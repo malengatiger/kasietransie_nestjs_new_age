@@ -1,0 +1,34 @@
+import { VehicleArrival } from 'src/data/models/VehicleArrival';
+import { DispatchRecord } from 'src/data/models/DispatchRecord';
+import { VehicleHeartbeat } from 'src/data/models/VehicleHeartbeat';
+import { AmbassadorPassengerCount } from 'src/data/models/AmbassadorPassengerCount';
+import { RouteUpdateRequest } from 'src/data/models/RouteUpdateRequest';
+import { AppError } from '../data/models/AppError';
+import { AppErrors } from '../data/helpers/AppErrors';
+import { LocationRequest } from '../data/models/LocationRequest';
+import { LocationResponse } from '../data/models/LocationResponse';
+import { KasieError } from '../my-utils/kasie.error';
+import { AssociationToken } from '../data/models/AssociationToken';
+import mongoose from 'mongoose';
+import { CommuterRequest } from '../data/models/CommuterRequest';
+import { CommuterResponse } from '../data/models/CommuterResponse';
+import { VehicleDeparture } from '../data/models/VehicleDeparture';
+export declare class MessagingService {
+    private associationTokenModel;
+    private kasieModel;
+    constructor(associationTokenModel: mongoose.Model<AssociationToken>, kasieModel: mongoose.Model<KasieError>);
+    sendAppErrorMessages(appErrors: AppErrors): Promise<any>;
+    sendAppErrorMessage(appError: AppError): Promise<any>;
+    sendKasieErrorMessage(kasieError: KasieError): Promise<any>;
+    sendLocationRequestMessage(locationRequest: LocationRequest): Promise<any>;
+    sendLocationResponseMessage(locationResponse: LocationResponse): Promise<any>;
+    sendVehicleArrivalMessage(arrival: VehicleArrival): Promise<any>;
+    sendVehicleDepartureMessage(departure: VehicleDeparture): Promise<any>;
+    sendDispatchMessage(dispatch: DispatchRecord): Promise<any>;
+    sendHeartbeatMessage(heartbeat: VehicleHeartbeat): Promise<any>;
+    sendPassengerCountMessage(count: AmbassadorPassengerCount): Promise<any>;
+    sendRouteUpdateMessage(req: RouteUpdateRequest): Promise<any>;
+    sendCommuterRequestMessage(req: CommuterRequest): Promise<any>;
+    sendCommuterResponseMessage(response: CommuterResponse): Promise<any>;
+    private send;
+}

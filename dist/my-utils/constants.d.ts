@@ -1,0 +1,25 @@
+export declare class Constants {
+    static readonly COMMUTER = "COMMUTER";
+    static readonly MARSHAL = "MARSHAL";
+    static readonly AMBASSADOR = "AMBASSADOR";
+    static readonly ASSOCIATION_OFFICIAL = "ASSOCIATION_OFFICIAL";
+    static readonly DRIVER = "DRIVER";
+    static readonly OWNER = "OWNER";
+    static readonly ROUTE_BUILDER = "ROUTE_BUILDER";
+    static readonly vehicleChanges = "vehicleChanges";
+    static readonly vehicleArrival = "vehicleArrival";
+    static readonly vehicleDeparture = "vehicleDeparture";
+    static readonly dispatchRecord = "dispatchRecord";
+    static readonly passengerCount = "passengerCount";
+    static readonly heartbeat = "heartbeat";
+    static readonly commuterRequest = "commuterRequest";
+    static readonly commuterResponse = "commuterResponse";
+    static readonly locationRequest = "locationRequest";
+    static readonly locationResponse = "locationResponse";
+    static readonly userGeofenceEvent = "userGeofenceEvent";
+    static readonly vehicleMediaRequest = "vehicleMediaRequest";
+    static readonly routeUpdateRequest = "routeUpdateRequest";
+    static readonly admin = "admin";
+    static readonly appError = "appError";
+    static readonly kasieError = "kasieError";
+}

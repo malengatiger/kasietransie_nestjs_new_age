@@ -1,0 +1,205 @@
+{
+  "type": "Compass Connections",
+  "version": {
+    "$numberInt": "1"
+  },
+  "connections": [
+    {
+      "id": "03ce39a5-6140-433f-9349-e00ef337ff29",
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1696682532396"
+        }
+      },
+      "connectionOptions": {
+        "connectionString": "mongodb://localhost:27017/",
+        "oidc": {
+          "serializedState": "eyJvaWRjUGx1Z2luU3RhdGVWZXJzaW9uIjowLCJzdGF0ZSI6W119"
+        }
+      },
+      "savedConnectionType": "recent"
+    },
+    {
+      "id": "06e74733-e595-4ee3-9ea9-5c2154c986e3",
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1673190943707"
+        }
+      },
+      "favorite": {
+        "name": "geoLocal",
+        "color": "color3"
+      },
+      "connectionOptions": {
+        "connectionString": "mongodb://localhost:27017/"
+      },
+      "savedConnectionType": "favorite"
+    },
+    {
+      "id": "0a02680c-b38c-4aeb-a062-f949382a2f6d",
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1694693354645"
+        }
+      },
+      "connectionOptions": {
+        "connectionString": "mongodb://localhost:27017/",
+        "oidc": {
+          "serializedState": "eyJvaWRjUGx1Z2luU3RhdGVWZXJzaW9uIjowLCJzdGF0ZSI6W119"
+        }
+      },
+      "savedConnectionType": "recent"
+    },
+    {
+      "id": "26223def-0324-45d2-b9b4-c55d153b82d4",
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1695737173187"
+        }
+      },
+      "connectionOptions": {
+        "connectionString": "mongodb://localhost:27017/",
+        "oidc": {
+          "serializedState": "eyJvaWRjUGx1Z2luU3RhdGVWZXJzaW9uIjowLCJzdGF0ZSI6W119"
+        }
+      },
+      "savedConnectionType": "recent"
+    },
+    {
+      "id": "4c45e027-84a6-4f36-9c16-ed44b49143ba",
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1696678029159"
+        }
+      },
+      "connectionOptions": {
+        "connectionString": "mongodb+srv://kasiemaster1:kkTiger3Son@cluster0.j5rskeq.mongodb.net/?retryWrites=true&w=majority",
+        "oidc": {
+          "serializedState": "eyJvaWRjUGx1Z2luU3RhdGVWZXJzaW9uIjowLCJzdGF0ZSI6W119"
+        }
+      },
+      "savedConnectionType": "recent"
+    },
+    {
+      "id": "65b6e51e-c889-4f18-8f19-3019b8676cba",
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1726750058743"
+        }
+      },
+      "savedConnectionType": "recent",
+      "connectionOptions": {
+        "connectionString": "mongodb+srv://aubreym:kkTiger23@cluster0.njz1rn4.mongodb.net/",
+        "oidc": {
+          "serializedState": "eyJvaWRjUGx1Z2luU3RhdGVWZXJzaW9uIjowLCJzdGF0ZSI6W119"
+        }
+      }
+    },
+    {
+      "id": "74eb9f90-e2c7-4edc-9098-cc5757f554f7",
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1672482845344"
+        }
+      },
+      "favorite": {
+        "name": "monitor"
+      },
+      "connectionOptions": {
+        "connectionString": "mongodb+srv://admin:kkTiger3Admin@monitorcluster.nnqij.mongodb.net/test"
+      },
+      "savedConnectionType": "favorite"
+    },
+    {
+      "id": "834f997e-5d72-44ad-ab7f-c2a943206d85",
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1696595101606"
+        }
+      },
+      "connectionOptions": {
+        "connectionString": "mongodb://localhost:27017/",
+        "oidc": {
+          "serializedState": "eyJvaWRjUGx1Z2luU3RhdGVWZXJzaW9uIjowLCJzdGF0ZSI6W119"
+        }
+      },
+      "savedConnectionType": "recent"
+    },
+    {
+      "id": "a2e44619-08bb-4865-a53c-ed77602a84d6",
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1697089299079"
+        }
+      },
+      "connectionOptions": {
+        "connectionString": "mongodb://localhost:27017/",
+        "oidc": {
+          "serializedState": "eyJvaWRjUGx1Z2luU3RhdGVWZXJzaW9uIjowLCJzdGF0ZSI6W119"
+        }
+      },
+      "savedConnectionType": "recent"
+    },
+    {
+      "id": "a86c87bb-bbd0-44e7-a482-939e8acbb0dc",
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1726750204754"
+        }
+      },
+      "savedConnectionType": "recent",
+      "connectionOptions": {
+        "connectionString": "mongodb+srv://aubreym:kkTiger23@cluster0.njz1rn4.mongodb.net/kasie_transie_db",
+        "oidc": {
+          "serializedState": "eyJvaWRjUGx1Z2luU3RhdGVWZXJzaW9uIjowLCJzdGF0ZSI6W119"
+        }
+      }
+    },
+    {
+      "id": "b1504f05-0727-4606-b4a9-06c297f507d9",
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1719259392802"
+        }
+      },
+      "connectionOptions": {
+        "connectionString": "mongodb://localhost:27017/",
+        "oidc": {
+          "serializedState": "eyJvaWRjUGx1Z2luU3RhdGVWZXJzaW9uIjowLCJzdGF0ZSI6W119"
+        }
+      },
+      "savedConnectionType": "recent"
+    },
+    {
+      "id": "d4d77589-2196-4eba-b45f-a147cd06e74b",
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1685605883463"
+        }
+      },
+      "favorite": {
+        "name": "geo",
+        "color": "color6"
+      },
+      "connectionOptions": {
+        "connectionString": "mongodb+srv://geomaster3:uo6tYo49sVB0xseq@cluster0.j5rskeq.mongodb.net/test"
+      },
+      "savedConnectionType": "favorite"
+    },
+    {
+      "id": "e4ec6335-abac-42d7-ae52-df156eac828b",
+      "lastUsed": {
+        "$date": {
+          "$numberLong": "1695281673742"
+        }
+      },
+      "connectionOptions": {
+        "connectionString": "mongodb://localhost:27017/",
+        "oidc": {
+          "serializedState": "eyJvaWRjUGx1Z2luU3RhdGVWZXJzaW9uIjowLCJzdGF0ZSI6W119"
+        }
+      },
+      "savedConnectionType": "recent"
+    }
+  ]
+}
