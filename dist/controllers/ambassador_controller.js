@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AmbassadorController = void 0;
 const common_1 = require("@nestjs/common");
 const AmbassadorPassengerCount_1 = require("../data/models/AmbassadorPassengerCount");
-const AmbassadorService_1 = require("../services/AmbassadorService");
+const ambassador_service_1 = require("../features/ambassador/ambassador.service");
 let AmbassadorController = class AmbassadorController {
     constructor(ambassadorService) {
         this.ambassadorService = ambassadorService;
@@ -55,6 +55,6 @@ __decorate([
 ], AmbassadorController.prototype, "getVehicleAmbassadorPassengerCounts", null);
 exports.AmbassadorController = AmbassadorController = __decorate([
     (0, common_1.Controller)('api/v1'),
-    __metadata("design:paramtypes", [AmbassadorService_1.AmbassadorService])
+    __metadata("design:paramtypes", [ambassador_service_1.AmbassadorService])
 ], AmbassadorController);
 //# sourceMappingURL=ambassador_controller.js.map

@@ -86,7 +86,7 @@ __decorate([
 exports.DispatchRecord = DispatchRecord = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'DispatchRecord',
+        collection: "DispatchRecord",
     })
 ], DispatchRecord);
 exports.DispatchRecordSchema = mongoose_1.SchemaFactory.createForClass(DispatchRecord);

@@ -14,10 +14,10 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ElapsedTimeMiddleware = void 0;
 const common_1 = require("@nestjs/common");
-const kasie_error_1 = require("../my-utils/kasie.error");
-const messaging_service_1 = require("../messaging/messaging.service");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
+const fcm_service_1 = require("../features/fcm/fcm.service");
+const kasie_error_1 = require("../data/models/kasie.error");
 const mm = ' 🔇 🔇 🔇 ElapsedTimeMiddleware';
 let ElapsedTimeMiddleware = class ElapsedTimeMiddleware {
     constructor(messagingService, kasieErrorModel) {
@@ -30,7 +30,7 @@ let ElapsedTimeMiddleware = class ElapsedTimeMiddleware {
             const elapsed = (Date.now() - start) / 1000;
             common_1.Logger.log(`${mm} ${req.originalUrl} took 🌸🌸🌸 ${elapsed} seconds 🔴 🔴 statusCode: ${res.statusCode}`);
             if (res.statusCode > 201) {
-                const x = new kasie_error_1.KasieError(res.statusCode, 'Error on Kasie Backend', req.originalUrl);
+                const x = new kasie_error_1.KasieError(`Error on Kasie Backend, statusCode: ${res.statusCode} - ${res.statusMessage}`, common_1.HttpStatus.BAD_REQUEST);
                 await this.kasieErrorModel.create(x);
                 common_1.Logger.debug(`${mm} KasieError added to database `);
                 await this.messagingService.sendKasieErrorMessage(x);
@@ -43,6 +43,6 @@ exports.ElapsedTimeMiddleware = ElapsedTimeMiddleware;
 exports.ElapsedTimeMiddleware = ElapsedTimeMiddleware = __decorate([
     (0, common_1.Injectable)(),
     __param(1, (0, mongoose_1.InjectModel)(kasie_error_1.KasieError.name)),
-    __metadata("design:paramtypes", [messaging_service_1.MessagingService, mongoose_2.default.Model])
+    __metadata("design:paramtypes", [fcm_service_1.MessagingService, mongoose_2.default.Model])
 ], ElapsedTimeMiddleware);
 //# sourceMappingURL=elapsed.middleware.js.map

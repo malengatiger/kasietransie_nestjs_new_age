@@ -1,0 +1,32 @@
+import { VehicleArrival } from 'src/data/models/VehicleArrival';
+import { DispatchRecord } from 'src/data/models/DispatchRecord';
+import { VehicleHeartbeat } from 'src/data/models/VehicleHeartbeat';
+import { AmbassadorPassengerCount } from 'src/data/models/AmbassadorPassengerCount';
+import { RouteUpdateRequest } from 'src/data/models/RouteUpdateRequest';
+import mongoose from 'mongoose';
+import { AppErrors } from 'src/data/helpers/AppErrors';
+import { AppError } from 'src/data/models/AppError';
+import { CommuterRequest } from 'src/data/models/CommuterRequest';
+import { CommuterResponse } from 'src/data/models/CommuterResponse';
+import { LocationRequest } from 'src/data/models/LocationRequest';
+import { LocationResponse } from 'src/data/models/LocationResponse';
+import { VehicleDeparture } from 'src/data/models/VehicleDeparture';
+import { KasieError } from 'src/data/models/kasie.error';
+export declare class MessagingService {
+    private kasieModel;
+    constructor(kasieModel: mongoose.Model<KasieError>);
+    sendAppErrorMessages(appErrors: AppErrors): Promise<any>;
+    sendAppErrorMessage(appError: AppError): Promise<any>;
+    sendKasieErrorMessage(kasieError: KasieError): Promise<any>;
+    sendLocationRequestMessage(locationRequest: LocationRequest): Promise<any>;
+    sendLocationResponseMessage(locationResponse: LocationResponse): Promise<any>;
+    sendVehicleArrivalMessage(arrival: VehicleArrival): Promise<any>;
+    sendVehicleDepartureMessage(departure: VehicleDeparture): Promise<any>;
+    sendDispatchMessage(dispatch: DispatchRecord): Promise<any>;
+    sendHeartbeatMessage(heartbeat: VehicleHeartbeat): Promise<any>;
+    sendPassengerCountMessage(count: AmbassadorPassengerCount): Promise<any>;
+    sendRouteUpdateMessage(req: RouteUpdateRequest): Promise<any>;
+    sendCommuterRequestMessage(req: CommuterRequest): Promise<any>;
+    sendCommuterResponseMessage(response: CommuterResponse): Promise<any>;
+    private send;
+}

@@ -3,11 +3,11 @@ import { BigBag } from 'src/data/helpers/BigBag';
 import { CounterBag } from 'src/data/helpers/CounterBag';
 import { AmbassadorPassengerCount } from 'src/data/models/AmbassadorPassengerCount';
 import { DispatchRecord } from 'src/data/models/DispatchRecord';
-import { AmbassadorService } from 'src/services/AmbassadorService';
-import { DispatchService } from 'src/services/DispatchService';
 import { MyFirebaseService } from 'src/services/FirebaseService';
 import { AssociationCounts } from '../data/helpers/AssociationCounts';
 import { VehicleDeparture } from '../data/models/VehicleDeparture';
+import { DispatchService } from 'src/features/dispatch/dispatch.service';
+import { AmbassadorService } from 'src/features/ambassador/ambassador.service';
 
 @Controller('api/v1')
 export class DispatchController {
@@ -58,24 +58,25 @@ export class DispatchController {
     );
   }
 
-  @Get('getVehicleDispatchRecords')
-  async getVehicleDispatchRecords(
-    @Query() query: { vehicleId: string; startDate: string },
-  ): Promise<DispatchRecord[]> {
-    return await this.dispatchService.getVehicleDispatchRecords(
-      query.vehicleId,
-      query.startDate,
-    );
-  }
-  @Get('getMarshalDispatchRecords')
-  async getMarshalDispatchRecords(
-    @Query() query: { marshalId: string; startDate: string },
-  ): Promise<DispatchRecord[]> {
-    return await this.dispatchService.getMarshalDispatchRecords(
-      query.marshalId,
-      query.startDate,
-    );
-  }
+  // @Get('getVehicleDispatchRecords')
+  // async getVehicleDispatchRecords(
+  //   @Query() query: { vehicleId: string; startDate: string, endDate: string  },
+  // ): Promise<DispatchRecord[]> {
+  //   return await this.dispatchService.getVehicleDispatchRecords(
+  //     query.vehicleId,
+  //     query.startDate,
+  //     query.endDate,
+  //   );
+  // }
+  // @Get('getMarshalDispatchRecords')
+  // async getMarshalDispatchRecords(
+  //   @Query() query: { marshalId: string; startDate: string },
+  // ): Promise<DispatchRecord[]> {
+  //   return await this.dispatchService.getMarshalDispatchRecords(
+  //     query.marshalId,
+  //     query.startDate,
+  //   );
+  // }
   @Get('getVehicleCounts')
   async getVehicleCounts(
     @Query() query: { vehicleId: string },

@@ -4,10 +4,11 @@ import {
   ExecutionContext,
   CallHandler,
   Logger,
+  HttpStatus,
 } from '@nestjs/common';
 import { Observable, throwError } from 'rxjs';
-import { KasieError } from '../my-utils/kasie.error';
 import { catchError } from 'rxjs/operators';
+import { KasieError } from 'src/data/models/kasie.error';
 const mm: string = '🔴🔴🔴 ErrorsInterceptor';
 @Injectable()
 export class ErrorsInterceptor implements NestInterceptor {
@@ -17,7 +18,7 @@ export class ErrorsInterceptor implements NestInterceptor {
     function handleError(err: KasieError) {
       Logger.log(`${mm} ... handling error: ${err}`);
       return throwError(
-        () => new KasieError(err.statusCode, err.message, err.request),
+        () => new KasieError(err.message, HttpStatus.BAD_REQUEST),
       );
     }
   }

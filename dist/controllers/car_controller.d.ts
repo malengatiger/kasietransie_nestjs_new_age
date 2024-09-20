@@ -1,19 +1,19 @@
 import { Response } from 'express';
 import { Vehicle } from 'src/data/models/Vehicle';
-import { VehicleService } from 'src/services/VehicleService';
 import { RouteAssignment } from 'src/data/models/RouteAssignment';
 import { RouteAssignmentList } from 'src/data/helpers/RouteAssignmentList';
 import { VehicleArrival } from 'src/data/models/VehicleArrival';
-import { DispatchService } from 'src/services/DispatchService';
 import { MediaService } from 'src/services/MediaService';
 import { VehiclePhoto } from 'src/data/models/VehiclePhoto';
-import { LocationRequestService } from '../services/LocationRequestService';
 import { LocationRequest } from '../data/models/LocationRequest';
 import { LocationResponse } from '../data/models/LocationResponse';
-import { RouteService } from '../services/RouteService';
 import { VehicleMediaRequest } from '../data/models/VehicleMediaRequest';
 import { VehicleBag } from '../data/helpers/VehicleBag';
-import { TimeSeriesService } from '../services/TimeSeriesService';
+import { DispatchService } from 'src/features/dispatch/dispatch.service';
+import { LocationRequestService } from 'src/features/location_request/location_request.service';
+import { RouteService } from 'src/features/route/route.service';
+import { TimeSeriesService } from 'src/features/time_series/time_series.service';
+import { VehicleService } from 'src/features/vehicle/vehicle.service';
 export declare class CarController {
     private readonly carService;
     private readonly dispatchService;

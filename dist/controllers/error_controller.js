@@ -15,7 +15,7 @@ var ErrorController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ErrorController = void 0;
 const common_1 = require("@nestjs/common");
-const ErrorService_1 = require("../services/ErrorService");
+const error_service_1 = require("../features/error/error.service");
 const mm = ' 🚼 🚼 🚼 ErrorController  🚼';
 let ErrorController = ErrorController_1 = class ErrorController {
     constructor(errorService) {
@@ -46,6 +46,6 @@ __decorate([
 ], ErrorController.prototype, "getKasieErrors", null);
 exports.ErrorController = ErrorController = ErrorController_1 = __decorate([
     (0, common_1.Controller)('api/v1'),
-    __metadata("design:paramtypes", [ErrorService_1.ErrorService])
+    __metadata("design:paramtypes", [error_service_1.ErrorService])
 ], ErrorController);
 //# sourceMappingURL=error_controller.js.map

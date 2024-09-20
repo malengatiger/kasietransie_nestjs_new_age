@@ -16,8 +16,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
 const platform_express_1 = require("@nestjs/platform-express");
-const UserService_1 = require("../services/UserService");
 const my_utils_1 = require("../my-utils/my-utils");
+const user_service_1 = require("../features/user/user.service");
 const mm = ' 🚼 🚼 🚼 UserController  🚼';
 let UserController = UserController_1 = class UserController {
     constructor(userService) {
@@ -32,7 +32,7 @@ let UserController = UserController_1 = class UserController {
         return res;
     }
     async importUsersFromJSON(file, associationId) {
-        const res = await this.userService.importUsersFromCSV(file, associationId);
+        const res = await this.userService.importUsersFromJSON(file, associationId);
         return res;
     }
     sendFile(fileName, res) {
@@ -71,6 +71,6 @@ __decorate([
 ], UserController.prototype, "importUsersFromJSON", null);
 exports.UserController = UserController = UserController_1 = __decorate([
     (0, common_1.Controller)('api/v1'),
-    __metadata("design:paramtypes", [UserService_1.UserService])
+    __metadata("design:paramtypes", [user_service_1.UserService])
 ], UserController);
 //# sourceMappingURL=user_controller.js.map

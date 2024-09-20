@@ -4,6 +4,7 @@ import {
   Body,
   Controller,
   Get,
+  HttpStatus,
   Logger,
   Post,
   Query,
@@ -13,24 +14,23 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { Vehicle } from 'src/data/models/Vehicle';
-import { VehicleService } from 'src/services/VehicleService';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { RouteAssignment } from 'src/data/models/RouteAssignment';
 import { RouteAssignmentList } from 'src/data/helpers/RouteAssignmentList';
 import { VehicleArrival } from 'src/data/models/VehicleArrival';
-import { DispatchService } from 'src/services/DispatchService';
 import { MediaService } from 'src/services/MediaService';
 import { VehiclePhoto } from 'src/data/models/VehiclePhoto';
 import { MyUtils } from 'src/my-utils/my-utils';
-import { LocationRequestService } from '../services/LocationRequestService';
 import { LocationRequest } from '../data/models/LocationRequest';
 import { LocationResponse } from '../data/models/LocationResponse';
-import { RouteService } from '../services/RouteService';
 import { VehicleMediaRequest } from '../data/models/VehicleMediaRequest';
 import { VehicleBag } from '../data/helpers/VehicleBag';
-import { KasieError } from '../my-utils/kasie.error';
-import { TimeSeriesService } from '../services/TimeSeriesService';
-import { Document } from 'mongoose';
+import { DispatchService } from 'src/features/dispatch/dispatch.service';
+import { LocationRequestService } from 'src/features/location_request/location_request.service';
+import { RouteService } from 'src/features/route/route.service';
+import { TimeSeriesService } from 'src/features/time_series/time_series.service';
+import { VehicleService } from 'src/features/vehicle/vehicle.service';
+import { KasieError } from 'src/data/models/kasie.error';
 
 const mm = ' 🚼 🚼 🚼 RouteController  🚼';
 
@@ -154,7 +154,7 @@ export class CarController {
   @Get('getOwnerVehicles')
   async getOwnerVehicles(@Query('userId') userId: string): Promise<Vehicle[]> {
     if (userId) {
-      throw new KasieError(400, 'UserId is missing!', 'getOwnerVehicles');
+      throw new KasieError('getOwnerVehicles: UserId is missing!', HttpStatus.BAD_REQUEST);
     }
     return await this.carService.getOwnerVehicles(userId, 0);
   }

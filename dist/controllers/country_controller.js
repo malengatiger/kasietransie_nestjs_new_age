@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CountryController = void 0;
 const common_1 = require("@nestjs/common");
-const CountryService_1 = require("../services/CountryService");
+const country_service_1 = require("../features/country/country.service");
 let CountryController = class CountryController {
     constructor(countryService) {
         this.countryService = countryService;
@@ -29,6 +29,6 @@ __decorate([
 ], CountryController.prototype, "getCountries", null);
 exports.CountryController = CountryController = __decorate([
     (0, common_1.Controller)('api/v1'),
-    __metadata("design:paramtypes", [CountryService_1.CountryService])
+    __metadata("design:paramtypes", [country_service_1.CountryService])
 ], CountryController);
 //# sourceMappingURL=country_controller.js.map

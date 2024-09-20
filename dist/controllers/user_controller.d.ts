@@ -1,5 +1,5 @@
-import { UserService } from 'src/services/UserService';
 import { User } from 'src/data/models/User';
+import { UserService } from 'src/features/user/user.service';
 export declare class UserController {
     private readonly userService;
     private readonly logger;

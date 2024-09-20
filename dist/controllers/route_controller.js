@@ -21,8 +21,8 @@ const RouteCity_1 = require("../data/models/RouteCity");
 const RouteLandmark_1 = require("../data/models/RouteLandmark");
 const RouteUpdateRequest_1 = require("../data/models/RouteUpdateRequest");
 const my_utils_1 = require("../my-utils/my-utils");
-const RouteService_1 = require("../services/RouteService");
 const RoutePointList_1 = require("../data/models/RoutePointList");
+const route_service_1 = require("../features/route/route.service");
 const mm = ' 🚼 🚼 🚼 RouteController  🚼';
 let RouteController = RouteController_1 = class RouteController {
     constructor(routeService) {
@@ -296,6 +296,6 @@ __decorate([
 ], RouteController.prototype, "getRoutePoints", null);
 exports.RouteController = RouteController = RouteController_1 = __decorate([
     (0, common_1.Controller)('api/v1'),
-    __metadata("design:paramtypes", [RouteService_1.RouteService])
+    __metadata("design:paramtypes", [route_service_1.RouteService])
 ], RouteController);
 //# sourceMappingURL=route_controller.js.map

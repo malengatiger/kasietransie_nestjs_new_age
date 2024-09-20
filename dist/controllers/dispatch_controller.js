@@ -15,10 +15,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DispatchController = void 0;
 const common_1 = require("@nestjs/common");
 const DispatchRecord_1 = require("../data/models/DispatchRecord");
-const AmbassadorService_1 = require("../services/AmbassadorService");
-const DispatchService_1 = require("../services/DispatchService");
 const FirebaseService_1 = require("../services/FirebaseService");
 const VehicleDeparture_1 = require("../data/models/VehicleDeparture");
+const dispatch_service_1 = require("../features/dispatch/dispatch.service");
+const ambassador_service_1 = require("../features/ambassador/ambassador.service");
 let DispatchController = class DispatchController {
     constructor(dispatchService, fbService, ambassadorService) {
         this.dispatchService = dispatchService;
@@ -39,12 +39,6 @@ let DispatchController = class DispatchController {
     }
     async getVehicleCountsByDate(query) {
         return await this.dispatchService.getVehicleCountsByDate(query.vehicleId, query.startDate);
-    }
-    async getVehicleDispatchRecords(query) {
-        return await this.dispatchService.getVehicleDispatchRecords(query.vehicleId, query.startDate);
-    }
-    async getMarshalDispatchRecords(query) {
-        return await this.dispatchService.getMarshalDispatchRecords(query.marshalId, query.startDate);
     }
     async getVehicleCounts(query) {
         return await this.dispatchService.getVehicleCounts(query.vehicleId);
@@ -90,20 +84,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], DispatchController.prototype, "getVehicleCountsByDate", null);
 __decorate([
-    (0, common_1.Get)('getVehicleDispatchRecords'),
-    __param(0, (0, common_1.Query)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], DispatchController.prototype, "getVehicleDispatchRecords", null);
-__decorate([
-    (0, common_1.Get)('getMarshalDispatchRecords'),
-    __param(0, (0, common_1.Query)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", Promise)
-], DispatchController.prototype, "getMarshalDispatchRecords", null);
-__decorate([
     (0, common_1.Get)('getVehicleCounts'),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
@@ -119,8 +99,8 @@ __decorate([
 ], DispatchController.prototype, "getOwnersBag", null);
 exports.DispatchController = DispatchController = __decorate([
     (0, common_1.Controller)('api/v1'),
-    __metadata("design:paramtypes", [DispatchService_1.DispatchService,
+    __metadata("design:paramtypes", [dispatch_service_1.DispatchService,
         FirebaseService_1.MyFirebaseService,
-        AmbassadorService_1.AmbassadorService])
+        ambassador_service_1.AmbassadorService])
 ], DispatchController);
 //# sourceMappingURL=dispatch_controller.js.map

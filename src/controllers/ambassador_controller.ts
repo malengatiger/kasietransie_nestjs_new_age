@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Logger, Post, Query } from '@nestjs/common';
 import { AmbassadorPassengerCount } from 'src/data/models/AmbassadorPassengerCount';
-import { AmbassadorService } from 'src/services/AmbassadorService';
+import { AmbassadorService } from 'src/features/ambassador/ambassador.service';
 
 @Controller('api/v1')
 export class AmbassadorController {

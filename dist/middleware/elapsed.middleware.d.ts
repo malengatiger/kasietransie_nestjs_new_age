@@ -1,8 +1,8 @@
 import { NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { KasieError } from '../my-utils/kasie.error';
-import { MessagingService } from '../messaging/messaging.service';
 import mongoose from 'mongoose';
+import { MessagingService } from 'src/features/fcm/fcm.service';
+import { KasieError } from 'src/data/models/kasie.error';
 export declare class ElapsedTimeMiddleware implements NestMiddleware {
     private readonly messagingService;
     private kasieErrorModel;

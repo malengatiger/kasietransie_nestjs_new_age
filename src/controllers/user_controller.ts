@@ -11,9 +11,9 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { UserService } from 'src/services/UserService';
 import { User } from 'src/data/models/User';
 import { MyUtils } from 'src/my-utils/my-utils';
+import { UserService } from 'src/features/user/user.service';
 
 const mm = ' 🚼 🚼 🚼 UserController  🚼';
 
@@ -44,7 +44,7 @@ export class UserController {
     @UploadedFile() file: Express.Multer.File,
     @Query('associationId') associationId: string,
   ): Promise<User[]> {
-    const res = await this.userService.importUsersFromCSV(file, associationId);
+    const res = await this.userService.importUsersFromJSON(file, associationId);
 
     return res;
   }

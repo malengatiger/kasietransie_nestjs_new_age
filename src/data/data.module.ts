@@ -84,7 +84,7 @@ import {
 } from './models/RouteAssignment';
 import { StateProvince, StateProvinceSchema } from './models/StateProvince';
 import { CountryController } from 'src/controllers/country_controller';
-import { CountryService } from 'src/services/CountryService';
+import { CountryService } from 'src/features/country/country.service';
 
 @Module({
   imports: [

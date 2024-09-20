@@ -45,7 +45,7 @@ const VehicleVideo_1 = require("./models/VehicleVideo");
 const RouteAssignment_1 = require("./models/RouteAssignment");
 const StateProvince_1 = require("./models/StateProvince");
 const country_controller_1 = require("../controllers/country_controller");
-const CountryService_1 = require("../services/CountryService");
+const country_service_1 = require("../features/country/country.service");
 let DataModule = class DataModule {
 };
 exports.DataModule = DataModule;
@@ -197,7 +197,7 @@ exports.DataModule = DataModule = __decorate([
             ]),
         ],
         controllers: [data_controller_1.DataController, country_controller_1.CountryController],
-        providers: [data_service_1.DataService, CountryService_1.CountryService],
+        providers: [data_service_1.DataService, country_service_1.CountryService],
     })
 ], DataModule);
 //# sourceMappingURL=data.module.js.map

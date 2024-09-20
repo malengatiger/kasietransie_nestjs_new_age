@@ -1,5 +1,5 @@
 import { AmbassadorPassengerCount } from 'src/data/models/AmbassadorPassengerCount';
-import { AmbassadorService } from 'src/services/AmbassadorService';
+import { AmbassadorService } from 'src/features/ambassador/ambassador.service';
 export declare class AmbassadorController {
     private readonly ambassadorService;
     constructor(ambassadorService: AmbassadorService);

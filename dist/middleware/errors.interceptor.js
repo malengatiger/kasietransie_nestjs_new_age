@@ -9,15 +9,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ErrorsInterceptor = void 0;
 const common_1 = require("@nestjs/common");
 const rxjs_1 = require("rxjs");
-const kasie_error_1 = require("../my-utils/kasie.error");
 const operators_1 = require("rxjs/operators");
+const kasie_error_1 = require("../data/models/kasie.error");
 const mm = '🔴🔴🔴 ErrorsInterceptor';
 let ErrorsInterceptor = class ErrorsInterceptor {
     intercept(context, next) {
         return next.handle().pipe((0, operators_1.catchError)(handleError));
         function handleError(err) {
             common_1.Logger.log(`${mm} ... handling error: ${err}`);
-            return (0, rxjs_1.throwError)(() => new kasie_error_1.KasieError(err.statusCode, err.message, err.request));
+            return (0, rxjs_1.throwError)(() => new kasie_error_1.KasieError(err.message, common_1.HttpStatus.BAD_REQUEST));
         }
     }
 };

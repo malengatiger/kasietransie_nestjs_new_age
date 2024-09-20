@@ -18,9 +18,9 @@ import { RouteLandmark } from 'src/data/models/RouteLandmark';
 import { RoutePoint } from 'src/data/models/RoutePoint';
 import { RouteUpdateRequest } from 'src/data/models/RouteUpdateRequest';
 import { MyUtils } from 'src/my-utils/my-utils';
-import { RouteService } from 'src/services/RouteService';
 import * as fs from 'fs';
 import { RoutePointList } from 'src/data/models/RoutePointList';
+import { RouteService } from 'src/features/route/route.service';
 
 const mm = ' 🚼 🚼 🚼 RouteController  🚼';
 

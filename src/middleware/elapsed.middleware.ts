@@ -1,10 +1,10 @@
-import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
-import { KasieError } from '../my-utils/kasie.error';
-import { MessagingService } from '../messaging/messaging.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../data/models/User';
 import mongoose from 'mongoose';
+import { MessagingService } from 'src/features/fcm/fcm.service';
+import { KasieError } from 'src/data/models/kasie.error';
 
 const mm = ' 🔇 🔇 🔇 ElapsedTimeMiddleware';
 @Injectable()
@@ -25,9 +25,8 @@ export class ElapsedTimeMiddleware implements NestMiddleware {
       if (res.statusCode > 201) {
         //send message & write to database
         const x: KasieError = new KasieError(
-          res.statusCode,
-          'Error on Kasie Backend',
-          req.originalUrl,
+          `Error on Kasie Backend, statusCode: ${res.statusCode} - ${res.statusMessage}`,
+          HttpStatus.BAD_REQUEST,
         );
         await this.kasieErrorModel.create(x);
         Logger.debug(`${mm} KasieError added to database `);

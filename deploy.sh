@@ -1,10 +1,10 @@
 #!/bin/bash
 echo "\n\n🔵🐦🔵🐦🔵🐦 Deploying Kasie Backend on NestJS to Cloud Run ... 🔵🐦🔵🐦🔵🐦"
 # Define variables
-PROJECT_ID="Kasie2024"
-IMAGE_NAME="kasie-nest-1"
+PROJECT_ID="kasie2024"
+IMAGE_NAME="kasie-backend-3"
 REGION="europe-west1"
-SERVICE_NAME="kasie-nest-1"
+SERVICE_NAME="kasie-backend-3"
 echo "\n🐦🐦🐦 Build the app ... 🔵🐦🔵🐦🔵🐦"
 npm run build
 echo "\n🐦🐦🐦 Build the Docker image ... 🔵🐦🔵🐦🔵🐦"

@@ -6,8 +6,8 @@ import { RouteCity } from 'src/data/models/RouteCity';
 import { RouteLandmark } from 'src/data/models/RouteLandmark';
 import { RoutePoint } from 'src/data/models/RoutePoint';
 import { RouteUpdateRequest } from 'src/data/models/RouteUpdateRequest';
-import { RouteService } from 'src/services/RouteService';
 import { RoutePointList } from 'src/data/models/RoutePointList';
+import { RouteService } from 'src/features/route/route.service';
 export declare class RouteController {
     private readonly routeService;
     private readonly logger;

@@ -16,21 +16,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CarController = void 0;
 const common_1 = require("@nestjs/common");
 const Vehicle_1 = require("../data/models/Vehicle");
-const VehicleService_1 = require("../services/VehicleService");
 const platform_express_1 = require("@nestjs/platform-express");
 const RouteAssignmentList_1 = require("../data/helpers/RouteAssignmentList");
 const VehicleArrival_1 = require("../data/models/VehicleArrival");
-const DispatchService_1 = require("../services/DispatchService");
 const MediaService_1 = require("../services/MediaService");
 const VehiclePhoto_1 = require("../data/models/VehiclePhoto");
 const my_utils_1 = require("../my-utils/my-utils");
-const LocationRequestService_1 = require("../services/LocationRequestService");
 const LocationRequest_1 = require("../data/models/LocationRequest");
 const LocationResponse_1 = require("../data/models/LocationResponse");
-const RouteService_1 = require("../services/RouteService");
 const VehicleMediaRequest_1 = require("../data/models/VehicleMediaRequest");
-const kasie_error_1 = require("../my-utils/kasie.error");
-const TimeSeriesService_1 = require("../services/TimeSeriesService");
+const dispatch_service_1 = require("../features/dispatch/dispatch.service");
+const location_request_service_1 = require("../features/location_request/location_request.service");
+const route_service_1 = require("../features/route/route.service");
+const time_series_service_1 = require("../features/time_series/time_series.service");
+const vehicle_service_1 = require("../features/vehicle/vehicle.service");
+const kasie_error_1 = require("../data/models/kasie.error");
 const mm = ' 🚼 🚼 🚼 RouteController  🚼';
 let CarController = CarController_1 = class CarController {
     constructor(carService, dispatchService, mediaService, locationRequestService, routeService, timeSeriesService) {
@@ -86,7 +86,7 @@ let CarController = CarController_1 = class CarController {
     }
     async getOwnerVehicles(userId) {
         if (userId) {
-            throw new kasie_error_1.KasieError(400, 'UserId is missing!', 'getOwnerVehicles');
+            throw new kasie_error_1.KasieError('getOwnerVehicles: UserId is missing!', common_1.HttpStatus.BAD_REQUEST);
         }
         return await this.carService.getOwnerVehicles(userId, 0);
     }
@@ -210,11 +210,11 @@ __decorate([
 ], CarController.prototype, "getVehicleBag", null);
 exports.CarController = CarController = CarController_1 = __decorate([
     (0, common_1.Controller)('api/v1'),
-    __metadata("design:paramtypes", [VehicleService_1.VehicleService,
-        DispatchService_1.DispatchService,
+    __metadata("design:paramtypes", [vehicle_service_1.VehicleService,
+        dispatch_service_1.DispatchService,
         MediaService_1.MediaService,
-        LocationRequestService_1.LocationRequestService,
-        RouteService_1.RouteService,
-        TimeSeriesService_1.TimeSeriesService])
+        location_request_service_1.LocationRequestService,
+        route_service_1.RouteService,
+        time_series_service_1.TimeSeriesService])
 ], CarController);
 //# sourceMappingURL=car_controller.js.map

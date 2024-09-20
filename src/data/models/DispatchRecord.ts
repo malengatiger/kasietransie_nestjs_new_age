@@ -1,8 +1,8 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Position } from './position';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Position } from "./position";
 @Schema({
   timestamps: true,
-  collection: 'DispatchRecord',
+  collection: "DispatchRecord",
 })
 export class DispatchRecord {
   _partitionKey: string;
