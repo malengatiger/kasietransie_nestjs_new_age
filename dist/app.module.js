@@ -14,7 +14,6 @@ const my_utils_1 = require("./my-utils/my-utils");
 const mongoose_1 = require("@nestjs/mongoose");
 const config_1 = require("@nestjs/config");
 const database_config_1 = require("./database.config");
-const dispatch_controller_1 = require("./controllers/dispatch_controller");
 const zipper_1 = require("./my-utils/zipper");
 const dispatch_module_1 = require("./features/dispatch/dispatch.module");
 const ambassador_module_1 = require("./features/ambassador/ambassador.module");
@@ -61,6 +60,12 @@ const Country_1 = require("./data/models/Country");
 const SettingsModel_1 = require("./data/models/SettingsModel");
 const LocationRequest_1 = require("./data/models/LocationRequest");
 const LocationResponse_1 = require("./data/models/LocationResponse");
+const dispatch_controller_1 = require("./features/dispatch/dispatch.controller");
+const VehicleHeartbeat_1 = require("./data/models/VehicleHeartbeat");
+const VehicleArrival_1 = require("./data/models/VehicleArrival");
+const VehicleDeparture_1 = require("./data/models/VehicleDeparture");
+const DispatchRecord_1 = require("./data/models/DispatchRecord");
+const CommuterRequest_1 = require("./data/models/CommuterRequest");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -81,10 +86,15 @@ exports.AppModule = AppModule = __decorate([
             mongoose_1.MongooseModule.forFeature([
                 { name: "AppError", schema: AppError_1.AppErrorSchema },
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
+                { name: "VehicleHeartbeat", schema: VehicleHeartbeat_1.VehicleHeartbeatSchema },
+                { name: "VehicleHeartbeat", schema: VehicleHeartbeat_1.VehicleHeartbeatSchema },
+                { name: "VehicleArrival", schema: VehicleArrival_1.VehicleArrivalSchema },
+                { name: "VehicleDeparture", schema: VehicleDeparture_1.VehicleDepartureSchema },
                 { name: "VehicleHeartbeatTimeSeries", schema: VehicleHeartbeatTimeSeries_1.VehicleHeartbeatTimeSeriesSchema },
                 { name: "VehicleHeartbeatTimeSeries", schema: VehicleHeartbeatTimeSeries_1.VehicleHeartbeatTimeSeriesSchema },
                 { name: "PassengerTimeSeries", schema: PassengerTimeSeries_1.PassengerTimeSeriesSchema },
                 { name: "User", schema: User_1.UserSchema },
+                { name: "DispatchRecord", schema: DispatchRecord_1.DispatchRecordSchema },
                 { name: "UserGeofenceEvent", schema: UserGeofenceEvent_1.UserGeofenceEventSchema },
                 { name: "Association", schema: Association_1.AssociationSchema },
                 { name: "City", schema: City_1.CitySchema },
@@ -97,6 +107,8 @@ exports.AppModule = AppModule = __decorate([
                 { name: "Country", schema: Country_1.CountrySchema },
                 { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
                 { name: "LocationRequest", schema: LocationRequest_1.LocationRequestSchema },
+                { name: "LocationResponse", schema: LocationResponse_1.LocationResponseSchema },
+                { name: "CommuterRequest", schema: CommuterRequest_1.CommuterRequestSchema },
                 { name: "LocationResponse", schema: LocationResponse_1.LocationResponseSchema },
                 { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCount_1.AmbassadorPassengerCountSchema },
             ]),

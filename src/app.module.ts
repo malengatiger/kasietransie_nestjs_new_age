@@ -6,7 +6,6 @@ import { MyUtils } from './my-utils/my-utils';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import databaseConfig from './database.config';
-import { DispatchController } from './controllers/dispatch_controller';
 import { FileArchiverService } from './my-utils/zipper';
 import { DispatchModule } from './features/dispatch/dispatch.module';
 import { AmbassadorModule } from './features/ambassador/ambassador.module';
@@ -53,6 +52,13 @@ import { CountrySchema } from './data/models/Country';
 import { SettingsModelSchema } from './data/models/SettingsModel';
 import { LocationRequestSchema } from './data/models/LocationRequest';
 import { LocationResponseSchema } from './data/models/LocationResponse';
+import { DispatchController } from './features/dispatch/dispatch.controller';
+import { VehicleHeartbeatSchema } from './data/models/VehicleHeartbeat';
+import { VehicleArrivalSchema } from './data/models/VehicleArrival';
+import { VehicleDepartureSchema } from './data/models/VehicleDeparture';
+
+import { DispatchRecordSchema } from './data/models/DispatchRecord';
+import { CommuterRequestSchema } from './data/models/CommuterRequest';
 
 @Module({
   imports: [
@@ -71,10 +77,15 @@ import { LocationResponseSchema } from './data/models/LocationResponse';
       
       { name: "AppError", schema: AppErrorSchema },
       { name: "KasieError", schema: KasieErrorSchema },
+      { name: "VehicleHeartbeat", schema: VehicleHeartbeatSchema },
+      { name: "VehicleHeartbeat", schema: VehicleHeartbeatSchema },
+      { name: "VehicleArrival", schema: VehicleArrivalSchema },
+      { name: "VehicleDeparture", schema: VehicleDepartureSchema },
       { name: "VehicleHeartbeatTimeSeries", schema: VehicleHeartbeatTimeSeriesSchema },
       { name: "VehicleHeartbeatTimeSeries", schema: VehicleHeartbeatTimeSeriesSchema },
       { name: "PassengerTimeSeries", schema: PassengerTimeSeriesSchema },
       { name: "User", schema: UserSchema },
+      { name: "DispatchRecord", schema: DispatchRecordSchema },
       { name: "UserGeofenceEvent", schema: UserGeofenceEventSchema },
       { name: "Association", schema: AssociationSchema },
       { name: "City", schema: CitySchema },
@@ -88,8 +99,11 @@ import { LocationResponseSchema } from './data/models/LocationResponse';
       { name: "AssociationToken", schema: AssociationTokenSchema },
       { name: "LocationRequest", schema: LocationRequestSchema },
       { name: "LocationResponse", schema: LocationResponseSchema },
+      { name: "CommuterRequest", schema: CommuterRequestSchema },
+      { name: "LocationResponse", schema: LocationResponseSchema },
 
       { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCountSchema },
+
 
     ]),
     // MongoDataModule,

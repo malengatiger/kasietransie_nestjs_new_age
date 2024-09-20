@@ -17,6 +17,13 @@ const mongoose_1 = require("@nestjs/mongoose");
 const AppError_1 = require("../../data/models/AppError");
 const AmbassadorPassengerCount_1 = require("../../data/models/AmbassadorPassengerCount");
 const DispatchRecord_1 = require("../../data/models/DispatchRecord");
+const VehicleHeartbeat_1 = require("../../data/models/VehicleHeartbeat");
+const VehicleArrival_1 = require("../../data/models/VehicleArrival");
+const VehicleDeparture_1 = require("../../data/models/VehicleDeparture");
+const Commuter_1 = require("../../data/models/Commuter");
+const CommuterRequest_1 = require("../../data/models/CommuterRequest");
+const CommuterResponse_1 = require("../../data/models/CommuterResponse");
+const UserGeofenceEvent_1 = require("../../data/models/UserGeofenceEvent");
 let DispatchModule = class DispatchModule {
 };
 exports.DispatchModule = DispatchModule;
@@ -24,6 +31,13 @@ exports.DispatchModule = DispatchModule = __decorate([
     (0, common_1.Module)({
         imports: [
             mongoose_1.MongooseModule.forFeature([
+                { name: "UserGeofenceEvent", schema: UserGeofenceEvent_1.UserGeofenceEventSchema },
+                { name: "Commuter", schema: Commuter_1.CommuterSchema },
+                { name: "CommuterResponse", schema: CommuterResponse_1.CommuterResponseSchema },
+                { name: "CommuterRequest", schema: CommuterRequest_1.CommuterRequestSchema },
+                { name: "VehicleDeparture", schema: VehicleDeparture_1.VehicleDepartureSchema },
+                { name: "VehicleArrival", schema: VehicleArrival_1.VehicleArrivalSchema },
+                { name: "VehicleHeartbeat", schema: VehicleHeartbeat_1.VehicleHeartbeatSchema },
                 { name: "AppError", schema: AppError_1.AppErrorSchema },
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
                 { name: "DispatchRecord", schema: DispatchRecord_1.DispatchRecordSchema },

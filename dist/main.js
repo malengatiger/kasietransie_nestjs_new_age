@@ -16,6 +16,7 @@ async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     const port = my_utils_1.MyUtils.getPort();
     common_1.Logger.log(`${mm} ... Kasie Backend running on port : ${port} `);
+    app.setGlobalPrefix('api/v1');
     const config = new swagger_1.DocumentBuilder()
         .setTitle('Cats example')
         .setDescription('The cats API description')

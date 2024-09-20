@@ -20,6 +20,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const port = MyUtils.getPort();
   Logger.log(`${mm} ... Kasie Backend running on port : ${port} `);
+  app.setGlobalPrefix('api/v1');
 
   // Swagger
   const config = new DocumentBuilder()
