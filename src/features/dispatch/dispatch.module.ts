@@ -16,7 +16,6 @@ import { CommuterRequestSchema } from "src/data/models/CommuterRequest";
 import { CommuterResponseSchema } from "src/data/models/CommuterResponse";
 import { UserGeofenceEventSchema } from "src/data/models/UserGeofenceEvent";
 
-
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -32,12 +31,12 @@ import { UserGeofenceEventSchema } from "src/data/models/UserGeofenceEvent";
       // { name: "VehicleMediaRequest", schema: VehicleMediaRequestSchema },
       // { name: "RouteLandmark", schema: RouteLandmarkSchema },
       // { name: "Route", schema: RouteSchema },
-      { name: "VehicleDeparture", schema:VehicleDepartureSchema },
+      { name: "VehicleDeparture", schema: VehicleDepartureSchema },
       { name: "VehicleArrival", schema: VehicleArrivalSchema },
       { name: "VehicleHeartbeat", schema: VehicleHeartbeatSchema },
       { name: "AppError", schema: AppErrorSchema },
       { name: "KasieError", schema: KasieErrorSchema },
-  
+
       { name: "DispatchRecord", schema: DispatchRecordSchema },
 
       {

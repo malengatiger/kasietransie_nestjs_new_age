@@ -44,8 +44,8 @@ const VehiclePhoto_1 = require("./models/VehiclePhoto");
 const VehicleVideo_1 = require("./models/VehicleVideo");
 const RouteAssignment_1 = require("./models/RouteAssignment");
 const StateProvince_1 = require("./models/StateProvince");
-const country_controller_1 = require("../controllers/country_controller");
 const country_service_1 = require("../features/country/country.service");
+const country_controller_1 = require("../features/country/country.controller");
 let DataModule = class DataModule {
 };
 exports.DataModule = DataModule;

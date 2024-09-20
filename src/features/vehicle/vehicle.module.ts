@@ -27,6 +27,24 @@ import { ExampleFileSchema } from "src/data/models/ExampleFile";
 import { CountrySchema } from "src/data/models/Country";
 import { AssociationTokenSchema } from "src/data/models/AssociationToken";
 import { SettingsModelSchema } from "src/data/models/SettingsModel";
+import { DispatchService } from "../dispatch/dispatch.service";
+import { CommuterRequestSchema } from "src/data/models/CommuterRequest";
+import { MediaService } from "src/services/MediaService";
+import { VehiclePhotoSchema } from "src/data/models/VehiclePhoto";
+import { VehicleVideoSchema } from "src/data/models/VehicleVideo";
+import { VehicleMediaRequestSchema } from "src/data/models/VehicleMediaRequest";
+import { LocationRequestSchema } from "src/data/models/LocationRequest";
+import { LocationRequestService } from "../location_request/location_request.service";
+import { LocationResponseSchema } from "src/data/models/LocationResponse";
+import { RouteService } from "../route/route.service";
+import { RouteUpdateRequestSchema } from "src/data/models/RouteUpdateRequest";
+import { RouteLandmarkSchema } from "src/data/models/RouteLandmark";
+import { RouteCitySchema } from "src/data/models/RouteCity";
+import { RoutePointSchema } from "src/data/models/RoutePoint";
+import { CalculatedDistanceSchema } from "src/data/models/CalculatedDistance";
+import { TimeSeriesService } from "../time_series/time_series.service";
+import { VehicleHeartbeatTimeSeriesSchema } from "src/data/models/VehicleHeartbeatTimeSeries";
+import { PassengerTimeSeriesSchema } from "src/data/models/PassengerTimeSeries";
 
 @Module({
   imports: [
@@ -50,13 +68,43 @@ import { SettingsModelSchema } from "src/data/models/SettingsModel";
       { name: "AssociationToken", schema: AssociationTokenSchema },
       { name: "SettingsModel", schema: SettingsModelSchema },
       { name: "KasieError", schema: KasieErrorSchema },
+      { name: "CommuterRequest", schema: CommuterRequestSchema },
+      { name: "VehiclePhoto", schema: VehiclePhotoSchema },
+      { name: "VehicleVideo", schema: VehicleVideoSchema },
+      { name: "VehicleMediaRequest", schema: VehicleMediaRequestSchema },
+      {
+        name: "AmbassadorPassengerCount",
+        schema: AmbassadorPassengerCountSchema,
+      },
+      { name: "LocationRequest", schema: LocationRequestSchema },
+      { name: "LocationResponse", schema: LocationResponseSchema },
+      { name: "RouteUpdateRequest", schema: RouteUpdateRequestSchema },
+      { name: "RouteLandmark", schema: RouteLandmarkSchema },
+      { name: "RouteCity", schema: RouteCitySchema },
+      { name: "Route", schema: RouteSchema },
+      { name: "RoutePoint", schema: RoutePointSchema },
+      { name: "CalculatedDistance", schema: CalculatedDistanceSchema },
+      { name: "VehicleHeartbeatTimeSeries", schema: VehicleHeartbeatTimeSeriesSchema },
+      { name: "PassengerTimeSeries", schema: PassengerTimeSeriesSchema },
+      { name: "City", schema: CitySchema },
+      { name: "City", schema: CitySchema },
 
-      { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCountSchema },
     ]),
   ],
   controllers: [VehicleController],
-  providers: [VehicleService, UserService, 
-    CityService, NewMongoService,
-    AssociationService, MessagingService, FileArchiverService],
+  providers: [
+    VehicleService,
+    UserService,
+    CityService,
+    NewMongoService,
+    RouteService,
+    TimeSeriesService,
+    DispatchService,
+    MediaService,
+    LocationRequestService,
+    AssociationService,
+    MessagingService,
+    FileArchiverService,
+  ],
 })
 export class VehicleModule {}

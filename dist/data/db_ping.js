@@ -13,7 +13,8 @@ exports.NewMongoService = void 0;
 const my_utils_1 = require("../my-utils/my-utils");
 const mongodb_1 = require("mongodb");
 const common_1 = require("@nestjs/common");
-const mm = '🍎🍎🍎 AssociationService: 🍎🍎🍎';
+const mm = '🍎🍎🍎 NewMongoService: 🍎🍎🍎';
+let go = 0;
 let NewMongoService = class NewMongoService {
     constructor() {
         this.client = new mongodb_1.MongoClient(my_utils_1.MyUtils.getDatabaseUrl(), {
@@ -28,7 +29,11 @@ let NewMongoService = class NewMongoService {
     }
     async connect() {
         await this.client.connect();
-        common_1.Logger.log(`🍎🍎🍎🍎🍎 MongoClient connected to ${my_utils_1.MyUtils.getDatabaseUrl()}`);
+        go++;
+        if (go == 1) {
+            common_1.Logger.log(`${mm} MongoClient connected to ${my_utils_1.MyUtils.getDatabaseUrl()}`);
+            await this.pingDatabase();
+        }
     }
     async find(name, query = {}, limit) {
         const collection = this.db.collection(name);
@@ -53,6 +58,24 @@ let NewMongoService = class NewMongoService {
         const result = await collection.deleteOne(query);
         console.log(result);
         return result.deletedCount;
+    }
+    async pingDatabase() {
+        try {
+            await this.client.connect();
+            await this.client.db('kasie_transie').command({ ping: 1 });
+            console.log(` 💖💖💖 Pinged my MongoDB Atlas deployment.  🥦🥦 I am successfully connected to MongoDB! ${this.client.db.name}`);
+            const database = this.client.db('kasie_transie');
+            const collection = database.collection('Association');
+            const associations = await collection.find({}).toArray();
+            console.log(`💖💖💖 Associations: ${JSON.stringify(associations, null, 2)}}`);
+        }
+        catch (error) {
+            console.error(error);
+            await this.client.close();
+        }
+        finally {
+            await this.client.close();
+        }
     }
 };
 exports.NewMongoService = NewMongoService;

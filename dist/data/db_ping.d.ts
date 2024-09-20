@@ -7,4 +7,5 @@ export declare class NewMongoService {
     delete(name: string, query: any): Promise<any>;
     client: MongoClient;
     db: import("mongodb").Db;
+    pingDatabase(): Promise<void>;
 }

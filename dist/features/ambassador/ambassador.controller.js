@@ -8,16 +8,51 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AmbassadorController = void 0;
 const common_1 = require("@nestjs/common");
+const AmbassadorPassengerCount_1 = require("../../data/models/AmbassadorPassengerCount");
 const ambassador_service_1 = require("./ambassador.service");
 let AmbassadorController = class AmbassadorController {
     constructor(ambassadorService) {
         this.ambassadorService = ambassadorService;
     }
+    async addAmbassadorPassengerCount(count) {
+        return await this.ambassadorService.addAmbassadorPassengerCount(count);
+    }
+    async getUserAmbassadorPassengerCounts(query) {
+        common_1.Logger.log(`${query.userId} ${query.startDate}`);
+        return await this.ambassadorService.getUserAmbassadorPassengerCounts(query.userId, query.startDate);
+    }
+    async getVehicleAmbassadorPassengerCounts(query) {
+        return await this.ambassadorService.getVehicleAmbassadorPassengerCounts(query.vehicleId, query.startSate);
+    }
 };
 exports.AmbassadorController = AmbassadorController;
+__decorate([
+    (0, common_1.Post)('addAmbassadorPassengerCount'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [AmbassadorPassengerCount_1.AmbassadorPassengerCount]),
+    __metadata("design:returntype", Promise)
+], AmbassadorController.prototype, "addAmbassadorPassengerCount", null);
+__decorate([
+    (0, common_1.Get)('getUserAmbassadorPassengerCounts'),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AmbassadorController.prototype, "getUserAmbassadorPassengerCounts", null);
+__decorate([
+    (0, common_1.Get)('getVehicleAmbassadorPassengerCounts'),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AmbassadorController.prototype, "getVehicleAmbassadorPassengerCounts", null);
 exports.AmbassadorController = AmbassadorController = __decorate([
     (0, common_1.Controller)('ambassador'),
     __metadata("design:paramtypes", [ambassador_service_1.AmbassadorService])

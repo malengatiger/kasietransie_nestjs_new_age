@@ -36,6 +36,24 @@ const ExampleFile_1 = require("../../data/models/ExampleFile");
 const Country_1 = require("../../data/models/Country");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
 const SettingsModel_1 = require("../../data/models/SettingsModel");
+const dispatch_service_1 = require("../dispatch/dispatch.service");
+const CommuterRequest_1 = require("../../data/models/CommuterRequest");
+const MediaService_1 = require("../../services/MediaService");
+const VehiclePhoto_1 = require("../../data/models/VehiclePhoto");
+const VehicleVideo_1 = require("../../data/models/VehicleVideo");
+const VehicleMediaRequest_1 = require("../../data/models/VehicleMediaRequest");
+const LocationRequest_1 = require("../../data/models/LocationRequest");
+const location_request_service_1 = require("../location_request/location_request.service");
+const LocationResponse_1 = require("../../data/models/LocationResponse");
+const route_service_1 = require("../route/route.service");
+const RouteUpdateRequest_1 = require("../../data/models/RouteUpdateRequest");
+const RouteLandmark_1 = require("../../data/models/RouteLandmark");
+const RouteCity_1 = require("../../data/models/RouteCity");
+const RoutePoint_1 = require("../../data/models/RoutePoint");
+const CalculatedDistance_1 = require("../../data/models/CalculatedDistance");
+const time_series_service_1 = require("../time_series/time_series.service");
+const VehicleHeartbeatTimeSeries_1 = require("../../data/models/VehicleHeartbeatTimeSeries");
+const PassengerTimeSeries_1 = require("../../data/models/PassengerTimeSeries");
 let VehicleModule = class VehicleModule {
 };
 exports.VehicleModule = VehicleModule;
@@ -62,13 +80,43 @@ exports.VehicleModule = VehicleModule = __decorate([
                 { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
                 { name: "SettingsModel", schema: SettingsModel_1.SettingsModelSchema },
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
-                { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCount_1.AmbassadorPassengerCountSchema },
+                { name: "CommuterRequest", schema: CommuterRequest_1.CommuterRequestSchema },
+                { name: "VehiclePhoto", schema: VehiclePhoto_1.VehiclePhotoSchema },
+                { name: "VehicleVideo", schema: VehicleVideo_1.VehicleVideoSchema },
+                { name: "VehicleMediaRequest", schema: VehicleMediaRequest_1.VehicleMediaRequestSchema },
+                {
+                    name: "AmbassadorPassengerCount",
+                    schema: AmbassadorPassengerCount_1.AmbassadorPassengerCountSchema,
+                },
+                { name: "LocationRequest", schema: LocationRequest_1.LocationRequestSchema },
+                { name: "LocationResponse", schema: LocationResponse_1.LocationResponseSchema },
+                { name: "RouteUpdateRequest", schema: RouteUpdateRequest_1.RouteUpdateRequestSchema },
+                { name: "RouteLandmark", schema: RouteLandmark_1.RouteLandmarkSchema },
+                { name: "RouteCity", schema: RouteCity_1.RouteCitySchema },
+                { name: "Route", schema: Route_1.RouteSchema },
+                { name: "RoutePoint", schema: RoutePoint_1.RoutePointSchema },
+                { name: "CalculatedDistance", schema: CalculatedDistance_1.CalculatedDistanceSchema },
+                { name: "VehicleHeartbeatTimeSeries", schema: VehicleHeartbeatTimeSeries_1.VehicleHeartbeatTimeSeriesSchema },
+                { name: "PassengerTimeSeries", schema: PassengerTimeSeries_1.PassengerTimeSeriesSchema },
+                { name: "City", schema: City_1.CitySchema },
+                { name: "City", schema: City_1.CitySchema },
             ]),
         ],
         controllers: [vehicle_controller_1.VehicleController],
-        providers: [vehicle_service_1.VehicleService, user_service_1.UserService,
-            city_service_1.CityService, db_ping_1.NewMongoService,
-            association_service_1.AssociationService, fcm_service_1.MessagingService, zipper_1.FileArchiverService],
+        providers: [
+            vehicle_service_1.VehicleService,
+            user_service_1.UserService,
+            city_service_1.CityService,
+            db_ping_1.NewMongoService,
+            route_service_1.RouteService,
+            time_series_service_1.TimeSeriesService,
+            dispatch_service_1.DispatchService,
+            MediaService_1.MediaService,
+            location_request_service_1.LocationRequestService,
+            association_service_1.AssociationService,
+            fcm_service_1.MessagingService,
+            zipper_1.FileArchiverService,
+        ],
     })
 ], VehicleModule);
 //# sourceMappingURL=vehicle.module.js.map
