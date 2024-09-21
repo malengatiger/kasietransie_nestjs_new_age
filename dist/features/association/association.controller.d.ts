@@ -16,5 +16,6 @@ export declare class AssociationController {
     getAssociationSettingsModels(associationId: string): Promise<any[]>;
     downloadExampleVehicleCSVFile(): Promise<string>;
     getAssociationAppErrors(associationId: string, startDate: string, endDate: string): Promise<AppError[]>;
+    generateFakeAssociation(name: string): Promise<RegistrationBag>;
     getExampleFiles(): Promise<any[]>;
 }

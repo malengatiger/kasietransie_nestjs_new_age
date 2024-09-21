@@ -20,6 +20,7 @@ const kasie_error_1 = require("../../data/models/kasie.error");
 const zipper_1 = require("../../my-utils/zipper");
 const VehicleHeartbeatTimeSeries_1 = require("../../data/models/VehicleHeartbeatTimeSeries");
 const PassengerTimeSeries_1 = require("../../data/models/PassengerTimeSeries");
+const AssociationToken_1 = require("../../data/models/AssociationToken");
 let AmbassadorModule = class AmbassadorModule {
 };
 exports.AmbassadorModule = AmbassadorModule;
@@ -27,7 +28,11 @@ exports.AmbassadorModule = AmbassadorModule = __decorate([
     (0, common_1.Module)({
         imports: [
             mongoose_1.MongooseModule.forFeature([
-                { name: "VehicleHeartbeatTimeSeries", schema: VehicleHeartbeatTimeSeries_1.VehicleHeartbeatTimeSeriesSchema },
+                {
+                    name: "VehicleHeartbeatTimeSeries",
+                    schema: VehicleHeartbeatTimeSeries_1.VehicleHeartbeatTimeSeriesSchema,
+                },
+                { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
                 { name: "PassengerTimeSeries", schema: PassengerTimeSeries_1.PassengerTimeSeriesSchema },
                 { name: "AppError", schema: AppError_1.AppErrorSchema },
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
@@ -36,8 +41,15 @@ exports.AmbassadorModule = AmbassadorModule = __decorate([
                     schema: AmbassadorPassengerCount_1.AmbassadorPassengerCountSchema,
                 },
             ]),
-        ], controllers: [ambassador_controller_1.AmbassadorController],
-        providers: [ambassador_service_1.AmbassadorService, fcm_service_1.MessagingService, time_series_service_1.TimeSeriesService, new_mongo_service_1.NewMongoService, zipper_1.FileArchiverService],
+        ],
+        controllers: [ambassador_controller_1.AmbassadorController],
+        providers: [
+            ambassador_service_1.AmbassadorService,
+            fcm_service_1.MessagingService,
+            time_series_service_1.TimeSeriesService,
+            new_mongo_service_1.NewMongoService,
+            zipper_1.FileArchiverService,
+        ],
     })
 ], AmbassadorModule);
 //# sourceMappingURL=ambassador.module.js.map

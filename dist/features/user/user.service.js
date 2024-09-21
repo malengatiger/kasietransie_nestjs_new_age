@@ -24,7 +24,7 @@ const csv_parser_1 = require("csv-parser");
 const crypto_1 = require("crypto");
 const Association_1 = require("../../data/models/Association");
 const UserGeofenceEvent_1 = require("../../data/models/UserGeofenceEvent");
-const mm = 'UserService';
+const mm = '🟢🟢 UserService 🟢';
 let UserService = class UserService {
     constructor(userModel, userGeofenceModel, associationModel) {
         this.userModel = userModel;
@@ -37,22 +37,21 @@ let UserService = class UserService {
         return fileString;
     }
     async createUser(user) {
-        console.log(`🟢🟢 create user: ${JSON.stringify(user)}`);
+        console.log(`${mm} create user: ${JSON.stringify(user)}`);
         const firebaseAuth = admin.auth();
-        console.log('🟢🟢 createRequest  .... ');
         const storedPassword = user.password;
         try {
             let email = '';
             if (!user.email) {
                 const name = `${user.firstName} ${user.lastName}`;
                 const mName = name.replace(' ', '').toLowerCase();
-                email = `${mName}${Date.now()}@kasietransie.com`;
+                email = `${mName}_${new Date().getTime()}@kasietransie.com`;
                 user.email = email;
-                console.log(`🟢🟢 createUserAsync  .... email: ${email}`);
             }
             else {
                 email = user.email;
             }
+            console.log(`${mm} createUserAsync  .... email: ${email}`);
             const userRecord = await firebaseAuth.createUser({
                 email: email,
                 emailVerified: false,
@@ -61,7 +60,7 @@ let UserService = class UserService {
                 displayName: `${user.firstName} ${user.lastName}`,
                 disabled: false,
             });
-            console.log(`🟢🟢 userRecord from Firebase : ${userRecord.email}`);
+            console.log(`${mm} userRecord from Firebase : ${userRecord.email}`);
             if (userRecord.uid) {
                 const uid = userRecord.uid;
                 user.userId = uid;
@@ -70,7 +69,7 @@ let UserService = class UserService {
                 user.qrCodeUrl = url;
                 const mUser = await this.userModel.create(user);
                 user.password = storedPassword;
-                common_1.Logger.log('🟢🟢 KasieTransie user created. ');
+                common_1.Logger.log('${mm} KasieTransie user created. ');
             }
             else {
                 throw new Error('userRecord.uid == null. We have a problem with Firebase, Jack!');

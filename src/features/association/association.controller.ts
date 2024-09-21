@@ -78,6 +78,13 @@ export class AssociationController {
     );
   }
   
+  @Get('generateFakeAssociation')
+  async generateFakeAssociation(
+    @Query() name: string,
+  ): Promise<RegistrationBag> {
+    return await this.associationService.generateFakeAssociation(name);
+  }
+  
   async getExampleFiles(): Promise<any[]> {
     return this.associationService.getExampleFiles();
   }

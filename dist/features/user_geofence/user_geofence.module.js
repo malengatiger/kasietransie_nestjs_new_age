@@ -16,6 +16,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const TranslationBag_1 = require("../../data/models/TranslationBag");
 const AppError_1 = require("../../data/models/AppError");
 const kasie_error_1 = require("../../data/models/kasie.error");
+const AssociationToken_1 = require("../../data/models/AssociationToken");
 let UserGeofenceModule = class UserGeofenceModule {
 };
 exports.UserGeofenceModule = UserGeofenceModule;
@@ -27,6 +28,7 @@ exports.UserGeofenceModule = UserGeofenceModule = __decorate([
                 { name: "UserGeofenceEvent", schema: UserGeofenceEvent_1.UserGeofenceEventSchema },
                 { name: "AppError", schema: AppError_1.AppErrorSchema },
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
+                { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
             ]),
         ],
         controllers: [user_geofence_controller_1.UserGeofenceController],

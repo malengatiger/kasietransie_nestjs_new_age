@@ -15,22 +15,17 @@ import { CommuterSchema } from "src/data/models/Commuter";
 import { CommuterRequestSchema } from "src/data/models/CommuterRequest";
 import { CommuterResponseSchema } from "src/data/models/CommuterResponse";
 import { UserGeofenceEventSchema } from "src/data/models/UserGeofenceEvent";
+import { AssociationTokenSchema } from "src/data/models/AssociationToken";
 
 @Module({
   imports: [
     MongooseModule.forFeature([
-      // { name: "TranslationBag", schema: TranslationBagSchema },
       { name: "UserGeofenceEvent", schema: UserGeofenceEventSchema },
       { name: "Commuter", schema: CommuterSchema },
       { name: "CommuterResponse", schema: CommuterResponseSchema },
       { name: "CommuterRequest", schema: CommuterRequestSchema },
-      // { name: "VehicleHeartbeatTimeSeries", schema: VehicleHeartbeatTimeSeriesSchema },
-      // { name: "PassengerTimeSeries", schema: PassengerTimeSeriesSchema },
-
-      // { name: "RouteUpdateRequest", schema: RouteUpdateRequestSchema },
-      // { name: "VehicleMediaRequest", schema: VehicleMediaRequestSchema },
-      // { name: "RouteLandmark", schema: RouteLandmarkSchema },
-      // { name: "Route", schema: RouteSchema },
+      { name: "AssociationToken", schema: AssociationTokenSchema },
+      
       { name: "VehicleDeparture", schema: VehicleDepartureSchema },
       { name: "VehicleArrival", schema: VehicleArrivalSchema },
       { name: "VehicleHeartbeat", schema: VehicleHeartbeatSchema },

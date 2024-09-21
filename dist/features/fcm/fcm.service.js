@@ -20,9 +20,11 @@ const constants_1 = require("../../my-utils/constants");
 const mongoose_1 = require("mongoose");
 const mongoose_2 = require("@nestjs/mongoose");
 const kasie_error_1 = require("../../data/models/kasie.error");
+const AssociationToken_1 = require("../../data/models/AssociationToken");
 const mm = '🎽 🎽 🎽 MessagingService';
 let MessagingService = class MessagingService {
-    constructor(kasieModel) {
+    constructor(associationTokenModel, kasieModel) {
+        this.associationTokenModel = associationTokenModel;
         this.kasieModel = kasieModel;
     }
     async sendAppErrorMessages(appErrors) {
@@ -35,67 +37,58 @@ let MessagingService = class MessagingService {
                 common_1.Logger.debug(`${e}`);
             }
         });
-        return null;
     }
     async sendAppErrorMessage(appError) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(appError.created, null);
         await this.send(`${constants_1.Constants.appError}`, `Kasie Mobile App Error`, `${appError.errorMessage} at ${fmtDate}`, constants_1.Constants.appError, JSON.stringify(appError, null, 2), appError.associationId);
-        return null;
     }
     async sendKasieErrorMessage(kasieError) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(kasieError.date, null);
         await this.send(`${constants_1.Constants.kasieError}`, `Kasie Server Error`, `${kasieError.message} at: ${fmtDate}`, constants_1.Constants.kasieError, JSON.stringify(kasieError, null, 2), '');
-        return null;
     }
     async sendLocationRequestMessage(locationRequest) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(locationRequest.created, null);
         await this.send(`${constants_1.Constants.locationRequest}${locationRequest.associationId}`, `Vehicle Location Request`, `Requested at ${fmtDate}`, constants_1.Constants.locationRequest, JSON.stringify(locationRequest, null, 2), locationRequest.associationId);
-        return null;
     }
     async sendLocationResponseMessage(locationResponse) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(locationResponse.created, null);
         await this.send(`${constants_1.Constants.locationResponse}${locationResponse.associationId}`, `Vehicle Location Response`, `Responded at ${fmtDate}`, constants_1.Constants.locationResponse, JSON.stringify(locationResponse, null, 2), locationResponse.associationId);
-        return null;
     }
     async sendVehicleArrivalMessage(arrival) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(arrival.created, null);
         await this.send(`${constants_1.Constants.vehicleArrival}${arrival.associationId}`, `${arrival.vehicleReg},`, `Arrived at ${fmtDate}`, constants_1.Constants.vehicleArrival, JSON.stringify(arrival, null, 2), arrival.associationId);
-        return null;
     }
     async sendVehicleDepartureMessage(departure) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(departure.created, null);
         await this.send(`${constants_1.Constants.vehicleDeparture}${departure.associationId}`, `${departure.vehicleReg},`, `Departed at ${fmtDate}`, constants_1.Constants.vehicleDeparture, JSON.stringify(departure, null, 2), departure.associationId);
-        return null;
     }
     async sendDispatchMessage(dispatch) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(dispatch.created, null);
         await this.send(`${constants_1.Constants.dispatchRecord}${dispatch.associationId}`, `${dispatch.vehicleReg},`, `Dispatched at ${fmtDate}`, constants_1.Constants.dispatchRecord, JSON.stringify(dispatch), dispatch.associationId);
-        return null;
     }
     async sendHeartbeatMessage(heartbeat) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(heartbeat.created, null);
         await this.send(`${constants_1.Constants.heartbeat}${heartbeat.associationId}`, `${heartbeat.vehicleReg},`, `Heartbeat at ${fmtDate}`, constants_1.Constants.heartbeat, JSON.stringify(heartbeat, null, 2), heartbeat.associationId);
-        return null;
     }
     async sendPassengerCountMessage(count) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(count.created, null);
         await this.send(`${constants_1.Constants.passengerCount}${count.associationId}`, `${count.vehicleReg},`, `PassengerCount on ${fmtDate}`, constants_1.Constants.passengerCount, JSON.stringify(count, null, 2), count.associationId);
-        return null;
     }
     async sendRouteUpdateMessage(req) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(Date.now().toString(), null);
         await this.send(`${constants_1.Constants.routeUpdateRequest}${req.associationId}`, `${req.routeName},`, `Route Updated on ${Date.now().toString()}`, constants_1.Constants.routeUpdateRequest, JSON.stringify(req, null, 2), req.associationId);
-        return null;
     }
     async sendCommuterRequestMessage(req) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(Date.now().toString(), null);
         await this.send(`${constants_1.Constants.commuterRequest}${req.associationId}`, `${req.routeName},`, `Commuter Request on ${Date.now().toString()}`, constants_1.Constants.commuterRequest, JSON.stringify(req, null, 2), req.associationId);
-        return null;
     }
     async sendCommuterResponseMessage(response) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(Date.now().toString(), null);
         await this.send(`${constants_1.Constants.commuterResponse}${response.associationId}`, `${response.routeName},`, `Commuter Response on ${Date.now().toString()}`, constants_1.Constants.commuterResponse, JSON.stringify(response, null, 2), response.associationId);
-        return null;
+    }
+    async sendAssociationRegisteredMessage(assoc) {
+        const fmtDate = my_utils_1.MyUtils.formatISOStringDate(Date.now().toString(), null);
+        await this.send(`${constants_1.Constants.association}${assoc.associationId}`, `${assoc.associationName},`, ` Registered on ${fmtDate}`, constants_1.Constants.association, JSON.stringify(assoc, null, 2), assoc.associationId);
     }
     async send(topic, title, body, type, data, associationId) {
         const message = {
@@ -111,6 +104,28 @@ let MessagingService = class MessagingService {
         };
         try {
             await admin.messaging().send(message);
+            const associationToken = await this.associationTokenModel.findOne({
+                associationId: associationId,
+            });
+            if (associationToken) {
+                const messageDirect = {
+                    token: associationToken.token,
+                    data: {
+                        type: type,
+                        data: data,
+                    },
+                    notification: {
+                        title: title,
+                        body: body,
+                    },
+                };
+                if (type === constants_1.Constants.admin ||
+                    type === constants_1.Constants.appError ||
+                    type === constants_1.Constants.kasieError) {
+                    return;
+                }
+                await admin.messaging().send(messageDirect);
+            }
             common_1.Logger.debug(`${mm} 🅿️🅿️🅿️ Successfully sent FCM message to topic and associations 🚺 🚺 🚺 topic: ${topic} message type: ${type} 🚺 title: ${title}`);
         }
         catch (error) {
@@ -123,7 +138,8 @@ let MessagingService = class MessagingService {
 exports.MessagingService = MessagingService;
 exports.MessagingService = MessagingService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, mongoose_2.InjectModel)(kasie_error_1.KasieError.name)),
-    __metadata("design:paramtypes", [mongoose_1.default.Model])
+    __param(0, (0, mongoose_2.InjectModel)(AssociationToken_1.AssociationToken.name)),
+    __param(1, (0, mongoose_2.InjectModel)(kasie_error_1.KasieError.name)),
+    __metadata("design:paramtypes", [mongoose_1.default.Model, mongoose_1.default.Model])
 ], MessagingService);
 //# sourceMappingURL=fcm.service.js.map

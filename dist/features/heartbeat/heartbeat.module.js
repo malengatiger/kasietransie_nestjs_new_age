@@ -22,6 +22,7 @@ const new_mongo_service_1 = require("../../data/new_mongo_service");
 const VehicleHeartbeatTimeSeries_1 = require("../../data/models/VehicleHeartbeatTimeSeries");
 const PassengerTimeSeries_1 = require("../../data/models/PassengerTimeSeries");
 const RouteUpdateRequest_1 = require("../../data/models/RouteUpdateRequest");
+const AssociationToken_1 = require("../../data/models/AssociationToken");
 let HeartbeatModule = class HeartbeatModule {
 };
 exports.HeartbeatModule = HeartbeatModule;
@@ -30,6 +31,7 @@ exports.HeartbeatModule = HeartbeatModule = __decorate([
         imports: [
             mongoose_1.MongooseModule.forFeature([
                 { name: "Vehicle", schema: Vehicle_1.VehicleSchema },
+                { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
                 { name: "VehicleHeartbeat", schema: VehicleHeartbeat_1.VehicleHeartbeatSchema },
                 { name: "VehicleHeartbeatTimeSeries", schema: VehicleHeartbeatTimeSeries_1.VehicleHeartbeatTimeSeriesSchema },
                 { name: "PassengerTimeSeries", schema: PassengerTimeSeries_1.PassengerTimeSeriesSchema },

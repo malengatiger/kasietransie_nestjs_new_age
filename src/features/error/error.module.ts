@@ -5,6 +5,7 @@ import { MessagingService } from '../fcm/fcm.service';
 import { KasieErrorSchema } from 'src/data/models/kasie.error';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppErrorSchema } from 'src/data/models/AppError';
+import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { AppErrorSchema } from 'src/data/models/AppError';
     
       { name: "AppError", schema: AppErrorSchema },
       { name: "KasieError", schema: KasieErrorSchema },
-    
+      { name: "AssociationToken", schema: AssociationTokenSchema },
+
     ]),
   ],  
   

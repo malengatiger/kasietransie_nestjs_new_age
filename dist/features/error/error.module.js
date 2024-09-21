@@ -14,6 +14,7 @@ const fcm_service_1 = require("../fcm/fcm.service");
 const kasie_error_1 = require("../../data/models/kasie.error");
 const mongoose_1 = require("@nestjs/mongoose");
 const AppError_1 = require("../../data/models/AppError");
+const AssociationToken_1 = require("../../data/models/AssociationToken");
 let ErrorModule = class ErrorModule {
 };
 exports.ErrorModule = ErrorModule;
@@ -23,6 +24,7 @@ exports.ErrorModule = ErrorModule = __decorate([
             mongoose_1.MongooseModule.forFeature([
                 { name: "AppError", schema: AppError_1.AppErrorSchema },
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
+                { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
             ]),
         ],
         controllers: [error_controller_1.ErrorController],

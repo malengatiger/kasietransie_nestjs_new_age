@@ -35,7 +35,7 @@ const Commuter_1 = require("../../data/models/Commuter");
 const fcm_service_1 = require("../fcm/fcm.service");
 const city_service_1 = require("../city/city.service");
 const user_service_1 = require("../user/user.service");
-const mm = '🍎🍎🍎 AssociationService: 🍎🍎🍎';
+const mm = "🍎🍎🍎 AssociationService: 🍎🍎🍎";
 let AssociationService = class AssociationService {
     constructor(configService, archiveService, userService, cityService, messagingService, mongoService, userModel, commuterModel, appErrorModel, associationModel, exampleFileModel, vehicleModel, countryModel, associationTokenModel, settingsModel) {
         this.configService = configService;
@@ -56,19 +56,23 @@ let AssociationService = class AssociationService {
     }
     async getAssociations() {
         common_1.Logger.log(`${mm} ... getAssociations starting ...`);
-        const list = await this.mongoService.find('Association', {});
+        const list = await this.mongoService.find("Association", {});
         common_1.Logger.log(`${mm} ... getAssociations found: ${list.length} ...`);
         return list;
     }
     async getAssociationUsers(associationId) {
         common_1.Logger.log(`${mm} ... getAssociationUsers starting, id: ${associationId} ...`);
-        const list = await this.mongoService.find('User', { associationId: associationId });
+        const list = await this.mongoService.find("User", {
+            associationId: associationId,
+        });
         common_1.Logger.log(`${mm} ... getAssociationUsers found: ${list.length} ...`);
         return list;
     }
     async getAssociationVehicles(associationId) {
         common_1.Logger.log(`${mm} ... getAssociationVehicles starting, id: ${associationId} ...`);
-        const list = await this.mongoService.find('Vehicle', { associationId: associationId });
+        const list = await this.mongoService.find("Vehicle", {
+            associationId: associationId,
+        });
         common_1.Logger.log(`${mm} ... getAssociationVehicles found: ${list.length} ...`);
         return list;
     }
@@ -96,15 +100,15 @@ let AssociationService = class AssociationService {
         return file;
     }
     async getAssociationById(associationId) {
-        const m = await this.mongoService.find('Association', {
+        const m = await this.mongoService.find("Association", {
             associationId: associationId,
         });
     }
     async getCountries() {
-        return await this.mongoService.find('Country', {});
+        return await this.mongoService.find("Country", {});
     }
     async getAssociationSettingsModels(associationId) {
-        const list = await this.mongoService.find('SettingsModel', {
+        const list = await this.mongoService.find("SettingsModel", {
             associationId: associationId,
         });
         common_1.Logger.log(`${mm} ... getAssociationSettingsModels found: ${list.length} ...`);
@@ -139,7 +143,7 @@ let AssociationService = class AssociationService {
         return this.downloadFileFromStorage(fileName);
     }
     async downloadFileFromStorage(fileName) {
-        const tempDir = path.join(__dirname, '..', 'tempFiles');
+        const tempDir = path.join(__dirname, "..", "tempFiles");
         const tempFilePath = path.join(tempDir, fileName);
         const storage = firebase_admin_1.default.storage();
         const folder = process.env.BUCKET_FOLDER;
@@ -160,12 +164,12 @@ let AssociationService = class AssociationService {
         }
         catch (error) {
             common_1.Logger.log(`${mm} Error downloading file: ${error}`);
-            throw new Error('Failed to download file');
+            throw new Error("Failed to download file");
         }
     }
     generateUniqueId() {
-        const timestamp = Date.now().toString();
-        const randomString = Math.random().toString(36).substring(2, 8);
+        const timestamp = new Date().getTime();
+        const randomString = Math.random().toString(36).substring(2, 6);
         return `${timestamp}_${randomString}`;
     }
     async registerAssociation(association) {
@@ -177,10 +181,11 @@ let AssociationService = class AssociationService {
         u.cellphone = association.adminCellphone;
         u.countryId = association.countryId;
         u.countryName = association.countryName;
-        u.dateRegistered = Date.now().toString();
+        u.dateRegistered = new Date().toISOString();
         const user = await this.userService.createUser(u);
         association.userId = user.userId;
         const ass = new Association_1.Association();
+        ass.userId = user.userId;
         ass.associationName = association.associationName;
         ass.associationId = this.generateUniqueId();
         ass.adminUserFirstName = association.adminUserFirstName;
@@ -189,74 +194,99 @@ let AssociationService = class AssociationService {
         ass.adminCellphone = association.adminCellphone;
         ass.countryId = association.countryId;
         ass.countryName = association.countryName;
-        ass.dateRegistered = Date.now().toString();
+        ass.dateRegistered = new Date().toISOString();
         ass.userId = user.userId;
-        const s = new SettingsModel_1.SettingsModel();
-        s.created = Date.now().toString();
-        s.associationId = ass.associationId;
-        s.commuterGeoQueryRadius = 50;
-        s.commuterGeofenceRadius = 200;
-        s.commuterSearchMinutes = 30;
-        s.distanceFilter = 25;
-        s.geofenceRadius = 200;
-        s.heartbeatIntervalSeconds = 600;
-        s.locale = 'en';
-        s.loiteringDelay = 60;
-        s.refreshRateInSeconds = 600;
-        s.themeIndex = 0;
-        s.vehicleGeoQueryRadius = 100;
-        s.vehicleSearchMinutes = 30;
+        const settings = new SettingsModel_1.SettingsModel();
+        settings.created = new Date().toISOString();
+        settings.associationId = ass.associationId;
+        settings.commuterGeoQueryRadius = 50;
+        settings.commuterGeofenceRadius = 200;
+        settings.commuterSearchMinutes = 30;
+        settings.distanceFilter = 25;
+        settings.geofenceRadius = 200;
+        settings.heartbeatIntervalSeconds = 600;
+        settings.locale = "en";
+        settings.loiteringDelay = 60;
+        settings.refreshRateInSeconds = 600;
+        settings.themeIndex = 0;
+        settings.vehicleGeoQueryRadius = 100;
+        settings.vehicleSearchMinutes = 30;
         const bag = new RegistrationBag_1.RegistrationBag();
         bag.association = ass;
-        bag.settings = s;
+        bag.settings = settings;
         bag.user = user;
         if (ass.countryId) {
-            const c = await this.mongoService.find('Country', { countryId: ass.countryId });
+            const c = await this.mongoService.find("Country", {
+                countryId: ass.countryId,
+            });
             if (c.length > 0) {
                 bag.country = c[0];
             }
         }
-        common_1.Logger.log(`association registered: ${ass.associationName}`);
+        await this.settingsModel.create(settings);
+        await this.associationModel.create(ass);
+        await this.messagingService.sendAssociationRegisteredMessage(ass);
+        common_1.Logger.log(`${mm} association registered: ${ass.associationName}`);
         return bag;
     }
     async addSettingsModel(model) {
         common_1.Logger.log(`adding addSettingsModel${model}`);
-        return await this.mongoService.create('SettingsModel', model);
+        return await this.mongoService.create("SettingsModel", model);
     }
     async addAssociationToken(associationId, userId, token) {
         const at = new AssociationToken_1.AssociationToken();
         at.associationId = associationId;
         at.userId = userId;
         at.token = token;
-        await this.mongoService.delete('AssociationToken', {
+        await this.mongoService.delete("AssociationToken", {
             associationId: associationId,
         });
-        return await this.mongoService.create('AssociationToken', at);
+        return await this.mongoService.create("AssociationToken", at);
     }
     async getAssociationAppErrors(associationId, startDate, endDate) {
-        return this.mongoService
-            .find('AppError', {
+        return this.mongoService.find("AppError", {
             associationId: associationId,
             created: { $gte: startDate, $lte: endDate },
         });
     }
     async getRandomCommuters(limit) {
-        return this.mongoService.find('Commuter', {}, limit);
+        return this.mongoService.find("Commuter", {}, limit);
     }
     async getAppErrors(startDate) {
-        return this.mongoService
-            .find('AppError', {
+        return this.mongoService.find("AppError", {
             created: { $gte: startDate },
         });
     }
-    async generateFakeAssociation(associationName, email, testCellphoneNumber, firstName, lastName) {
-        return null;
+    async generateFakeAssociation(name) {
+        const ass = new Association_1.Association();
+        ass.associationName = name;
+        ass.associationId = this.generateUniqueId();
+        ass.adminEmail = this.getFakeEmail();
+        ass.adminCellphone = this.getFakeCell();
+        ass.adminUserFirstName = "James Earl";
+        ass.adminUserLastName = `Jones_${Math.random() * 1000}`;
+        ass.dateRegistered = new Date().toISOString();
+        const bag = await this.registerAssociation(ass);
+        return bag;
     }
     async getExampleFiles() {
-        return this.mongoService.find('ExampleFile', {});
+        return this.mongoService.find("ExampleFile", {});
     }
     async upLoadExampleFiles(files) {
         return [];
+    }
+    getFakeEmail() {
+        const name = "fake admin";
+        const mName = name.replace(" ", "").toLowerCase();
+        return `${mName}_${new Date().getTime()}@kasietransie.com`;
+    }
+    getFakeCell() {
+        const arr = [];
+        arr.push("+27");
+        for (let i = 0; i < 9; i++) {
+            arr.push(Math.random() * 9);
+        }
+        return arr.join("");
     }
 };
 exports.AssociationService = AssociationService;

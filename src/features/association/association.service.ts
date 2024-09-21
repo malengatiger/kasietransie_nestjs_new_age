@@ -1,29 +1,29 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { InjectModel } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
-import { Association } from 'src/data/models/Association';
-import { SettingsModel } from 'src/data/models/SettingsModel';
-import { ExampleFile } from 'src/data/models/ExampleFile';
-import { RegistrationBag } from 'src/data/models/RegistrationBag';
-import { AppErrors } from 'src/data/helpers/AppErrors';
-import { User } from 'src/data/models/User';
-import { AppError } from 'src/data/models/AppError';
-import * as fs from 'fs';
-import * as path from 'path';
-import admin from 'firebase-admin';
-import { Vehicle } from 'src/data/models/Vehicle';
-import { FileArchiverService } from 'src/my-utils/zipper';
-import { Country } from 'src/data/models/Country';
-import { NewMongoService } from 'src/data/new_mongo_service';
-import { AssociationToken } from 'src/data/models/AssociationToken';
-import { Commuter } from 'src/data/models/Commuter';
-import { MessagingService } from '../fcm/fcm.service';
-import { CityService } from '../city/city.service';
-import { UserService } from '../user/user.service';
+import { Injectable, Logger } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { InjectModel } from "@nestjs/mongoose";
+import mongoose from "mongoose";
+import { Association } from "src/data/models/Association";
+import { SettingsModel } from "src/data/models/SettingsModel";
+import { ExampleFile } from "src/data/models/ExampleFile";
+import { RegistrationBag } from "src/data/models/RegistrationBag";
+import { AppErrors } from "src/data/helpers/AppErrors";
+import { User } from "src/data/models/User";
+import { AppError } from "src/data/models/AppError";
+import * as fs from "fs";
+import * as path from "path";
+import admin from "firebase-admin";
+import { Vehicle } from "src/data/models/Vehicle";
+import { FileArchiverService } from "src/my-utils/zipper";
+import { Country } from "src/data/models/Country";
+import { NewMongoService } from "src/data/new_mongo_service";
+import { AssociationToken } from "src/data/models/AssociationToken";
+import { Commuter } from "src/data/models/Commuter";
+import { MessagingService } from "../fcm/fcm.service";
+import { CityService } from "../city/city.service";
+import { UserService } from "../user/user.service";
 
-const mm = '🍎🍎🍎 AssociationService: 🍎🍎🍎';
+const mm = "🍎🍎🍎 AssociationService: 🍎🍎🍎";
 
 @Injectable()
 export class AssociationService {
@@ -52,42 +52,46 @@ export class AssociationService {
     @InjectModel(AssociationToken.name)
     private associationTokenModel: mongoose.Model<AssociationToken>,
     @InjectModel(SettingsModel.name)
-    private settingsModel: mongoose.Model<SettingsModel>,
+    private settingsModel: mongoose.Model<SettingsModel>
   ) {}
 
   //----------------------------------------------------------------
   public async getAssociations(): Promise<any[]> {
     Logger.log(`${mm} ... getAssociations starting ...`);
-    const list = await this.mongoService.find('Association',{});
+    const list = await this.mongoService.find("Association", {});
     Logger.log(`${mm} ... getAssociations found: ${list.length} ...`);
     return list;
   }
 
   public async getAssociationUsers(associationId: string): Promise<any[]> {
     Logger.log(
-      `${mm} ... getAssociationUsers starting, id: ${associationId} ...`,
+      `${mm} ... getAssociationUsers starting, id: ${associationId} ...`
     );
-    const list = await this.mongoService.find('User',{ associationId: associationId });
+    const list = await this.mongoService.find("User", {
+      associationId: associationId,
+    });
     Logger.log(`${mm} ... getAssociationUsers found: ${list.length} ...`);
     return list;
   }
 
   public async getAssociationVehicles(
-    associationId: string,
+    associationId: string
   ): Promise<Vehicle[]> {
     Logger.log(
-      `${mm} ... getAssociationVehicles starting, id: ${associationId} ...`,
+      `${mm} ... getAssociationVehicles starting, id: ${associationId} ...`
     );
-    const list = await this.mongoService.find('Vehicle',{ associationId: associationId });
+    const list = await this.mongoService.find("Vehicle", {
+      associationId: associationId,
+    });
     Logger.log(`${mm} ... getAssociationVehicles found: ${list.length} ...`);
     return list;
   }
 
   public async getAssociationVehiclesZippedFile(
-    associationId: string,
+    associationId: string
   ): Promise<string> {
     Logger.log(
-      `${mm} ... getAssociationVehicles starting, id: ${associationId} ...`,
+      `${mm} ... getAssociationVehicles starting, id: ${associationId} ...`
     );
     const list = await this.getAssociationVehicles(associationId);
     const json = JSON.stringify(list);
@@ -103,45 +107,45 @@ export class AssociationService {
 
     const file = await this.archiveService.zip([{ content: json }]);
     Logger.log(
-      `${mm} ... getOwnerVehiclesZippedFile found: ${list.length} ...`,
+      `${mm} ... getOwnerVehiclesZippedFile found: ${list.length} ...`
     );
     return file;
   }
 
   public async getCountryCitiesZippedFile(countryId: string): Promise<string> {
     Logger.log(
-      `${mm} ... getCountryCitiesZippedFile starting, id: ${countryId} ...`,
+      `${mm} ... getCountryCitiesZippedFile starting, id: ${countryId} ...`
     );
     const list = await this.cityService.getCountryCities(countryId);
     const json = JSON.stringify(list);
 
     const file = await this.archiveService.zip([{ content: json }]);
     Logger.log(
-      `${mm} ... getCountryCitiesZippedFile found: ${list.length} ...`,
+      `${mm} ... getCountryCitiesZippedFile found: ${list.length} ...`
     );
     return file;
   }
 
   public async getAssociationById(associationId: string): Promise<any> {
-    const m = await this.mongoService.find('Association',{
+    const m = await this.mongoService.find("Association", {
       associationId: associationId,
     });
   }
 
   public async getCountries(): Promise<Country[]> {
-    return await this.mongoService.find('Country',{});
+    return await this.mongoService.find("Country", {});
   }
 
   T;
 
   public async getAssociationSettingsModels(
-    associationId: string,
+    associationId: string
   ): Promise<any[]> {
-    const list = await this.mongoService.find('SettingsModel',{
+    const list = await this.mongoService.find("SettingsModel", {
       associationId: associationId,
     });
     Logger.log(
-      `${mm} ... getAssociationSettingsModels found: ${list.length} ...`,
+      `${mm} ... getAssociationSettingsModels found: ${list.length} ...`
     );
     return list;
   }
@@ -181,7 +185,7 @@ export class AssociationService {
   }
 
   async downloadFileFromStorage(fileName: string): Promise<string> {
-    const tempDir = path.join(__dirname, '..', 'tempFiles');
+    const tempDir = path.join(__dirname, "..", "tempFiles");
     const tempFilePath = path.join(tempDir, fileName);
     const storage = admin.storage();
     const folder = process.env.BUCKET_FOLDER;
@@ -193,13 +197,13 @@ export class AssociationService {
       }
       const csFile = storage.bucket().file(`${folder}/${fileName}`);
       Logger.log(
-        `${mm} Downloading file, csFile: ${csFile.cloudStorageURI} tempFilePath: ${tempFilePath} .....`,
+        `${mm} Downloading file, csFile: ${csFile.cloudStorageURI} tempFilePath: ${tempFilePath} .....`
       );
 
       const contents = await csFile.download();
       const fileContent = contents[0];
       Logger.log(
-        `${mm} ${fileContent}  🔵🔵🔵 fileContent.byteLength: ${fileContent.byteLength}`,
+        `${mm} ${fileContent}  🔵🔵🔵 fileContent.byteLength: ${fileContent.byteLength}`
       );
       //Create a writable stream to write the file content
       const writeStream = fs.createWriteStream(tempFilePath);
@@ -210,21 +214,22 @@ export class AssociationService {
       return tempFilePath;
     } catch (error) {
       Logger.log(`${mm} Error downloading file: ${error}`);
-      throw new Error('Failed to download file');
+      throw new Error("Failed to download file");
     }
   }
 
   //
   private generateUniqueId(): string {
-    const timestamp = Date.now().toString();
-    const randomString = Math.random().toString(36).substring(2, 8);
+    const timestamp = new Date().getTime();
+    const randomString = Math.random().toString(36).substring(2, 6);
     return `${timestamp}_${randomString}`;
   }
 
   public async registerAssociation(
-    association: Association,
+    association: Association
   ): Promise<RegistrationBag> {
     Logger.log(`${mm} registerAssociation ...`);
+
     const u = new User();
     u.firstName = association.adminUserFirstName;
     u.lastName = association.adminUserLastName;
@@ -232,11 +237,13 @@ export class AssociationService {
     u.cellphone = association.adminCellphone;
     u.countryId = association.countryId;
     u.countryName = association.countryName;
-    u.dateRegistered = Date.now().toString();
+    u.dateRegistered = new Date().toISOString();
 
     const user = await this.userService.createUser(u);
     association.userId = user.userId;
+
     const ass = new Association();
+    ass.userId = user.userId;
     ass.associationName = association.associationName;
     ass.associationId = this.generateUniqueId();
     ass.adminUserFirstName = association.adminUserFirstName;
@@ -245,95 +252,120 @@ export class AssociationService {
     ass.adminCellphone = association.adminCellphone;
     ass.countryId = association.countryId;
     ass.countryName = association.countryName;
-    ass.dateRegistered = Date.now().toString();
+    ass.dateRegistered = new Date().toISOString();
     ass.userId = user.userId;
-    const s = new SettingsModel();
-    s.created = Date.now().toString();
-    s.associationId = ass.associationId;
-    s.commuterGeoQueryRadius = 50;
-    s.commuterGeofenceRadius = 200;
-    s.commuterSearchMinutes = 30;
-    s.distanceFilter = 25;
-    s.geofenceRadius = 200;
-    s.heartbeatIntervalSeconds = 600;
-    s.locale = 'en';
-    s.loiteringDelay = 60;
-    s.refreshRateInSeconds = 600;
-    s.themeIndex = 0;
-    s.vehicleGeoQueryRadius = 100;
-    s.vehicleSearchMinutes = 30;
+
+    const settings = new SettingsModel();
+    settings.created = new Date().toISOString();
+    settings.associationId = ass.associationId;
+    settings.commuterGeoQueryRadius = 50;
+    settings.commuterGeofenceRadius = 200;
+    settings.commuterSearchMinutes = 30;
+    settings.distanceFilter = 25;
+    settings.geofenceRadius = 200;
+    settings.heartbeatIntervalSeconds = 600;
+    settings.locale = "en";
+    settings.loiteringDelay = 60;
+    settings.refreshRateInSeconds = 600;
+    settings.themeIndex = 0;
+    settings.vehicleGeoQueryRadius = 100;
+    settings.vehicleSearchMinutes = 30;
+
     const bag = new RegistrationBag();
     bag.association = ass;
-    bag.settings = s;
+    bag.settings = settings;
     bag.user = user;
     if (ass.countryId) {
-      const c = await this.mongoService.find('Country',{ countryId: ass.countryId });
+      const c = await this.mongoService.find("Country", {
+        countryId: ass.countryId,
+      });
       if (c.length > 0) {
         bag.country = c[0];
       }
     }
+    await this.settingsModel.create(settings);
+    await this.associationModel.create(ass);
 
-    Logger.log(`association registered: ${ass.associationName}`);
+    await this.messagingService.sendAssociationRegisteredMessage(ass);
+
+    Logger.log(`${mm} association registered: ${ass.associationName}`);
     return bag;
   }
 
   public async addSettingsModel(model: SettingsModel): Promise<any> {
     Logger.log(`adding addSettingsModel${model}`);
-    return await this.mongoService.create('SettingsModel', model);
+    return await this.mongoService.create("SettingsModel", model);
   }
 
   public async addAssociationToken(
     associationId: string,
     userId: string,
-    token: string,
+    token: string
   ): Promise<any> {
     const at: AssociationToken = new AssociationToken();
     at.associationId = associationId;
     at.userId = userId;
     at.token = token;
-    await this.mongoService.delete('AssociationToken', {
+    await this.mongoService.delete("AssociationToken", {
       associationId: associationId,
     });
-    return await this.mongoService.create('AssociationToken', at);
+    return await this.mongoService.create("AssociationToken", at);
   }
 
   public async getAssociationAppErrors(
     associationId: string,
     startDate: string,
-    endDate: string,
+    endDate: string
   ): Promise<AppError[]> {
-    return this.mongoService
-      .find('AppError', {
-        associationId: associationId,
-        created: { $gte: startDate, $lte: endDate },
-      });
+    return this.mongoService.find("AppError", {
+      associationId: associationId,
+      created: { $gte: startDate, $lte: endDate },
+    });
   }
   public async getRandomCommuters(limit: number): Promise<any[]> {
-    return this.mongoService.find('Commuter',{}, limit);
+    return this.mongoService.find("Commuter", {}, limit);
   }
 
   public async getAppErrors(startDate: string): Promise<any[]> {
-    return this.mongoService
-      .find('AppError',{
-        created: { $gte: startDate },
-      });
+    return this.mongoService.find("AppError", {
+      created: { $gte: startDate },
+    });
   }
 
   public async generateFakeAssociation(
-    associationName: string,
-    email: string,
-    testCellphoneNumber: string,
-    firstName: string,
-    lastName: string,
+    name: string
   ): Promise<RegistrationBag> {
-    return null;
+    const ass = new Association();
+    ass.associationName = name;
+    ass.associationId = this.generateUniqueId();
+    ass.adminEmail = this.getFakeEmail();
+    ass.adminCellphone = this.getFakeCell();
+    ass.adminUserFirstName = "James Earl";
+    ass.adminUserLastName =  `Jones_${Math.random() * 1000}`;
+    ass.dateRegistered = new Date().toISOString();
+
+    const bag = await this.registerAssociation(ass);
+    return bag;
   }
 
   public async getExampleFiles(): Promise<any[]> {
-    return this.mongoService.find('ExampleFile', {});
+    return this.mongoService.find("ExampleFile", {});
   }
 
   public async upLoadExampleFiles(files: File[]): Promise<ExampleFile[]> {
     return [];
+  }
+  getFakeEmail() {
+    const name = "fake admin";
+    const mName = name.replace(" ", "").toLowerCase();
+    return `${mName}_${new Date().getTime()}@kasietransie.com`;
+  }
+  getFakeCell() {
+    const arr = [];
+    arr.push("+27");
+    for (let i = 0; i < 9; i++) {
+      arr.push(Math.random() * 9);
+    }
+    return arr.join("");
   }
 }

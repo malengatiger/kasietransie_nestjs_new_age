@@ -13,7 +13,7 @@ import { randomUUID } from 'crypto';
 import { Association } from 'src/data/models/Association';
 import { UserGeofenceEvent } from 'src/data/models/UserGeofenceEvent';
 
-const mm = 'UserService';
+const mm = '🟢🟢 UserService 🟢';
 
 @Injectable()
 export class UserService {
@@ -32,9 +32,8 @@ export class UserService {
   }
 
   async createUser(user: User): Promise<User> {
-    console.log(`🟢🟢 create user: ${JSON.stringify(user)}`);
+    console.log(`${mm} create user: ${JSON.stringify(user)}`);
     const firebaseAuth = admin.auth();
-    console.log('🟢🟢 createRequest  .... ');
     const storedPassword = user.password;
 
     try {
@@ -42,12 +41,12 @@ export class UserService {
       if (!user.email) {
         const name = `${user.firstName} ${user.lastName}`;
         const mName = name.replace(' ', '').toLowerCase();
-        email = `${mName}${Date.now()}@kasietransie.com`;
+        email = `${mName}_${new Date().getTime()}@kasietransie.com`;
         user.email = email;
-        console.log(`🟢🟢 createUserAsync  .... email: ${email}`);
       } else {
         email = user.email;
       }
+      console.log(`${mm} createUserAsync  .... email: ${email}`);
       const userRecord = await firebaseAuth.createUser({
         email: email,
         emailVerified: false,
@@ -57,7 +56,7 @@ export class UserService {
         disabled: false,
       });
 
-      console.log(`🟢🟢 userRecord from Firebase : ${userRecord.email}`);
+      console.log(`${mm} userRecord from Firebase : ${userRecord.email}`);
       if (userRecord.uid) {
         const uid = userRecord.uid;
         user.userId = uid;
@@ -72,7 +71,7 @@ export class UserService {
         //
         user.password = storedPassword;
 
-        Logger.log('🟢🟢 KasieTransie user created. ');
+        Logger.log('${mm} KasieTransie user created. ');
       } else {
         throw new Error(
           'userRecord.uid == null. We have a problem with Firebase, Jack!',

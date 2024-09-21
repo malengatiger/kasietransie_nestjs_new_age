@@ -11,6 +11,7 @@ import { CommuterRequestSchema } from "src/data/models/CommuterRequest";
 import { RouteLandmarkSchema } from "src/data/models/RouteLandmark";
 import { RouteSchema } from "src/data/models/Route";
 import { RoutePointSchema } from "src/data/models/RoutePoint";
+import { AssociationTokenSchema } from "src/data/models/AssociationToken";
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { RoutePointSchema } from "src/data/models/RoutePoint";
       { name: "RouteLandmark", schema: RouteLandmarkSchema },
       { name: "Route", schema: RouteSchema },
       { name: "RoutePoint", schema: RoutePointSchema },
-     
+      { name: "AssociationToken", schema: AssociationTokenSchema },
+
     ]),
   ],
   controllers: [CommuterController],

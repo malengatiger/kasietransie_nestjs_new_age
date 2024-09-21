@@ -27,4 +27,5 @@ Constants.routeUpdateRequest = 'routeUpdateRequest';
 Constants.admin = 'admin';
 Constants.appError = 'appError';
 Constants.kasieError = 'kasieError';
+Constants.association = 'association';
 //# sourceMappingURL=constants.js.map

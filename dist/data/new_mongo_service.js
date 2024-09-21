@@ -62,8 +62,9 @@ let NewMongoService = class NewMongoService {
     async pingDatabase() {
         try {
             await this.client.connect();
-            await this.client.db('kasie_transie').command({ ping: 1 });
-            console.log(` 💖💖💖 Pinged my MongoDB Atlas deployment.  🥦🥦 I am successfully connected to MongoDB! ${this.client.db.name}`);
+            const ping = await this.client.db('kasie_transie').command({ ping: 1 });
+            console.log(`💖💖💖 Pinged my MongoDB Atlas deployment.` +
+                `  🥦🥦 I am successfully connected to MongoDB! ${this.client.db.name} ${JSON.stringify(ping, null, 2)}`);
             const database = this.client.db('kasie_transie');
             const collection = database.collection('Association');
             const associations = await collection.find({}).toArray();

@@ -19,14 +19,16 @@ import { LocationRequest } from 'src/data/models/LocationRequest';
 import { LocationResponse } from 'src/data/models/LocationResponse';
 import { VehicleDeparture } from 'src/data/models/VehicleDeparture';
 import { KasieError } from 'src/data/models/kasie.error';
+import { Association } from 'src/data/models/Association';
+import { AssociationToken } from 'src/data/models/AssociationToken';
 
 const mm = '🎽 🎽 🎽 MessagingService';
 
 @Injectable()
 export class MessagingService {
   constructor(
-    // @InjectModel(AssociationToken.name)
-    // private associationTokenModel: mongoose.Model<AssociationToken>,
+    @InjectModel(AssociationToken.name)
+    private associationTokenModel: mongoose.Model<AssociationToken>,
     @InjectModel(KasieError.name)
     private kasieModel: mongoose.Model<KasieError>,
   ) {}
@@ -40,7 +42,7 @@ export class MessagingService {
         Logger.debug(`${e}`);
       }
     });
-    return null;
+    
   }
 
   async sendAppErrorMessage(appError: AppError) {
@@ -53,7 +55,7 @@ export class MessagingService {
       JSON.stringify(appError, null, 2),
       appError.associationId,
     );
-    return null;
+    
   }
 
   async sendKasieErrorMessage(kasieError: KasieError) {
@@ -66,7 +68,7 @@ export class MessagingService {
       JSON.stringify(kasieError, null, 2),
       '',
     );
-    return null;
+    
   }
 
   async sendLocationRequestMessage(locationRequest: LocationRequest) {
@@ -79,7 +81,7 @@ export class MessagingService {
       JSON.stringify(locationRequest, null, 2),
       locationRequest.associationId,
     );
-    return null;
+    
   }
 
   //http://192.168.86.242:8080/api/v1/getAssociationCounts?associationId=2f3faebd-6159-4b03-9857-9dad6d9a82ac&startDate=2023-09-14T06:52:32.929Z
@@ -93,7 +95,7 @@ export class MessagingService {
       JSON.stringify(locationResponse, null, 2),
       locationResponse.associationId,
     );
-    return null;
+    
   }
 
   async sendVehicleArrivalMessage(arrival: VehicleArrival) {
@@ -106,7 +108,7 @@ export class MessagingService {
       JSON.stringify(arrival, null, 2),
       arrival.associationId,
     );
-    return null;
+    
   }
   async sendVehicleDepartureMessage(departure: VehicleDeparture) {
     const fmtDate = MyUtils.formatISOStringDate(departure.created, null);
@@ -118,7 +120,7 @@ export class MessagingService {
       JSON.stringify(departure, null, 2),
       departure.associationId,
     );
-    return null;
+    
   }
 
   async sendDispatchMessage(dispatch: DispatchRecord) {
@@ -132,7 +134,7 @@ export class MessagingService {
       JSON.stringify(dispatch),
       dispatch.associationId,
     );
-    return null;
+    
   }
 
   async sendHeartbeatMessage(heartbeat: VehicleHeartbeat) {
@@ -146,7 +148,7 @@ export class MessagingService {
       JSON.stringify(heartbeat, null, 2),
       heartbeat.associationId,
     );
-    return null;
+    
   }
 
   async sendPassengerCountMessage(count: AmbassadorPassengerCount) {
@@ -160,7 +162,7 @@ export class MessagingService {
       JSON.stringify(count, null, 2),
       count.associationId,
     );
-    return null;
+    
   }
 
   async sendRouteUpdateMessage(req: RouteUpdateRequest) {
@@ -173,7 +175,7 @@ export class MessagingService {
       JSON.stringify(req, null, 2),
       req.associationId,
     );
-    return null;
+    
   }
   async sendCommuterRequestMessage(req: CommuterRequest) {
     const fmtDate = MyUtils.formatISOStringDate(Date.now().toString(), null);
@@ -185,7 +187,7 @@ export class MessagingService {
       JSON.stringify(req, null, 2),
       req.associationId,
     );
-    return null;
+    
   }
   async sendCommuterResponseMessage(response: CommuterResponse) {
     const fmtDate = MyUtils.formatISOStringDate(Date.now().toString(), null);
@@ -197,7 +199,17 @@ export class MessagingService {
       JSON.stringify(response, null, 2),
       response.associationId,
     );
-    return null;
+  }
+  async sendAssociationRegisteredMessage(assoc: Association) {
+    const fmtDate = MyUtils.formatISOStringDate(Date.now().toString(), null);
+    await this.send(
+      `${Constants.association}${assoc.associationId}`,
+      `${assoc.associationName},`,
+      ` Registered on ${fmtDate}`,
+      Constants.association,
+      JSON.stringify(assoc, null, 2),
+      assoc.associationId,
+    );
   }
   private async send(
     topic: string,
@@ -221,30 +233,30 @@ export class MessagingService {
 
     try {
       await admin.messaging().send(message);
-      // const associationToken = await this.associationTokenModel.findOne({
-      //   associationId: associationId,
-      // });
-      // if (associationToken) {
-      //   const messageDirect: admin.messaging.Message = {
-      //     token: associationToken.token,
-      //     data: {
-      //       type: type,
-      //       data: data,
-      //     },
-      //     notification: {
-      //       title: title,
-      //       body: body,
-      //     },
-      //   };
-      //   if (
-      //     type === Constants.admin ||
-      //     type === Constants.appError ||
-      //     type === Constants.kasieError
-      //   ) {
-      //     return;
-      //   }
-      //   await admin.messaging().send(messageDirect);
-      // }
+      const associationToken = await this.associationTokenModel.findOne({
+        associationId: associationId,
+      });
+      if (associationToken) {
+        const messageDirect: admin.messaging.Message = {
+          token: associationToken.token,
+          data: {
+            type: type,
+            data: data,
+          },
+          notification: {
+            title: title,
+            body: body,
+          },
+        };
+        if (
+          type === Constants.admin ||
+          type === Constants.appError ||
+          type === Constants.kasieError
+        ) {
+          return;
+        }
+        await admin.messaging().send(messageDirect);
+      }
 
       Logger.debug(
         `${mm} 🅿️🅿️🅿️ Successfully sent FCM message to topic and associations 🚺 🚺 🚺 topic: ${topic} message type: ${type} 🚺 title: ${title}`,

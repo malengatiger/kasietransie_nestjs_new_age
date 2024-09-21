@@ -15,6 +15,7 @@ const LocationRequest_1 = require("../../data/models/LocationRequest");
 const mongoose_1 = require("@nestjs/mongoose");
 const AmbassadorPassengerCount_1 = require("../../data/models/AmbassadorPassengerCount");
 const AppError_1 = require("../../data/models/AppError");
+const AssociationToken_1 = require("../../data/models/AssociationToken");
 const kasie_error_1 = require("../../data/models/kasie.error");
 const LocationResponse_1 = require("../../data/models/LocationResponse");
 let LocationRequestModule = class LocationRequestModule {
@@ -24,6 +25,7 @@ exports.LocationRequestModule = LocationRequestModule = __decorate([
     (0, common_1.Module)({
         imports: [
             mongoose_1.MongooseModule.forFeature([
+                { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
                 { name: "AppError", schema: AppError_1.AppErrorSchema },
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
                 { name: "LocationRequest", schema: LocationRequest_1.LocationRequestSchema },

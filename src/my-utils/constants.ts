@@ -26,4 +26,6 @@ export class Constants {
   public static readonly admin = 'admin';
   public static readonly appError = 'appError';
   public static readonly kasieError = 'kasieError';
+  public static readonly association = 'association';
+
 }

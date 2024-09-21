@@ -20,6 +20,7 @@ const CommuterRequest_1 = require("../../data/models/CommuterRequest");
 const RouteLandmark_1 = require("../../data/models/RouteLandmark");
 const Route_1 = require("../../data/models/Route");
 const RoutePoint_1 = require("../../data/models/RoutePoint");
+const AssociationToken_1 = require("../../data/models/AssociationToken");
 let CommuterModule = class CommuterModule {
 };
 exports.CommuterModule = CommuterModule;
@@ -35,6 +36,7 @@ exports.CommuterModule = CommuterModule = __decorate([
                 { name: "RouteLandmark", schema: RouteLandmark_1.RouteLandmarkSchema },
                 { name: "Route", schema: Route_1.RouteSchema },
                 { name: "RoutePoint", schema: RoutePoint_1.RoutePointSchema },
+                { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
             ]),
         ],
         controllers: [commuter_controller_1.CommuterController],

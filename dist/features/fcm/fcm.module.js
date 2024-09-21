@@ -10,6 +10,7 @@ exports.FcmModule = void 0;
 const common_1 = require("@nestjs/common");
 const fcm_controller_1 = require("./fcm.controller");
 const fcm_service_1 = require("./fcm.service");
+const AssociationToken_1 = require("../../data/models/AssociationToken");
 const mongoose_1 = require("@nestjs/mongoose");
 const AppError_1 = require("../../data/models/AppError");
 const kasie_error_1 = require("../../data/models/kasie.error");
@@ -22,6 +23,7 @@ exports.FcmModule = FcmModule = __decorate([
             mongoose_1.MongooseModule.forFeature([
                 { name: "AppError", schema: AppError_1.AppErrorSchema },
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
+                { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
             ]),
         ],
         controllers: [fcm_controller_1.FcmController],

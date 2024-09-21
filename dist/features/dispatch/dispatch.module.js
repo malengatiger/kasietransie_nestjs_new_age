@@ -24,6 +24,7 @@ const Commuter_1 = require("../../data/models/Commuter");
 const CommuterRequest_1 = require("../../data/models/CommuterRequest");
 const CommuterResponse_1 = require("../../data/models/CommuterResponse");
 const UserGeofenceEvent_1 = require("../../data/models/UserGeofenceEvent");
+const AssociationToken_1 = require("../../data/models/AssociationToken");
 let DispatchModule = class DispatchModule {
 };
 exports.DispatchModule = DispatchModule;
@@ -35,6 +36,7 @@ exports.DispatchModule = DispatchModule = __decorate([
                 { name: "Commuter", schema: Commuter_1.CommuterSchema },
                 { name: "CommuterResponse", schema: CommuterResponse_1.CommuterResponseSchema },
                 { name: "CommuterRequest", schema: CommuterRequest_1.CommuterRequestSchema },
+                { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
                 { name: "VehicleDeparture", schema: VehicleDeparture_1.VehicleDepartureSchema },
                 { name: "VehicleArrival", schema: VehicleArrival_1.VehicleArrivalSchema },
                 { name: "VehicleHeartbeat", schema: VehicleHeartbeat_1.VehicleHeartbeatSchema },

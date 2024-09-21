@@ -1,20 +1,20 @@
-import { ConfigService } from '@nestjs/config';
-import mongoose from 'mongoose';
-import { Association } from 'src/data/models/Association';
-import { SettingsModel } from 'src/data/models/SettingsModel';
-import { ExampleFile } from 'src/data/models/ExampleFile';
-import { RegistrationBag } from 'src/data/models/RegistrationBag';
-import { User } from 'src/data/models/User';
-import { AppError } from 'src/data/models/AppError';
-import { Vehicle } from 'src/data/models/Vehicle';
-import { FileArchiverService } from 'src/my-utils/zipper';
-import { Country } from 'src/data/models/Country';
-import { NewMongoService } from 'src/data/new_mongo_service';
-import { AssociationToken } from 'src/data/models/AssociationToken';
-import { Commuter } from 'src/data/models/Commuter';
-import { MessagingService } from '../fcm/fcm.service';
-import { CityService } from '../city/city.service';
-import { UserService } from '../user/user.service';
+import { ConfigService } from "@nestjs/config";
+import mongoose from "mongoose";
+import { Association } from "src/data/models/Association";
+import { SettingsModel } from "src/data/models/SettingsModel";
+import { ExampleFile } from "src/data/models/ExampleFile";
+import { RegistrationBag } from "src/data/models/RegistrationBag";
+import { User } from "src/data/models/User";
+import { AppError } from "src/data/models/AppError";
+import { Vehicle } from "src/data/models/Vehicle";
+import { FileArchiverService } from "src/my-utils/zipper";
+import { Country } from "src/data/models/Country";
+import { NewMongoService } from "src/data/new_mongo_service";
+import { AssociationToken } from "src/data/models/AssociationToken";
+import { Commuter } from "src/data/models/Commuter";
+import { MessagingService } from "../fcm/fcm.service";
+import { CityService } from "../city/city.service";
+import { UserService } from "../user/user.service";
 export declare class AssociationService {
     private configService;
     private archiveService;
@@ -56,7 +56,9 @@ export declare class AssociationService {
     getAssociationAppErrors(associationId: string, startDate: string, endDate: string): Promise<AppError[]>;
     getRandomCommuters(limit: number): Promise<any[]>;
     getAppErrors(startDate: string): Promise<any[]>;
-    generateFakeAssociation(associationName: string, email: string, testCellphoneNumber: string, firstName: string, lastName: string): Promise<RegistrationBag>;
+    generateFakeAssociation(name: string): Promise<RegistrationBag>;
     getExampleFiles(): Promise<any[]>;
     upLoadExampleFiles(files: File[]): Promise<ExampleFile[]>;
+    getFakeEmail(): string;
+    getFakeCell(): string;
 }

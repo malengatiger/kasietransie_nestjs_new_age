@@ -7,7 +7,7 @@ const my_utils_1 = require("./my-utils/my-utils");
 const FirebaseService_1 = require("./services/FirebaseService");
 const errors_interceptor_1 = require("./middleware/errors.interceptor");
 const swagger_1 = require("@nestjs/swagger");
-const mm = '🔵 🔵 🔵 🔵 🔵 🔵 Kasie Transie Bootstrap 🔵 🔵';
+const mm = "🔵 🔵 🔵 🔵 🔵 🔵 Kasie Transie Bootstrap 🔵 🔵";
 const env = process.env.NODE_ENV;
 common_1.Logger.log(`${mm} Kasie NODE_ENV : ${env}`);
 const srv = new FirebaseService_1.MyFirebaseService();
@@ -16,21 +16,23 @@ async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     const port = my_utils_1.MyUtils.getPort();
     common_1.Logger.log(`${mm} ... Kasie Backend running on port : ${port} `);
-    app.setGlobalPrefix('api/v1');
+    app.setGlobalPrefix("api/v1");
     const config = new swagger_1.DocumentBuilder()
-        .setTitle('KasieTransie Backend')
-        .setDescription('The Kasie API manages the backend data and provides access to the MongoDB Atlas database')
-        .setVersion('1.0')
-        .addTag('taxis')
+        .setTitle("KasieTransie Backend")
+        .setDescription("The Kasie API manages the backend data and provides access to the MongoDB Atlas database")
+        .setVersion("1.0")
+        .addTag("taxis")
         .build();
     const document = swagger_1.SwaggerModule.createDocument(app, config);
-    swagger_1.SwaggerModule.setup('api/v1/api', app, document);
+    swagger_1.SwaggerModule.setup("api/v1/api", app, document);
     common_1.Logger.log(`${mm} ... Kasie Swagger set up .....`);
     app.enableCors();
+    common_1.Logger.log(`${mm} ... CORS set up .....`);
+    app.useGlobalInterceptors(new errors_interceptor_1.ErrorsInterceptor());
+    common_1.Logger.log(`${mm} ... GlobalInterceptors set up .....`);
     await app.listen(port);
     await srv.initializeFirebase();
     await srv.sendInitializationMessage();
-    app.useGlobalInterceptors(new errors_interceptor_1.ErrorsInterceptor());
 }
 bootstrap().then((r) => common_1.Logger.debug(`${mm} Bootstrapping is complete. 💖💖💖 ... Lets do this!!`));
 //# sourceMappingURL=main.js.map

@@ -22,4 +22,5 @@ export declare class Constants {
     static readonly admin = "admin";
     static readonly appError = "appError";
     static readonly kasieError = "kasieError";
+    static readonly association = "association";
 }

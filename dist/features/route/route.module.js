@@ -25,6 +25,7 @@ const RouteCity_1 = require("../../data/models/RouteCity");
 const City_1 = require("../../data/models/City");
 const CalculatedDistance_1 = require("../../data/models/CalculatedDistance");
 const Country_1 = require("../../data/models/Country");
+const AssociationToken_1 = require("../../data/models/AssociationToken");
 let RouteModule = class RouteModule {
 };
 exports.RouteModule = RouteModule;
@@ -32,6 +33,7 @@ exports.RouteModule = RouteModule = __decorate([
     (0, common_1.Module)({
         imports: [
             mongoose_1.MongooseModule.forFeature([
+                { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
                 { name: "RouteUpdateRequest", schema: RouteUpdateRequest_1.RouteUpdateRequestSchema },
                 { name: "VehicleMediaRequest", schema: VehicleMediaRequest_1.VehicleMediaRequestSchema },
                 { name: "RouteLandmark", schema: RouteLandmark_1.RouteLandmarkSchema },

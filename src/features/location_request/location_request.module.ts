@@ -29,24 +29,9 @@ import { LocationResponseSchema } from 'src/data/models/LocationResponse';
 @Module({
   imports: [
     MongooseModule.forFeature([
-      // { name: "Vehicle", schema: VehicleSchema },
-      // { name: "DispatchRecord", schema: DispatchRecordSchema },
-      // { name: "VehicleArrival", schema: VehicleArrivalSchema },
-      // { name: "VehicleDeparture", schema: VehicleDepartureSchema },
-      // { name: "VehicleHeartbeat", schema: VehicleHeartbeatSchema },
-      // { name: "Association", schema: AssociationSchema },
-      // { name: "RouteAssignment", schema: RouteAssignmentSchema },
-      // { name: "User", schema: UserSchema },
-      // { name: "Route", schema: RouteSchema },
-      // { name: "UserGeofenceEvent", schema: UserGeofenceEventSchema },
-      // { name: "City", schema: CitySchema },
-      // { name: "Commuter", schema: CommuterSchema },
+      { name: "AssociationToken", schema: AssociationTokenSchema },
       { name: "AppError", schema: AppErrorSchema },
       { name: "KasieError", schema: KasieErrorSchema },
-      // { name: "ExampleFile", schema: ExampleFileSchema },
-      // { name: "Country", schema: CountrySchema },
-      // { name: "AssociationToken", schema: AssociationTokenSchema },
-      // { name: "SettingsModel", schema: SettingsModelSchema },
       { name: "LocationRequest", schema: LocationRequestSchema },
       { name: "LocationResponse", schema: LocationResponseSchema },
 

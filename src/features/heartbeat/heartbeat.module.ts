@@ -14,35 +14,20 @@ import { NewMongoService } from 'src/data/new_mongo_service';
 import { VehicleHeartbeatTimeSeriesSchema } from 'src/data/models/VehicleHeartbeatTimeSeries';
 import { PassengerTimeSeriesSchema } from 'src/data/models/PassengerTimeSeries';
 import { RouteUpdateRequestSchema } from 'src/data/models/RouteUpdateRequest';
+import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: "Vehicle", schema: VehicleSchema },
-      // { name: "DispatchRecord", schema: DispatchRecordSchema },
-      // { name: "VehicleArrival", schema: VehicleArrivalSchema },
-      // { name: "VehicleDeparture", schema: VehicleDepartureSchema },
+      { name: "AssociationToken", schema: AssociationTokenSchema },
       { name: "VehicleHeartbeat", schema: VehicleHeartbeatSchema },
       { name: "VehicleHeartbeatTimeSeries", schema: VehicleHeartbeatTimeSeriesSchema },
       { name: "PassengerTimeSeries", schema: PassengerTimeSeriesSchema },
 
       { name: "RouteUpdateRequest", schema: RouteUpdateRequestSchema },
-      // { name: "RouteAssignment", schema: RouteAssignmentSchema },
-      // { name: "User", schema: UserSchema },
-      // { name: "Route", schema: RouteSchema },
-      // { name: "UserGeofenceEvent", schema: UserGeofenceEventSchema },
-      // { name: "City", schema: CitySchema },
-      // { name: "Commuter", schema: CommuterSchema },
       { name: "AppError", schema: AppErrorSchema },
       { name: "KasieError", schema: KasieErrorSchema },
-      // { name: "ExampleFile", schema: ExampleFileSchema },
-      // { name: "Country", schema: CountrySchema },
-      // { name: "AssociationToken", schema: AssociationTokenSchema },
-      // { name: "SettingsModel", schema: SettingsModelSchema },
-      // { name: "LocationRequest", schema: LocationRequestSchema },
-      // { name: "LocationResponse", schema: LocationResponseSchema },
-
-      // { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCountSchema },
     ]),
   ],
   controllers: [HeartbeatController],

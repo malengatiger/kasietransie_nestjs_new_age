@@ -63,9 +63,10 @@ export class NewMongoService {
     // Connect the client to the server	(optional starting in v4.7)
     await this.client.connect();
     // Send a ping to confirm a successful connection
-    await this.client.db('kasie_transie').command({ ping: 1 });
+    const ping = await this.client.db('kasie_transie').command({ ping: 1 });
     console.log(
-      ` 💖💖💖 Pinged my MongoDB Atlas deployment.  🥦🥦 I am successfully connected to MongoDB! ${this.client.db.name}`,
+      `💖💖💖 Pinged my MongoDB Atlas deployment.` +
+        `  🥦🥦 I am successfully connected to MongoDB! ${this.client.db.name} ${JSON.stringify(ping, null, 2)}`,
     );
     const database = this.client.db('kasie_transie');
     const collection = database.collection('Association');
