@@ -24,15 +24,15 @@ async function bootstrap() {
 
   // Swagger
   const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('KasieTransie Backend')
+    .setDescription('The Kasie API manages the backend data and provides access to the MongoDB Atlas database')
     .setVersion('1.0')
-    .addTag('cats')
+    .addTag('taxis')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
-  Logger.log(`${mm} ... Swagger set up .....`);
+  SwaggerModule.setup('api/v1/api', app, document);
+  Logger.log(`${mm} ... Kasie Swagger set up .....`);
 
   // app.use(helmet());
   app.enableCors();

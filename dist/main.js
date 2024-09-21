@@ -18,14 +18,14 @@ async function bootstrap() {
     common_1.Logger.log(`${mm} ... Kasie Backend running on port : ${port} `);
     app.setGlobalPrefix('api/v1');
     const config = new swagger_1.DocumentBuilder()
-        .setTitle('Cats example')
-        .setDescription('The cats API description')
+        .setTitle('KasieTransie Backend')
+        .setDescription('The Kasie API manages the backend data and provides access to the MongoDB Atlas database')
         .setVersion('1.0')
-        .addTag('cats')
+        .addTag('taxis')
         .build();
     const document = swagger_1.SwaggerModule.createDocument(app, config);
-    swagger_1.SwaggerModule.setup('api', app, document);
-    common_1.Logger.log(`${mm} ... Swagger set up .....`);
+    swagger_1.SwaggerModule.setup('api/v1/api', app, document);
+    common_1.Logger.log(`${mm} ... Kasie Swagger set up .....`);
     app.enableCors();
     await app.listen(port);
     await srv.initializeFirebase();
