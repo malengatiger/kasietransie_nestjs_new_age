@@ -6,7 +6,7 @@ import mongoose, { Aggregate, Document, PipelineStage } from 'mongoose';
 import { VehicleHeartbeatAggregationResult } from 'src/data/helpers/VehicleHeartbeatAggregationResult';
 
 import * as moment from 'moment';
-import { NewMongoService } from 'src/data/db_ping';
+import { NewMongoService } from 'src/data/new_mongo_service';
 import { AssociationHeartbeatAggregationResult } from 'src/data/helpers/AssociationHeartbeatAggregationResult';
 import { HeartbeatMeta } from 'src/data/models/HeartbeatMeta';
 import { PassengerTimeSeries } from 'src/data/models/PassengerTimeSeries';

@@ -11,57 +11,69 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommuterResponseSchema = exports.CommuterResponse = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
+const swagger_1 = require("@nestjs/swagger");
 let CommuterResponse = class CommuterResponse {
 };
 exports.CommuterResponse = CommuterResponse;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], CommuterResponse.prototype, "commuterResponseId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], CommuterResponse.prototype, "commuterRequestId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], CommuterResponse.prototype, "responseDate", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], CommuterResponse.prototype, "message", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], CommuterResponse.prototype, "routeId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], CommuterResponse.prototype, "routeName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], CommuterResponse.prototype, "numberOfVehiclesOnRoute", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], CommuterResponse.prototype, "routeLandmarkId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], CommuterResponse.prototype, "routeLandmarkName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], CommuterResponse.prototype, "associationId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Boolean)
 ], CommuterResponse.prototype, "vehicleDispatched", void 0);
 exports.CommuterResponse = CommuterResponse = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'CommuterResponse',
+        collection: "CommuterResponse",
     })
 ], CommuterResponse);
 exports.CommuterResponseSchema = mongoose_1.SchemaFactory.createForClass(CommuterResponse);

@@ -9,7 +9,7 @@ import { AppError } from 'src/data/models/AppError';
 import { Vehicle } from 'src/data/models/Vehicle';
 import { FileArchiverService } from 'src/my-utils/zipper';
 import { Country } from 'src/data/models/Country';
-import { NewMongoService } from 'src/data/db_ping';
+import { NewMongoService } from 'src/data/new_mongo_service';
 import { AssociationToken } from 'src/data/models/AssociationToken';
 import { Commuter } from 'src/data/models/Commuter';
 import { MessagingService } from '../fcm/fcm.service';

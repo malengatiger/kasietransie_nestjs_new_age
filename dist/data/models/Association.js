@@ -12,69 +12,84 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AssociationSchema = exports.Association = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const position_1 = require("./position");
+const swagger_1 = require("@nestjs/swagger");
 let Association = class Association {
 };
 exports.Association = Association;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Association.prototype, "associationId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Association.prototype, "cityId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Association.prototype, "countryId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Association.prototype, "associationName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], Association.prototype, "active", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Association.prototype, "countryName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Association.prototype, "cityName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Association.prototype, "dateRegistered", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", position_1.Position)
 ], Association.prototype, "position", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Association.prototype, "adminUserFirstName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Association.prototype, "adminUserLastName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Association.prototype, "userId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Association.prototype, "adminCellphone", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Association.prototype, "adminEmail", void 0);
 exports.Association = Association = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'Association',
+        collection: "Association",
     })
 ], Association);
 exports.AssociationSchema = mongoose_1.SchemaFactory.createForClass(Association);

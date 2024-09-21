@@ -10,7 +10,7 @@ import { AppErrorSchema } from 'src/data/models/AppError';
 import { KasieErrorSchema } from 'src/data/models/kasie.error';
 import { VehicleHeartbeatSchema } from 'src/data/models/VehicleHeartbeat';
 import { FileArchiverService } from 'src/my-utils/zipper';
-import { NewMongoService } from 'src/data/db_ping';
+import { NewMongoService } from 'src/data/new_mongo_service';
 import { VehicleHeartbeatTimeSeriesSchema } from 'src/data/models/VehicleHeartbeatTimeSeries';
 import { PassengerTimeSeriesSchema } from 'src/data/models/PassengerTimeSeries';
 import { RouteUpdateRequestSchema } from 'src/data/models/RouteUpdateRequest';

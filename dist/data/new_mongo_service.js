@@ -68,6 +68,7 @@ let NewMongoService = class NewMongoService {
             const collection = database.collection('Association');
             const associations = await collection.find({}).toArray();
             console.log(`💖💖💖 Associations: ${JSON.stringify(associations, null, 2)}}`);
+            return associations;
         }
         catch (error) {
             console.error(error);
@@ -83,4 +84,4 @@ exports.NewMongoService = NewMongoService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [])
 ], NewMongoService);
-//# sourceMappingURL=db_ping.js.map
+//# sourceMappingURL=new_mongo_service.js.map

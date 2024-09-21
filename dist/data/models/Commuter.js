@@ -11,57 +11,69 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommuterSchema = exports.Commuter = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
+const swagger_1 = require("@nestjs/swagger");
 let Commuter = class Commuter {
 };
 exports.Commuter = Commuter;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Commuter.prototype, "commuterId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Commuter.prototype, "cellphone", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Commuter.prototype, "email", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Commuter.prototype, "name", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Commuter.prototype, "dateRegistered", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Commuter.prototype, "qrCodeUrl", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Commuter.prototype, "profileUrl", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Commuter.prototype, "profileThumbnail", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Commuter.prototype, "countryId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Commuter.prototype, "password", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Commuter.prototype, "gender", void 0);
 exports.Commuter = Commuter = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'Commuter',
+        collection: "Commuter",
     })
 ], Commuter);
 exports.CommuterSchema = mongoose_1.SchemaFactory.createForClass(Commuter);

@@ -12,57 +12,69 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CitySchema = exports.City = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const position_1 = require("./position");
+const swagger_1 = require("@nestjs/swagger");
 let City = class City {
 };
 exports.City = City;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], City.prototype, "name", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], City.prototype, "cityId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], City.prototype, "country", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], City.prototype, "countryId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], City.prototype, "stateId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], City.prototype, "stateName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], City.prototype, "countryName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], City.prototype, "province", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", position_1.Position)
 ], City.prototype, "position", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], City.prototype, "latitude", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], City.prototype, "longitude", void 0);
 exports.City = City = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'City',
+        collection: "City",
     })
 ], City);
 exports.CitySchema = mongoose_1.SchemaFactory.createForClass(City);

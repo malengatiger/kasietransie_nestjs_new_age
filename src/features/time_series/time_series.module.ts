@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TimeSeriesService } from './time_series.service';
 import { TimeSeriesController } from './time_series.controller';
 import { FileArchiverService } from 'src/my-utils/zipper';
-import { NewMongoService } from 'src/data/db_ping';
+import { NewMongoService } from 'src/data/new_mongo_service';
 import { VehicleHeartbeatTimeSeriesSchema } from 'src/data/models/VehicleHeartbeatTimeSeries';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PassengerTimeSeriesSchema } from 'src/data/models/PassengerTimeSeries';

@@ -109,7 +109,7 @@ export class RouteController {
     const list = await this.routeService.getAssociationRoutes(
       query.associationId,
     );
-    this.logger.log(`${mm} associationroutes found: ${list.length}`);
+    this.logger.log(`${mm} association routes found: ${list.length}`);
     return list;
   }
   @Get('getAssociationRouteLandmarks')

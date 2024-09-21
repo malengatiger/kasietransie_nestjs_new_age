@@ -11,45 +11,54 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VehicleMediaRequestSchema = exports.VehicleMediaRequest = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
+const swagger_1 = require("@nestjs/swagger");
 let VehicleMediaRequest = class VehicleMediaRequest {
 };
 exports.VehicleMediaRequest = VehicleMediaRequest;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleMediaRequest.prototype, "userId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleMediaRequest.prototype, "vehicleId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleMediaRequest.prototype, "vehicleReg", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleMediaRequest.prototype, "created", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleMediaRequest.prototype, "requesterId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleMediaRequest.prototype, "associationId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleMediaRequest.prototype, "requesterName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Boolean)
 ], VehicleMediaRequest.prototype, "addVideo", void 0);
 exports.VehicleMediaRequest = VehicleMediaRequest = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'VehicleMediaRequest',
+        collection: "VehicleMediaRequest",
     })
 ], VehicleMediaRequest);
 exports.VehicleMediaRequestSchema = mongoose_1.SchemaFactory.createForClass(VehicleMediaRequest);

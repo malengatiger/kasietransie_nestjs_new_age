@@ -7,4 +7,6 @@ export declare class RegistrationBag {
     user: User;
     settings: SettingsModel;
     country: Country;
+    exampleVehicleFileUrl: string;
+    exampleUserFileUrl: string;
 }

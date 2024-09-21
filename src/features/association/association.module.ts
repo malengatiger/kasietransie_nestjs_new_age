@@ -5,7 +5,7 @@ import { FileArchiverService } from "src/my-utils/zipper";
 import { UserService } from "../user/user.service";
 import { CityService } from "../city/city.service";
 import { MessagingService } from "../fcm/fcm.service";
-import { NewMongoService } from "src/data/db_ping";
+import { NewMongoService } from "src/data/new_mongo_service";
 import { DataModule } from "src/data/data.module";
 import { UserModule } from "../user/user.module";
 import { MongooseModule } from "@nestjs/mongoose";

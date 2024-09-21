@@ -12,61 +12,74 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.VehiclePhotoSchema = exports.VehiclePhoto = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const position_1 = require("./position");
+const swagger_1 = require("@nestjs/swagger");
 let VehiclePhoto = class VehiclePhoto {
 };
 exports.VehiclePhoto = VehiclePhoto;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehiclePhoto.prototype, "vehicleId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehiclePhoto.prototype, "vehicleReg", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehiclePhoto.prototype, "associationId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehiclePhoto.prototype, "userName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehiclePhoto.prototype, "created", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehiclePhoto.prototype, "vehiclePhotoId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehiclePhoto.prototype, "landmarkName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehiclePhoto.prototype, "userId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehiclePhoto.prototype, "url", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehiclePhoto.prototype, "thumbNailUrl", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehiclePhoto.prototype, "landmarkId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", position_1.Position)
 ], VehiclePhoto.prototype, "position", void 0);
 exports.VehiclePhoto = VehiclePhoto = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'VehiclePhoto',
+        collection: "VehiclePhoto",
     })
 ], VehiclePhoto);
 exports.VehiclePhotoSchema = mongoose_1.SchemaFactory.createForClass(VehiclePhoto);

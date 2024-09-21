@@ -58,7 +58,7 @@ export class NewMongoService {
   });
   db = this.client.db('kasie_transie');
   //
-  async pingDatabase() {
+  async pingDatabase(): Promise<any> {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await this.client.connect();
@@ -71,6 +71,7 @@ export class NewMongoService {
     const collection = database.collection('Association');
     const associations = await collection.find({}).toArray();
     console.log(`💖💖💖 Associations: ${JSON.stringify(associations, null, 2)}}`);
+    return associations;
   } catch (error) {
     console.error(error);
     await this.client.close();

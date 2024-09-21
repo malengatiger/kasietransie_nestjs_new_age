@@ -12,41 +12,49 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AmbassadorCheckInSchema = exports.AmbassadorCheckIn = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const position_1 = require("./position");
+const swagger_1 = require("@nestjs/swagger");
 let AmbassadorCheckIn = class AmbassadorCheckIn {
 };
 exports.AmbassadorCheckIn = AmbassadorCheckIn;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], AmbassadorCheckIn.prototype, "associationId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], AmbassadorCheckIn.prototype, "vehicleId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], AmbassadorCheckIn.prototype, "vehicleReg", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], AmbassadorCheckIn.prototype, "created", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], AmbassadorCheckIn.prototype, "userId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], AmbassadorCheckIn.prototype, "userName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", position_1.Position)
 ], AmbassadorCheckIn.prototype, "position", void 0);
 exports.AmbassadorCheckIn = AmbassadorCheckIn = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'AmbassadorCheckIn',
+        collection: "AmbassadorCheckIn",
     })
 ], AmbassadorCheckIn);
 exports.AmbassadorCheckInSchema = mongoose_1.SchemaFactory.createForClass(AmbassadorCheckIn);

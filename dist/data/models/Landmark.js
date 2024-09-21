@@ -12,49 +12,59 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LandmarkSchema = exports.Landmark = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const position_1 = require("./position");
+const swagger_1 = require("@nestjs/swagger");
 let Landmark = class Landmark {
 };
 exports.Landmark = Landmark;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Landmark.prototype, "landmarkId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Landmark.prototype, "associationId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Landmark.prototype, "created", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], Landmark.prototype, "latitude", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], Landmark.prototype, "longitude", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], Landmark.prototype, "distance", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Landmark.prototype, "landmarkName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Array)
 ], Landmark.prototype, "routeDetails", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", position_1.Position)
 ], Landmark.prototype, "position", void 0);
 exports.Landmark = Landmark = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'Landmark',
+        collection: "Landmark",
     })
 ], Landmark);
 exports.LandmarkSchema = mongoose_1.SchemaFactory.createForClass(Landmark);

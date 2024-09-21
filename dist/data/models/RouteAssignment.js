@@ -11,45 +11,54 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RouteAssignmentSchema = exports.RouteAssignment = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
+const swagger_1 = require("@nestjs/swagger");
 let RouteAssignment = class RouteAssignment {
 };
 exports.RouteAssignment = RouteAssignment;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteAssignment.prototype, "associationId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteAssignment.prototype, "routeId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteAssignment.prototype, "vehicleId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], RouteAssignment.prototype, "active", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteAssignment.prototype, "created", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteAssignment.prototype, "routeName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteAssignment.prototype, "associationName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteAssignment.prototype, "vehicleReg", void 0);
 exports.RouteAssignment = RouteAssignment = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'RouteAssignment',
+        collection: "RouteAssignment",
     })
 ], RouteAssignment);
 exports.RouteAssignmentSchema = mongoose_1.SchemaFactory.createForClass(RouteAssignment);

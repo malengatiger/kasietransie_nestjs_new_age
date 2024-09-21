@@ -3,7 +3,7 @@ import { AmbassadorService } from './ambassador.service';
 import { AmbassadorController } from './ambassador.controller';
 import { MessagingService } from '../fcm/fcm.service';
 import { TimeSeriesService } from '../time_series/time_series.service';
-import { NewMongoService } from 'src/data/db_ping';
+import { NewMongoService } from 'src/data/new_mongo_service';
 import { AmbassadorPassengerCountSchema } from 'src/data/models/AmbassadorPassengerCount';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppErrorSchema } from 'src/data/models/AppError';

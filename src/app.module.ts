@@ -34,7 +34,7 @@ import { AmbassadorService } from './features/ambassador/ambassador.service';
 import { AssociationService } from './features/association/association.service';
 import { LocationRequestService } from './features/location_request/location_request.service';
 import { TimeSeriesService } from './features/time_series/time_series.service';
-import { NewMongoService } from './data/db_ping';
+import { NewMongoService } from './data/new_mongo_service';
 import { VehicleHeartbeatTimeSeriesSchema } from './data/models/VehicleHeartbeatTimeSeries';
 import { PassengerTimeSeriesSchema } from './data/models/PassengerTimeSeries';
 import { AmbassadorPassengerCountSchema } from './data/models/AmbassadorPassengerCount';

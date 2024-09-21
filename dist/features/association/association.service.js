@@ -29,7 +29,7 @@ const firebase_admin_1 = require("firebase-admin");
 const Vehicle_1 = require("../../data/models/Vehicle");
 const zipper_1 = require("../../my-utils/zipper");
 const Country_1 = require("../../data/models/Country");
-const db_ping_1 = require("../../data/db_ping");
+const new_mongo_service_1 = require("../../data/new_mongo_service");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
 const Commuter_1 = require("../../data/models/Commuter");
 const fcm_service_1 = require("../fcm/fcm.service");
@@ -276,6 +276,6 @@ exports.AssociationService = AssociationService = __decorate([
         user_service_1.UserService,
         city_service_1.CityService,
         fcm_service_1.MessagingService,
-        db_ping_1.NewMongoService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        new_mongo_service_1.NewMongoService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], AssociationService);
 //# sourceMappingURL=association.service.js.map

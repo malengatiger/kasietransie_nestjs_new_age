@@ -1,4 +1,4 @@
-import { HttpException } from '@nestjs/common';
+import { HttpException } from "@nestjs/common";
 export declare class KasieError extends HttpException {
     _partitionKey: string;
     _id: string;

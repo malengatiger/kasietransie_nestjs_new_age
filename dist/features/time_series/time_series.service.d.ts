@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import mongoose from 'mongoose';
 import { VehicleHeartbeatAggregationResult } from 'src/data/helpers/VehicleHeartbeatAggregationResult';
-import { NewMongoService } from 'src/data/db_ping';
+import { NewMongoService } from 'src/data/new_mongo_service';
 import { PassengerTimeSeries } from 'src/data/models/PassengerTimeSeries';
 import { VehicleHeartbeatTimeSeries } from 'src/data/models/VehicleHeartbeatTimeSeries';
 import { FileArchiverService } from 'src/my-utils/zipper';

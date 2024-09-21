@@ -1,4 +1,4 @@
-import { RouteStartEnd } from './RouteStartEnd';
+import { RouteStartEnd } from "./RouteStartEnd";
 export declare class Route {
     _partitionKey: string;
     _id: string;

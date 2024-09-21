@@ -11,25 +11,29 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ExampleFileSchema = exports.ExampleFile = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
+const swagger_1 = require("@nestjs/swagger");
 let ExampleFile = class ExampleFile {
 };
 exports.ExampleFile = ExampleFile;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], ExampleFile.prototype, "type", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], ExampleFile.prototype, "fileName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], ExampleFile.prototype, "downloadUrl", void 0);
 exports.ExampleFile = ExampleFile = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'ExampleFile',
+        collection: "ExampleFile",
     })
 ], ExampleFile);
 exports.ExampleFileSchema = mongoose_1.SchemaFactory.createForClass(ExampleFile);

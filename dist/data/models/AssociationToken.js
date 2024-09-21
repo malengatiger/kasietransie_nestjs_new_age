@@ -11,33 +11,39 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AssociationTokenSchema = exports.AssociationToken = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
+const swagger_1 = require("@nestjs/swagger");
 let AssociationToken = class AssociationToken {
 };
 exports.AssociationToken = AssociationToken;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], AssociationToken.prototype, "userId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], AssociationToken.prototype, "token", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], AssociationToken.prototype, "created", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], AssociationToken.prototype, "associationId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], AssociationToken.prototype, "associationName", void 0);
 exports.AssociationToken = AssociationToken = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'AssociationToken',
+        collection: "AssociationToken",
     })
 ], AssociationToken);
 exports.AssociationTokenSchema = mongoose_1.SchemaFactory.createForClass(AssociationToken);

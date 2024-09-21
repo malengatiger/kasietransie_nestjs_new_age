@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { AmbassadorPassengerCount } from 'src/data/models/AmbassadorPassengerCount';
 import { AmbassadorCheckIn } from 'src/data/models/AmbassadorCheckIn';
 import { Vehicle } from 'src/data/models/Vehicle';
-import { NewMongoService } from 'src/data/db_ping';
+import { NewMongoService } from 'src/data/new_mongo_service';
 import { MessagingService } from '../fcm/fcm.service';
 import { TimeSeriesService } from '../time_series/time_series.service';
 export declare class AmbassadorService {

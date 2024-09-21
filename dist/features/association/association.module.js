@@ -14,7 +14,7 @@ const zipper_1 = require("../../my-utils/zipper");
 const user_service_1 = require("../user/user.service");
 const city_service_1 = require("../city/city.service");
 const fcm_service_1 = require("../fcm/fcm.service");
-const db_ping_1 = require("../../data/db_ping");
+const new_mongo_service_1 = require("../../data/new_mongo_service");
 const mongoose_1 = require("@nestjs/mongoose");
 const AmbassadorPassengerCount_1 = require("../../data/models/AmbassadorPassengerCount");
 const AppError_1 = require("../../data/models/AppError");
@@ -71,7 +71,7 @@ exports.AssociationModule = AssociationModule = __decorate([
             user_service_1.UserService,
             city_service_1.CityService,
             fcm_service_1.MessagingService,
-            db_ping_1.NewMongoService,
+            new_mongo_service_1.NewMongoService,
         ],
     })
 ], AssociationModule);

@@ -28,7 +28,7 @@ const user_service_1 = require("../user/user.service");
 const UserGeofenceEvent_1 = require("../../data/models/UserGeofenceEvent");
 const city_service_1 = require("../city/city.service");
 const City_1 = require("../../data/models/City");
-const db_ping_1 = require("../../data/db_ping");
+const new_mongo_service_1 = require("../../data/new_mongo_service");
 const Commuter_1 = require("../../data/models/Commuter");
 const AppError_1 = require("../../data/models/AppError");
 const kasie_error_1 = require("../../data/models/kasie.error");
@@ -46,7 +46,6 @@ const LocationRequest_1 = require("../../data/models/LocationRequest");
 const location_request_service_1 = require("../location_request/location_request.service");
 const LocationResponse_1 = require("../../data/models/LocationResponse");
 const route_service_1 = require("../route/route.service");
-const RouteUpdateRequest_1 = require("../../data/models/RouteUpdateRequest");
 const RouteLandmark_1 = require("../../data/models/RouteLandmark");
 const RouteCity_1 = require("../../data/models/RouteCity");
 const RoutePoint_1 = require("../../data/models/RoutePoint");
@@ -54,6 +53,7 @@ const CalculatedDistance_1 = require("../../data/models/CalculatedDistance");
 const time_series_service_1 = require("../time_series/time_series.service");
 const VehicleHeartbeatTimeSeries_1 = require("../../data/models/VehicleHeartbeatTimeSeries");
 const PassengerTimeSeries_1 = require("../../data/models/PassengerTimeSeries");
+const RouteUpdateRequest_1 = require("../../data/models/RouteUpdateRequest");
 let VehicleModule = class VehicleModule {
 };
 exports.VehicleModule = VehicleModule;
@@ -107,7 +107,7 @@ exports.VehicleModule = VehicleModule = __decorate([
             vehicle_service_1.VehicleService,
             user_service_1.UserService,
             city_service_1.CityService,
-            db_ping_1.NewMongoService,
+            new_mongo_service_1.NewMongoService,
             route_service_1.RouteService,
             time_series_service_1.TimeSeriesService,
             dispatch_service_1.DispatchService,

@@ -11,37 +11,44 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LocationRequestSchema = exports.LocationRequest = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
+const swagger_1 = require("@nestjs/swagger");
 let LocationRequest = class LocationRequest {
 };
 exports.LocationRequest = LocationRequest;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], LocationRequest.prototype, "associationId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], LocationRequest.prototype, "vehicleId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], LocationRequest.prototype, "vehicleReg", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], LocationRequest.prototype, "created", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], LocationRequest.prototype, "userId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], LocationRequest.prototype, "userName", void 0);
 exports.LocationRequest = LocationRequest = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'LocationRequest',
+        collection: "LocationRequest",
     })
 ], LocationRequest);
 exports.LocationRequestSchema = mongoose_1.SchemaFactory.createForClass(LocationRequest);

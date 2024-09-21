@@ -11,7 +11,7 @@ const common_1 = require("@nestjs/common");
 const time_series_service_1 = require("./time_series.service");
 const time_series_controller_1 = require("./time_series.controller");
 const zipper_1 = require("../../my-utils/zipper");
-const db_ping_1 = require("../../data/db_ping");
+const new_mongo_service_1 = require("../../data/new_mongo_service");
 const VehicleHeartbeatTimeSeries_1 = require("../../data/models/VehicleHeartbeatTimeSeries");
 const mongoose_1 = require("@nestjs/mongoose");
 const PassengerTimeSeries_1 = require("../../data/models/PassengerTimeSeries");
@@ -27,7 +27,7 @@ exports.TimeSeriesModule = TimeSeriesModule = __decorate([
             ]),
         ],
         controllers: [time_series_controller_1.TimeSeriesController],
-        providers: [time_series_service_1.TimeSeriesService, zipper_1.FileArchiverService, db_ping_1.NewMongoService],
+        providers: [time_series_service_1.TimeSeriesService, zipper_1.FileArchiverService, new_mongo_service_1.NewMongoService],
     })
 ], TimeSeriesModule);
 //# sourceMappingURL=time_series.module.js.map

@@ -1,4 +1,4 @@
-import { HeartbeatMeta } from './HeartbeatMeta';
+import { HeartbeatMeta } from "./HeartbeatMeta";
 export declare class VehicleHeartbeatTimeSeries {
     timestamp: Date;
     metaData: HeartbeatMeta;

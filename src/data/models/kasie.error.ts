@@ -1,9 +1,10 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HttpException } from '@nestjs/common';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { HttpException } from "@nestjs/common";
+import { ApiProperty } from "@nestjs/swagger";
 
 @Schema({
   timestamps: true,
-  collection: 'KasieError',
+  collection: "KasieError",
 })
 /**
  * Error that occurs in the backend code
@@ -12,12 +13,16 @@ export class KasieError extends HttpException {
   _partitionKey: string;
   _id: string;
   @Prop()
+  @ApiProperty()
   statusCode: number;
   @Prop()
+  @ApiProperty()
   message: string;
   @Prop()
+  @ApiProperty()
   date: string;
   @Prop()
+  @ApiProperty()
   request: string;
 
   // constructor(statusCode: number, message: string, request: string) {

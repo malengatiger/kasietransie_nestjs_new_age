@@ -12,65 +12,79 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserGeofenceEventSchema = exports.UserGeofenceEvent = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const position_1 = require("./position");
+const swagger_1 = require("@nestjs/swagger");
 let UserGeofenceEvent = class UserGeofenceEvent {
 };
 exports.UserGeofenceEvent = UserGeofenceEvent;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], UserGeofenceEvent.prototype, "userGeofenceId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], UserGeofenceEvent.prototype, "landmarkId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], UserGeofenceEvent.prototype, "activityType", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], UserGeofenceEvent.prototype, "action", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], UserGeofenceEvent.prototype, "userId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], UserGeofenceEvent.prototype, "longDate", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], UserGeofenceEvent.prototype, "created", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], UserGeofenceEvent.prototype, "landmarkName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], UserGeofenceEvent.prototype, "confidence", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], UserGeofenceEvent.prototype, "odometer", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Boolean)
 ], UserGeofenceEvent.prototype, "moving", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], UserGeofenceEvent.prototype, "associationId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", position_1.Position)
 ], UserGeofenceEvent.prototype, "position", void 0);
 exports.UserGeofenceEvent = UserGeofenceEvent = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'UserGeofenceEvent',
+        collection: "UserGeofenceEvent",
     })
 ], UserGeofenceEvent);
 exports.UserGeofenceEventSchema = mongoose_1.SchemaFactory.createForClass(UserGeofenceEvent);

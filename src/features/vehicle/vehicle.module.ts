@@ -19,7 +19,7 @@ import { UserService } from "../user/user.service";
 import { UserGeofenceEventSchema } from "src/data/models/UserGeofenceEvent";
 import { CityService } from "../city/city.service";
 import { CitySchema } from "src/data/models/City";
-import { NewMongoService } from "src/data/db_ping";
+import { NewMongoService } from "src/data/new_mongo_service";
 import { CommuterSchema } from "src/data/models/Commuter";
 import { AppErrorSchema } from "src/data/models/AppError";
 import { KasieErrorSchema } from "src/data/models/kasie.error";
@@ -37,7 +37,6 @@ import { LocationRequestSchema } from "src/data/models/LocationRequest";
 import { LocationRequestService } from "../location_request/location_request.service";
 import { LocationResponseSchema } from "src/data/models/LocationResponse";
 import { RouteService } from "../route/route.service";
-import { RouteUpdateRequestSchema } from "src/data/models/RouteUpdateRequest";
 import { RouteLandmarkSchema } from "src/data/models/RouteLandmark";
 import { RouteCitySchema } from "src/data/models/RouteCity";
 import { RoutePointSchema } from "src/data/models/RoutePoint";
@@ -45,6 +44,7 @@ import { CalculatedDistanceSchema } from "src/data/models/CalculatedDistance";
 import { TimeSeriesService } from "../time_series/time_series.service";
 import { VehicleHeartbeatTimeSeriesSchema } from "src/data/models/VehicleHeartbeatTimeSeries";
 import { PassengerTimeSeriesSchema } from "src/data/models/PassengerTimeSeries";
+import { RouteUpdateRequestSchema } from "src/data/models/RouteUpdateRequest";
 
 @Module({
   imports: [

@@ -11,73 +11,89 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SettingsModelSchema = exports.SettingsModel = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
+const swagger_1 = require("@nestjs/swagger");
 let SettingsModel = class SettingsModel {
 };
 exports.SettingsModel = SettingsModel;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], SettingsModel.prototype, "associationId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], SettingsModel.prototype, "locale", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], SettingsModel.prototype, "refreshRateInSeconds", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], SettingsModel.prototype, "themeIndex", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], SettingsModel.prototype, "geofenceRadius", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], SettingsModel.prototype, "commuterGeofenceRadius", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], SettingsModel.prototype, "vehicleSearchMinutes", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], SettingsModel.prototype, "heartbeatIntervalSeconds", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], SettingsModel.prototype, "loiteringDelay", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], SettingsModel.prototype, "commuterSearchMinutes", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], SettingsModel.prototype, "commuterGeoQueryRadius", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], SettingsModel.prototype, "vehicleGeoQueryRadius", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], SettingsModel.prototype, "numberOfLandmarksToScan", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], SettingsModel.prototype, "distanceFilter", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], SettingsModel.prototype, "created", void 0);
 exports.SettingsModel = SettingsModel = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'SettingsModel',
+        collection: "SettingsModel",
     })
 ], SettingsModel);
 exports.SettingsModelSchema = mongoose_1.SchemaFactory.createForClass(SettingsModel);

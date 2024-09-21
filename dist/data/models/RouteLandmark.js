@@ -12,53 +12,64 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RouteLandmarkSchema = exports.RouteLandmark = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const position_1 = require("./position");
+const swagger_1 = require("@nestjs/swagger");
 let RouteLandmark = class RouteLandmark {
 };
 exports.RouteLandmark = RouteLandmark;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteLandmark.prototype, "routeId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteLandmark.prototype, "routePointId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], RouteLandmark.prototype, "index", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], RouteLandmark.prototype, "routePointIndex", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteLandmark.prototype, "routeName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteLandmark.prototype, "landmarkId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteLandmark.prototype, "landmarkName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteLandmark.prototype, "created", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteLandmark.prototype, "associationId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", position_1.Position)
 ], RouteLandmark.prototype, "position", void 0);
 exports.RouteLandmark = RouteLandmark = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'RouteLandmark',
+        collection: "RouteLandmark",
     })
 ], RouteLandmark);
 exports.RouteLandmarkSchema = mongoose_1.SchemaFactory.createForClass(RouteLandmark);

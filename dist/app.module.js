@@ -42,7 +42,7 @@ const ambassador_service_1 = require("./features/ambassador/ambassador.service")
 const association_service_1 = require("./features/association/association.service");
 const location_request_service_1 = require("./features/location_request/location_request.service");
 const time_series_service_1 = require("./features/time_series/time_series.service");
-const db_ping_1 = require("./data/db_ping");
+const new_mongo_service_1 = require("./data/new_mongo_service");
 const VehicleHeartbeatTimeSeries_1 = require("./data/models/VehicleHeartbeatTimeSeries");
 const PassengerTimeSeries_1 = require("./data/models/PassengerTimeSeries");
 const AmbassadorPassengerCount_1 = require("./data/models/AmbassadorPassengerCount");
@@ -133,7 +133,7 @@ exports.AppModule = AppModule = __decorate([
         ],
         controllers: [app_controller_1.AppController, dispatch_controller_1.DispatchController],
         providers: [app_service_1.AppService, dispatch_service_1.DispatchService, fcm_service_1.MessagingService, time_series_service_1.TimeSeriesService,
-            db_ping_1.NewMongoService, user_service_1.UserService, city_service_1.CityService,
+            new_mongo_service_1.NewMongoService, user_service_1.UserService, city_service_1.CityService,
             ambassador_service_1.AmbassadorService, association_service_1.AssociationService, location_request_service_1.LocationRequestService,
             FirebaseService_1.MyFirebaseService, zipper_1.FileArchiverService],
     })

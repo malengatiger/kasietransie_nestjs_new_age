@@ -11,37 +11,50 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RouteUpdateRequestSchema = exports.RouteUpdateRequest = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
+const swagger_1 = require("@nestjs/swagger");
 let RouteUpdateRequest = class RouteUpdateRequest {
 };
 exports.RouteUpdateRequest = RouteUpdateRequest;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteUpdateRequest.prototype, "associationId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteUpdateRequest.prototype, "routeId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteUpdateRequest.prototype, "routeName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteUpdateRequest.prototype, "created", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteUpdateRequest.prototype, "userId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteUpdateRequest.prototype, "userName", void 0);
 exports.RouteUpdateRequest = RouteUpdateRequest = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'RouteUpdateRequest',
+        collection: "RouteUpdateRequest",
     })
 ], RouteUpdateRequest);
 exports.RouteUpdateRequestSchema = mongoose_1.SchemaFactory.createForClass(RouteUpdateRequest);

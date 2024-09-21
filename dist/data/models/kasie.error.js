@@ -12,29 +12,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.KasieErrorSchema = exports.KasieError = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const common_1 = require("@nestjs/common");
+const swagger_1 = require("@nestjs/swagger");
 let KasieError = class KasieError extends common_1.HttpException {
 };
 exports.KasieError = KasieError;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], KasieError.prototype, "statusCode", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], KasieError.prototype, "message", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], KasieError.prototype, "date", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], KasieError.prototype, "request", void 0);
 exports.KasieError = KasieError = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'KasieError',
+        collection: "KasieError",
     })
 ], KasieError);
 exports.KasieErrorSchema = mongoose_1.SchemaFactory.createForClass(KasieError);

@@ -17,7 +17,7 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const AmbassadorPassengerCount_1 = require("../../data/models/AmbassadorPassengerCount");
-const db_ping_1 = require("../../data/db_ping");
+const new_mongo_service_1 = require("../../data/new_mongo_service");
 const fcm_service_1 = require("../fcm/fcm.service");
 const time_series_service_1 = require("../time_series/time_series.service");
 let AmbassadorService = class AmbassadorService {
@@ -101,6 +101,6 @@ exports.AmbassadorService = AmbassadorService = __decorate([
     __param(3, (0, mongoose_1.InjectModel)(AmbassadorPassengerCount_1.AmbassadorPassengerCount.name)),
     __metadata("design:paramtypes", [fcm_service_1.MessagingService,
         time_series_service_1.TimeSeriesService,
-        db_ping_1.NewMongoService, mongoose_2.default.Model])
+        new_mongo_service_1.NewMongoService, mongoose_2.default.Model])
 ], AmbassadorService);
 //# sourceMappingURL=ambassador.service.js.map

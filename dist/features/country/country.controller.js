@@ -22,13 +22,13 @@ let CountryController = class CountryController {
 };
 exports.CountryController = CountryController;
 __decorate([
-    (0, common_1.Get)('getCountries'),
+    (0, common_1.Get)("getCountries"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], CountryController.prototype, "getCountries", null);
 exports.CountryController = CountryController = __decorate([
-    (0, common_1.Controller)('country'),
+    (0, common_1.Controller)("country"),
     __metadata("design:paramtypes", [country_service_1.CountryService])
 ], CountryController);
 //# sourceMappingURL=country.controller.js.map

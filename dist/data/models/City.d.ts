@@ -1,4 +1,4 @@
-import { Position } from './position';
+import { Position } from "./position";
 export declare class City {
     _partitionKey: string;
     _id: string;

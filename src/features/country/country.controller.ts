@@ -1,15 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
-import { CountryService } from './country.service';
-import { Country } from 'src/data/models/Country';
+import { Controller, Get } from "@nestjs/common";
+import { CountryService } from "./country.service";
+import { Country } from "src/data/models/Country";
 
-@Controller('country')
+@Controller("country")
 export class CountryController {
   constructor(private readonly countryService: CountryService) {}
 
-  @Get('getCountries')
+  @Get("getCountries")
   async getCountries(): Promise<Country[]> {
-    return await this.countryService.getCountries(
-    );
+    return await this.countryService.getCountries();
   }
-  
 }

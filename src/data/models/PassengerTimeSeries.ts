@@ -1,13 +1,14 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HeartbeatMeta } from './HeartbeatMeta';
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { HeartbeatMeta } from "./HeartbeatMeta";
+import { ApiProperty } from "@nestjs/swagger";
 
 @Schema({
   timestamps: true,
-  collection: 'PassengerTimeSeries',
+  collection: "PassengerTimeSeries",
   timeseries: {
-    timeField: 'timestamp',
-    metaField: 'metaData',
-    granularity: 'hours',
+    timeField: "timestamp",
+    metaField: "metaData",
+    granularity: "hours",
   },
 })
 export class PassengerTimeSeries {
@@ -15,18 +16,23 @@ export class PassengerTimeSeries {
   timestamp: Date;
 
   @Prop()
+  @ApiProperty()
   metaData: HeartbeatMeta;
 
   @Prop()
+  @ApiProperty()
   associationId: string;
 
   @Prop()
+  @ApiProperty()
   vehicleId: string;
 
   @Prop()
+  @ApiProperty()
   routeId: string;
 
   @Prop()
+  @ApiProperty()
   passengers: number;
 }
 

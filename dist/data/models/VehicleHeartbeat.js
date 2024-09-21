@@ -12,39 +12,48 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.VehicleHeartbeatSchema = exports.VehicleHeartbeat = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const position_1 = require("./position");
+const swagger_1 = require("@nestjs/swagger");
 let VehicleHeartbeat = class VehicleHeartbeat {
 };
 exports.VehicleHeartbeat = VehicleHeartbeat;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleHeartbeat.prototype, "vehicleHeartbeatId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleHeartbeat.prototype, "vehicleId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleHeartbeat.prototype, "vehicleReg", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleHeartbeat.prototype, "associationId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleHeartbeat.prototype, "ownerId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleHeartbeat.prototype, "ownerName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", position_1.Position)
 ], VehicleHeartbeat.prototype, "position", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleHeartbeat.prototype, "created", void 0);
 __decorate([
@@ -53,14 +62,17 @@ __decorate([
 ], VehicleHeartbeat.prototype, "longDate", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleHeartbeat.prototype, "make", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleHeartbeat.prototype, "model", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Boolean)
 ], VehicleHeartbeat.prototype, "appToBackground", void 0);
 exports.VehicleHeartbeat = VehicleHeartbeat = __decorate([

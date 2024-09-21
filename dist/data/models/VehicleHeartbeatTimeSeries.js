@@ -12,37 +12,43 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.VehicleHeartbeatTimeSeriesSchema = exports.VehicleHeartbeatTimeSeries = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const HeartbeatMeta_1 = require("./HeartbeatMeta");
+const swagger_1 = require("@nestjs/swagger");
 let VehicleHeartbeatTimeSeries = class VehicleHeartbeatTimeSeries {
 };
 exports.VehicleHeartbeatTimeSeries = VehicleHeartbeatTimeSeries;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Date)
 ], VehicleHeartbeatTimeSeries.prototype, "timestamp", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", HeartbeatMeta_1.HeartbeatMeta)
 ], VehicleHeartbeatTimeSeries.prototype, "metaData", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleHeartbeatTimeSeries.prototype, "associationId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], VehicleHeartbeatTimeSeries.prototype, "vehicleId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], VehicleHeartbeatTimeSeries.prototype, "count", void 0);
 exports.VehicleHeartbeatTimeSeries = VehicleHeartbeatTimeSeries = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'VehicleHeartbeatTimeSeries',
+        collection: "VehicleHeartbeatTimeSeries",
         timeseries: {
-            timeField: 'timestamp',
-            metaField: 'metaData',
-            granularity: 'hours',
+            timeField: "timestamp",
+            metaField: "metaData",
+            granularity: "hours",
         },
     })
 ], VehicleHeartbeatTimeSeries);

@@ -1,5 +1,5 @@
-import { Position } from './position';
-import { HydratedDocument } from 'mongoose';
+import { Position } from "./position";
+import { HydratedDocument } from "mongoose";
 export type AmbassadorCheckInDocument = HydratedDocument<AmbassadorCheckIn>;
 export declare class AmbassadorCheckIn {
     _partitionKey: string;

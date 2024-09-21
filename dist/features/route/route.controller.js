@@ -70,7 +70,7 @@ let RouteController = RouteController_1 = class RouteController {
     }
     async getAssociationRoutes(query) {
         const list = await this.routeService.getAssociationRoutes(query.associationId);
-        this.logger.log(`${mm} associationroutes found: ${list.length}`);
+        this.logger.log(`${mm} association routes found: ${list.length}`);
         return list;
     }
     async getAssociationRouteLandmarks(query) {

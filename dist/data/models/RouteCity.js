@@ -12,49 +12,59 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RouteCitySchema = exports.RouteCity = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const position_1 = require("./position");
+const swagger_1 = require("@nestjs/swagger");
 let RouteCity = class RouteCity {
 };
 exports.RouteCity = RouteCity;
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteCity.prototype, "routeId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteCity.prototype, "routeName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteCity.prototype, "cityId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteCity.prototype, "cityName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteCity.prototype, "created", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteCity.prototype, "associationId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteCity.prototype, "routeLandmarkId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], RouteCity.prototype, "routeLandmarkName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", position_1.Position)
 ], RouteCity.prototype, "position", void 0);
 exports.RouteCity = RouteCity = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
-        collection: 'RouteCity',
+        collection: "RouteCity",
     })
 ], RouteCity);
 exports.RouteCitySchema = mongoose_1.SchemaFactory.createForClass(RouteCity);
