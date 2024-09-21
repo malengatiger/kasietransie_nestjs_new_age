@@ -53,7 +53,7 @@ export declare class AssociationService {
     registerAssociation(association: Association): Promise<RegistrationBag>;
     addSettingsModel(model: SettingsModel): Promise<any>;
     addAssociationToken(associationId: string, userId: string, token: string): Promise<any>;
-    getAssociationAppErrors(associationId: string, startDate: string): Promise<AppError[]>;
+    getAssociationAppErrors(associationId: string, startDate: string, endDate: string): Promise<AppError[]>;
     getRandomCommuters(limit: number): Promise<any[]>;
     getAppErrors(startDate: string): Promise<any[]>;
     generateFakeAssociation(associationName: string, email: string, testCellphoneNumber: string, firstName: string, lastName: string): Promise<RegistrationBag>;

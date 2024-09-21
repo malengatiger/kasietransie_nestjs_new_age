@@ -300,11 +300,12 @@ export class AssociationService {
   public async getAssociationAppErrors(
     associationId: string,
     startDate: string,
+    endDate: string,
   ): Promise<AppError[]> {
     return this.mongoService
       .find('AppError', {
         associationId: associationId,
-        created: { $gte: startDate },
+        created: { $gte: startDate, $lte: endDate },
       });
   }
   public async getRandomCommuters(limit: number): Promise<any[]> {

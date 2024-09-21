@@ -25,11 +25,12 @@ async function bootstrap() {
         .build();
     const document = swagger_1.SwaggerModule.createDocument(app, config);
     swagger_1.SwaggerModule.setup('api', app, document);
+    common_1.Logger.log(`${mm} ... Swagger set up .....`);
     app.enableCors();
     await app.listen(port);
     await srv.initializeFirebase();
     await srv.sendInitializationMessage();
     app.useGlobalInterceptors(new errors_interceptor_1.ErrorsInterceptor());
 }
-bootstrap().then((r) => common_1.Logger.debug(`Kasie Backend Bootstrapping is complete. 💖💖💖 ... Boogy on!`));
+bootstrap().then((r) => common_1.Logger.debug(`${mm} Bootstrapping is complete. 💖💖💖 ... Lets do this!!`));
 //# sourceMappingURL=main.js.map

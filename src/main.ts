@@ -32,16 +32,16 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  //
+  Logger.log(`${mm} ... Swagger set up .....`);
+
   // app.use(helmet());
   app.enableCors();
   await app.listen(port);
   await srv.initializeFirebase();
   await srv.sendInitializationMessage();
   app.useGlobalInterceptors(new ErrorsInterceptor());
-  //
-  // pingDatabase();
+  
 }
 bootstrap().then((r) =>
-  Logger.debug(`Kasie Backend Bootstrapping is complete. 💖💖💖 ... Boogy on!`),
+  Logger.debug(`${mm} Bootstrapping is complete. 💖💖💖 ... Lets do this!!`),
 );

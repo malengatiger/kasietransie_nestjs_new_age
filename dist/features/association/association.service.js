@@ -233,11 +233,11 @@ let AssociationService = class AssociationService {
         });
         return await this.mongoService.create('AssociationToken', at);
     }
-    async getAssociationAppErrors(associationId, startDate) {
+    async getAssociationAppErrors(associationId, startDate, endDate) {
         return this.mongoService
             .find('AppError', {
             associationId: associationId,
-            created: { $gte: startDate },
+            created: { $gte: startDate, $lte: endDate },
         });
     }
     async getRandomCommuters(limit) {
