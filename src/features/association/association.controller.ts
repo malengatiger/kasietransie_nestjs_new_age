@@ -6,6 +6,7 @@ import { Vehicle } from 'src/data/models/Vehicle';
 import { SettingsModel } from 'src/data/models/SettingsModel';
 import { AppError } from 'src/data/models/AppError';
 import { CloudStorageUploaderService } from 'src/storage/storage.service';
+import { KasieQRCode } from 'src/data/helpers/kasie_qr_code';
 
 @Controller('association')
 export class AssociationController {
@@ -83,7 +84,7 @@ export class AssociationController {
   
   @Get('generateFakeAssociation')
   async generateFakeAssociation(
-    @Query() name: string,
+    @Query('name') name: string,
   ): Promise<RegistrationBag> {
     return await this.associationService.generateFakeAssociation(name);
   }
@@ -93,16 +94,8 @@ export class AssociationController {
   }
   @Post('createQRCode')
   async createQRCode(
-    data: string,
-    prefix: string,
-    size: number,
-    associationId: string,
+    @Body() data: KasieQRCode
   ): Promise<string> {
-    return this.storage.createQRCode(
-      data,
-      prefix,
-      size,
-      associationId,
-    );
+    return this.storage.createQRCode(data);
   }
 }

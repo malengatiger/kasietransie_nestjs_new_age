@@ -56,8 +56,8 @@ let AssociationController = class AssociationController {
     async getExampleFiles() {
         return this.associationService.getExampleFiles();
     }
-    async createQRCode(data, prefix, size, associationId) {
-        return this.storage.createQRCode(data, prefix, size, associationId);
+    async createQRCode(data) {
+        return this.storage.createQRCode(data);
     }
 };
 exports.AssociationController = AssociationController;
@@ -124,15 +124,16 @@ __decorate([
 ], AssociationController.prototype, "getAssociationAppErrors", null);
 __decorate([
     (0, common_1.Get)('generateFakeAssociation'),
-    __param(0, (0, common_1.Query)()),
+    __param(0, (0, common_1.Query)('name')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], AssociationController.prototype, "generateFakeAssociation", null);
 __decorate([
     (0, common_1.Post)('createQRCode'),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, Number, String]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AssociationController.prototype, "createQRCode", null);
 exports.AssociationController = AssociationController = __decorate([

@@ -35,6 +35,7 @@ const Commuter_1 = require("../../data/models/Commuter");
 const fcm_service_1 = require("../fcm/fcm.service");
 const city_service_1 = require("../city/city.service");
 const user_service_1 = require("../user/user.service");
+const uuid_1 = require("uuid");
 const mm = "🍎🍎🍎 AssociationService: 🍎🍎🍎";
 let AssociationService = class AssociationService {
     constructor(configService, archiveService, userService, cityService, messagingService, mongoService, userModel, commuterModel, appErrorModel, associationModel, exampleFileModel, vehicleModel, countryModel, associationTokenModel, settingsModel) {
@@ -168,12 +169,13 @@ let AssociationService = class AssociationService {
         }
     }
     generateUniqueId() {
-        const timestamp = new Date().getTime();
-        const randomString = Math.random().toString(36).substring(2, 6);
-        return `${timestamp}_${randomString}`;
+        const uuid = (0, uuid_1.v4)();
+        console.log(`UUID: ${uuid}`);
+        return uuid;
     }
     async registerAssociation(association) {
-        common_1.Logger.log(`${mm} registerAssociation ...`);
+        const associationId = this.generateUniqueId();
+        common_1.Logger.log(`${mm} registerAssociation ... id: ${associationId}`);
         const u = new User_1.User();
         u.firstName = association.adminUserFirstName;
         u.lastName = association.adminUserLastName;
@@ -181,13 +183,15 @@ let AssociationService = class AssociationService {
         u.cellphone = association.adminCellphone;
         u.countryId = association.countryId;
         u.countryName = association.countryName;
+        u.associationId = associationId;
+        u.associationName = association.associationName;
         u.dateRegistered = new Date().toISOString();
         const user = await this.userService.createUser(u);
         association.userId = user.userId;
         const ass = new Association_1.Association();
         ass.userId = user.userId;
         ass.associationName = association.associationName;
-        ass.associationId = this.generateUniqueId();
+        ass.associationId = associationId;
         ass.adminUserFirstName = association.adminUserFirstName;
         ass.adminUserLastName = association.adminUserLastName;
         ass.adminEmail = association.adminEmail;
@@ -198,7 +202,7 @@ let AssociationService = class AssociationService {
         ass.userId = user.userId;
         const settings = new SettingsModel_1.SettingsModel();
         settings.created = new Date().toISOString();
-        settings.associationId = ass.associationId;
+        settings.associationId = associationId;
         settings.commuterGeoQueryRadius = 50;
         settings.commuterGeofenceRadius = 200;
         settings.commuterSearchMinutes = 30;
@@ -225,12 +229,13 @@ let AssociationService = class AssociationService {
                 bag.country = c[0];
             }
         }
-        common_1.Logger.log(`${mm} send association and settings to Atlas ...`);
-        await this.mongoService.create("SettingsModel", settings);
-        await this.mongoService.create("AssociationModel", ass);
-        common_1.Logger.log(`${mm} 🥬 association and settings added to Atlas ...`);
+        common_1.Logger.log(`\n${mm} send association and settings to Atlas ...`);
+        const resp1 = await this.settingsModel.create(settings);
+        const resp2 = await this.associationModel.create(ass);
+        common_1.Logger.log(`${mm} 🥬 association and settings added to Atlas ...` +
+            `\n${JSON.stringify(resp1, null, 2)}\n\n${JSON.stringify(resp2, null, 2)}}\n`);
         await this.messagingService.sendAssociationRegisteredMessage(ass);
-        common_1.Logger.log(`${mm} 🥬 association registered: 🥬 🥬 🥬 ${JSON.stringify(bag, null, 2)} 🥬 `);
+        common_1.Logger.log(`\n${mm} 🥬 association registered: 🥬 🥬 🥬 ${JSON.stringify(bag, null, 2)} 🥬 \n\n`);
         return bag;
     }
     async addSettingsModel(model) {
@@ -262,17 +267,15 @@ let AssociationService = class AssociationService {
         });
     }
     async generateFakeAssociation(name) {
-        common_1.Logger.log(`${mm} generateFakeAssociation ...`);
+        common_1.Logger.log(`${mm} generateFakeAssociation ...${name}`);
         const ass = new Association_1.Association();
         ass.associationName = name;
-        ass.associationId = this.generateUniqueId();
         ass.adminEmail = this.getFakeEmail();
         ass.adminCellphone = this.getFakeCellphoneNumber();
         ass.adminUserFirstName = "James Earl";
         ass.adminUserLastName = `Jones_${Math.random() * 1000}`;
         ass.dateRegistered = new Date().toISOString();
-        ass.countryId = '7a2328bf-915f-4194-82ae-6c220c046cac';
-        ass.countryName = 'South Africa';
+        ass.countryId = "7a2328bf-915f-4194-82ae-6c220c046cac";
         const bag = await this.registerAssociation(ass);
         return bag;
     }

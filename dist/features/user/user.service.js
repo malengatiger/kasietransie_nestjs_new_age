@@ -66,12 +66,17 @@ let UserService = class UserService {
             if (userRecord.uid) {
                 const uid = userRecord.uid;
                 user.userId = uid;
-                const url = await this.storage.createQRCode(JSON.stringify(user), constants_1.Constants.qrcode_user, 1, user.associationId);
+                const url = await this.storage.createQRCode({
+                    data: JSON.stringify(user),
+                    prefix: constants_1.Constants.qrcode_user,
+                    size: 1,
+                    associationId: user.associationId,
+                });
                 user.password = null;
                 user.qrCodeUrl = url;
                 const mUser = await this.userModel.create(user);
                 user.password = storedPassword;
-                common_1.Logger.log(`\n${mm} KasieTransie user created. \n`);
+                common_1.Logger.log(`\n${mm} KasieTransie user created. ${JSON.stringify(user)}\n`);
             }
             else {
                 throw new Error('userRecord.uid == null. We have a problem with Firebase, Jack!');

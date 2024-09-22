@@ -5,11 +5,15 @@ import {
   File,
   StorageOptions,
   GetSignedUrlConfig,
+  UploadResponse,
 } from "@google-cloud/storage";
 import { ConfigService } from "@nestjs/config";
 import * as fs from "fs";
 import * as path from "path";
 import * as qrcode from "qrcode";
+import { KasieQRCode } from "src/data/helpers/kasie_qr_code";
+import * as mime from "mime-types";
+import { StorageControlClient } from "@google-cloud/storage-control";
 
 const mm = "CloudStorageUploaderService";
 
@@ -27,16 +31,8 @@ export class CloudStorageUploaderService {
     );
   }
 
-  private async getSignedUrl(
-    objectName: string,
-  ): Promise<string> {
-    Logger.log(`${mm} getSignedUrl for cloud storage: ${objectName}`);
-
-    const storage: Storage = new Storage({ projectId: this.projectId });
-    const bucket: Bucket = storage.bucket(this.bucketName);
-    const file: File = bucket.file(
-      `${this.cloudStorageDirectory}/${objectName}`
-    );
+  private async getSignedUrl(file: File): Promise<string> {
+    Logger.log(`${mm} getSignedUrl for cloud storage: ${file.name}`);
 
     const signedUrlOptions: GetSignedUrlConfig = {
       action: "read",
@@ -45,39 +41,65 @@ export class CloudStorageUploaderService {
 
     try {
       const [url] = await file.getSignedUrl(signedUrlOptions);
-      Logger.log(`${mm} Signed URL acquired. Cool! ${url}`);
+      Logger.log(`\n${mm} Signed URL acquired. Cool! \n 🤟🏽 🤟🏽 ${url}  🤟🏽 🤟🏽\n\n`);
       return url;
     } catch (error) {
       Logger.error(`${mm} Error getting signed URL: ${error}`);
       throw error;
     }
   }
+  // Instantiates a client
 
+  async callCreateFolder(folderName: string) {
+    const controlClient = new StorageControlClient();
+    const bucketPath = controlClient.bucketPath("_", this.bucketName);
+
+    // Create the request
+    const request = {
+      parent: bucketPath,
+      folderId: folderName,
+    };
+    // Run request
+    const [response] = await controlClient.createFolder(request);
+    console.log(`${mm} Created folder: ${response.name}.`);
+    return response;
+  }
   public async uploadFile(
     objectName: string,
     filePath: string,
     associationId: string
   ): Promise<string> {
-    Logger.log(`${mm} uploadFile to cloud storage: ${objectName}`);
+    Logger.log(
+      `${mm} uploadFile to cloud storage: ${objectName} in associationId: ${associationId}}`
+    );
 
     const storage: Storage = new Storage({ projectId: this.projectId });
     const bucket: Bucket = storage.bucket(this.bucketName);
-    const file: File = bucket.file(
-      `${this.cloudStorageDirectory}/${associationId}/${objectName}`
-    );
+    const bucketFileName = `${this.cloudStorageDirectory}/${associationId}/${objectName}`;
+    Logger.log(`${mm} .... bucketFileName: ${bucketFileName}`);
+    const file: File = bucket.file(bucketFileName);
 
     try {
       const contentType = this.getFileContentType(filePath);
       Logger.log(
         `${mm} uploadFile to cloud storage, contentType: ${contentType}`
       );
-
-      await file.bucket.upload(filePath, {
-        metadata: { contentType, predefinedAcl: "publicRead" },
-      });
-
-      const signedUrl = await this.getSignedUrl(objectName);
-      Logger.log(`${mm} File uploaded to cloud storage; url = ${signedUrl}`);
+      const options = {
+        destination: bucketFileName,
+        preconditionOpts: {},
+        metadata: {
+          contentType: contentType,
+          predefinedAcl: "publicRead",
+        },
+      };
+      const response = await storage
+        .bucket(this.bucketName)
+        .upload(filePath, options);
+      Logger.log(
+        `${mm} File uploaded to cloud storage; \n🍐🍐 metadata = ${JSON.stringify(response[0].metadata)} 🍐🍐\n`
+      );
+      const signedUrl = await this.getSignedUrl(file);
+      Logger.log(`${mm} File uploaded to cloud storage; url: \n🍐🍐 ${signedUrl} 🍐🍐\n`);
       return signedUrl;
     } catch (error) {
       Logger.error(`${mm} Error uploading file: ${error}`);
@@ -86,27 +108,17 @@ export class CloudStorageUploaderService {
   }
 
   private getFileContentType(filePath: string): string {
-    try {
-      return fs.readFileSync(filePath).toString();
-    } catch (error) {
-      Logger.warn(
-        `${mm} Could not determine content type, using 'application/octet-stream'`
-      );
-      return "application/octet-stream";
-    }
+    const mimeType = mime.lookup(filePath);
+    return mimeType || "application/octet-stream";
   }
 
   public async createQRCode(
-    data: string,
-    prefix: string,
-    size: number,
-    associationId: string,
-    // Add bucketName as a parameter
+    data: KasieQRCode // Add bucketName as a parameter
   ): Promise<string> {
-    Logger.log(`${mm} qrcode prefix: ${prefix} - size: ${size}`);
+    Logger.log(`${mm} qrcode prefix: ${data.prefix} - size: ${data.size}`);
 
     try {
-      const fileName = `qrcode_${prefix}_${new Date().getTime()}.png`;
+      const fileName = `qrcode_${data.prefix}_${new Date().getTime()}.png`;
       const tempDir = path.join(__dirname, "..", "tempFiles");
       const tempFilePath = path.join(tempDir, fileName);
 
@@ -114,22 +126,24 @@ export class CloudStorageUploaderService {
         fs.mkdirSync(tempDir, { recursive: true });
       }
       let version = 15;
-      if (size == 1) {
+      if (data.size == 1) {
         version = 20;
       }
-      if (size == 2) {
+      if (data.size == 2) {
         version = 30;
       }
-      if (size == 3) {
+      if (data.size == 3) {
         version = 40;
       }
       Logger.log(`${mm} qrcode version: ${version}`);
-      await qrcode.toFile(tempFilePath, data, {
+      await qrcode.toFile(tempFilePath, data.data, {
         version: version,
       });
       Logger.log(`${mm} tempFilePath.length: ${tempFilePath.length} bytes`);
-      Logger.log(`${mm} qrcode file: ${tempFilePath}`);
-      return this.uploadFile(fileName, tempFilePath, associationId);
+      Logger.log(
+        `${mm} qrcode file: ${tempFilePath} to be uploaded to ${fileName}`
+      );
+      return this.uploadFile(fileName, tempFilePath, data.associationId);
     } catch (error) {
       console.error(error);
       throw new Error("Failed to create QR code and upload to Cloud Storage.");

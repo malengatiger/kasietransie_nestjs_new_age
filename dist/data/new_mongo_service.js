@@ -50,8 +50,8 @@ let NewMongoService = class NewMongoService {
     async create(name, data) {
         const collection = this.db.collection(name);
         const result = await collection.insertOne(data);
-        console.log(result);
-        return result.insertedId;
+        console.log(`${mm} create: ${JSON.stringify(result, null, 2)}`);
+        return result;
     }
     async delete(name, query) {
         const collection = this.db.collection(name);
@@ -76,7 +76,6 @@ let NewMongoService = class NewMongoService {
             await this.client.close();
         }
         finally {
-            await this.client.close();
         }
     }
 };

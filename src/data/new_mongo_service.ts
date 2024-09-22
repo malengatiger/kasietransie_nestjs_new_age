@@ -39,8 +39,9 @@ export class NewMongoService {
     // const database = this.client.db('kasie_transie');
     const collection = this.db.collection(name);
     const result = await collection.insertOne(data);
-    console.log(result);
-    return result.insertedId;
+    console.log(`${mm} create: ${JSON.stringify(result, null, 2)}`);
+    
+    return result;
   }
   async delete(name: string, query: any): Promise<any> {
     // const database = this.client.db('kasie_transie');
@@ -78,7 +79,7 @@ export class NewMongoService {
     await this.client.close();
   } finally {
     // Ensures that the this.client will close when you finish/error
-    await this.client.close();
+    // await this.client.close();
   }
 }
 }

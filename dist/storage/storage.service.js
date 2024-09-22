@@ -16,6 +16,8 @@ const config_1 = require("@nestjs/config");
 const fs = require("fs");
 const path = require("path");
 const qrcode = require("qrcode");
+const mime = require("mime-types");
+const storage_control_1 = require("@google-cloud/storage-control");
 const mm = "CloudStorageUploaderService";
 let CloudStorageUploaderService = class CloudStorageUploaderService {
     constructor(configService) {
@@ -24,18 +26,15 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
         this.projectId = this.configService.get("PROJECT_ID");
         this.cloudStorageDirectory = this.configService.get("CLOUD_STORAGE_DIRECTORY");
     }
-    async getSignedUrl(objectName) {
-        common_1.Logger.log(`${mm} getSignedUrl for cloud storage: ${objectName}`);
-        const storage = new storage_1.Storage({ projectId: this.projectId });
-        const bucket = storage.bucket(this.bucketName);
-        const file = bucket.file(`${this.cloudStorageDirectory}/${objectName}`);
+    async getSignedUrl(file) {
+        common_1.Logger.log(`${mm} getSignedUrl for cloud storage: ${file.name}`);
         const signedUrlOptions = {
             action: "read",
             expires: Date.now() + 365 * 24 * 60 * 60 * 1000 * 10,
         };
         try {
             const [url] = await file.getSignedUrl(signedUrlOptions);
-            common_1.Logger.log(`${mm} Signed URL acquired. Cool! ${url}`);
+            common_1.Logger.log(`\n${mm} Signed URL acquired. Cool! \n 🤟🏽 🤟🏽 ${url}  🤟🏽 🤟🏽\n\n`);
             return url;
         }
         catch (error) {
@@ -43,19 +42,41 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             throw error;
         }
     }
+    async callCreateFolder(folderName) {
+        const controlClient = new storage_control_1.StorageControlClient();
+        const bucketPath = controlClient.bucketPath("_", this.bucketName);
+        const request = {
+            parent: bucketPath,
+            folderId: folderName,
+        };
+        const [response] = await controlClient.createFolder(request);
+        console.log(`${mm} Created folder: ${response.name}.`);
+        return response;
+    }
     async uploadFile(objectName, filePath, associationId) {
-        common_1.Logger.log(`${mm} uploadFile to cloud storage: ${objectName}`);
+        common_1.Logger.log(`${mm} uploadFile to cloud storage: ${objectName} in associationId: ${associationId}}`);
         const storage = new storage_1.Storage({ projectId: this.projectId });
         const bucket = storage.bucket(this.bucketName);
-        const file = bucket.file(`${this.cloudStorageDirectory}/${associationId}/${objectName}`);
+        const bucketFileName = `${this.cloudStorageDirectory}/${associationId}/${objectName}`;
+        common_1.Logger.log(`${mm} .... bucketFileName: ${bucketFileName}`);
+        const file = bucket.file(bucketFileName);
         try {
             const contentType = this.getFileContentType(filePath);
             common_1.Logger.log(`${mm} uploadFile to cloud storage, contentType: ${contentType}`);
-            await file.bucket.upload(filePath, {
-                metadata: { contentType, predefinedAcl: "publicRead" },
-            });
-            const signedUrl = await this.getSignedUrl(objectName);
-            common_1.Logger.log(`${mm} File uploaded to cloud storage; url = ${signedUrl}`);
+            const options = {
+                destination: bucketFileName,
+                preconditionOpts: {},
+                metadata: {
+                    contentType: contentType,
+                    predefinedAcl: "publicRead",
+                },
+            };
+            const response = await storage
+                .bucket(this.bucketName)
+                .upload(filePath, options);
+            common_1.Logger.log(`${mm} File uploaded to cloud storage; \n🍐🍐 metadata = ${JSON.stringify(response[0].metadata)} 🍐🍐\n`);
+            const signedUrl = await this.getSignedUrl(file);
+            common_1.Logger.log(`${mm} File uploaded to cloud storage; url: \n🍐🍐 ${signedUrl} 🍐🍐\n`);
             return signedUrl;
         }
         catch (error) {
@@ -64,40 +85,35 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
         }
     }
     getFileContentType(filePath) {
-        try {
-            return fs.readFileSync(filePath).toString();
-        }
-        catch (error) {
-            common_1.Logger.warn(`${mm} Could not determine content type, using 'application/octet-stream'`);
-            return "application/octet-stream";
-        }
+        const mimeType = mime.lookup(filePath);
+        return mimeType || "application/octet-stream";
     }
-    async createQRCode(data, prefix, size, associationId) {
-        common_1.Logger.log(`${mm} qrcode prefix: ${prefix} - size: ${size}`);
+    async createQRCode(data) {
+        common_1.Logger.log(`${mm} qrcode prefix: ${data.prefix} - size: ${data.size}`);
         try {
-            const fileName = `qrcode_${prefix}_${new Date().getTime()}.png`;
+            const fileName = `qrcode_${data.prefix}_${new Date().getTime()}.png`;
             const tempDir = path.join(__dirname, "..", "tempFiles");
             const tempFilePath = path.join(tempDir, fileName);
             if (!fs.existsSync(tempDir)) {
                 fs.mkdirSync(tempDir, { recursive: true });
             }
             let version = 15;
-            if (size == 1) {
+            if (data.size == 1) {
                 version = 20;
             }
-            if (size == 2) {
+            if (data.size == 2) {
                 version = 30;
             }
-            if (size == 3) {
+            if (data.size == 3) {
                 version = 40;
             }
             common_1.Logger.log(`${mm} qrcode version: ${version}`);
-            await qrcode.toFile(tempFilePath, data, {
+            await qrcode.toFile(tempFilePath, data.data, {
                 version: version,
             });
             common_1.Logger.log(`${mm} tempFilePath.length: ${tempFilePath.length} bytes`);
-            common_1.Logger.log(`${mm} qrcode file: ${tempFilePath}`);
-            return this.uploadFile(fileName, tempFilePath, associationId);
+            common_1.Logger.log(`${mm} qrcode file: ${tempFilePath} to be uploaded to ${fileName}`);
+            return this.uploadFile(fileName, tempFilePath, data.associationId);
         }
         catch (error) {
             console.error(error);

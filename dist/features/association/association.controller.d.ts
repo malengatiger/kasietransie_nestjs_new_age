@@ -5,6 +5,7 @@ import { Vehicle } from 'src/data/models/Vehicle';
 import { SettingsModel } from 'src/data/models/SettingsModel';
 import { AppError } from 'src/data/models/AppError';
 import { CloudStorageUploaderService } from 'src/storage/storage.service';
+import { KasieQRCode } from 'src/data/helpers/kasie_qr_code';
 export declare class AssociationController {
     private readonly associationService;
     private readonly storage;
@@ -20,5 +21,5 @@ export declare class AssociationController {
     getAssociationAppErrors(associationId: string, startDate: string, endDate: string): Promise<AppError[]>;
     generateFakeAssociation(name: string): Promise<RegistrationBag>;
     getExampleFiles(): Promise<any[]>;
-    createQRCode(data: string, prefix: string, size: number, associationId: string): Promise<string>;
+    createQRCode(data: KasieQRCode): Promise<string>;
 }

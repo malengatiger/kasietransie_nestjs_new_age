@@ -1,4 +1,5 @@
 import { ConfigService } from "@nestjs/config";
+import { KasieQRCode } from "src/data/helpers/kasie_qr_code";
 export declare class CloudStorageUploaderService {
     private configService;
     private bucketName;
@@ -6,7 +7,8 @@ export declare class CloudStorageUploaderService {
     private cloudStorageDirectory;
     constructor(configService: ConfigService);
     private getSignedUrl;
+    callCreateFolder(folderName: string): Promise<import("@google-cloud/storage-control/build/protos/protos").google.storage.control.v2.IFolder>;
     uploadFile(objectName: string, filePath: string, associationId: string): Promise<string>;
     private getFileContentType;
-    createQRCode(data: string, prefix: string, size: number, associationId: string): Promise<string>;
+    createQRCode(data: KasieQRCode): Promise<string>;
 }
