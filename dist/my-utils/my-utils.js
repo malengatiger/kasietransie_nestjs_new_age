@@ -46,6 +46,7 @@ class MyUtils {
     }
     static async createQRCodeAndUploadToCloudStorage(input, prefix, size) {
         common_1.Logger.log(`${mm} qrcode prefix: ${prefix} - size: ${size}`);
+        const bucketName = process.env.BUCKET_NAME;
         try {
             const fileName = `qrcode_${prefix}_${new Date().getTime()}.png`;
             const tempDir = path.join(__dirname, '..', 'tempFiles');
@@ -68,7 +69,7 @@ class MyUtils {
                 version: version,
             });
             common_1.Logger.log(`${mm} tempFilePath.length: ${tempFilePath.length} bytes`);
-            const storage = firebase_admin_1.default.storage();
+            const storage = firebase_admin_1.default.storage().bucket(bucketName);
             common_1.Logger.log(`${mm} uploading qrcode file: ${tempFilePath}`);
             const options = {
                 destination: `kasieMedia/${fileName}`,
@@ -77,10 +78,10 @@ class MyUtils {
                     predefinedAcl: 'publicRead',
                 },
             };
-            const [file] = await storage.bucket().upload(tempFilePath, options);
-            const [metadata] = await file.getMetadata();
-            common_1.Logger.log(`${mm} returning medialink: 🔵 🔵 🔵 ${metadata.mediaLink}`);
-            return metadata.mediaLink;
+            const [file] = await storage.upload(tempFilePath, options);
+            const publicUrl = file.publicUrl();
+            common_1.Logger.log(`${mm} returning public URL: 🔵 🔵 🔵 ${publicUrl}`);
+            return publicUrl;
         }
         catch (error) {
             console.error(error);

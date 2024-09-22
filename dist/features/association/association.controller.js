@@ -17,9 +17,11 @@ const common_1 = require("@nestjs/common");
 const association_service_1 = require("./association.service");
 const Association_1 = require("../../data/models/Association");
 const SettingsModel_1 = require("../../data/models/SettingsModel");
+const storage_service_1 = require("../../storage/storage.service");
 let AssociationController = class AssociationController {
-    constructor(associationService) {
+    constructor(associationService, storage) {
         this.associationService = associationService;
+        this.storage = storage;
     }
     async registerAssociation(association) {
         return this.associationService.registerAssociation(association);
@@ -53,6 +55,9 @@ let AssociationController = class AssociationController {
     }
     async getExampleFiles() {
         return this.associationService.getExampleFiles();
+    }
+    async createQRCode(data, prefix, size, associationId) {
+        return this.storage.createQRCode(data, prefix, size, associationId);
     }
 };
 exports.AssociationController = AssociationController;
@@ -124,8 +129,15 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], AssociationController.prototype, "generateFakeAssociation", null);
+__decorate([
+    (0, common_1.Post)('createQRCode'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, Number, String]),
+    __metadata("design:returntype", Promise)
+], AssociationController.prototype, "createQRCode", null);
 exports.AssociationController = AssociationController = __decorate([
     (0, common_1.Controller)('association'),
-    __metadata("design:paramtypes", [association_service_1.AssociationService])
+    __metadata("design:paramtypes", [association_service_1.AssociationService,
+        storage_service_1.CloudStorageUploaderService])
 ], AssociationController);
 //# sourceMappingURL=association.controller.js.map

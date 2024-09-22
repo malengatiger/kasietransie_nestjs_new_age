@@ -66,6 +66,8 @@ const VehicleArrival_1 = require("./data/models/VehicleArrival");
 const VehicleDeparture_1 = require("./data/models/VehicleDeparture");
 const DispatchRecord_1 = require("./data/models/DispatchRecord");
 const CommuterRequest_1 = require("./data/models/CommuterRequest");
+const storage_module_1 = require("./storage/storage.module");
+const storage_service_1 = require("./storage/storage.service");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -130,10 +132,11 @@ exports.AppModule = AppModule = __decorate([
             user_geofence_module_1.UserGeofenceModule,
             error_module_1.ErrorModule,
             mongo_data_module_1.MongoDataModule,
+            storage_module_1.StorageModule,
         ],
         controllers: [app_controller_1.AppController, dispatch_controller_1.DispatchController],
         providers: [app_service_1.AppService, dispatch_service_1.DispatchService, fcm_service_1.MessagingService, time_series_service_1.TimeSeriesService,
-            new_mongo_service_1.NewMongoService, user_service_1.UserService, city_service_1.CityService,
+            new_mongo_service_1.NewMongoService, user_service_1.UserService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService,
             ambassador_service_1.AmbassadorService, association_service_1.AssociationService, location_request_service_1.LocationRequestService,
             FirebaseService_1.MyFirebaseService, zipper_1.FileArchiverService],
     })

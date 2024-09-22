@@ -45,6 +45,7 @@ import { TimeSeriesService } from "../time_series/time_series.service";
 import { VehicleHeartbeatTimeSeriesSchema } from "src/data/models/VehicleHeartbeatTimeSeries";
 import { PassengerTimeSeriesSchema } from "src/data/models/PassengerTimeSeries";
 import { RouteUpdateRequestSchema } from "src/data/models/RouteUpdateRequest";
+import { CloudStorageUploaderService } from "src/storage/storage.service";
 
 @Module({
   imports: [
@@ -105,6 +106,7 @@ import { RouteUpdateRequestSchema } from "src/data/models/RouteUpdateRequest";
     AssociationService,
     MessagingService,
     FileArchiverService,
+    CloudStorageUploaderService,
   ],
 })
 export class VehicleModule {}

@@ -259,7 +259,8 @@ export class MessagingService {
       }
 
       Logger.debug(
-        `${mm} 🅿️🅿️🅿️ Successfully sent FCM message to topic and associations 🚺 🚺 🚺 topic: ${topic} message type: ${type} 🚺 title: ${title}`,
+        `${mm} 🅿️🅿️🅿️ Successfully sent FCM message to topic and association (if appropriate) `
+        + `\n🚺 🚺 🚺 topic: ${topic} message type: ${type} 🚺 title: ${JSON.stringify(title)}`,
       );
     } catch (error) {
       Logger.error('Error sending message:', error);

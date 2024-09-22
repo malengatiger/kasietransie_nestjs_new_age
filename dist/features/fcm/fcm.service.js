@@ -126,7 +126,8 @@ let MessagingService = class MessagingService {
                 }
                 await admin.messaging().send(messageDirect);
             }
-            common_1.Logger.debug(`${mm} 🅿️🅿️🅿️ Successfully sent FCM message to topic and associations 🚺 🚺 🚺 topic: ${topic} message type: ${type} 🚺 title: ${title}`);
+            common_1.Logger.debug(`${mm} 🅿️🅿️🅿️ Successfully sent FCM message to topic and association (if appropriate) `
+                + `\n🚺 🚺 🚺 topic: ${topic} message type: ${type} 🚺 title: ${JSON.stringify(title)}`);
         }
         catch (error) {
             common_1.Logger.error('Error sending message:', error);

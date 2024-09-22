@@ -60,5 +60,6 @@ export declare class AssociationService {
     getExampleFiles(): Promise<any[]>;
     upLoadExampleFiles(files: File[]): Promise<ExampleFile[]>;
     getFakeEmail(): string;
-    getFakeCell(): string;
+    randomIntFromInterval(min: number, max: number): number;
+    getFakeCellphoneNumber(): string;
 }

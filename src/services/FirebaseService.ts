@@ -1,27 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, Logger } from '@nestjs/common';
 import * as admin from 'firebase-admin';
+import { applicationDefault } from 'firebase-admin/app';
 import { Constants } from 'src/my-utils/constants';
 import { MyUtils } from 'src/my-utils/my-utils';
 
 const mm = '🍑 🍑 🍑 FirebaseService 🍑 ';
-const firebaseConfig = {
-  apiKey: 'AIzaSyAdOBFxPS1TacnK5OZTU6VxOQ20Bq8Cyrg',
-  authDomain: 'kasie2024.firebaseapp.com',
-  projectId: 'kasie2024',
-  storageBucket: 'kasie2024.appspot.com',
-  messagingSenderId: '79998394043',
-  appId: '1:79998394043:web:95361b63452944add6139e',
-  measurementId: 'G-70WYNB4CN7',
-};
 
 @Injectable()
 export class MyFirebaseService {
   public async initializeFirebase(): Promise<void> {
     Logger.log(`${mm} ... Initializing Firebase ...`);
-    const app1 = admin.initializeApp(firebaseConfig);
-    Logger.log(`${mm} ... Firebase initialized: name: ${app1.name}   ...`);
-    return null;
+    const app1 = admin.initializeApp({
+      credential: applicationDefault(),
+    });
+    Logger.log(`${mm} ... Firebase initialized: name: ${app1.name}  🔵 🔵 ${JSON.stringify(app1.options, null, 2)}  🔵 🔵`);
   }
   async sendInitializationMessage() {
     const date = MyUtils.formatISOStringDate(new Date().toISOString(), 'en');

@@ -59,6 +59,8 @@ import { VehicleDepartureSchema } from './data/models/VehicleDeparture';
 
 import { DispatchRecordSchema } from './data/models/DispatchRecord';
 import { CommuterRequestSchema } from './data/models/CommuterRequest';
+import { StorageModule } from './storage/storage.module';
+import { CloudStorageUploaderService } from './storage/storage.service';
 
 @Module({
   imports: [
@@ -125,10 +127,11 @@ import { CommuterRequestSchema } from './data/models/CommuterRequest';
     UserGeofenceModule,
     ErrorModule,
     MongoDataModule,
+    StorageModule,
   ],
   controllers: [AppController, DispatchController],
   providers: [AppService, DispatchService, MessagingService, TimeSeriesService,
-    NewMongoService, UserService, CityService,
+    NewMongoService, UserService, CityService, CloudStorageUploaderService,
     AmbassadorService, AssociationService, LocationRequestService, 
     MyFirebaseService, FileArchiverService],
 })

@@ -5,10 +5,13 @@ import { RegistrationBag } from 'src/data/models/RegistrationBag';
 import { Vehicle } from 'src/data/models/Vehicle';
 import { SettingsModel } from 'src/data/models/SettingsModel';
 import { AppError } from 'src/data/models/AppError';
+import { CloudStorageUploaderService } from 'src/storage/storage.service';
 
 @Controller('association')
 export class AssociationController {
-  constructor(private readonly associationService: AssociationService) {}
+  constructor(private readonly associationService: AssociationService,
+    private readonly storage: CloudStorageUploaderService
+  ) {}
 
   @Post('registerAssociation')
   async registerAssociation(
@@ -87,5 +90,19 @@ export class AssociationController {
   
   async getExampleFiles(): Promise<any[]> {
     return this.associationService.getExampleFiles();
+  }
+  @Post('createQRCode')
+  async createQRCode(
+    data: string,
+    prefix: string,
+    size: number,
+    associationId: string,
+  ): Promise<string> {
+    return this.storage.createQRCode(
+      data,
+      prefix,
+      size,
+      associationId,
+    );
   }
 }

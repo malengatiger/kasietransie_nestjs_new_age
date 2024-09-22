@@ -6,6 +6,7 @@ import { User, UserSchema } from 'src/data/models/User';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserGeofenceEventSchema } from 'src/data/models/UserGeofenceEvent';
 import { AssociationSchema } from 'src/data/models/Association';
+import { CloudStorageUploaderService } from 'src/storage/storage.service';
 
 @Module({
   imports: [
@@ -15,6 +16,6 @@ import { AssociationSchema } from 'src/data/models/Association';
       { name: "Association", schema: AssociationSchema },
     ]),
   ],  controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, CloudStorageUploaderService],
 })
 export class UserModule {}

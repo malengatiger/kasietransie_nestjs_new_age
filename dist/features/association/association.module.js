@@ -35,6 +35,7 @@ const Vehicle_1 = require("../../data/models/Vehicle");
 const VehicleArrival_1 = require("../../data/models/VehicleArrival");
 const VehicleDeparture_1 = require("../../data/models/VehicleDeparture");
 const VehicleHeartbeat_1 = require("../../data/models/VehicleHeartbeat");
+const storage_service_1 = require("../../storage/storage.service");
 let AssociationModule = class AssociationModule {
 };
 exports.AssociationModule = AssociationModule;
@@ -72,6 +73,7 @@ exports.AssociationModule = AssociationModule = __decorate([
             city_service_1.CityService,
             fcm_service_1.MessagingService,
             new_mongo_service_1.NewMongoService,
+            storage_service_1.CloudStorageUploaderService,
         ],
     })
 ], AssociationModule);

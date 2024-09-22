@@ -23,4 +23,7 @@ export declare class Constants {
     static readonly appError = "appError";
     static readonly kasieError = "kasieError";
     static readonly association = "association";
+    static readonly qrcode_user = "user";
+    static readonly qrcode_vehicle = "vehicle";
+    static readonly qrcode_route = "route";
 }

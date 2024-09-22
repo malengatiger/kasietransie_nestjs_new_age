@@ -28,4 +28,9 @@ export class Constants {
   public static readonly kasieError = 'kasieError';
   public static readonly association = 'association';
 
+  public static readonly qrcode_user = 'user';
+  public static readonly qrcode_vehicle = 'vehicle';
+  public static readonly qrcode_route = 'route';
+
+
 }

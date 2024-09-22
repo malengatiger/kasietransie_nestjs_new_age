@@ -28,6 +28,7 @@ import { VehicleSchema } from "src/data/models/Vehicle";
 import { VehicleArrivalSchema } from "src/data/models/VehicleArrival";
 import { VehicleDepartureSchema } from "src/data/models/VehicleDeparture";
 import { VehicleHeartbeatSchema } from "src/data/models/VehicleHeartbeat";
+import { CloudStorageUploaderService } from "src/storage/storage.service";
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { VehicleHeartbeatSchema } from "src/data/models/VehicleHeartbeat";
     CityService,
     MessagingService,
     NewMongoService,
+    CloudStorageUploaderService,
   ],
 })
 export class AssociationModule {}

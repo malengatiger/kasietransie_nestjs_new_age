@@ -12,12 +12,15 @@ import csvParser from 'csv-parser';
 import { randomUUID } from 'crypto';
 import { Association } from 'src/data/models/Association';
 import { UserGeofenceEvent } from 'src/data/models/UserGeofenceEvent';
+import { CloudStorageUploaderService } from 'src/storage/storage.service';
+import { Constants } from 'src/my-utils/constants';
 
 const mm = '🟢🟢 UserService 🟢';
 
 @Injectable()
 export class UserService {
   constructor(
+    readonly storage: CloudStorageUploaderService,
     @InjectModel(User.name)
     private userModel: mongoose.Model<User>,
     @InjectModel(UserGeofenceEvent.name)
@@ -60,10 +63,11 @@ export class UserService {
       if (userRecord.uid) {
         const uid = userRecord.uid;
         user.userId = uid;
-        const url = await MyUtils.createQRCodeAndUploadToCloudStorage(
+        const url = await this.storage.createQRCode(
           JSON.stringify(user),
-          `${user.firstName}_${user.lastName}`.replace(' ', ''),
+          Constants.qrcode_user,
           1,
+          user.associationId,
         );
         user.password = null;
         user.qrCodeUrl = url;
@@ -71,7 +75,7 @@ export class UserService {
         //
         user.password = storedPassword;
 
-        Logger.log('${mm} KasieTransie user created. ');
+        Logger.log(`\n${mm} KasieTransie user created. \n`);
       } else {
         throw new Error(
           'userRecord.uid == null. We have a problem with Firebase, Jack!',

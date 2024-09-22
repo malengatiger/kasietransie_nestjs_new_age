@@ -36,10 +36,6 @@ __decorate([
 ], RegistrationBag.prototype, "country", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", String)
-], RegistrationBag.prototype, "exampleVehicleFileUrl", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", String)
-], RegistrationBag.prototype, "exampleUserFileUrl", void 0);
+    __metadata("design:type", Array)
+], RegistrationBag.prototype, "exampleFiles", void 0);
 //# sourceMappingURL=RegistrationBag.js.map

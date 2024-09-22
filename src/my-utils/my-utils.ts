@@ -43,13 +43,16 @@ export abstract class MyUtils {
     const isoString = date.toISOString();
     return isoString;
   }
-
+  
   public static async createQRCodeAndUploadToCloudStorage(
     input: string,
     prefix: string,
     size: number,
+     // Add bucketName as a parameter
   ): Promise<string> {
     Logger.log(`${mm} qrcode prefix: ${prefix} - size: ${size}`);
+    const bucketName: string = process.env.BUCKET_NAME;
+
     try {
       const fileName = `qrcode_${prefix}_${new Date().getTime()}.png`;
       const tempDir = path.join(__dirname, '..', 'tempFiles');
@@ -73,26 +76,28 @@ export abstract class MyUtils {
         version: version,
       });
       Logger.log(`${mm} tempFilePath.length: ${tempFilePath.length} bytes`);
-      // Upload QR code image to Google Cloud Storage
-      const storage = admin.storage();
+
+      // Use the provided bucketName
+      const storage = admin.storage().bucket(bucketName); 
       Logger.log(`${mm} uploading qrcode file: ${tempFilePath}`);
 
       const options = {
         destination: `kasieMedia/${fileName}`,
         metadata: {
           contentType: 'image/png',
-          predefinedAcl: 'publicRead',
+          predefinedAcl: 'publicRead', 
         },
       };
-      const [file] = await storage.bucket().upload(tempFilePath, options);
-      const [metadata] = await file.getMetadata();
-      Logger.log(`${mm} returning medialink: 🔵 🔵 🔵 ${metadata.mediaLink}`);
-      return metadata.mediaLink;
+      const [file] = await storage.upload(tempFilePath, options);
+      const publicUrl = file.publicUrl(); 
+      Logger.log(`${mm} returning public URL: 🔵 🔵 🔵 ${publicUrl}`);
+      return publicUrl; 
     } catch (error) {
       console.error(error);
       throw new Error('Failed to create QR code and upload to Cloud Storage.');
     }
   }
+
   public static formatISOStringDate(
     dateString: string,
     locale: string,

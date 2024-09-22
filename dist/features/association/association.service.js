@@ -211,10 +211,12 @@ let AssociationService = class AssociationService {
         settings.themeIndex = 0;
         settings.vehicleGeoQueryRadius = 100;
         settings.vehicleSearchMinutes = 30;
+        const files = await this.getExampleFiles();
         const bag = new RegistrationBag_1.RegistrationBag();
         bag.association = ass;
         bag.settings = settings;
         bag.user = user;
+        bag.exampleFiles = files;
         if (ass.countryId) {
             const c = await this.mongoService.find("Country", {
                 countryId: ass.countryId,
@@ -223,10 +225,12 @@ let AssociationService = class AssociationService {
                 bag.country = c[0];
             }
         }
-        await this.settingsModel.create(settings);
-        await this.associationModel.create(ass);
+        common_1.Logger.log(`${mm} send association and settings to Atlas ...`);
+        await this.mongoService.create("SettingsModel", settings);
+        await this.mongoService.create("AssociationModel", ass);
+        common_1.Logger.log(`${mm} 🥬 association and settings added to Atlas ...`);
         await this.messagingService.sendAssociationRegisteredMessage(ass);
-        common_1.Logger.log(`${mm} association registered: ${ass.associationName}`);
+        common_1.Logger.log(`${mm} 🥬 association registered: 🥬 🥬 🥬 ${JSON.stringify(bag, null, 2)} 🥬 `);
         return bag;
     }
     async addSettingsModel(model) {
@@ -258,14 +262,17 @@ let AssociationService = class AssociationService {
         });
     }
     async generateFakeAssociation(name) {
+        common_1.Logger.log(`${mm} generateFakeAssociation ...`);
         const ass = new Association_1.Association();
         ass.associationName = name;
         ass.associationId = this.generateUniqueId();
         ass.adminEmail = this.getFakeEmail();
-        ass.adminCellphone = this.getFakeCell();
+        ass.adminCellphone = this.getFakeCellphoneNumber();
         ass.adminUserFirstName = "James Earl";
         ass.adminUserLastName = `Jones_${Math.random() * 1000}`;
         ass.dateRegistered = new Date().toISOString();
+        ass.countryId = '7a2328bf-915f-4194-82ae-6c220c046cac';
+        ass.countryName = 'South Africa';
         const bag = await this.registerAssociation(ass);
         return bag;
     }
@@ -280,11 +287,15 @@ let AssociationService = class AssociationService {
         const mName = name.replace(" ", "").toLowerCase();
         return `${mName}_${new Date().getTime()}@kasietransie.com`;
     }
-    getFakeCell() {
+    randomIntFromInterval(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+    getFakeCellphoneNumber() {
         const arr = [];
-        arr.push("+27");
-        for (let i = 0; i < 9; i++) {
-            arr.push(Math.random() * 9);
+        arr.push("+2765");
+        for (let i = 0; i < 7; i++) {
+            const x = this.randomIntFromInterval(0, 9);
+            arr.push(x);
         }
         return arr.join("");
     }

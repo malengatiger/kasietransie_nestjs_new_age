@@ -9,24 +9,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MyFirebaseService = void 0;
 const common_1 = require("@nestjs/common");
 const admin = require("firebase-admin");
+const app_1 = require("firebase-admin/app");
 const constants_1 = require("../my-utils/constants");
 const my_utils_1 = require("../my-utils/my-utils");
 const mm = '🍑 🍑 🍑 FirebaseService 🍑 ';
-const firebaseConfig = {
-    apiKey: 'AIzaSyAdOBFxPS1TacnK5OZTU6VxOQ20Bq8Cyrg',
-    authDomain: 'kasie2024.firebaseapp.com',
-    projectId: 'kasie2024',
-    storageBucket: 'kasie2024.appspot.com',
-    messagingSenderId: '79998394043',
-    appId: '1:79998394043:web:95361b63452944add6139e',
-    measurementId: 'G-70WYNB4CN7',
-};
 let MyFirebaseService = class MyFirebaseService {
     async initializeFirebase() {
         common_1.Logger.log(`${mm} ... Initializing Firebase ...`);
-        const app1 = admin.initializeApp(firebaseConfig);
-        common_1.Logger.log(`${mm} ... Firebase initialized: name: ${app1.name}   ...`);
-        return null;
+        const app1 = admin.initializeApp({
+            credential: (0, app_1.applicationDefault)(),
+        });
+        common_1.Logger.log(`${mm} ... Firebase initialized: name: ${app1.name}  🔵 🔵 ${JSON.stringify(app1.options, null, 2)}  🔵 🔵`);
     }
     async sendInitializationMessage() {
         const date = my_utils_1.MyUtils.formatISOStringDate(new Date().toISOString(), 'en');

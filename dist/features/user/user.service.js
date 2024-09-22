@@ -19,14 +19,16 @@ const mongoose_2 = require("mongoose");
 const User_1 = require("../../data/models/User");
 const fs = require("fs");
 const admin = require("firebase-admin");
-const my_utils_1 = require("../../my-utils/my-utils");
 const csv_parser_1 = require("csv-parser");
 const crypto_1 = require("crypto");
 const Association_1 = require("../../data/models/Association");
 const UserGeofenceEvent_1 = require("../../data/models/UserGeofenceEvent");
+const storage_service_1 = require("../../storage/storage.service");
+const constants_1 = require("../../my-utils/constants");
 const mm = '🟢🟢 UserService 🟢';
 let UserService = class UserService {
-    constructor(userModel, userGeofenceModel, associationModel) {
+    constructor(storage, userModel, userGeofenceModel, associationModel) {
+        this.storage = storage;
         this.userModel = userModel;
         this.userGeofenceModel = userGeofenceModel;
         this.associationModel = associationModel;
@@ -64,12 +66,12 @@ let UserService = class UserService {
             if (userRecord.uid) {
                 const uid = userRecord.uid;
                 user.userId = uid;
-                const url = await my_utils_1.MyUtils.createQRCodeAndUploadToCloudStorage(JSON.stringify(user), `${user.firstName}_${user.lastName}`.replace(' ', ''), 1);
+                const url = await this.storage.createQRCode(JSON.stringify(user), constants_1.Constants.qrcode_user, 1, user.associationId);
                 user.password = null;
                 user.qrCodeUrl = url;
                 const mUser = await this.userModel.create(user);
                 user.password = storedPassword;
-                common_1.Logger.log('${mm} KasieTransie user created. ');
+                common_1.Logger.log(`\n${mm} KasieTransie user created. \n`);
             }
             else {
                 throw new Error('userRecord.uid == null. We have a problem with Firebase, Jack!');
@@ -168,9 +170,9 @@ let UserService = class UserService {
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, mongoose_1.InjectModel)(User_1.User.name)),
-    __param(1, (0, mongoose_1.InjectModel)(UserGeofenceEvent_1.UserGeofenceEvent.name)),
-    __param(2, (0, mongoose_1.InjectModel)(Association_1.Association.name)),
-    __metadata("design:paramtypes", [mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+    __param(1, (0, mongoose_1.InjectModel)(User_1.User.name)),
+    __param(2, (0, mongoose_1.InjectModel)(UserGeofenceEvent_1.UserGeofenceEvent.name)),
+    __param(3, (0, mongoose_1.InjectModel)(Association_1.Association.name)),
+    __metadata("design:paramtypes", [storage_service_1.CloudStorageUploaderService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], UserService);
 //# sourceMappingURL=user.service.js.map

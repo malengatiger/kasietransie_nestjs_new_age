@@ -28,4 +28,7 @@ Constants.admin = 'admin';
 Constants.appError = 'appError';
 Constants.kasieError = 'kasieError';
 Constants.association = 'association';
+Constants.qrcode_user = 'user';
+Constants.qrcode_vehicle = 'vehicle';
+Constants.qrcode_route = 'route';
 //# sourceMappingURL=constants.js.map

@@ -54,6 +54,7 @@ const time_series_service_1 = require("../time_series/time_series.service");
 const VehicleHeartbeatTimeSeries_1 = require("../../data/models/VehicleHeartbeatTimeSeries");
 const PassengerTimeSeries_1 = require("../../data/models/PassengerTimeSeries");
 const RouteUpdateRequest_1 = require("../../data/models/RouteUpdateRequest");
+const storage_service_1 = require("../../storage/storage.service");
 let VehicleModule = class VehicleModule {
 };
 exports.VehicleModule = VehicleModule;
@@ -116,6 +117,7 @@ exports.VehicleModule = VehicleModule = __decorate([
             association_service_1.AssociationService,
             fcm_service_1.MessagingService,
             zipper_1.FileArchiverService,
+            storage_service_1.CloudStorageUploaderService,
         ],
     })
 ], VehicleModule);
