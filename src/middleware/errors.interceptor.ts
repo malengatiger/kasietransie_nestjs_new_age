@@ -16,9 +16,9 @@ export class ErrorsInterceptor implements NestInterceptor {
     return next.handle().pipe(catchError(handleError));
 
     function handleError(err: KasieError) {
-      Logger.log(`${mm} ... handling error: ${err}`);
+      Logger.log(`${mm} ... 😈😈 handling error: ${err} `);
       return throwError(
-        () => new KasieError(err.message, HttpStatus.BAD_REQUEST),
+        () => new KasieError(`😈😈 ${err.message}`, HttpStatus.BAD_REQUEST),
       );
     }
   }

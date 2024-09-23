@@ -69,6 +69,8 @@ const AmbassadorCheckIn_1 = require("./data/models/AmbassadorCheckIn");
 const city_service_1 = require("./features/city/city.service");
 const user_service_1 = require("./features/user/user.service");
 const storage_service_1 = require("./storage/storage.service");
+const VehiclePhoto_1 = require("./data/models/VehiclePhoto");
+const VehicleVideo_1 = require("./data/models/VehicleVideo");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -87,6 +89,8 @@ exports.AppModule = AppModule = __decorate([
                 }),
             }),
             mongoose_1.MongooseModule.forFeature([
+                { name: "VehicleVideo", schema: VehicleVideo_1.VehicleVideoSchema },
+                { name: "VehiclePhoto", schema: VehiclePhoto_1.VehiclePhotoSchema },
                 { name: "AppError", schema: AppError_1.AppErrorSchema },
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
                 { name: "VehicleHeartbeat", schema: VehicleHeartbeat_1.VehicleHeartbeatSchema },

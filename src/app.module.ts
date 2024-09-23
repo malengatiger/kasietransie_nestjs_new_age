@@ -62,6 +62,8 @@ import { AmbassadorCheckInSchema } from './data/models/AmbassadorCheckIn';
 import { CityService } from './features/city/city.service';
 import { UserService } from './features/user/user.service';
 import { CloudStorageUploaderService } from './storage/storage.service';
+import { VehiclePhotoSchema } from './data/models/VehiclePhoto';
+import { VehicleVideoSchema } from './data/models/VehicleVideo';
 
 @Module({
   imports: [
@@ -78,7 +80,8 @@ import { CloudStorageUploaderService } from './storage/storage.service';
       }),
     }),
     MongooseModule.forFeature([
-      
+      { name: "VehicleVideo", schema: VehicleVideoSchema },
+      { name: "VehiclePhoto", schema: VehiclePhotoSchema },
       { name: "AppError", schema: AppErrorSchema },
       { name: "KasieError", schema: KasieErrorSchema },
       { name: "VehicleHeartbeat", schema: VehicleHeartbeatSchema },

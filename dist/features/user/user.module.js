@@ -17,6 +17,9 @@ const Association_1 = require("../../data/models/Association");
 const storage_service_1 = require("../../storage/storage.service");
 const firebase_util_1 = require("../../services/firebase_util");
 const ExampleFile_1 = require("../../data/models/ExampleFile");
+const VehiclePhoto_1 = require("../../data/models/VehiclePhoto");
+const VehicleVideo_1 = require("../../data/models/VehicleVideo");
+const Vehicle_1 = require("../../data/models/Vehicle");
 let UserModule = class UserModule {
 };
 exports.UserModule = UserModule;
@@ -28,6 +31,9 @@ exports.UserModule = UserModule = __decorate([
                 { name: "UserGeofenceEvent", schema: UserGeofenceEvent_1.UserGeofenceEventSchema },
                 { name: "Association", schema: Association_1.AssociationSchema },
                 { name: "ExampleFile", schema: ExampleFile_1.ExampleFileSchema },
+                { name: "VehicleVideo", schema: VehicleVideo_1.VehicleVideoSchema },
+                { name: "VehiclePhoto", schema: VehiclePhoto_1.VehiclePhotoSchema },
+                { name: "Vehicle", schema: Vehicle_1.VehicleSchema },
             ]),
         ], controllers: [user_controller_1.UserController],
         providers: [user_service_1.UserService, storage_service_1.CloudStorageUploaderService, firebase_util_1.FirebaseAdmin],

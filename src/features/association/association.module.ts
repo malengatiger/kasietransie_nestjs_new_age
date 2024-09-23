@@ -28,6 +28,8 @@ import { VehicleDepartureSchema } from "src/data/models/VehicleDeparture";
 import { VehicleHeartbeatSchema } from "src/data/models/VehicleHeartbeat";
 import { CloudStorageUploaderService } from "src/storage/storage.service";
 import { FirebaseAdmin } from "src/services/firebase_util";
+import { VehiclePhotoSchema } from "src/data/models/VehiclePhoto";
+import { VehicleVideoSchema } from "src/data/models/VehicleVideo";
 
 @Module({
   imports: [
@@ -36,6 +38,8 @@ import { FirebaseAdmin } from "src/services/firebase_util";
       { name: "Vehicle", schema: VehicleSchema },
       { name: "DispatchRecord", schema: DispatchRecordSchema },
       { name: "VehicleArrival", schema: VehicleArrivalSchema },
+      { name: "VehicleVideo", schema: VehicleVideoSchema },
+      { name: "VehiclePhoto", schema: VehiclePhotoSchema },
       { name: "VehicleDeparture", schema: VehicleDepartureSchema },
       { name: "VehicleHeartbeat", schema: VehicleHeartbeatSchema },
       { name: "Association", schema: AssociationSchema },

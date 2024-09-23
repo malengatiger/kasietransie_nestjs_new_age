@@ -36,6 +36,8 @@ const VehicleDeparture_1 = require("../../data/models/VehicleDeparture");
 const VehicleHeartbeat_1 = require("../../data/models/VehicleHeartbeat");
 const storage_service_1 = require("../../storage/storage.service");
 const firebase_util_1 = require("../../services/firebase_util");
+const VehiclePhoto_1 = require("../../data/models/VehiclePhoto");
+const VehicleVideo_1 = require("../../data/models/VehicleVideo");
 let AssociationModule = class AssociationModule {
 };
 exports.AssociationModule = AssociationModule;
@@ -46,6 +48,8 @@ exports.AssociationModule = AssociationModule = __decorate([
                 { name: "Vehicle", schema: Vehicle_1.VehicleSchema },
                 { name: "DispatchRecord", schema: DispatchRecord_1.DispatchRecordSchema },
                 { name: "VehicleArrival", schema: VehicleArrival_1.VehicleArrivalSchema },
+                { name: "VehicleVideo", schema: VehicleVideo_1.VehicleVideoSchema },
+                { name: "VehiclePhoto", schema: VehiclePhoto_1.VehiclePhotoSchema },
                 { name: "VehicleDeparture", schema: VehicleDeparture_1.VehicleDepartureSchema },
                 { name: "VehicleHeartbeat", schema: VehicleHeartbeat_1.VehicleHeartbeatSchema },
                 { name: "Association", schema: Association_1.AssociationSchema },

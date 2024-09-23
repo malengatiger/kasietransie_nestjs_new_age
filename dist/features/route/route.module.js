@@ -28,6 +28,9 @@ const Country_1 = require("../../data/models/Country");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
 const storage_service_1 = require("../../storage/storage.service");
 const ExampleFile_1 = require("../../data/models/ExampleFile");
+const VehiclePhoto_1 = require("../../data/models/VehiclePhoto");
+const VehicleVideo_1 = require("../../data/models/VehicleVideo");
+const Vehicle_1 = require("../../data/models/Vehicle");
 let RouteModule = class RouteModule {
 };
 exports.RouteModule = RouteModule;
@@ -36,10 +39,13 @@ exports.RouteModule = RouteModule = __decorate([
         imports: [
             mongoose_1.MongooseModule.forFeature([
                 { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
+                { name: "Vehicle", schema: Vehicle_1.VehicleSchema },
                 { name: "RouteUpdateRequest", schema: RouteUpdateRequest_1.RouteUpdateRequestSchema },
                 { name: "VehicleMediaRequest", schema: VehicleMediaRequest_1.VehicleMediaRequestSchema },
                 { name: "RouteLandmark", schema: RouteLandmark_1.RouteLandmarkSchema },
                 { name: "Route", schema: Route_1.RouteSchema },
+                { name: "VehicleVideo", schema: VehicleVideo_1.VehicleVideoSchema },
+                { name: "VehiclePhoto", schema: VehiclePhoto_1.VehiclePhotoSchema },
                 { name: "RoutePoint", schema: RoutePoint_1.RoutePointSchema },
                 { name: "RouteCity", schema: RouteCity_1.RouteCitySchema },
                 { name: "City", schema: City_1.CitySchema },

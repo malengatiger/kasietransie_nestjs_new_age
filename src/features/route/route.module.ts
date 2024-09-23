@@ -19,17 +19,23 @@ import { CountrySchema } from 'src/data/models/Country';
 import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
 import { CloudStorageUploaderService } from 'src/storage/storage.service';
 import { ExampleFileSchema } from 'src/data/models/ExampleFile';
+import { VehiclePhotoSchema } from 'src/data/models/VehiclePhoto';
+import { VehicleVideoSchema } from 'src/data/models/VehicleVideo';
+import { VehicleSchema } from 'src/data/models/Vehicle';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: "AssociationToken", schema: AssociationTokenSchema },
 
+      { name: "Vehicle", schema: VehicleSchema },
 
       { name: "RouteUpdateRequest", schema: RouteUpdateRequestSchema },
       { name: "VehicleMediaRequest", schema: VehicleMediaRequestSchema },
       { name: "RouteLandmark", schema: RouteLandmarkSchema },
       { name: "Route", schema: RouteSchema },
+      { name: "VehicleVideo", schema: VehicleVideoSchema },
+      { name: "VehiclePhoto", schema: VehiclePhotoSchema },
       { name: "RoutePoint", schema: RoutePointSchema },
       { name: "RouteCity", schema: RouteCitySchema },
       { name: "City", schema: CitySchema },

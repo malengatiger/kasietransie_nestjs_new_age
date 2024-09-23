@@ -12,6 +12,9 @@ const storage_service_1 = require("./storage.service");
 const storage_controller_1 = require("./storage.controller");
 const mongoose_1 = require("@nestjs/mongoose");
 const ExampleFile_1 = require("../data/models/ExampleFile");
+const VehiclePhoto_1 = require("../data/models/VehiclePhoto");
+const VehicleVideo_1 = require("../data/models/VehicleVideo");
+const Vehicle_1 = require("../data/models/Vehicle");
 let StorageModule = class StorageModule {
 };
 exports.StorageModule = StorageModule;
@@ -20,6 +23,9 @@ exports.StorageModule = StorageModule = __decorate([
         imports: [
             mongoose_1.MongooseModule.forFeature([
                 { name: "ExampleFile", schema: ExampleFile_1.ExampleFileSchema },
+                { name: "VehicleVideo", schema: VehicleVideo_1.VehicleVideoSchema },
+                { name: "VehiclePhoto", schema: VehiclePhoto_1.VehiclePhotoSchema },
+                { name: "Vehicle", schema: Vehicle_1.VehicleSchema },
             ])
         ],
         controllers: [storage_controller_1.StorageController],

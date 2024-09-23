@@ -17,7 +17,13 @@ import { StorageControlClient } from "@google-cloud/storage-control";
 import mongoose from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import { ExampleFile } from "src/data/models/ExampleFile";
+import { VehicleVideo } from "src/data/models/VehicleVideo";
+import { VehiclePhoto } from "src/data/models/VehiclePhoto";
+import { Vehicle } from "src/data/models/Vehicle";
+import sharp from "sharp";
+import { Position } from "src/data/models/position";
 
+console.log(`${typeof sharp} - Should output "function"`); // 
 const mm = "🔶🔶🔶 CloudStorageUploaderService 🔶 ";
 
 @Injectable()
@@ -26,32 +32,151 @@ export class CloudStorageUploaderService {
   private projectId: string;
   private cloudStorageDirectory: string;
 
-  constructor(private configService: ConfigService,
+  constructor(
+    private configService: ConfigService,
     @InjectModel(ExampleFile.name)
     private exampleFileModel: mongoose.Model<ExampleFile>,
+
+    @InjectModel(Vehicle.name)
+    private vehicleModel: mongoose.Model<Vehicle>,
+
+    @InjectModel(VehiclePhoto.name)
+    private vehiclePhotoModel: mongoose.Model<VehiclePhoto>,
+
+    @InjectModel(VehicleVideo.name)
+    private vehicleVideoModel: mongoose.Model<VehicleVideo>
   ) {
     this.bucketName = this.configService.get<string>("BUCKET_NAME");
     this.projectId = this.configService.get<string>("PROJECT_ID");
     this.cloudStorageDirectory = this.configService.get<string>(
       "CLOUD_STORAGE_DIRECTORY"
     );
-   
   }
 
-  public async uploadExampleFiles(userFilePath: string, vehicleFilePath: string): Promise<void> {
-    Logger.log(`${mm} ... upload example files ... 🍐 users: ${userFilePath} 🍐 cars: ${vehicleFilePath}`);
-    const userUrl = await this.uploadFile('users.csv', userFilePath,'admin');
-    const vehicleUrl = await this.uploadFile('vehicles.csv', vehicleFilePath,'admin');
+  public async uploadVehicleVideo(
+    vehicleId: string,
+    filePath: string,
+    latitude: number,
+    longitude: number
+  ): Promise<any> {
+    Logger.log(`${mm} getting vehicle from Atlas, car: ${vehicleId}`);
+    const cars = await this.vehicleModel
+      .find({ vehicleId: vehicleId })
+      .limit(1);
+    console.log(cars);
+    const dt = new Date().getTime();
+
+    if (cars.length > 0) {
+      const car = cars[0];
+      Logger.log(`${mm} uploading vehicle video, car: ${car.vehicleReg}`);
+      const url = await this.uploadFile(
+        `${vehicleId}_${dt}`,
+        filePath,
+        car.associationId
+      );
+      // const thumbnailPath = await this.createThumbnail(filePath);
+      // const thumbUrl = await this.uploadFile(
+      //   `thumbnail_${vehicleId}_${dt}`,
+      //   thumbnailPath,
+      //   car.associationId
+      // );
+
+      const p = new VehicleVideo();
+      p.associationId = car.associationId;
+      p.vehicleVideoId = `${vehicleId}_${dt}`;
+      p.url = url;
+      p.thumbNailUrl = 'tbd';
+      p.vehicleId = car.vehicleId;
+      p.vehicleReg = car.vehicleReg;
+      const pos = new Position();
+      pos.type = "Point";
+      pos.coordinates = [longitude, latitude];
+      p.position = pos;
+      p.created = new Date().toISOString();
+      const resp = await this.vehicleVideoModel.create(p);
+      Logger.log(
+        `${mm} vehicle video uploaded and added to Atlas: ${JSON.stringify(resp)}}\n\n`
+      );
+      return resp;
+    } else {
+      throw new Error("Vehicle not found");
+    }
+  }
+
+  public async uploadVehiclePhoto(
+    vehicleId: string,
+    filePath: string,
+    thumbFilePath: string,
+    latitude: number,
+    longitude: number
+  ): Promise<any> {
+    Logger.log(`${mm} uploadVehiclePhoto: getting vehicle from Atlas, 🔵 car: ${vehicleId}`);
+    const cars = await this.vehicleModel
+      .find({ vehicleId: vehicleId })
+      .limit(1);
+    console.log(cars);
+    const dt = new Date().getTime();
+    if (cars.length > 0) {
+      const car = cars[0];
+      Logger.log(`${mm} uploading vehicle photo, 🔵 car: ${car.vehicleReg}`);
+      const url = await this.uploadFile(
+        `photo_${vehicleId}_${dt}`,
+        filePath,
+        car.associationName
+      );
+      const thumbUrl = await this.uploadFile(
+        `thumbnail_${vehicleId}_${dt}`,
+        thumbFilePath,
+        car.associationName
+      );
+
+      const p = new VehiclePhoto();
+      p.associationId = car.associationId;
+      p.vehiclePhotoId = `${vehicleId}_${dt}`;
+      p.url = url;
+      p.thumbNailUrl = thumbUrl;
+      p.vehicleId = car.vehicleId;
+      p.vehicleReg = car.vehicleReg;
+    
+      const pos = new Position();
+      pos.type = "Point";
+      pos.coordinates = [longitude, latitude];
+      p.position = pos;
+      p.created = new Date().toISOString();
+
+      const resp = await this.vehiclePhotoModel.create(p);
+      Logger.log(
+        `${mm} vehicle photo uploaded and added to Atlas: \n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`
+      );
+      return resp;
+    } else {
+      throw new Error("Vehicle not found");
+    }
+  }
+
+  public async uploadExampleFiles(
+    userFilePath: string,
+    vehicleFilePath: string
+  ): Promise<void> {
+    Logger.log(
+      `${mm} ... upload example files ... 🍐 users: ${userFilePath} 🍐 cars: ${vehicleFilePath}`
+    );
+    const userUrl = await this.uploadFile("users.csv", userFilePath, "admin");
+    const vehicleUrl = await this.uploadFile(
+      "vehicles.csv",
+      vehicleFilePath,
+      "admin"
+    );
     const u = new ExampleFile();
     u.downloadUrl = userUrl;
-    u.fileName = 'users.csv';
-    u.type = 'csv';
+    u.fileName = "users.csv";
+    u.type = "csv";
     await this.exampleFileModel.create(u);
 
     const v = new ExampleFile();
     v.downloadUrl = vehicleUrl;
-    v.fileName = 'vehicles.csv';
-    v.type = 'csv';
+    v.fileName = "vehicles.csv";
+    v.type = "csv";
     await this.exampleFileModel.create(v);
     Logger.log(`${mm} Example files uploaded and written to Atlas ✅ `);
   }
@@ -60,38 +185,37 @@ export class CloudStorageUploaderService {
 
     const signedUrlOptions: GetSignedUrlConfig = {
       action: "read",
-      expires: Date.now() + 365 * 24 * 60 * 60 * 1000 * 10, // 1 year
+      expires: Date.now() + 365 * 24 * 60 * 60 * 1000 * 30, // 30 years
     };
 
     try {
       const [url] = await file.getSignedUrl(signedUrlOptions);
-      Logger.log(`\n${mm} Signed URL acquired. Cool! \n 🤟🏽 🤟🏽 ${url}  🤟🏽 🤟🏽\n\n`);
       return url;
     } catch (error) {
       Logger.error(`${mm} Error getting signed URL: ${error}`);
       throw error;
     }
   }
-  
+
   public async uploadFile(
     objectName: string,
     filePath: string,
-    associationId: string
+    folder: string
   ): Promise<string> {
     Logger.log(
-      `${mm} uploadFile to cloud storage: ${objectName} in associationId: ${associationId}}`
+      `${mm} uploadFile to cloud storage: 🔵 ${objectName} in associationId: 🔵 ${folder}}`
     );
 
     const storage: Storage = new Storage({ projectId: this.projectId });
     const bucket: Bucket = storage.bucket(this.bucketName);
-    const bucketFileName = `${this.cloudStorageDirectory}/${associationId}/${objectName}`;
+    const bucketFileName = `${this.cloudStorageDirectory}/${folder}/${objectName}`;
     Logger.log(`${mm} .... bucketFileName: ${bucketFileName}`);
     const file: File = bucket.file(bucketFileName);
 
     try {
       const contentType = this.getFileContentType(filePath);
       Logger.log(
-        `${mm} uploadFile to cloud storage, contentType: ${contentType}`
+        `${mm} uploadFile to cloud storage, contentType: 🔵 ${contentType}`
       );
       const options = {
         destination: bucketFileName,
@@ -105,10 +229,12 @@ export class CloudStorageUploaderService {
         .bucket(this.bucketName)
         .upload(filePath, options);
       Logger.log(
-        `${mm} File uploaded to cloud storage; \n🍐🍐 metadata = ${JSON.stringify(response[0].metadata)} 🍐🍐\n`
+        `${mm} File uploaded to cloud storage; \n\n🔵 🍐🍐 metadata = ${JSON.stringify(response[0].metadata)} 🍐🍐\n`
       );
       const signedUrl = await this.getSignedUrl(file);
-      Logger.log(`${mm} File uploaded to cloud storage; url: \n🍐🍐 ${signedUrl} 🍐🍐\n`);
+      Logger.log(
+        `${mm} File uploaded to cloud storage; ✅ url: \n\n 🍐🍐 ${signedUrl} 🍐🍐\n`
+      );
       return signedUrl;
     } catch (error) {
       Logger.error(`${mm} Error uploading file: ${error}`);

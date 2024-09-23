@@ -4,5 +4,5 @@ export class Position {
   @ApiProperty()
   type: string;
   @ApiProperty()
-  coordinates: [];
+  coordinates: number[];
 }

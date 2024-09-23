@@ -8,8 +8,8 @@ import { ApiProperty } from "@nestjs/swagger";
 })
 export class VehiclePhoto {
   _partitionKey: string;
-
   _id: string;
+  
   @Prop()
   @ApiProperty()
   vehicleId: string;

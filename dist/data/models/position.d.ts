@@ -1,4 +1,4 @@
 export declare class Position {
     type: string;
-    coordinates: [];
+    coordinates: number[];
 }

@@ -16,8 +16,8 @@ let ErrorsInterceptor = class ErrorsInterceptor {
     intercept(context, next) {
         return next.handle().pipe((0, operators_1.catchError)(handleError));
         function handleError(err) {
-            common_1.Logger.log(`${mm} ... handling error: ${err}`);
-            return (0, rxjs_1.throwError)(() => new kasie_error_1.KasieError(err.message, common_1.HttpStatus.BAD_REQUEST));
+            common_1.Logger.log(`${mm} ... 😈😈 handling error: ${err} `);
+            return (0, rxjs_1.throwError)(() => new kasie_error_1.KasieError(`😈😈 ${err.message}`, common_1.HttpStatus.BAD_REQUEST));
         }
     }
 };
