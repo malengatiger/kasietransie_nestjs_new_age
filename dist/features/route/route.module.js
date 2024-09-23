@@ -27,6 +27,7 @@ const CalculatedDistance_1 = require("../../data/models/CalculatedDistance");
 const Country_1 = require("../../data/models/Country");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
 const storage_service_1 = require("../../storage/storage.service");
+const ExampleFile_1 = require("../../data/models/ExampleFile");
 let RouteModule = class RouteModule {
 };
 exports.RouteModule = RouteModule;
@@ -46,6 +47,7 @@ exports.RouteModule = RouteModule = __decorate([
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
                 { name: "CalculatedDistance", schema: CalculatedDistance_1.CalculatedDistanceSchema },
                 { name: "Country", schema: Country_1.CountrySchema },
+                { name: 'ExampleFile', schema: ExampleFile_1.ExampleFileSchema },
             ]),
         ],
         controllers: [route_controller_1.RouteController],

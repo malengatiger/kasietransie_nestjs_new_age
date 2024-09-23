@@ -20,6 +20,9 @@ import { VehicleArrival } from 'src/data/models/VehicleArrival';
 import { VehicleDeparture } from 'src/data/models/VehicleDeparture';
 import { AssociationService } from '../association/association.service';
 import { CloudStorageUploaderService } from 'src/storage/storage.service';
+import { VehicleMediaRequest } from 'src/data/models/VehicleMediaRequest';
+import { VehiclePhoto } from 'src/data/models/VehiclePhoto';
+import { VehicleVideo } from 'src/data/models/VehicleVideo';
 
 const mm = ' 💚 💚 💚 VehicleService  💚';
 
@@ -56,8 +59,48 @@ export class VehicleService {
 
     @InjectModel(Route.name)
     private routeModel: mongoose.Model<Route>,
+
+    @InjectModel(Route.name)
+    private vehicleMediaRequestModel: mongoose.Model<VehicleMediaRequest>,
+
+    @InjectModel(Route.name)
+    private vehiclePhotoModel: mongoose.Model<VehiclePhoto>,
+
+    @InjectModel(Route.name)
+    private vehicleVideoModel: mongoose.Model<VehicleVideo>,
+
   ) {}
 
+  public async getAssociationVehicleMediaRequests(
+    associationId: string,
+    startDate: string,
+  ): Promise<VehicleMediaRequest[]> {
+    return await this.vehicleMediaRequestModel.find({
+      associationId: associationId,
+      startDate: startDate,
+    });
+  }
+  public async addVehiclePhoto(
+    vehiclePhoto: VehiclePhoto,
+  ): Promise<VehiclePhoto> {
+    return await this.vehiclePhotoModel.create(vehiclePhoto);
+  }
+  public async getVehicleMediaRequests(
+    vehicleId: string,
+  ): Promise<VehicleMediaRequest[]> {
+    return [];
+  }
+  public async addVehicleVideo(
+    vehicleVideo: VehicleVideo,
+  ): Promise<VehicleVideo> {
+    return await this.vehicleVideoModel.create(vehicleVideo);
+  }
+  public async getVehiclePhotos(vehicleId: string): Promise<VehiclePhoto[]> {
+    return [];
+  }
+  public async getVehicleVideos(vehicleId: string): Promise<VehicleVideo[]> {
+    return [];
+  }
   public async findOwnerVehiclesByLocationAndTime(
     userId: string,
     latitude: number,

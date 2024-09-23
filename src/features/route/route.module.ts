@@ -18,6 +18,7 @@ import { CalculatedDistanceSchema } from 'src/data/models/CalculatedDistance';
 import { CountrySchema } from 'src/data/models/Country';
 import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
 import { CloudStorageUploaderService } from 'src/storage/storage.service';
+import { ExampleFileSchema } from 'src/data/models/ExampleFile';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { CloudStorageUploaderService } from 'src/storage/storage.service';
       { name: "KasieError", schema: KasieErrorSchema },
       { name: "CalculatedDistance", schema: CalculatedDistanceSchema },
       { name: "Country", schema: CountrySchema },
+      { name: 'ExampleFile', schema: ExampleFileSchema },
     ]),
   ],
   controllers: [RouteController],

@@ -34,7 +34,7 @@ const association_service_1 = require("../association/association.service");
 const storage_service_1 = require("../../storage/storage.service");
 const mm = ' 💚 💚 💚 VehicleService  💚';
 let VehicleService = class VehicleService {
-    constructor(storage, associationService, vehicleModel, dispatchRecordModel, vehicleArrivalModel, vehicleHeartbeatModel, ambassadorPassengerCountModel, vehicleDepartureModel, associationModel, userModel, assignModel, routeModel) {
+    constructor(storage, associationService, vehicleModel, dispatchRecordModel, vehicleArrivalModel, vehicleHeartbeatModel, ambassadorPassengerCountModel, vehicleDepartureModel, associationModel, userModel, assignModel, routeModel, vehicleMediaRequestModel, vehiclePhotoModel, vehicleVideoModel) {
         this.storage = storage;
         this.associationService = associationService;
         this.vehicleModel = vehicleModel;
@@ -47,6 +47,30 @@ let VehicleService = class VehicleService {
         this.userModel = userModel;
         this.assignModel = assignModel;
         this.routeModel = routeModel;
+        this.vehicleMediaRequestModel = vehicleMediaRequestModel;
+        this.vehiclePhotoModel = vehiclePhotoModel;
+        this.vehicleVideoModel = vehicleVideoModel;
+    }
+    async getAssociationVehicleMediaRequests(associationId, startDate) {
+        return await this.vehicleMediaRequestModel.find({
+            associationId: associationId,
+            startDate: startDate,
+        });
+    }
+    async addVehiclePhoto(vehiclePhoto) {
+        return await this.vehiclePhotoModel.create(vehiclePhoto);
+    }
+    async getVehicleMediaRequests(vehicleId) {
+        return [];
+    }
+    async addVehicleVideo(vehicleVideo) {
+        return await this.vehicleVideoModel.create(vehicleVideo);
+    }
+    async getVehiclePhotos(vehicleId) {
+        return [];
+    }
+    async getVehicleVideos(vehicleId) {
+        return [];
     }
     async findOwnerVehiclesByLocationAndTime(userId, latitude, longitude, minutes) {
         return [];
@@ -243,7 +267,10 @@ exports.VehicleService = VehicleService = __decorate([
     __param(9, (0, mongoose_1.InjectModel)(User_1.User.name)),
     __param(10, (0, mongoose_1.InjectModel)(RouteAssignment_1.RouteAssignment.name)),
     __param(11, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
+    __param(12, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
+    __param(13, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
+    __param(14, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
     __metadata("design:paramtypes", [storage_service_1.CloudStorageUploaderService,
-        association_service_1.AssociationService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        association_service_1.AssociationService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], VehicleService);
 //# sourceMappingURL=vehicle.service.js.map

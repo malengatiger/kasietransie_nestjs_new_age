@@ -7,6 +7,7 @@ import { UserGeofenceEventSchema } from 'src/data/models/UserGeofenceEvent';
 import { AssociationSchema } from 'src/data/models/Association';
 import { CloudStorageUploaderService } from 'src/storage/storage.service';
 import { FirebaseAdmin } from 'src/services/firebase_util';
+import { ExampleFileSchema } from 'src/data/models/ExampleFile';
 
 @Module({
   imports: [
@@ -14,6 +15,8 @@ import { FirebaseAdmin } from 'src/services/firebase_util';
       { name: "User", schema: UserSchema },
       { name: "UserGeofenceEvent", schema: UserGeofenceEventSchema },
       { name: "Association", schema: AssociationSchema },
+      { name: "ExampleFile", schema: ExampleFileSchema },
+
     ]),
   ],  controllers: [UserController],
   providers: [UserService, CloudStorageUploaderService, FirebaseAdmin],

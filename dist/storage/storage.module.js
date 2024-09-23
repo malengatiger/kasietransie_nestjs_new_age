@@ -10,11 +10,18 @@ exports.StorageModule = void 0;
 const common_1 = require("@nestjs/common");
 const storage_service_1 = require("./storage.service");
 const storage_controller_1 = require("./storage.controller");
+const mongoose_1 = require("@nestjs/mongoose");
+const ExampleFile_1 = require("../data/models/ExampleFile");
 let StorageModule = class StorageModule {
 };
 exports.StorageModule = StorageModule;
 exports.StorageModule = StorageModule = __decorate([
     (0, common_1.Module)({
+        imports: [
+            mongoose_1.MongooseModule.forFeature([
+                { name: "ExampleFile", schema: ExampleFile_1.ExampleFileSchema },
+            ])
+        ],
         controllers: [storage_controller_1.StorageController],
         providers: [storage_service_1.CloudStorageUploaderService],
     })

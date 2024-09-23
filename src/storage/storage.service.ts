@@ -14,8 +14,11 @@ import * as qrcode from "qrcode";
 import { KasieQRCode } from "src/data/helpers/kasie_qr_code";
 import * as mime from "mime-types";
 import { StorageControlClient } from "@google-cloud/storage-control";
+import mongoose from "mongoose";
+import { InjectModel } from "@nestjs/mongoose";
+import { ExampleFile } from "src/data/models/ExampleFile";
 
-const mm = "CloudStorageUploaderService";
+const mm = "🔶🔶🔶 CloudStorageUploaderService 🔶 ";
 
 @Injectable()
 export class CloudStorageUploaderService {
@@ -23,14 +26,35 @@ export class CloudStorageUploaderService {
   private projectId: string;
   private cloudStorageDirectory: string;
 
-  constructor(private configService: ConfigService) {
+  constructor(private configService: ConfigService,
+    @InjectModel(ExampleFile.name)
+    private exampleFileModel: mongoose.Model<ExampleFile>,
+  ) {
     this.bucketName = this.configService.get<string>("BUCKET_NAME");
     this.projectId = this.configService.get<string>("PROJECT_ID");
     this.cloudStorageDirectory = this.configService.get<string>(
       "CLOUD_STORAGE_DIRECTORY"
     );
+   
   }
 
+  public async uploadExampleFiles(userFilePath: string, vehicleFilePath: string): Promise<void> {
+    Logger.log(`${mm} ... upload example files ... 🍐 users: ${userFilePath} 🍐 cars: ${vehicleFilePath}`);
+    const userUrl = await this.uploadFile('users.csv', userFilePath,'admin');
+    const vehicleUrl = await this.uploadFile('vehicles.csv', vehicleFilePath,'admin');
+    const u = new ExampleFile();
+    u.downloadUrl = userUrl;
+    u.fileName = 'users.csv';
+    u.type = 'csv';
+    await this.exampleFileModel.create(u);
+
+    const v = new ExampleFile();
+    v.downloadUrl = vehicleUrl;
+    v.fileName = 'vehicles.csv';
+    v.type = 'csv';
+    await this.exampleFileModel.create(v);
+    Logger.log(`${mm} Example files uploaded and written to Atlas ✅ `);
+  }
   private async getSignedUrl(file: File): Promise<string> {
     Logger.log(`${mm} getSignedUrl for cloud storage: ${file.name}`);
 

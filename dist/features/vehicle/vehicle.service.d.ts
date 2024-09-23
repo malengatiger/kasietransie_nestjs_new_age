@@ -14,6 +14,9 @@ import { VehicleArrival } from 'src/data/models/VehicleArrival';
 import { VehicleDeparture } from 'src/data/models/VehicleDeparture';
 import { AssociationService } from '../association/association.service';
 import { CloudStorageUploaderService } from 'src/storage/storage.service';
+import { VehicleMediaRequest } from 'src/data/models/VehicleMediaRequest';
+import { VehiclePhoto } from 'src/data/models/VehiclePhoto';
+import { VehicleVideo } from 'src/data/models/VehicleVideo';
 export declare class VehicleService {
     private storage;
     private associationService;
@@ -27,7 +30,16 @@ export declare class VehicleService {
     private userModel;
     private assignModel;
     private routeModel;
-    constructor(storage: CloudStorageUploaderService, associationService: AssociationService, vehicleModel: mongoose.Model<Vehicle>, dispatchRecordModel: mongoose.Model<DispatchRecord>, vehicleArrivalModel: mongoose.Model<VehicleArrival>, vehicleHeartbeatModel: mongoose.Model<VehicleHeartbeat>, ambassadorPassengerCountModel: mongoose.Model<AmbassadorPassengerCount>, vehicleDepartureModel: mongoose.Model<VehicleDeparture>, associationModel: mongoose.Model<Association>, userModel: mongoose.Model<User>, assignModel: mongoose.Model<RouteAssignment>, routeModel: mongoose.Model<Route>);
+    private vehicleMediaRequestModel;
+    private vehiclePhotoModel;
+    private vehicleVideoModel;
+    constructor(storage: CloudStorageUploaderService, associationService: AssociationService, vehicleModel: mongoose.Model<Vehicle>, dispatchRecordModel: mongoose.Model<DispatchRecord>, vehicleArrivalModel: mongoose.Model<VehicleArrival>, vehicleHeartbeatModel: mongoose.Model<VehicleHeartbeat>, ambassadorPassengerCountModel: mongoose.Model<AmbassadorPassengerCount>, vehicleDepartureModel: mongoose.Model<VehicleDeparture>, associationModel: mongoose.Model<Association>, userModel: mongoose.Model<User>, assignModel: mongoose.Model<RouteAssignment>, routeModel: mongoose.Model<Route>, vehicleMediaRequestModel: mongoose.Model<VehicleMediaRequest>, vehiclePhotoModel: mongoose.Model<VehiclePhoto>, vehicleVideoModel: mongoose.Model<VehicleVideo>);
+    getAssociationVehicleMediaRequests(associationId: string, startDate: string): Promise<VehicleMediaRequest[]>;
+    addVehiclePhoto(vehiclePhoto: VehiclePhoto): Promise<VehiclePhoto>;
+    getVehicleMediaRequests(vehicleId: string): Promise<VehicleMediaRequest[]>;
+    addVehicleVideo(vehicleVideo: VehicleVideo): Promise<VehicleVideo>;
+    getVehiclePhotos(vehicleId: string): Promise<VehiclePhoto[]>;
+    getVehicleVideos(vehicleId: string): Promise<VehicleVideo[]>;
     findOwnerVehiclesByLocationAndTime(userId: string, latitude: number, longitude: number, minutes: number): Promise<VehicleHeartbeat[]>;
     findAssociationVehiclesByLocationAndTime(associationId: string, latitude: number, longitude: number, minutes: number): Promise<VehicleHeartbeat[]>;
     generateFakeVehiclesFromFile(associationId: string): Promise<Vehicle[]>;

@@ -8,6 +8,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CloudStorageUploaderService = void 0;
 const common_1 = require("@nestjs/common");
@@ -17,13 +20,33 @@ const fs = require("fs");
 const path = require("path");
 const qrcode = require("qrcode");
 const mime = require("mime-types");
-const mm = "CloudStorageUploaderService";
+const mongoose_1 = require("mongoose");
+const mongoose_2 = require("@nestjs/mongoose");
+const ExampleFile_1 = require("../data/models/ExampleFile");
+const mm = "🔶🔶🔶 CloudStorageUploaderService 🔶 ";
 let CloudStorageUploaderService = class CloudStorageUploaderService {
-    constructor(configService) {
+    constructor(configService, exampleFileModel) {
         this.configService = configService;
+        this.exampleFileModel = exampleFileModel;
         this.bucketName = this.configService.get("BUCKET_NAME");
         this.projectId = this.configService.get("PROJECT_ID");
         this.cloudStorageDirectory = this.configService.get("CLOUD_STORAGE_DIRECTORY");
+    }
+    async uploadExampleFiles(userFilePath, vehicleFilePath) {
+        common_1.Logger.log(`${mm} ... upload example files ... 🍐 users: ${userFilePath} 🍐 cars: ${vehicleFilePath}`);
+        const userUrl = await this.uploadFile('users.csv', userFilePath, 'admin');
+        const vehicleUrl = await this.uploadFile('vehicles.csv', vehicleFilePath, 'admin');
+        const u = new ExampleFile_1.ExampleFile();
+        u.downloadUrl = userUrl;
+        u.fileName = 'users.csv';
+        u.type = 'csv';
+        await this.exampleFileModel.create(u);
+        const v = new ExampleFile_1.ExampleFile();
+        v.downloadUrl = vehicleUrl;
+        v.fileName = 'vehicles.csv';
+        v.type = 'csv';
+        await this.exampleFileModel.create(v);
+        common_1.Logger.log(`${mm} Example files uploaded and written to Atlas ✅ `);
     }
     async getSignedUrl(file) {
         common_1.Logger.log(`${mm} getSignedUrl for cloud storage: ${file.name}`);
@@ -112,6 +135,7 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
 exports.CloudStorageUploaderService = CloudStorageUploaderService;
 exports.CloudStorageUploaderService = CloudStorageUploaderService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [config_1.ConfigService])
+    __param(1, (0, mongoose_2.InjectModel)(ExampleFile_1.ExampleFile.name)),
+    __metadata("design:paramtypes", [config_1.ConfigService, mongoose_1.default.Model])
 ], CloudStorageUploaderService);
 //# sourceMappingURL=storage.service.js.map
