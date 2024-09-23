@@ -5,8 +5,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Aggregate, Document, PipelineStage } from 'mongoose';
 import { VehicleHeartbeatAggregationResult } from 'src/data/helpers/VehicleHeartbeatAggregationResult';
 
-import * as moment from 'moment';
-import { NewMongoService } from 'src/data/new_mongo_service';
 import { AssociationHeartbeatAggregationResult } from 'src/data/helpers/AssociationHeartbeatAggregationResult';
 import { HeartbeatMeta } from 'src/data/models/HeartbeatMeta';
 import { PassengerTimeSeries } from 'src/data/models/PassengerTimeSeries';
@@ -19,7 +17,6 @@ export class TimeSeriesService {
   constructor(
     private configService: ConfigService,
     private zipService: FileArchiverService,
-    private readonly mongoService: NewMongoService,
     @InjectModel(VehicleHeartbeatTimeSeries.name)
     private vehicleHeartbeatTimeSeriesModel: mongoose.Model<VehicleHeartbeatTimeSeries>,
     @InjectModel(PassengerTimeSeries.name)

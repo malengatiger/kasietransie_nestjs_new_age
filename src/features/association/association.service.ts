@@ -16,50 +16,57 @@ import admin from "firebase-admin";
 import { Vehicle } from "src/data/models/Vehicle";
 import { FileArchiverService } from "src/my-utils/zipper";
 import { Country } from "src/data/models/Country";
-import { NewMongoService } from "src/data/new_mongo_service";
+//import { NewMongoService } from "src/data/new_mongo_service";
 import { AssociationToken } from "src/data/models/AssociationToken";
-import { Commuter } from "src/data/models/Commuter";
 import { MessagingService } from "../fcm/fcm.service";
 import { CityService } from "../city/city.service";
 import { UserService } from "../user/user.service";
 import { v4 as uuidv4 } from "uuid";
+import { Commuter } from 'src/data/models/Commuter';
 
 const mm = "🍎🍎🍎 AssociationService: 🍎🍎🍎";
 
 @Injectable()
 export class AssociationService {
+  getAssociationById(associationId: string) {
+    throw new Error('Method not implemented.');
+  }
   constructor(
-    private configService: ConfigService,
     private archiveService: FileArchiverService,
     private userService: UserService,
     private cityService: CityService,
     private messagingService: MessagingService,
-    private mongoService: NewMongoService,
-    //
-    @InjectModel(User.name)
-    private userModel: mongoose.Model<User>,
-    @InjectModel(Commuter.name)
-    private commuterModel: mongoose.Model<Commuter>,
-    @InjectModel(AppError.name)
-    private appErrorModel: mongoose.Model<AppError>,
     @InjectModel(Association.name)
     private associationModel: mongoose.Model<Association>,
-    @InjectModel(ExampleFile.name)
-    private exampleFileModel: mongoose.Model<ExampleFile>,
     @InjectModel(Vehicle.name)
     private vehicleModel: mongoose.Model<Vehicle>,
+    @InjectModel(SettingsModel.name)
+    private settingsModel: mongoose.Model<SettingsModel>,
+
+    @InjectModel(User.name)
+    private userModel: mongoose.Model<User>,
+
     @InjectModel(Country.name)
     private countryModel: mongoose.Model<Country>,
+
     @InjectModel(AssociationToken.name)
     private associationTokenModel: mongoose.Model<AssociationToken>,
-    @InjectModel(SettingsModel.name)
-    private settingsModel: mongoose.Model<SettingsModel>
-  ) {}
+
+    @InjectModel(AppError.name)
+    private appErrorModel: mongoose.Model<AppError>,
+    
+    @InjectModel(ExampleFile.name)
+    private exampleFileModel: mongoose.Model<ExampleFile>,
+    
+    @InjectModel(Commuter.name)
+    private commuterModel: mongoose.Model<Commuter>,
+
+  ){}
 
   //----------------------------------------------------------------
   public async getAssociations(): Promise<any[]> {
     Logger.log(`${mm} ... getAssociations starting ...`);
-    const list = await this.mongoService.find("Association", {});
+    const list = await this.associationModel.find({});
     Logger.log(`${mm} ... getAssociations found: ${list.length} ...`);
     return list;
   }
@@ -68,7 +75,7 @@ export class AssociationService {
     Logger.log(
       `${mm} ... getAssociationUsers starting, id: ${associationId} ...`
     );
-    const list = await this.mongoService.find("User", {
+    const list = await this.userModel.find( {
       associationId: associationId,
     });
     Logger.log(`${mm} ... getAssociationUsers found: ${list.length} ...`);
@@ -81,7 +88,7 @@ export class AssociationService {
     Logger.log(
       `${mm} ... getAssociationVehicles starting, id: ${associationId} ...`
     );
-    const list = await this.mongoService.find("Vehicle", {
+    const list = await this.vehicleModel.find( {
       associationId: associationId,
     });
     Logger.log(`${mm} ... getAssociationVehicles found: ${list.length} ...`);
@@ -127,24 +134,14 @@ export class AssociationService {
     return file;
   }
 
-  public async getAssociationById(associationId: string): Promise<any> {
-    const m = await this.mongoService.find("Association", {
-      associationId: associationId,
-    });
-  }
-
   public async getCountries(): Promise<Country[]> {
-    return await this.mongoService.find("Country", {});
+    return await this.countryModel.find({});
   }
-
-  T;
 
   public async getAssociationSettingsModels(
     associationId: string
   ): Promise<any[]> {
-    const list = await this.mongoService.find("SettingsModel", {
-      associationId: associationId,
-    });
+    const list = await this.settingsModel.find({associationId: associationId});
     Logger.log(
       `${mm} ... getAssociationSettingsModels found: ${list.length} ...`
     );
@@ -285,7 +282,7 @@ export class AssociationService {
     bag.exampleFiles = files;
 
     if (ass.countryId) {
-      const c = await this.mongoService.find("Country", {
+      const c = await this.countryModel.find( {
         countryId: ass.countryId,
       });
       if (c.length > 0) {
@@ -310,7 +307,7 @@ export class AssociationService {
 
   public async addSettingsModel(model: SettingsModel): Promise<any> {
     Logger.log(`adding addSettingsModel${model}`);
-    return await this.mongoService.create("SettingsModel", model);
+    return await this.settingsModel.create(model);
   }
 
   public async addAssociationToken(
@@ -322,10 +319,8 @@ export class AssociationService {
     at.associationId = associationId;
     at.userId = userId;
     at.token = token;
-    await this.mongoService.delete("AssociationToken", {
-      associationId: associationId,
-    });
-    return await this.mongoService.create("AssociationToken", at);
+    
+    return await this.associationTokenModel.create(at);
   }
 
   public async getAssociationAppErrors(
@@ -333,17 +328,17 @@ export class AssociationService {
     startDate: string,
     endDate: string
   ): Promise<AppError[]> {
-    return this.mongoService.find("AppError", {
+    return this.appErrorModel.find({
       associationId: associationId,
       created: { $gte: startDate, $lte: endDate },
     });
   }
   public async getRandomCommuters(limit: number): Promise<any[]> {
-    return this.mongoService.find("Commuter", {}, limit);
+    return this.commuterModel.find({limit});
   }
 
   public async getAppErrors(startDate: string): Promise<any[]> {
-    return this.mongoService.find("AppError", {
+    return this.appErrorModel.find({
       created: { $gte: startDate },
     });
   }
@@ -365,10 +360,10 @@ export class AssociationService {
   }
 
   public async getExampleFiles(): Promise<any[]> {
-    return this.mongoService.find("ExampleFile", {});
+    return this.exampleFileModel.find({});
   }
 
-  public async upLoadExampleFiles(files: File[]): Promise<ExampleFile[]> {
+  public async upLoadExampleFiles(): Promise<ExampleFile[]> {
     return [];
   }
   getFakeEmail() {

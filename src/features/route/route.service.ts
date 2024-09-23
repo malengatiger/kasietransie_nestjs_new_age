@@ -16,13 +16,15 @@ import { RoutePointList } from 'src/data/models/RoutePointList';
 import { City } from 'src/data/models/City';
 import { CityService } from '../city/city.service';
 import { MessagingService } from '../fcm/fcm.service';
+import { CloudStorageUploaderService } from 'src/storage/storage.service';
 
 const mm = 'RouteService';
 
 @Injectable()
 export class RouteService {
   constructor(
-    // private configService: ConfigService,
+    private storage: CloudStorageUploaderService,
+
     private readonly archiveService: FileArchiverService,
     private readonly messagingService: MessagingService,
     private readonly cityService: CityService,
@@ -85,19 +87,26 @@ export class RouteService {
   }
 
   public async addRoute(route: Route): Promise<Route> {
-    const url = await MyUtils.createQRCodeAndUploadToCloudStorage(
-      JSON.stringify(route),
-      'route',
-      3,
+    const url = await this.storage.createQRCode(
+     {
+       data: JSON.stringify(route),
+       prefix: 'route',
+       size: 2,
+       associationId: route.associationId,
+     }
+     
     );
     route.qrCodeUrl = url;
     return await this.routeModel.create(route);
   }
   public async createRouteQRCode(route: Route): Promise<Route> {
-    const url = await MyUtils.createQRCodeAndUploadToCloudStorage(
-      JSON.stringify(route),
-      'route',
-      3,
+    const url = await this.storage.createQRCode(
+     {
+       data: JSON.stringify(route),
+       prefix: 'route',
+       size: 1,
+       associationId: route.associationId,
+     }
     );
     route.qrCodeUrl = url;
     await this.routeModel.updateOne(route);

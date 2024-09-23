@@ -12,9 +12,12 @@ import { RouteLandmarkSchema } from "src/data/models/RouteLandmark";
 import { RouteSchema } from "src/data/models/Route";
 import { RoutePointSchema } from "src/data/models/RoutePoint";
 import { AssociationTokenSchema } from "src/data/models/AssociationToken";
+import { FirebaseAdmin } from "src/services/firebase_util";
 
 @Module({
   imports: [
+    
+
     MongooseModule.forFeature([
       { name: "AppError", schema: AppErrorSchema },
       { name: "KasieError", schema: KasieErrorSchema },

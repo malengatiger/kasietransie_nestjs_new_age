@@ -12,6 +12,7 @@ import { TranslationBagSchema } from "src/data/models/TranslationBag";
 import { AppErrorSchema } from "src/data/models/AppError";
 import { KasieErrorSchema } from "src/data/models/kasie.error";
 import { AssociationTokenSchema } from "src/data/models/AssociationToken";
+import { FirebaseAdmin } from "src/services/firebase_util";
 
 @Module({
   imports: [
@@ -21,7 +22,6 @@ import { AssociationTokenSchema } from "src/data/models/AssociationToken";
       { name: "AppError", schema: AppErrorSchema },
       { name: "KasieError", schema: KasieErrorSchema },
       { name: "AssociationToken", schema: AssociationTokenSchema },
-
     ]),
   ],
   controllers: [UserGeofenceController],

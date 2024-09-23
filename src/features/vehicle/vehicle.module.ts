@@ -19,7 +19,6 @@ import { UserService } from "../user/user.service";
 import { UserGeofenceEventSchema } from "src/data/models/UserGeofenceEvent";
 import { CityService } from "../city/city.service";
 import { CitySchema } from "src/data/models/City";
-import { NewMongoService } from "src/data/new_mongo_service";
 import { CommuterSchema } from "src/data/models/Commuter";
 import { AppErrorSchema } from "src/data/models/AppError";
 import { KasieErrorSchema } from "src/data/models/kasie.error";
@@ -46,9 +45,12 @@ import { VehicleHeartbeatTimeSeriesSchema } from "src/data/models/VehicleHeartbe
 import { PassengerTimeSeriesSchema } from "src/data/models/PassengerTimeSeries";
 import { RouteUpdateRequestSchema } from "src/data/models/RouteUpdateRequest";
 import { CloudStorageUploaderService } from "src/storage/storage.service";
+import { FirebaseAdmin } from "src/services/firebase_util";
 
 @Module({
   imports: [
+    
+
     MongooseModule.forFeature([
       { name: "Vehicle", schema: VehicleSchema },
       { name: "DispatchRecord", schema: DispatchRecordSchema },
@@ -97,7 +99,7 @@ import { CloudStorageUploaderService } from "src/storage/storage.service";
     VehicleService,
     UserService,
     CityService,
-    NewMongoService,
+    //
     RouteService,
     TimeSeriesService,
     DispatchService,
@@ -106,7 +108,7 @@ import { CloudStorageUploaderService } from "src/storage/storage.service";
     AssociationService,
     MessagingService,
     FileArchiverService,
-    CloudStorageUploaderService,
+    CloudStorageUploaderService, FirebaseAdmin,
   ],
 })
 export class VehicleModule {}

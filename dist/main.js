@@ -31,7 +31,6 @@ async function bootstrap() {
     app.useGlobalInterceptors(new errors_interceptor_1.ErrorsInterceptor());
     common_1.Logger.log(`${mm} ... GlobalInterceptors set up .....`);
     await app.listen(port);
-    await srv.initializeFirebase();
     await srv.sendInitializationMessage();
 }
 bootstrap().then((r) => common_1.Logger.debug(`${mm} Bootstrapping is complete. 💖💖💖 ... Lets do this!!`));

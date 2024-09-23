@@ -1,4 +1,3 @@
-import { ConfigService } from '@nestjs/config';
 import mongoose from 'mongoose';
 import { Vehicle } from 'src/data/models/Vehicle';
 import { Association } from 'src/data/models/Association';
@@ -14,8 +13,9 @@ import { DispatchRecord } from 'src/data/models/DispatchRecord';
 import { VehicleArrival } from 'src/data/models/VehicleArrival';
 import { VehicleDeparture } from 'src/data/models/VehicleDeparture';
 import { AssociationService } from '../association/association.service';
+import { CloudStorageUploaderService } from 'src/storage/storage.service';
 export declare class VehicleService {
-    private configService;
+    private storage;
     private associationService;
     private vehicleModel;
     private dispatchRecordModel;
@@ -27,7 +27,7 @@ export declare class VehicleService {
     private userModel;
     private assignModel;
     private routeModel;
-    constructor(configService: ConfigService, associationService: AssociationService, vehicleModel: mongoose.Model<Vehicle>, dispatchRecordModel: mongoose.Model<DispatchRecord>, vehicleArrivalModel: mongoose.Model<VehicleArrival>, vehicleHeartbeatModel: mongoose.Model<VehicleHeartbeat>, ambassadorPassengerCountModel: mongoose.Model<AmbassadorPassengerCount>, vehicleDepartureModel: mongoose.Model<VehicleDeparture>, associationModel: mongoose.Model<Association>, userModel: mongoose.Model<User>, assignModel: mongoose.Model<RouteAssignment>, routeModel: mongoose.Model<Route>);
+    constructor(storage: CloudStorageUploaderService, associationService: AssociationService, vehicleModel: mongoose.Model<Vehicle>, dispatchRecordModel: mongoose.Model<DispatchRecord>, vehicleArrivalModel: mongoose.Model<VehicleArrival>, vehicleHeartbeatModel: mongoose.Model<VehicleHeartbeat>, ambassadorPassengerCountModel: mongoose.Model<AmbassadorPassengerCount>, vehicleDepartureModel: mongoose.Model<VehicleDeparture>, associationModel: mongoose.Model<Association>, userModel: mongoose.Model<User>, assignModel: mongoose.Model<RouteAssignment>, routeModel: mongoose.Model<Route>);
     findOwnerVehiclesByLocationAndTime(userId: string, latitude: number, longitude: number, minutes: number): Promise<VehicleHeartbeat[]>;
     findAssociationVehiclesByLocationAndTime(associationId: string, latitude: number, longitude: number, minutes: number): Promise<VehicleHeartbeat[]>;
     generateFakeVehiclesFromFile(associationId: string): Promise<Vehicle[]>;

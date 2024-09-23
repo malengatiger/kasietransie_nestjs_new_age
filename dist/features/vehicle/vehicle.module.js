@@ -28,7 +28,6 @@ const user_service_1 = require("../user/user.service");
 const UserGeofenceEvent_1 = require("../../data/models/UserGeofenceEvent");
 const city_service_1 = require("../city/city.service");
 const City_1 = require("../../data/models/City");
-const new_mongo_service_1 = require("../../data/new_mongo_service");
 const Commuter_1 = require("../../data/models/Commuter");
 const AppError_1 = require("../../data/models/AppError");
 const kasie_error_1 = require("../../data/models/kasie.error");
@@ -55,6 +54,7 @@ const VehicleHeartbeatTimeSeries_1 = require("../../data/models/VehicleHeartbeat
 const PassengerTimeSeries_1 = require("../../data/models/PassengerTimeSeries");
 const RouteUpdateRequest_1 = require("../../data/models/RouteUpdateRequest");
 const storage_service_1 = require("../../storage/storage.service");
+const firebase_util_1 = require("../../services/firebase_util");
 let VehicleModule = class VehicleModule {
 };
 exports.VehicleModule = VehicleModule;
@@ -108,7 +108,6 @@ exports.VehicleModule = VehicleModule = __decorate([
             vehicle_service_1.VehicleService,
             user_service_1.UserService,
             city_service_1.CityService,
-            new_mongo_service_1.NewMongoService,
             route_service_1.RouteService,
             time_series_service_1.TimeSeriesService,
             dispatch_service_1.DispatchService,
@@ -117,7 +116,7 @@ exports.VehicleModule = VehicleModule = __decorate([
             association_service_1.AssociationService,
             fcm_service_1.MessagingService,
             zipper_1.FileArchiverService,
-            storage_service_1.CloudStorageUploaderService,
+            storage_service_1.CloudStorageUploaderService, firebase_util_1.FirebaseAdmin,
         ],
     })
 ], VehicleModule);

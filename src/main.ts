@@ -44,7 +44,7 @@ async function bootstrap() {
   Logger.log(`${mm} ... GlobalInterceptors set up .....`);
   
   await app.listen(port);
-  await srv.initializeFirebase();
+  // await srv.initializeFirebase();
   await srv.sendInitializationMessage();
 
   

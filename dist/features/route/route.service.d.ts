@@ -11,7 +11,9 @@ import { RoutePointList } from 'src/data/models/RoutePointList';
 import { City } from 'src/data/models/City';
 import { CityService } from '../city/city.service';
 import { MessagingService } from '../fcm/fcm.service';
+import { CloudStorageUploaderService } from 'src/storage/storage.service';
 export declare class RouteService {
+    private storage;
     private readonly archiveService;
     private readonly messagingService;
     private readonly cityService;
@@ -23,7 +25,7 @@ export declare class RouteService {
     private routePointModel;
     private calculatedDistanceModel;
     private routeModel;
-    constructor(archiveService: FileArchiverService, messagingService: MessagingService, cityService: CityService, routeUpdateRequestModel: mongoose.Model<RouteUpdateRequest>, vehicleMediaRequestModel: mongoose.Model<VehicleMediaRequest>, routeLandmarkModel: mongoose.Model<RouteLandmark>, routeCityModel: mongoose.Model<RouteCity>, cityModel: mongoose.Model<City>, routePointModel: mongoose.Model<RoutePoint>, calculatedDistanceModel: mongoose.Model<CalculatedDistance>, routeModel: mongoose.Model<Route>);
+    constructor(storage: CloudStorageUploaderService, archiveService: FileArchiverService, messagingService: MessagingService, cityService: CityService, routeUpdateRequestModel: mongoose.Model<RouteUpdateRequest>, vehicleMediaRequestModel: mongoose.Model<VehicleMediaRequest>, routeLandmarkModel: mongoose.Model<RouteLandmark>, routeCityModel: mongoose.Model<RouteCity>, cityModel: mongoose.Model<City>, routePointModel: mongoose.Model<RoutePoint>, calculatedDistanceModel: mongoose.Model<CalculatedDistance>, routeModel: mongoose.Model<Route>);
     findAssociationRouteLandmarksByLocation(associationId: string, latitude: number, longitude: number, radiusInKM: number): Promise<RouteLandmark[]>;
     findRouteLandmarksByLocation(latitude: number, longitude: number, radiusInKM: number): Promise<RouteLandmark[]>;
     findAssociationRoutesByLocation(associationId: string, latitude: number, longitude: number, radiusInKM: number): Promise<Route[]>;

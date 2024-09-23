@@ -10,11 +10,10 @@ const mm = '🍑 🍑 🍑 FirebaseService 🍑 ';
 @Injectable()
 export class MyFirebaseService {
   public async initializeFirebase(): Promise<void> {
-    Logger.log(`${mm} ... Initializing Firebase ...`);
-    const app1 = admin.initializeApp({
-      credential: applicationDefault(),
-    });
-    Logger.log(`${mm} ... Firebase initialized: name: ${app1.name}  🔵 🔵 ${JSON.stringify(app1.options, null, 2)}  🔵 🔵`);
+    // Logger.log(`${mm} ... Initializing Firebase ...`);
+    // const app1 = admin.initializeApp({
+    //   credential: applicationDefault(),
+    // });
   }
   async sendInitializationMessage() {
     const date = MyUtils.formatISOStringDate(new Date().toISOString(), 'en');
@@ -44,3 +43,9 @@ export class MyFirebaseService {
     }
   }
 }
+
+// Logger.log(`${mm} ... Initializing Firebase ...`);
+// export const app = admin.initializeApp({
+//   credential: applicationDefault(),
+// });
+// Logger.log(`${mm} ... Firebase initialized: name: ${app.name}  \n🔵 🔵 options: ${JSON.stringify(app.options, null, 2)}  🔵 🔵`);

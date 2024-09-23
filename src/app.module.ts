@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { DataModule } from './data/data.module';
 import { MyUtils } from './my-utils/my-utils';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
@@ -34,12 +33,10 @@ import { AmbassadorService } from './features/ambassador/ambassador.service';
 import { AssociationService } from './features/association/association.service';
 import { LocationRequestService } from './features/location_request/location_request.service';
 import { TimeSeriesService } from './features/time_series/time_series.service';
-import { NewMongoService } from './data/new_mongo_service';
+//import { NewMongoService } from './data/new_mongo_service';
 import { VehicleHeartbeatTimeSeriesSchema } from './data/models/VehicleHeartbeatTimeSeries';
 import { PassengerTimeSeriesSchema } from './data/models/PassengerTimeSeries';
 import { AmbassadorPassengerCountSchema } from './data/models/AmbassadorPassengerCount';
-import { CityService } from './features/city/city.service';
-import { UserService } from './features/user/user.service';
 import { UserSchema } from './data/models/User';
 import { UserGeofenceEventSchema } from './data/models/UserGeofenceEvent';
 import { AssociationSchema } from './data/models/Association';
@@ -60,10 +57,15 @@ import { VehicleDepartureSchema } from './data/models/VehicleDeparture';
 import { DispatchRecordSchema } from './data/models/DispatchRecord';
 import { CommuterRequestSchema } from './data/models/CommuterRequest';
 import { StorageModule } from './storage/storage.module';
+import { FirebaseAdmin } from './services/firebase_util';
+import { AmbassadorCheckInSchema } from './data/models/AmbassadorCheckIn';
+import { CityService } from './features/city/city.service';
+import { UserService } from './features/user/user.service';
 import { CloudStorageUploaderService } from './storage/storage.service';
 
 @Module({
   imports: [
+
     ConfigModule.forRoot({
       load: [databaseConfig],
       envFilePath: '.env',
@@ -103,6 +105,7 @@ import { CloudStorageUploaderService } from './storage/storage.service';
       { name: "LocationResponse", schema: LocationResponseSchema },
       { name: "CommuterRequest", schema: CommuterRequestSchema },
       { name: "LocationResponse", schema: LocationResponseSchema },
+      { name: "AmbassadorCheckIn", schema: AmbassadorCheckInSchema },
 
       { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCountSchema },
 
@@ -131,8 +134,10 @@ import { CloudStorageUploaderService } from './storage/storage.service';
   ],
   controllers: [AppController, DispatchController],
   providers: [AppService, DispatchService, MessagingService, TimeSeriesService,
-    NewMongoService, UserService, CityService, CloudStorageUploaderService,
+    UserService, CityService, CloudStorageUploaderService,
     AmbassadorService, AssociationService, LocationRequestService, 
-    MyFirebaseService, FileArchiverService],
+    MyFirebaseService, FileArchiverService, FirebaseAdmin,
+
+  ],
 })
 export class AppModule {}

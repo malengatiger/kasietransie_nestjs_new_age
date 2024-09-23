@@ -16,6 +16,7 @@ import { CommuterRequestSchema } from "src/data/models/CommuterRequest";
 import { CommuterResponseSchema } from "src/data/models/CommuterResponse";
 import { UserGeofenceEventSchema } from "src/data/models/UserGeofenceEvent";
 import { AssociationTokenSchema } from "src/data/models/AssociationToken";
+import { FirebaseAdmin } from "src/services/firebase_util";
 
 @Module({
   imports: [

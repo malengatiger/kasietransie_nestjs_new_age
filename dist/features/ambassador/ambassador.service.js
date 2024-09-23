@@ -17,37 +17,39 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const AmbassadorPassengerCount_1 = require("../../data/models/AmbassadorPassengerCount");
-const new_mongo_service_1 = require("../../data/new_mongo_service");
+const AmbassadorCheckIn_1 = require("../../data/models/AmbassadorCheckIn");
+const Vehicle_1 = require("../../data/models/Vehicle");
 const fcm_service_1 = require("../fcm/fcm.service");
 const time_series_service_1 = require("../time_series/time_series.service");
 let AmbassadorService = class AmbassadorService {
-    constructor(messagingService, timeSeriesService, mongoService, ambassadorPassengerCountModel) {
+    constructor(messagingService, timeSeriesService, ambassadorPassengerCountModel, ambassadorCheckInModel, vehicleModel) {
         this.messagingService = messagingService;
         this.timeSeriesService = timeSeriesService;
-        this.mongoService = mongoService;
         this.ambassadorPassengerCountModel = ambassadorPassengerCountModel;
+        this.ambassadorCheckInModel = ambassadorCheckInModel;
+        this.vehicleModel = vehicleModel;
     }
     async getAssociationAmbassadorCheckIn(associationId, startDate) {
-        return await this.mongoService.find('AmbassadorCheckIn', {
+        return await this.ambassadorCheckInModel.find({
             associationId: associationId,
             startDate: startDate,
         });
     }
     async getVehicleAmbassadorCheckIn(vehicleId, startDate) {
-        return await this.mongoService.find('AmbassadorCheckIn', {
+        return await this.ambassadorCheckInModel.find({
             vehicleId: vehicleId,
             startDate: startDate,
         });
     }
     async getUserAmbassadorPassengerCounts(userId, startDate) {
-        return this.mongoService.find('AmbassadorPassengerCount', {
+        return this.ambassadorPassengerCountModel.find({
             userId: userId,
             created: { $gte: startDate },
         });
     }
     async getAssociationAmbassadorPassengerCounts(associationId, startDate) {
-        const list = await this.mongoService
-            .find('AmbassadorPassengerCount', {
+        const list = await this.ambassadorPassengerCountModel
+            .find({
             associationId: associationId,
             created: { $gte: startDate },
         });
@@ -55,14 +57,14 @@ let AmbassadorService = class AmbassadorService {
         return list;
     }
     async getVehicleAmbassadorPassengerCounts(vehicleId, startDate) {
-        const res = await this.mongoService.find('AmbassadorPassengerCount', {
+        const res = await this.ambassadorPassengerCountModel.find({
             vehicleId: vehicleId,
             created: { $gte: startDate },
         });
         return res;
     }
     async addAmbassadorPassengerCount(count) {
-        const res = await this.mongoService.create('AmbassadorPassengerCount', count);
+        const res = await this.ambassadorPassengerCountModel.create(count);
         await this.timeSeriesService.addPassengerTimeSeries(count.associationId, count.vehicleId, count.vehicleReg, count.routeId, count.passengersIn);
         await this.messagingService.sendPassengerCountMessage(res);
         return res;
@@ -98,9 +100,10 @@ let AmbassadorService = class AmbassadorService {
 exports.AmbassadorService = AmbassadorService;
 exports.AmbassadorService = AmbassadorService = __decorate([
     (0, common_1.Injectable)(),
-    __param(3, (0, mongoose_1.InjectModel)(AmbassadorPassengerCount_1.AmbassadorPassengerCount.name)),
+    __param(2, (0, mongoose_1.InjectModel)(AmbassadorPassengerCount_1.AmbassadorPassengerCount.name)),
+    __param(3, (0, mongoose_1.InjectModel)(AmbassadorCheckIn_1.AmbassadorCheckIn.name)),
+    __param(4, (0, mongoose_1.InjectModel)(Vehicle_1.Vehicle.name)),
     __metadata("design:paramtypes", [fcm_service_1.MessagingService,
-        time_series_service_1.TimeSeriesService,
-        new_mongo_service_1.NewMongoService, mongoose_2.default.Model])
+        time_series_service_1.TimeSeriesService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], AmbassadorService);
 //# sourceMappingURL=ambassador.service.js.map

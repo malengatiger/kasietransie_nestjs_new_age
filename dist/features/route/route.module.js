@@ -26,6 +26,7 @@ const City_1 = require("../../data/models/City");
 const CalculatedDistance_1 = require("../../data/models/CalculatedDistance");
 const Country_1 = require("../../data/models/Country");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
+const storage_service_1 = require("../../storage/storage.service");
 let RouteModule = class RouteModule {
 };
 exports.RouteModule = RouteModule;
@@ -48,7 +49,7 @@ exports.RouteModule = RouteModule = __decorate([
             ]),
         ],
         controllers: [route_controller_1.RouteController],
-        providers: [route_service_1.RouteService, zipper_1.FileArchiverService, fcm_service_1.MessagingService, city_service_1.CityService],
+        providers: [route_service_1.RouteService, zipper_1.FileArchiverService, fcm_service_1.MessagingService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService],
     })
 ], RouteModule);
 //# sourceMappingURL=route.module.js.map

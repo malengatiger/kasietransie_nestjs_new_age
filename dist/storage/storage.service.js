@@ -17,7 +17,6 @@ const fs = require("fs");
 const path = require("path");
 const qrcode = require("qrcode");
 const mime = require("mime-types");
-const storage_control_1 = require("@google-cloud/storage-control");
 const mm = "CloudStorageUploaderService";
 let CloudStorageUploaderService = class CloudStorageUploaderService {
     constructor(configService) {
@@ -41,17 +40,6 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             common_1.Logger.error(`${mm} Error getting signed URL: ${error}`);
             throw error;
         }
-    }
-    async callCreateFolder(folderName) {
-        const controlClient = new storage_control_1.StorageControlClient();
-        const bucketPath = controlClient.bucketPath("_", this.bucketName);
-        const request = {
-            parent: bucketPath,
-            folderId: folderName,
-        };
-        const [response] = await controlClient.createFolder(request);
-        console.log(`${mm} Created folder: ${response.name}.`);
-        return response;
     }
     async uploadFile(objectName, filePath, associationId) {
         common_1.Logger.log(`${mm} uploadFile to cloud storage: ${objectName} in associationId: ${associationId}}`);

@@ -5,7 +5,6 @@ import mongoose from 'mongoose';
 import { AmbassadorPassengerCount } from 'src/data/models/AmbassadorPassengerCount';
 import { AmbassadorCheckIn } from 'src/data/models/AmbassadorCheckIn';
 import { Vehicle } from 'src/data/models/Vehicle';
-import { NewMongoService } from 'src/data/new_mongo_service';
 import { MessagingService } from '../fcm/fcm.service';
 import { TimeSeriesService } from '../time_series/time_series.service';
 
@@ -15,18 +14,20 @@ export class AmbassadorService {
   constructor(
     private readonly messagingService: MessagingService,
     private readonly timeSeriesService: TimeSeriesService,
-    private readonly mongoService: NewMongoService,
   
     @InjectModel(AmbassadorPassengerCount.name)
-    private ambassadorPassengerCountModel: mongoose.Model<AmbassadorPassengerCount>
-    ,
+    private ambassadorPassengerCountModel: mongoose.Model<AmbassadorPassengerCount>,
+    @InjectModel(AmbassadorCheckIn.name)
+    private ambassadorCheckInModel: mongoose.Model<AmbassadorCheckIn>,
+    @InjectModel(Vehicle.name)
+    private vehicleModel: mongoose.Model<Vehicle>,
   ) {}
 
   public async getAssociationAmbassadorCheckIn(
     associationId: string,
     startDate: string,
   ): Promise<any[]> {
-    return await this.mongoService.find('AmbassadorCheckIn', {
+    return await this.ambassadorCheckInModel.find( {
       associationId: associationId,
       startDate: startDate,
     });
@@ -35,7 +36,7 @@ export class AmbassadorService {
     vehicleId: string,
     startDate: string,
   ): Promise<AmbassadorCheckIn[]> {
-     return await this.mongoService.find('AmbassadorCheckIn', {
+     return await this.ambassadorCheckInModel.find({
        vehicleId: vehicleId,
        startDate: startDate,
      });
@@ -44,7 +45,7 @@ export class AmbassadorService {
     userId: string,
     startDate: string,
   ): Promise<any[]> {
-    return this.mongoService.find('AmbassadorPassengerCount', {
+    return this.ambassadorPassengerCountModel.find({
       userId: userId,
       created: { $gte: startDate },
     });
@@ -53,8 +54,8 @@ export class AmbassadorService {
     associationId: string,
     startDate: string,
   ): Promise<AmbassadorPassengerCount[]> {
-    const list = await this.mongoService
-      .find('AmbassadorPassengerCount', {
+    const list = await this.ambassadorPassengerCountModel
+      .find( {
         associationId: associationId,
         created: { $gte: startDate },
       });
@@ -65,8 +66,7 @@ export class AmbassadorService {
     vehicleId: string,
     startDate: string,
   ): Promise<AmbassadorPassengerCount[]> {
-    const res = await this.mongoService.find(
-      'AmbassadorPassengerCount',
+    const res = await this.ambassadorPassengerCountModel.find(
       {
         vehicleId: vehicleId,
         created: { $gte: startDate },
@@ -77,8 +77,7 @@ export class AmbassadorService {
   public async addAmbassadorPassengerCount(
     count: AmbassadorPassengerCount,
   ): Promise<AmbassadorPassengerCount> {
-    const res = await this.mongoService.create(
-      'AmbassadorPassengerCount',
+    const res = await this.ambassadorPassengerCountModel.create(
       count,
     );
     await this.timeSeriesService.addPassengerTimeSeries(

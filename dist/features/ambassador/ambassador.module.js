@@ -12,7 +12,6 @@ const ambassador_service_1 = require("./ambassador.service");
 const ambassador_controller_1 = require("./ambassador.controller");
 const fcm_service_1 = require("../fcm/fcm.service");
 const time_series_service_1 = require("../time_series/time_series.service");
-const new_mongo_service_1 = require("../../data/new_mongo_service");
 const AmbassadorPassengerCount_1 = require("../../data/models/AmbassadorPassengerCount");
 const mongoose_1 = require("@nestjs/mongoose");
 const AppError_1 = require("../../data/models/AppError");
@@ -21,6 +20,8 @@ const zipper_1 = require("../../my-utils/zipper");
 const VehicleHeartbeatTimeSeries_1 = require("../../data/models/VehicleHeartbeatTimeSeries");
 const PassengerTimeSeries_1 = require("../../data/models/PassengerTimeSeries");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
+const AmbassadorCheckIn_1 = require("../../data/models/AmbassadorCheckIn");
+const Vehicle_1 = require("../../data/models/Vehicle");
 let AmbassadorModule = class AmbassadorModule {
 };
 exports.AmbassadorModule = AmbassadorModule;
@@ -36,6 +37,8 @@ exports.AmbassadorModule = AmbassadorModule = __decorate([
                 { name: "PassengerTimeSeries", schema: PassengerTimeSeries_1.PassengerTimeSeriesSchema },
                 { name: "AppError", schema: AppError_1.AppErrorSchema },
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
+                { name: "AmbassadorCheckIn", schema: AmbassadorCheckIn_1.AmbassadorCheckInSchema },
+                { name: "Vehicle", schema: Vehicle_1.VehicleSchema },
                 {
                     name: "AmbassadorPassengerCount",
                     schema: AmbassadorPassengerCount_1.AmbassadorPassengerCountSchema,
@@ -47,7 +50,6 @@ exports.AmbassadorModule = AmbassadorModule = __decorate([
             ambassador_service_1.AmbassadorService,
             fcm_service_1.MessagingService,
             time_series_service_1.TimeSeriesService,
-            new_mongo_service_1.NewMongoService,
             zipper_1.FileArchiverService,
         ],
     })

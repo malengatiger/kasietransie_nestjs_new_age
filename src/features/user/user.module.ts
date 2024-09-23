@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { DataModule } from 'src/data/data.module';
-import { User, UserSchema } from 'src/data/models/User';
+import { UserSchema } from 'src/data/models/User';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserGeofenceEventSchema } from 'src/data/models/UserGeofenceEvent';
 import { AssociationSchema } from 'src/data/models/Association';
 import { CloudStorageUploaderService } from 'src/storage/storage.service';
+import { FirebaseAdmin } from 'src/services/firebase_util';
 
 @Module({
   imports: [
@@ -16,6 +16,6 @@ import { CloudStorageUploaderService } from 'src/storage/storage.service';
       { name: "Association", schema: AssociationSchema },
     ]),
   ],  controllers: [UserController],
-  providers: [UserService, CloudStorageUploaderService],
+  providers: [UserService, CloudStorageUploaderService, FirebaseAdmin],
 })
 export class UserModule {}

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Vehicle } from 'src/data/models/Vehicle';
@@ -14,20 +13,20 @@ import { VehicleHeartbeat } from 'src/data/models/VehicleHeartbeat';
 import csvParser from 'csv-parser';
 import * as fs from 'fs';
 import { randomUUID } from 'crypto';
-import { MyUtils } from 'src/my-utils/my-utils';
 import { VehicleBag } from 'src/data/helpers/VehicleBag';
 import { AmbassadorPassengerCount } from 'src/data/models/AmbassadorPassengerCount';
 import { DispatchRecord } from 'src/data/models/DispatchRecord';
 import { VehicleArrival } from 'src/data/models/VehicleArrival';
 import { VehicleDeparture } from 'src/data/models/VehicleDeparture';
 import { AssociationService } from '../association/association.service';
+import { CloudStorageUploaderService } from 'src/storage/storage.service';
 
 const mm = ' 💚 💚 💚 VehicleService  💚';
 
 @Injectable()
 export class VehicleService {
   constructor(
-    private configService: ConfigService,
+    private storage: CloudStorageUploaderService,
     private associationService: AssociationService,
     @InjectModel(Vehicle.name)
     private vehicleModel: mongoose.Model<Vehicle>,
@@ -102,10 +101,13 @@ export class VehicleService {
     return null;
   }
   public async addVehicle(vehicle: Vehicle): Promise<Vehicle> {
-    const url = await MyUtils.createQRCodeAndUploadToCloudStorage(
-      JSON.stringify(vehicle),
-      vehicle.vehicleReg,
-      2,
+    const url = await this.storage.createQRCode(
+     {
+       data: JSON.stringify(vehicle),
+       prefix: vehicle.vehicleReg,
+       size: 2,
+       associationId: vehicle.associationId,
+     }
     );
     vehicle.qrCodeUrl = url;
     return await this.vehicleModel.create(vehicle);
@@ -187,11 +189,13 @@ export class VehicleService {
     return this.vehicleModel.find({ ownerId: userId }).sort({ vehicleReg: 1 });
   }
   public async updateVehicleQRCode(vehicle: Vehicle): Promise<number> {
-    const url = await MyUtils.createQRCodeAndUploadToCloudStorage(
-      JSON.stringify(vehicle),
-      vehicle.vehicleReg.replace(' ', ''),
-      2,
-    );
+    const url = await this.storage.createQRCode(
+      {
+        data: JSON.stringify(vehicle),
+        prefix: vehicle.vehicleReg.replace(' ', ''),
+        size: 2,
+        associationId: vehicle.associationId,
+      });
     vehicle.qrCodeUrl = url;
     await this.vehicleModel.create(vehicle);
     return 0;
@@ -201,15 +205,21 @@ export class VehicleService {
     file: Express.Multer.File,
     associationId: string,
   ): Promise<Vehicle[]> {
-    const ass = await this.associationService.getAssociationById(associationId);
+    const ass = await this.associationModel.find({associationId: associationId});
     const cars: Vehicle[] = [];
 
     // Parse the JSON file and create User objects
     const jsonData = fs.readFileSync(file.path, 'utf-8');
     const jsonUsers = JSON.parse(jsonData);
 
+    const m = new Association();
+    m.associationId = ass[0].associationId;
+    m.associationName = ass[0].associationName;
+    m.countryId = ass[0].countryId;
+    m.countryName = ass[0].countryName;
+
     jsonUsers.forEach(async (data: any) => {
-      const car: Vehicle = await this.buildCar(data, ass);
+      const car: Vehicle = await this.buildCar(data, m);
       cars.push(car);
     });
 
@@ -221,11 +231,13 @@ export class VehicleService {
   }
   private async processCars(cars: Vehicle[], uList: any[]) {
     cars.forEach(async (data: Vehicle) => {
-      const url = await MyUtils.createQRCodeAndUploadToCloudStorage(
-        JSON.stringify(data),
-        data.vehicleReg.replace(' ', ''),
-        2,
-      );
+      const url = await this.storage.createQRCode(
+        {
+          data: JSON.stringify(data),
+          prefix: data.vehicleReg.replace(' ', ''),
+          size: 2,
+          associationId: data.associationId,
+        });
       data.qrCodeUrl = url;
       const c = await this.vehicleModel.create(data);
       uList.push(c);
@@ -237,14 +249,24 @@ export class VehicleService {
     file: Express.Multer.File,
     associationId: string,
   ): Promise<Vehicle[]> {
-    const ass = await this.associationService.getAssociationById(associationId);
+    const list = await this.associationModel.find({associationId: associationId});
+    if (list.length == 0) {
+      throw new Error('Association not found');
+    }
+    const ass = list[0];
+    const m = new Association();
+    m.associationId = ass.associationId;
+    m.associationName = ass.associationName;
+    m.countryId = ass.countryId;
+    m.countryName = ass.countryName;
+
     const cars: Vehicle[] = [];
     const pCars: Vehicle[] = [];
 
     fs.createReadStream(file.path)
       .pipe(csvParser())
       .on('data', async (data: any) => {
-        const car: Vehicle = await this.buildCar(data, ass);
+        const car: Vehicle = await this.buildCar(data, m);
         cars.push(car);
       })
       .on('end', async () => {
@@ -278,10 +300,14 @@ export class VehicleService {
       qrCodeUrl: null,
     };
     const prefix = data.vehicleReg.replace(' ', '');
-    const url = await MyUtils.createQRCodeAndUploadToCloudStorage(
-      JSON.stringify(car),
-      prefix,
-      2,
+    const url = await this.storage.createQRCode(
+     {
+       data: JSON.stringify(car),
+       prefix: prefix,
+       size: 2,
+       associationId: ass.associationId,
+     
+     }
     );
     car.qrCodeUrl = url;
     return car;

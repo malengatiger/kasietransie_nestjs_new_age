@@ -48,22 +48,7 @@ export class CloudStorageUploaderService {
       throw error;
     }
   }
-  // Instantiates a client
-
-  async callCreateFolder(folderName: string) {
-    const controlClient = new StorageControlClient();
-    const bucketPath = controlClient.bucketPath("_", this.bucketName);
-
-    // Create the request
-    const request = {
-      parent: bucketPath,
-      folderId: folderName,
-    };
-    // Run request
-    const [response] = await controlClient.createFolder(request);
-    console.log(`${mm} Created folder: ${response.name}.`);
-    return response;
-  }
+  
   public async uploadFile(
     objectName: string,
     filePath: string,

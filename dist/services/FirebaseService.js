@@ -9,17 +9,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MyFirebaseService = void 0;
 const common_1 = require("@nestjs/common");
 const admin = require("firebase-admin");
-const app_1 = require("firebase-admin/app");
 const constants_1 = require("../my-utils/constants");
 const my_utils_1 = require("../my-utils/my-utils");
 const mm = '🍑 🍑 🍑 FirebaseService 🍑 ';
 let MyFirebaseService = class MyFirebaseService {
     async initializeFirebase() {
-        common_1.Logger.log(`${mm} ... Initializing Firebase ...`);
-        const app1 = admin.initializeApp({
-            credential: (0, app_1.applicationDefault)(),
-        });
-        common_1.Logger.log(`${mm} ... Firebase initialized: name: ${app1.name}  🔵 🔵 ${JSON.stringify(app1.options, null, 2)}  🔵 🔵`);
     }
     async sendInitializationMessage() {
         const date = my_utils_1.MyUtils.formatISOStringDate(new Date().toISOString(), 'en');

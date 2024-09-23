@@ -17,6 +17,7 @@ import { CitySchema } from 'src/data/models/City';
 import { CalculatedDistanceSchema } from 'src/data/models/CalculatedDistance';
 import { CountrySchema } from 'src/data/models/Country';
 import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
+import { CloudStorageUploaderService } from 'src/storage/storage.service';
 
 @Module({
   imports: [
@@ -38,6 +39,6 @@ import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
     ]),
   ],
   controllers: [RouteController],
-  providers: [RouteService, FileArchiverService, MessagingService, CityService],
+  providers: [RouteService, FileArchiverService, MessagingService, CityService, CloudStorageUploaderService],
 })
 export class RouteModule {}

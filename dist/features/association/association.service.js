@@ -14,7 +14,6 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AssociationService = void 0;
 const common_1 = require("@nestjs/common");
-const config_1 = require("@nestjs/config");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const Association_1 = require("../../data/models/Association");
@@ -29,41 +28,41 @@ const firebase_admin_1 = require("firebase-admin");
 const Vehicle_1 = require("../../data/models/Vehicle");
 const zipper_1 = require("../../my-utils/zipper");
 const Country_1 = require("../../data/models/Country");
-const new_mongo_service_1 = require("../../data/new_mongo_service");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
-const Commuter_1 = require("../../data/models/Commuter");
 const fcm_service_1 = require("../fcm/fcm.service");
 const city_service_1 = require("../city/city.service");
 const user_service_1 = require("../user/user.service");
 const uuid_1 = require("uuid");
+const Commuter_1 = require("../../data/models/Commuter");
 const mm = "🍎🍎🍎 AssociationService: 🍎🍎🍎";
 let AssociationService = class AssociationService {
-    constructor(configService, archiveService, userService, cityService, messagingService, mongoService, userModel, commuterModel, appErrorModel, associationModel, exampleFileModel, vehicleModel, countryModel, associationTokenModel, settingsModel) {
-        this.configService = configService;
+    getAssociationById(associationId) {
+        throw new Error('Method not implemented.');
+    }
+    constructor(archiveService, userService, cityService, messagingService, associationModel, vehicleModel, settingsModel, userModel, countryModel, associationTokenModel, appErrorModel, exampleFileModel, commuterModel) {
         this.archiveService = archiveService;
         this.userService = userService;
         this.cityService = cityService;
         this.messagingService = messagingService;
-        this.mongoService = mongoService;
-        this.userModel = userModel;
-        this.commuterModel = commuterModel;
-        this.appErrorModel = appErrorModel;
         this.associationModel = associationModel;
-        this.exampleFileModel = exampleFileModel;
         this.vehicleModel = vehicleModel;
+        this.settingsModel = settingsModel;
+        this.userModel = userModel;
         this.countryModel = countryModel;
         this.associationTokenModel = associationTokenModel;
-        this.settingsModel = settingsModel;
+        this.appErrorModel = appErrorModel;
+        this.exampleFileModel = exampleFileModel;
+        this.commuterModel = commuterModel;
     }
     async getAssociations() {
         common_1.Logger.log(`${mm} ... getAssociations starting ...`);
-        const list = await this.mongoService.find("Association", {});
+        const list = await this.associationModel.find({});
         common_1.Logger.log(`${mm} ... getAssociations found: ${list.length} ...`);
         return list;
     }
     async getAssociationUsers(associationId) {
         common_1.Logger.log(`${mm} ... getAssociationUsers starting, id: ${associationId} ...`);
-        const list = await this.mongoService.find("User", {
+        const list = await this.userModel.find({
             associationId: associationId,
         });
         common_1.Logger.log(`${mm} ... getAssociationUsers found: ${list.length} ...`);
@@ -71,7 +70,7 @@ let AssociationService = class AssociationService {
     }
     async getAssociationVehicles(associationId) {
         common_1.Logger.log(`${mm} ... getAssociationVehicles starting, id: ${associationId} ...`);
-        const list = await this.mongoService.find("Vehicle", {
+        const list = await this.vehicleModel.find({
             associationId: associationId,
         });
         common_1.Logger.log(`${mm} ... getAssociationVehicles found: ${list.length} ...`);
@@ -100,18 +99,11 @@ let AssociationService = class AssociationService {
         common_1.Logger.log(`${mm} ... getCountryCitiesZippedFile found: ${list.length} ...`);
         return file;
     }
-    async getAssociationById(associationId) {
-        const m = await this.mongoService.find("Association", {
-            associationId: associationId,
-        });
-    }
     async getCountries() {
-        return await this.mongoService.find("Country", {});
+        return await this.countryModel.find({});
     }
     async getAssociationSettingsModels(associationId) {
-        const list = await this.mongoService.find("SettingsModel", {
-            associationId: associationId,
-        });
+        const list = await this.settingsModel.find({ associationId: associationId });
         common_1.Logger.log(`${mm} ... getAssociationSettingsModels found: ${list.length} ...`);
         return list;
     }
@@ -222,7 +214,7 @@ let AssociationService = class AssociationService {
         bag.user = user;
         bag.exampleFiles = files;
         if (ass.countryId) {
-            const c = await this.mongoService.find("Country", {
+            const c = await this.countryModel.find({
                 countryId: ass.countryId,
             });
             if (c.length > 0) {
@@ -240,29 +232,26 @@ let AssociationService = class AssociationService {
     }
     async addSettingsModel(model) {
         common_1.Logger.log(`adding addSettingsModel${model}`);
-        return await this.mongoService.create("SettingsModel", model);
+        return await this.settingsModel.create(model);
     }
     async addAssociationToken(associationId, userId, token) {
         const at = new AssociationToken_1.AssociationToken();
         at.associationId = associationId;
         at.userId = userId;
         at.token = token;
-        await this.mongoService.delete("AssociationToken", {
-            associationId: associationId,
-        });
-        return await this.mongoService.create("AssociationToken", at);
+        return await this.associationTokenModel.create(at);
     }
     async getAssociationAppErrors(associationId, startDate, endDate) {
-        return this.mongoService.find("AppError", {
+        return this.appErrorModel.find({
             associationId: associationId,
             created: { $gte: startDate, $lte: endDate },
         });
     }
     async getRandomCommuters(limit) {
-        return this.mongoService.find("Commuter", {}, limit);
+        return this.commuterModel.find({ limit });
     }
     async getAppErrors(startDate) {
-        return this.mongoService.find("AppError", {
+        return this.appErrorModel.find({
             created: { $gte: startDate },
         });
     }
@@ -280,9 +269,9 @@ let AssociationService = class AssociationService {
         return bag;
     }
     async getExampleFiles() {
-        return this.mongoService.find("ExampleFile", {});
+        return this.exampleFileModel.find({});
     }
-    async upLoadExampleFiles(files) {
+    async upLoadExampleFiles() {
         return [];
     }
     getFakeEmail() {
@@ -306,20 +295,18 @@ let AssociationService = class AssociationService {
 exports.AssociationService = AssociationService;
 exports.AssociationService = AssociationService = __decorate([
     (0, common_1.Injectable)(),
-    __param(6, (0, mongoose_1.InjectModel)(User_1.User.name)),
-    __param(7, (0, mongoose_1.InjectModel)(Commuter_1.Commuter.name)),
-    __param(8, (0, mongoose_1.InjectModel)(AppError_1.AppError.name)),
-    __param(9, (0, mongoose_1.InjectModel)(Association_1.Association.name)),
-    __param(10, (0, mongoose_1.InjectModel)(ExampleFile_1.ExampleFile.name)),
-    __param(11, (0, mongoose_1.InjectModel)(Vehicle_1.Vehicle.name)),
-    __param(12, (0, mongoose_1.InjectModel)(Country_1.Country.name)),
-    __param(13, (0, mongoose_1.InjectModel)(AssociationToken_1.AssociationToken.name)),
-    __param(14, (0, mongoose_1.InjectModel)(SettingsModel_1.SettingsModel.name)),
-    __metadata("design:paramtypes", [config_1.ConfigService,
-        zipper_1.FileArchiverService,
+    __param(4, (0, mongoose_1.InjectModel)(Association_1.Association.name)),
+    __param(5, (0, mongoose_1.InjectModel)(Vehicle_1.Vehicle.name)),
+    __param(6, (0, mongoose_1.InjectModel)(SettingsModel_1.SettingsModel.name)),
+    __param(7, (0, mongoose_1.InjectModel)(User_1.User.name)),
+    __param(8, (0, mongoose_1.InjectModel)(Country_1.Country.name)),
+    __param(9, (0, mongoose_1.InjectModel)(AssociationToken_1.AssociationToken.name)),
+    __param(10, (0, mongoose_1.InjectModel)(AppError_1.AppError.name)),
+    __param(11, (0, mongoose_1.InjectModel)(ExampleFile_1.ExampleFile.name)),
+    __param(12, (0, mongoose_1.InjectModel)(Commuter_1.Commuter.name)),
+    __metadata("design:paramtypes", [zipper_1.FileArchiverService,
         user_service_1.UserService,
         city_service_1.CityService,
-        fcm_service_1.MessagingService,
-        new_mongo_service_1.NewMongoService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        fcm_service_1.MessagingService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], AssociationService);
 //# sourceMappingURL=association.service.js.map

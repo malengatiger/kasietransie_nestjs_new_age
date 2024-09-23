@@ -14,7 +14,6 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.VehicleService = void 0;
 const common_1 = require("@nestjs/common");
-const config_1 = require("@nestjs/config");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const Vehicle_1 = require("../../data/models/Vehicle");
@@ -26,17 +25,17 @@ const VehicleHeartbeat_1 = require("../../data/models/VehicleHeartbeat");
 const csv_parser_1 = require("csv-parser");
 const fs = require("fs");
 const crypto_1 = require("crypto");
-const my_utils_1 = require("../../my-utils/my-utils");
 const VehicleBag_1 = require("../../data/helpers/VehicleBag");
 const AmbassadorPassengerCount_1 = require("../../data/models/AmbassadorPassengerCount");
 const DispatchRecord_1 = require("../../data/models/DispatchRecord");
 const VehicleArrival_1 = require("../../data/models/VehicleArrival");
 const VehicleDeparture_1 = require("../../data/models/VehicleDeparture");
 const association_service_1 = require("../association/association.service");
+const storage_service_1 = require("../../storage/storage.service");
 const mm = ' 💚 💚 💚 VehicleService  💚';
 let VehicleService = class VehicleService {
-    constructor(configService, associationService, vehicleModel, dispatchRecordModel, vehicleArrivalModel, vehicleHeartbeatModel, ambassadorPassengerCountModel, vehicleDepartureModel, associationModel, userModel, assignModel, routeModel) {
-        this.configService = configService;
+    constructor(storage, associationService, vehicleModel, dispatchRecordModel, vehicleArrivalModel, vehicleHeartbeatModel, ambassadorPassengerCountModel, vehicleDepartureModel, associationModel, userModel, assignModel, routeModel) {
+        this.storage = storage;
         this.associationService = associationService;
         this.vehicleModel = vehicleModel;
         this.dispatchRecordModel = dispatchRecordModel;
@@ -68,7 +67,12 @@ let VehicleService = class VehicleService {
         return null;
     }
     async addVehicle(vehicle) {
-        const url = await my_utils_1.MyUtils.createQRCodeAndUploadToCloudStorage(JSON.stringify(vehicle), vehicle.vehicleReg, 2);
+        const url = await this.storage.createQRCode({
+            data: JSON.stringify(vehicle),
+            prefix: vehicle.vehicleReg,
+            size: 2,
+            associationId: vehicle.associationId,
+        });
         vehicle.qrCodeUrl = url;
         return await this.vehicleModel.create(vehicle);
     }
@@ -126,18 +130,28 @@ let VehicleService = class VehicleService {
         return this.vehicleModel.find({ ownerId: userId }).sort({ vehicleReg: 1 });
     }
     async updateVehicleQRCode(vehicle) {
-        const url = await my_utils_1.MyUtils.createQRCodeAndUploadToCloudStorage(JSON.stringify(vehicle), vehicle.vehicleReg.replace(' ', ''), 2);
+        const url = await this.storage.createQRCode({
+            data: JSON.stringify(vehicle),
+            prefix: vehicle.vehicleReg.replace(' ', ''),
+            size: 2,
+            associationId: vehicle.associationId,
+        });
         vehicle.qrCodeUrl = url;
         await this.vehicleModel.create(vehicle);
         return 0;
     }
     async importVehiclesFromJSON(file, associationId) {
-        const ass = await this.associationService.getAssociationById(associationId);
+        const ass = await this.associationModel.find({ associationId: associationId });
         const cars = [];
         const jsonData = fs.readFileSync(file.path, 'utf-8');
         const jsonUsers = JSON.parse(jsonData);
+        const m = new Association_1.Association();
+        m.associationId = ass[0].associationId;
+        m.associationName = ass[0].associationName;
+        m.countryId = ass[0].countryId;
+        m.countryName = ass[0].countryName;
         jsonUsers.forEach(async (data) => {
-            const car = await this.buildCar(data, ass);
+            const car = await this.buildCar(data, m);
             cars.push(car);
         });
         const uList = [];
@@ -146,7 +160,12 @@ let VehicleService = class VehicleService {
     }
     async processCars(cars, uList) {
         cars.forEach(async (data) => {
-            const url = await my_utils_1.MyUtils.createQRCodeAndUploadToCloudStorage(JSON.stringify(data), data.vehicleReg.replace(' ', ''), 2);
+            const url = await this.storage.createQRCode({
+                data: JSON.stringify(data),
+                prefix: data.vehicleReg.replace(' ', ''),
+                size: 2,
+                associationId: data.associationId,
+            });
             data.qrCodeUrl = url;
             const c = await this.vehicleModel.create(data);
             uList.push(c);
@@ -154,13 +173,22 @@ let VehicleService = class VehicleService {
         common_1.Logger.log(`${uList.length} cars added`);
     }
     async importVehiclesFromCSV(file, associationId) {
-        const ass = await this.associationService.getAssociationById(associationId);
+        const list = await this.associationModel.find({ associationId: associationId });
+        if (list.length == 0) {
+            throw new Error('Association not found');
+        }
+        const ass = list[0];
+        const m = new Association_1.Association();
+        m.associationId = ass.associationId;
+        m.associationName = ass.associationName;
+        m.countryId = ass.countryId;
+        m.countryName = ass.countryName;
         const cars = [];
         const pCars = [];
         fs.createReadStream(file.path)
             .pipe((0, csv_parser_1.default)())
             .on('data', async (data) => {
-            const car = await this.buildCar(data, ass);
+            const car = await this.buildCar(data, m);
             cars.push(car);
         })
             .on('end', async () => {
@@ -192,7 +220,12 @@ let VehicleService = class VehicleService {
             qrCodeUrl: null,
         };
         const prefix = data.vehicleReg.replace(' ', '');
-        const url = await my_utils_1.MyUtils.createQRCodeAndUploadToCloudStorage(JSON.stringify(car), prefix, 2);
+        const url = await this.storage.createQRCode({
+            data: JSON.stringify(car),
+            prefix: prefix,
+            size: 2,
+            associationId: ass.associationId,
+        });
         car.qrCodeUrl = url;
         return car;
     }
@@ -210,7 +243,7 @@ exports.VehicleService = VehicleService = __decorate([
     __param(9, (0, mongoose_1.InjectModel)(User_1.User.name)),
     __param(10, (0, mongoose_1.InjectModel)(RouteAssignment_1.RouteAssignment.name)),
     __param(11, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
-    __metadata("design:paramtypes", [config_1.ConfigService,
+    __metadata("design:paramtypes", [storage_service_1.CloudStorageUploaderService,
         association_service_1.AssociationService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], VehicleService);
 //# sourceMappingURL=vehicle.service.js.map

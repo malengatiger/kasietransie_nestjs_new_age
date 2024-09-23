@@ -18,7 +18,6 @@ const AppError_1 = require("../../data/models/AppError");
 const kasie_error_1 = require("../../data/models/kasie.error");
 const VehicleHeartbeat_1 = require("../../data/models/VehicleHeartbeat");
 const zipper_1 = require("../../my-utils/zipper");
-const new_mongo_service_1 = require("../../data/new_mongo_service");
 const VehicleHeartbeatTimeSeries_1 = require("../../data/models/VehicleHeartbeatTimeSeries");
 const PassengerTimeSeries_1 = require("../../data/models/PassengerTimeSeries");
 const RouteUpdateRequest_1 = require("../../data/models/RouteUpdateRequest");
@@ -42,7 +41,6 @@ exports.HeartbeatModule = HeartbeatModule = __decorate([
         ],
         controllers: [heartbeat_controller_1.HeartbeatController],
         providers: [heartbeat_service_1.HeartbeatService,
-            new_mongo_service_1.NewMongoService,
             time_series_service_1.TimeSeriesService, fcm_service_1.MessagingService, zipper_1.FileArchiverService],
     })
 ], HeartbeatModule);

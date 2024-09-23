@@ -14,7 +14,6 @@ const zipper_1 = require("../../my-utils/zipper");
 const user_service_1 = require("../user/user.service");
 const city_service_1 = require("../city/city.service");
 const fcm_service_1 = require("../fcm/fcm.service");
-const new_mongo_service_1 = require("../../data/new_mongo_service");
 const mongoose_1 = require("@nestjs/mongoose");
 const AmbassadorPassengerCount_1 = require("../../data/models/AmbassadorPassengerCount");
 const AppError_1 = require("../../data/models/AppError");
@@ -36,6 +35,7 @@ const VehicleArrival_1 = require("../../data/models/VehicleArrival");
 const VehicleDeparture_1 = require("../../data/models/VehicleDeparture");
 const VehicleHeartbeat_1 = require("../../data/models/VehicleHeartbeat");
 const storage_service_1 = require("../../storage/storage.service");
+const firebase_util_1 = require("../../services/firebase_util");
 let AssociationModule = class AssociationModule {
 };
 exports.AssociationModule = AssociationModule;
@@ -72,8 +72,7 @@ exports.AssociationModule = AssociationModule = __decorate([
             user_service_1.UserService,
             city_service_1.CityService,
             fcm_service_1.MessagingService,
-            new_mongo_service_1.NewMongoService,
-            storage_service_1.CloudStorageUploaderService,
+            storage_service_1.CloudStorageUploaderService, firebase_util_1.FirebaseAdmin,
         ],
     })
 ], AssociationModule);

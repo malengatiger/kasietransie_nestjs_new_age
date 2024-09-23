@@ -17,17 +17,15 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
-const new_mongo_service_1 = require("../../data/new_mongo_service");
 const HeartbeatMeta_1 = require("../../data/models/HeartbeatMeta");
 const PassengerTimeSeries_1 = require("../../data/models/PassengerTimeSeries");
 const VehicleHeartbeatTimeSeries_1 = require("../../data/models/VehicleHeartbeatTimeSeries");
 const zipper_1 = require("../../my-utils/zipper");
 const mm = 'TimeSeriesService';
 let TimeSeriesService = class TimeSeriesService {
-    constructor(configService, zipService, mongoService, vehicleHeartbeatTimeSeriesModel, passengerTimeSeriesModel) {
+    constructor(configService, zipService, vehicleHeartbeatTimeSeriesModel, passengerTimeSeriesModel) {
         this.configService = configService;
         this.zipService = zipService;
-        this.mongoService = mongoService;
         this.vehicleHeartbeatTimeSeriesModel = vehicleHeartbeatTimeSeriesModel;
         this.passengerTimeSeriesModel = passengerTimeSeriesModel;
     }
@@ -152,10 +150,9 @@ let TimeSeriesService = class TimeSeriesService {
 exports.TimeSeriesService = TimeSeriesService;
 exports.TimeSeriesService = TimeSeriesService = __decorate([
     (0, common_1.Injectable)(),
-    __param(3, (0, mongoose_1.InjectModel)(VehicleHeartbeatTimeSeries_1.VehicleHeartbeatTimeSeries.name)),
-    __param(4, (0, mongoose_1.InjectModel)(PassengerTimeSeries_1.PassengerTimeSeries.name)),
+    __param(2, (0, mongoose_1.InjectModel)(VehicleHeartbeatTimeSeries_1.VehicleHeartbeatTimeSeries.name)),
+    __param(3, (0, mongoose_1.InjectModel)(PassengerTimeSeries_1.PassengerTimeSeries.name)),
     __metadata("design:paramtypes", [config_1.ConfigService,
-        zipper_1.FileArchiverService,
-        new_mongo_service_1.NewMongoService, mongoose_2.default.Model, mongoose_2.default.Model])
+        zipper_1.FileArchiverService, mongoose_2.default.Model, mongoose_2.default.Model])
 ], TimeSeriesService);
 //# sourceMappingURL=time_series.service.js.map

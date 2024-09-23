@@ -18,17 +18,18 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const User_1 = require("../../data/models/User");
 const fs = require("fs");
-const admin = require("firebase-admin");
 const csv_parser_1 = require("csv-parser");
 const crypto_1 = require("crypto");
 const Association_1 = require("../../data/models/Association");
 const UserGeofenceEvent_1 = require("../../data/models/UserGeofenceEvent");
 const storage_service_1 = require("../../storage/storage.service");
 const constants_1 = require("../../my-utils/constants");
-const mm = '🟢🟢 UserService 🟢';
+const firebase_util_1 = require("../../services/firebase_util");
+const mm = '🟢 🟢 UserService 🟢';
 let UserService = class UserService {
-    constructor(storage, userModel, userGeofenceModel, associationModel) {
+    constructor(storage, firebaseAdmin, userModel, userGeofenceModel, associationModel) {
         this.storage = storage;
+        this.firebaseAdmin = firebaseAdmin;
         this.userModel = userModel;
         this.userGeofenceModel = userGeofenceModel;
         this.associationModel = associationModel;
@@ -39,9 +40,9 @@ let UserService = class UserService {
         return fileString;
     }
     async createUser(user) {
-        console.log(`${mm} create user: ${JSON.stringify(user)}`);
-        const firebaseAuth = admin.auth();
         const storedPassword = user.password;
+        const app = this.firebaseAdmin.getFirebaseApp();
+        console.log(`\n\n${mm} create user: ${JSON.stringify(user)} on app: ${JSON.stringify(app.options)}\n`);
         try {
             let email = '';
             if (!user.email) {
@@ -53,16 +54,13 @@ let UserService = class UserService {
             else {
                 email = user.email;
             }
-            console.log(`${mm} createUserAsync  .... email: ${email}`);
-            const userRecord = await firebaseAuth.createUser({
-                email: email,
-                emailVerified: false,
-                phoneNumber: user.cellphone,
+            console.log(`${mm} createUserAsync  .... 🎽 email: ${email}`);
+            const userRecord = await app.auth().createUser({
+                email,
                 password: user.password,
                 displayName: `${user.firstName} ${user.lastName}`,
-                disabled: false,
             });
-            console.log(`${mm} userRecord from Firebase : ${userRecord.email}`);
+            console.log(`${mm} auth user created. userRecord from Firebase : 🎽 ${JSON.stringify(userRecord, null, 2)}`);
             if (userRecord.uid) {
                 const uid = userRecord.uid;
                 user.userId = uid;
@@ -76,7 +74,8 @@ let UserService = class UserService {
                 user.qrCodeUrl = url;
                 const mUser = await this.userModel.create(user);
                 user.password = storedPassword;
-                common_1.Logger.log(`\n${mm} KasieTransie user created. ${JSON.stringify(user)}\n`);
+                await app.auth().setCustomUserClaims(uid, {});
+                common_1.Logger.log(`\n\n${mm} KasieTransie user created. 🥬🥬🥬 ${JSON.stringify(mUser)} 🥬\n\n`);
             }
             else {
                 throw new Error('userRecord.uid == null. We have a problem with Firebase, Jack!');
@@ -175,9 +174,10 @@ let UserService = class UserService {
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
     (0, common_1.Injectable)(),
-    __param(1, (0, mongoose_1.InjectModel)(User_1.User.name)),
-    __param(2, (0, mongoose_1.InjectModel)(UserGeofenceEvent_1.UserGeofenceEvent.name)),
-    __param(3, (0, mongoose_1.InjectModel)(Association_1.Association.name)),
-    __metadata("design:paramtypes", [storage_service_1.CloudStorageUploaderService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+    __param(2, (0, mongoose_1.InjectModel)(User_1.User.name)),
+    __param(3, (0, mongoose_1.InjectModel)(UserGeofenceEvent_1.UserGeofenceEvent.name)),
+    __param(4, (0, mongoose_1.InjectModel)(Association_1.Association.name)),
+    __metadata("design:paramtypes", [storage_service_1.CloudStorageUploaderService,
+        firebase_util_1.FirebaseAdmin, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], UserService);
 //# sourceMappingURL=user.service.js.map

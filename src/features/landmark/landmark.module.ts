@@ -1,12 +1,14 @@
 import { Module } from "@nestjs/common";
 import { LandmarkService } from "./landmark.service";
 import { LandmarkController } from "./landmark.controller";
-import { DataModule } from "src/data/data.module";
-import { Landmark, LandmarkSchema } from "src/data/models/Landmark";
+import { LandmarkSchema } from "src/data/models/Landmark";
 import { MongooseModule } from "@nestjs/mongoose";
+import { FirebaseAdmin } from "src/services/firebase_util";
 
 @Module({
   imports: [
+    
+
     MongooseModule.forFeature([
       { name: "Landmark", schema: LandmarkSchema },
     ]),

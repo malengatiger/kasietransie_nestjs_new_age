@@ -24,14 +24,15 @@ const Route_1 = require("../../data/models/Route");
 const RouteBag_1 = require("../../data/helpers/RouteBag");
 const CalculatedDistance_1 = require("../../data/models/CalculatedDistance");
 const RoutePoint_1 = require("../../data/models/RoutePoint");
-const my_utils_1 = require("../../my-utils/my-utils");
 const zipper_1 = require("../../my-utils/zipper");
 const City_1 = require("../../data/models/City");
 const city_service_1 = require("../city/city.service");
 const fcm_service_1 = require("../fcm/fcm.service");
+const storage_service_1 = require("../../storage/storage.service");
 const mm = 'RouteService';
 let RouteService = class RouteService {
-    constructor(archiveService, messagingService, cityService, routeUpdateRequestModel, vehicleMediaRequestModel, routeLandmarkModel, routeCityModel, cityModel, routePointModel, calculatedDistanceModel, routeModel) {
+    constructor(storage, archiveService, messagingService, cityService, routeUpdateRequestModel, vehicleMediaRequestModel, routeLandmarkModel, routeCityModel, cityModel, routePointModel, calculatedDistanceModel, routeModel) {
+        this.storage = storage;
         this.archiveService = archiveService;
         this.messagingService = messagingService;
         this.cityService = cityService;
@@ -60,12 +61,22 @@ let RouteService = class RouteService {
         return routeLandmarks;
     }
     async addRoute(route) {
-        const url = await my_utils_1.MyUtils.createQRCodeAndUploadToCloudStorage(JSON.stringify(route), 'route', 3);
+        const url = await this.storage.createQRCode({
+            data: JSON.stringify(route),
+            prefix: 'route',
+            size: 2,
+            associationId: route.associationId,
+        });
         route.qrCodeUrl = url;
         return await this.routeModel.create(route);
     }
     async createRouteQRCode(route) {
-        const url = await my_utils_1.MyUtils.createQRCodeAndUploadToCloudStorage(JSON.stringify(route), 'route', 3);
+        const url = await this.storage.createQRCode({
+            data: JSON.stringify(route),
+            prefix: 'route',
+            size: 1,
+            associationId: route.associationId,
+        });
         route.qrCodeUrl = url;
         await this.routeModel.updateOne(route);
         return route;
@@ -359,15 +370,16 @@ let RouteService = class RouteService {
 exports.RouteService = RouteService;
 exports.RouteService = RouteService = __decorate([
     (0, common_1.Injectable)(),
-    __param(3, (0, mongoose_1.InjectModel)(RouteUpdateRequest_1.RouteUpdateRequest.name)),
-    __param(4, (0, mongoose_1.InjectModel)(VehicleMediaRequest_1.VehicleMediaRequest.name)),
-    __param(5, (0, mongoose_1.InjectModel)(RouteLandmark_1.RouteLandmark.name)),
-    __param(6, (0, mongoose_1.InjectModel)(RouteCity_1.RouteCity.name)),
-    __param(7, (0, mongoose_1.InjectModel)(City_1.City.name)),
-    __param(8, (0, mongoose_1.InjectModel)(RoutePoint_1.RoutePoint.name)),
-    __param(9, (0, mongoose_1.InjectModel)(CalculatedDistance_1.CalculatedDistance.name)),
-    __param(10, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
-    __metadata("design:paramtypes", [zipper_1.FileArchiverService,
+    __param(4, (0, mongoose_1.InjectModel)(RouteUpdateRequest_1.RouteUpdateRequest.name)),
+    __param(5, (0, mongoose_1.InjectModel)(VehicleMediaRequest_1.VehicleMediaRequest.name)),
+    __param(6, (0, mongoose_1.InjectModel)(RouteLandmark_1.RouteLandmark.name)),
+    __param(7, (0, mongoose_1.InjectModel)(RouteCity_1.RouteCity.name)),
+    __param(8, (0, mongoose_1.InjectModel)(City_1.City.name)),
+    __param(9, (0, mongoose_1.InjectModel)(RoutePoint_1.RoutePoint.name)),
+    __param(10, (0, mongoose_1.InjectModel)(CalculatedDistance_1.CalculatedDistance.name)),
+    __param(11, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
+    __metadata("design:paramtypes", [storage_service_1.CloudStorageUploaderService,
+        zipper_1.FileArchiverService,
         fcm_service_1.MessagingService,
         city_service_1.CityService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], RouteService);

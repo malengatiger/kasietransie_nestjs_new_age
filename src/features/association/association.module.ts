@@ -5,9 +5,7 @@ import { FileArchiverService } from "src/my-utils/zipper";
 import { UserService } from "../user/user.service";
 import { CityService } from "../city/city.service";
 import { MessagingService } from "../fcm/fcm.service";
-import { NewMongoService } from "src/data/new_mongo_service";
-import { DataModule } from "src/data/data.module";
-import { UserModule } from "../user/user.module";
+//import { NewMongoService } from "src/data/new_mongo_service";
 import { MongooseModule } from "@nestjs/mongoose";
 import { AmbassadorPassengerCountSchema } from "src/data/models/AmbassadorPassengerCount";
 import { AppErrorSchema } from "src/data/models/AppError";
@@ -29,9 +27,11 @@ import { VehicleArrivalSchema } from "src/data/models/VehicleArrival";
 import { VehicleDepartureSchema } from "src/data/models/VehicleDeparture";
 import { VehicleHeartbeatSchema } from "src/data/models/VehicleHeartbeat";
 import { CloudStorageUploaderService } from "src/storage/storage.service";
+import { FirebaseAdmin } from "src/services/firebase_util";
 
 @Module({
   imports: [
+    
     MongooseModule.forFeature([
       { name: "Vehicle", schema: VehicleSchema },
       { name: "DispatchRecord", schema: DispatchRecordSchema },
@@ -63,8 +63,8 @@ import { CloudStorageUploaderService } from "src/storage/storage.service";
     UserService,
     CityService,
     MessagingService,
-    NewMongoService,
-    CloudStorageUploaderService,
+    //
+    CloudStorageUploaderService, FirebaseAdmin,
   ],
 })
 export class AssociationModule {}

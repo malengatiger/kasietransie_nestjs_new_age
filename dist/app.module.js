@@ -42,12 +42,9 @@ const ambassador_service_1 = require("./features/ambassador/ambassador.service")
 const association_service_1 = require("./features/association/association.service");
 const location_request_service_1 = require("./features/location_request/location_request.service");
 const time_series_service_1 = require("./features/time_series/time_series.service");
-const new_mongo_service_1 = require("./data/new_mongo_service");
 const VehicleHeartbeatTimeSeries_1 = require("./data/models/VehicleHeartbeatTimeSeries");
 const PassengerTimeSeries_1 = require("./data/models/PassengerTimeSeries");
 const AmbassadorPassengerCount_1 = require("./data/models/AmbassadorPassengerCount");
-const city_service_1 = require("./features/city/city.service");
-const user_service_1 = require("./features/user/user.service");
 const User_1 = require("./data/models/User");
 const UserGeofenceEvent_1 = require("./data/models/UserGeofenceEvent");
 const Association_1 = require("./data/models/Association");
@@ -67,6 +64,10 @@ const VehicleDeparture_1 = require("./data/models/VehicleDeparture");
 const DispatchRecord_1 = require("./data/models/DispatchRecord");
 const CommuterRequest_1 = require("./data/models/CommuterRequest");
 const storage_module_1 = require("./storage/storage.module");
+const firebase_util_1 = require("./services/firebase_util");
+const AmbassadorCheckIn_1 = require("./data/models/AmbassadorCheckIn");
+const city_service_1 = require("./features/city/city.service");
+const user_service_1 = require("./features/user/user.service");
 const storage_service_1 = require("./storage/storage.service");
 let AppModule = class AppModule {
 };
@@ -112,6 +113,7 @@ exports.AppModule = AppModule = __decorate([
                 { name: "LocationResponse", schema: LocationResponse_1.LocationResponseSchema },
                 { name: "CommuterRequest", schema: CommuterRequest_1.CommuterRequestSchema },
                 { name: "LocationResponse", schema: LocationResponse_1.LocationResponseSchema },
+                { name: "AmbassadorCheckIn", schema: AmbassadorCheckIn_1.AmbassadorCheckInSchema },
                 { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCount_1.AmbassadorPassengerCountSchema },
             ]),
             dispatch_module_1.DispatchModule,
@@ -136,9 +138,10 @@ exports.AppModule = AppModule = __decorate([
         ],
         controllers: [app_controller_1.AppController, dispatch_controller_1.DispatchController],
         providers: [app_service_1.AppService, dispatch_service_1.DispatchService, fcm_service_1.MessagingService, time_series_service_1.TimeSeriesService,
-            new_mongo_service_1.NewMongoService, user_service_1.UserService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService,
+            user_service_1.UserService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService,
             ambassador_service_1.AmbassadorService, association_service_1.AssociationService, location_request_service_1.LocationRequestService,
-            FirebaseService_1.MyFirebaseService, zipper_1.FileArchiverService],
+            FirebaseService_1.MyFirebaseService, zipper_1.FileArchiverService, firebase_util_1.FirebaseAdmin,
+        ],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

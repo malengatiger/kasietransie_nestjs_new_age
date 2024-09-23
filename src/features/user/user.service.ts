@@ -5,22 +5,21 @@ import mongoose from 'mongoose';
 import { User } from 'src/data/models/User';
 import * as fs from 'fs';
 import * as admin from 'firebase-admin';
-import qrcode from 'qrcode';
-import { Storage } from '@google-cloud/storage';
-import { MyUtils } from 'src/my-utils/my-utils';
 import csvParser from 'csv-parser';
 import { randomUUID } from 'crypto';
 import { Association } from 'src/data/models/Association';
 import { UserGeofenceEvent } from 'src/data/models/UserGeofenceEvent';
 import { CloudStorageUploaderService } from 'src/storage/storage.service';
 import { Constants } from 'src/my-utils/constants';
+import { FirebaseAdmin } from 'src/services/firebase_util';
 
-const mm = '🟢🟢 UserService 🟢';
+const mm = '🟢 🟢 UserService 🟢';
 
 @Injectable()
 export class UserService {
   constructor(
     readonly storage: CloudStorageUploaderService,
+    private readonly firebaseAdmin: FirebaseAdmin, 
     @InjectModel(User.name)
     private userModel: mongoose.Model<User>,
     @InjectModel(UserGeofenceEvent.name)
@@ -35,9 +34,9 @@ export class UserService {
   }
 
   async createUser(user: User): Promise<User> {
-    console.log(`${mm} create user: ${JSON.stringify(user)}`);
-    const firebaseAuth = admin.auth();
     const storedPassword = user.password;
+    const app = this.firebaseAdmin.getFirebaseApp();
+    console.log(`\n\n${mm} create user: ${JSON.stringify(user)} on app: ${JSON.stringify(app.options)}\n`);
 
     try {
       let email = '';
@@ -49,17 +48,23 @@ export class UserService {
       } else {
         email = user.email;
       }
-      console.log(`${mm} createUserAsync  .... email: ${email}`);
-      const userRecord = await firebaseAuth.createUser({
-        email: email,
-        emailVerified: false,
-        phoneNumber: user.cellphone,
+      console.log(`${mm} createUserAsync  .... 🎽 email: ${email}`);
+
+      const userRecord = await app.auth().createUser({
+        email,
         password: user.password,
         displayName: `${user.firstName} ${user.lastName}`,
-        disabled: false,
-      });
+      })
+      // const userRecord = await firebaseAuth.createUser({
+      //   email: email,
+      //   emailVerified: false,
+      //   phoneNumber: user.cellphone,
+      //   password: user.password,
+      //   displayName: `${user.firstName} ${user.lastName}`,
+      //   disabled: false,
+      // });
 
-      console.log(`${mm} userRecord from Firebase : ${userRecord.email}`);
+      console.log(`${mm} auth user created. userRecord from Firebase : 🎽 ${JSON.stringify(userRecord,null,2)}`);
       if (userRecord.uid) {
         const uid = userRecord.uid;
         user.userId = uid;
@@ -74,8 +79,8 @@ export class UserService {
         const mUser = await this.userModel.create(user);
         //
         user.password = storedPassword;
-
-        Logger.log(`\n${mm} KasieTransie user created. ${JSON.stringify(user)}\n`);
+        await app.auth().setCustomUserClaims(uid, {  });
+        Logger.log(`\n\n${mm} KasieTransie user created. 🥬🥬🥬 ${JSON.stringify(mUser)} 🥬\n\n`);
       } else {
         throw new Error(
           'userRecord.uid == null. We have a problem with Firebase, Jack!',

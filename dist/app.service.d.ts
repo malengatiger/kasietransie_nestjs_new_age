@@ -1,6 +1,7 @@
-import { NewMongoService } from 'src/data/new_mongo_service';
+import { Association } from './data/models/Association';
+import mongoose from 'mongoose';
 export declare class AppService {
-    readonly mongoService: NewMongoService;
-    constructor(mongoService: NewMongoService);
+    private assocModel;
+    constructor(assocModel: mongoose.Model<Association>);
     shakeKasieUp(): Promise<string>;
 }
