@@ -25,9 +25,7 @@ import { VehiclePhoto } from "src/data/models/VehiclePhoto";
 import { VehicleVideo } from "src/data/models/VehicleVideo";
 import * as os from "os";
 import * as path from "path";
-import { parser } from "csv";
 import { parse } from "csv";
-import { interpolators } from "sharp";
 const mm = "💚 💚 💚 VehicleService  💚 ";
 
 @Injectable()
@@ -337,9 +335,8 @@ export class VehicleService {
 
     // Now 'response' will have the correct value
     if (response) {
-      Logger.log(
-        `${mm} 🔵 🔵 🔵 🔵 🔵 WORK IS DONE !!! ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅\n\n`
-      );
+      Logger.log(`${mm} return response: ${JSON.stringify(response, null, 2)}`);
+
       return response;
     } else {
       // This should ideally never happen now

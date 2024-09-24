@@ -18,14 +18,16 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const User_1 = require("../../data/models/User");
 const fs = require("fs");
-const csv_parser_1 = require("csv-parser");
+const csv_1 = require("csv");
 const crypto_1 = require("crypto");
 const Association_1 = require("../../data/models/Association");
 const UserGeofenceEvent_1 = require("../../data/models/UserGeofenceEvent");
 const storage_service_1 = require("../../storage/storage.service");
 const constants_1 = require("../../my-utils/constants");
 const firebase_util_1 = require("../../services/firebase_util");
-const mm = '🟢 🟢 UserService 🟢';
+const os = require("os");
+const path = require("path");
+const mm = "🏈 🏈 🏈 UserService 🏈 🏈";
 let UserService = class UserService {
     constructor(storage, firebaseAdmin, userModel, userGeofenceModel, associationModel) {
         this.storage = storage;
@@ -36,18 +38,18 @@ let UserService = class UserService {
     }
     convertExpressFileToString(expressFile) {
         const buffer = fs.readFileSync(expressFile.path);
-        const fileString = buffer.toString('utf-8');
+        const fileString = buffer.toString("utf-8");
         return fileString;
     }
     async createUser(user) {
         const storedPassword = user.password;
         const app = this.firebaseAdmin.getFirebaseApp();
-        console.log(`\n\n${mm} create user: ${JSON.stringify(user)} on app: ${JSON.stringify(app.options)}\n`);
+        console.log(`\n\n${mm} create user: ${JSON.stringify(user)} \n`);
         try {
-            let email = '';
+            let email = "";
             if (!user.email) {
                 const name = `${user.firstName} ${user.lastName}`;
-                const mName = name.replace(' ', '').toLowerCase();
+                const mName = name.replace(" ", "").toLowerCase();
                 email = `${mName}_${new Date().getTime()}@kasietransie.com`;
                 user.email = email;
             }
@@ -78,86 +80,86 @@ let UserService = class UserService {
                 common_1.Logger.log(`\n\n${mm} KasieTransie user created. 🥬🥬🥬 ${JSON.stringify(mUser)} 🥬\n\n`);
             }
             else {
-                throw new Error('userRecord.uid == null. We have a problem with Firebase, Jack!');
+                throw new Error("userRecord.uid == null. We have a problem with Firebase, Jack!");
             }
         }
         catch (e) {
             console.error(e);
-            throw e;
+            throw new Error(`User creation failed: ${e}`);
         }
         return user;
     }
     async updateUser(user) {
         return null;
     }
-    async importUsersFromJSON(file, associationId) {
-        const ass = await this.associationModel.findOne({
-            associationId: associationId,
-        });
-        const users = [];
-        try {
-            const jsonData = fs.readFileSync(file.path, 'utf-8');
-            const jsonUsers = JSON.parse(jsonData);
-            jsonUsers.forEach(async (data) => {
-                const user = await this.buildUser(data, ass);
-                users.push(user);
-            });
-            const mUsers = [];
-            users.forEach(async (user) => {
-                const u = await this.createUser(user);
-                mUsers.push(u);
-            });
-            common_1.Logger.log(`${mUsers.length} users added`);
-        }
-        catch (error) {
-            console.error('Failed to parse JSON string:', error);
-        }
-        return users;
-    }
     async importUsersFromCSV(file, associationId) {
-        const ass = await this.associationModel.findOne({
+        common_1.Logger.log(`\n\n${mm} importUsersFromCSV:... 🍎🍎 associationId: ${associationId} 🍎🍎 ... find association ...`);
+        common_1.Logger.debug(`${mm} importUsersFromCSV:...  🥦 file size: ${file.buffer.length} bytes;  🥦 originalname: ${file.originalname}`);
+        const list = await this.associationModel.find({
             associationId: associationId,
         });
+        if (list.length == 0) {
+            throw new Error("Association not found");
+        }
+        const ass = list[0];
+        common_1.Logger.log(`${mm} importUsersFromCSV:... association: 🔵 ${JSON.stringify(ass, null, 2)} 🔵\n\n`);
         const users = [];
         const mUsers = [];
-        fs.createReadStream(file.path)
-            .pipe((0, csv_parser_1.default)())
-            .on('data', async (data) => {
-            const user = await this.buildUser(data, ass);
-            users.push(user);
-        })
-            .on('end', () => {
-            users.forEach(async (user) => {
-                const u = await this.createUser(user);
-                mUsers.push(u);
+        const errors = [];
+        let response;
+        let index = 0;
+        const tempFilePath = path.join(os.tmpdir(), file.originalname);
+        common_1.Logger.log(`${mm} importUsersFromCSV:... 🔵 tempFilePath: ${tempFilePath}`);
+        common_1.Logger.log(`${mm} importUsersFromCSV:... 🔵 read csv file: ${file.originalname}`);
+        await fs.promises.writeFile(tempFilePath, file.buffer);
+        response = await new Promise((resolve, reject) => {
+            fs.createReadStream(tempFilePath)
+                .pipe((0, csv_1.parse)())
+                .on("data", async (data) => {
+                if (index > 0) {
+                    const user = await this.buildUser(data, ass);
+                    users.push(user);
+                }
+                index++;
+            })
+                .on("error", (err) => {
+                reject(new Error(`Error processing user CSV file: ${err}`));
+            })
+                .on("end", async () => {
+                common_1.Logger.debug(`${mm} CSV parsing completed ......`);
+                common_1.Logger.log(`${mm} Save the parsed users to the database`);
+                for (const user of users) {
+                    try {
+                        const u = await this.createUser(user);
+                        mUsers.push(u);
+                    }
+                    catch (e) {
+                        errors.push(user);
+                        common_1.Logger.debug(`${mm} ${e} - errors: ${errors.length}`);
+                    }
+                }
+                await fs.promises.unlink(tempFilePath);
+                resolve({
+                    users: mUsers,
+                    errors: errors,
+                });
             });
         });
-        common_1.Logger.log(`${mUsers.length} users added`);
-        return mUsers;
+        common_1.Logger.log(`${mm} return response: ${JSON.stringify(response, null, 2)}`);
+        common_1.Logger.log(`\n\n${mm} 😎 😎 😎 😎 😎 😎 Work completed! Users from csv file, 🍎 users: ${response.users.length} 🍎 errors: ${response.errors.length}\n\n`);
+        return response;
     }
     async buildUser(data, ass) {
-        const u = {
-            userType: data.userType,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            email: data.email,
-            cellphone: data.cellphone,
-            userId: null,
-            gender: null,
-            countryId: ass.countryId,
-            associationId: ass.associationId,
-            associationName: ass.associationName,
-            fcmToken: '',
-            password: crypto_1.randomUUID.toString(),
-            countryName: ass.countryName,
-            dateRegistered: '',
-            qrCodeUrl: null,
-            profileUrl: null,
-            profileThumbnail: null,
-            _partitionKey: null,
-            _id: null,
-        };
-        return u;
+        const uu = new User_1.User();
+        uu.userType = data[0];
+        uu.firstName = data[1];
+        uu.lastName = data[2];
+        uu.email = data[3];
+        uu.cellphone = data[4];
+        uu.associationId = ass.associationId;
+        uu.associationName = ass.associationName;
+        uu.password = (0, crypto_1.randomUUID)().trim();
+        return uu;
     }
     async getUserById(userId) {
         const user = await this.userModel.findOne({ userId: userId });

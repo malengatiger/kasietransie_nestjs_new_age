@@ -31,7 +31,7 @@ const kasie_error_1 = require("../../data/models/kasie.error");
 const LocationRequest_1 = require("../../data/models/LocationRequest");
 const LocationResponse_1 = require("../../data/models/LocationResponse");
 const VehicleMediaRequest_1 = require("../../data/models/VehicleMediaRequest");
-const mm = ' 🚼 🚼 🚼 RouteController  🚼';
+const mm = ' 🚼 🚼 🚼 VehicleController  🚼';
 let VehicleController = VehicleController_1 = class VehicleController {
     constructor(carService, dispatchService, mediaService, locationRequestService, routeService, timeSeriesService) {
         this.carService = carService;

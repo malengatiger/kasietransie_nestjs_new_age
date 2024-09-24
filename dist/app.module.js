@@ -71,6 +71,7 @@ const user_service_1 = require("./features/user/user.service");
 const storage_service_1 = require("./storage/storage.service");
 const VehiclePhoto_1 = require("./data/models/VehiclePhoto");
 const VehicleVideo_1 = require("./data/models/VehicleVideo");
+const user_controller_1 = require("./features/user/user.controller");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -140,7 +141,7 @@ exports.AppModule = AppModule = __decorate([
             mongo_data_module_1.MongoDataModule,
             storage_module_1.StorageModule,
         ],
-        controllers: [app_controller_1.AppController, dispatch_controller_1.DispatchController],
+        controllers: [app_controller_1.AppController, dispatch_controller_1.DispatchController, user_controller_1.UserController],
         providers: [app_service_1.AppService, dispatch_service_1.DispatchService, fcm_service_1.MessagingService, time_series_service_1.TimeSeriesService,
             user_service_1.UserService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService,
             ambassador_service_1.AmbassadorService, association_service_1.AssociationService, location_request_service_1.LocationRequestService,

@@ -30,7 +30,6 @@ let FirebaseAdmin = class FirebaseAdmin {
                 common_1.Logger.log(`${tag} provider: ${JSON.stringify(p)}`);
             });
             common_1.Logger.log(`${tag} ... projectId: 🎽 ${app.options.projectId} storageBucket: ${app.options.storageBucket} \n\n`);
-            common_1.Logger.log(`${tag} ... credential: 🎽 ${JSON.stringify(app.options.credential, null, 2)} \n\n`);
         }
         else {
             common_1.Logger.debug(`${tag} ... Firebase already initialized ... ignored!`);

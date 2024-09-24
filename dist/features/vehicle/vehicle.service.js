@@ -231,7 +231,7 @@ let VehicleService = class VehicleService {
             throw new Error(`Error processing vehicles CSV file: ${err}`);
         }
         if (response) {
-            common_1.Logger.log(`${mm} 🔵 🔵 🔵 🔵 🔵 WORK IS DONE !!! ✅ ✅ ✅ ✅ ✅ ✅ ✅ ✅\n\n`);
+            common_1.Logger.log(`${mm} return response: ${JSON.stringify(response, null, 2)}`);
             return response;
         }
         else {

@@ -64,6 +64,7 @@ import { UserService } from './features/user/user.service';
 import { CloudStorageUploaderService } from './storage/storage.service';
 import { VehiclePhotoSchema } from './data/models/VehiclePhoto';
 import { VehicleVideoSchema } from './data/models/VehicleVideo';
+import { UserController } from './features/user/user.controller';
 
 @Module({
   imports: [
@@ -135,7 +136,7 @@ import { VehicleVideoSchema } from './data/models/VehicleVideo';
     MongoDataModule,
     StorageModule,
   ],
-  controllers: [AppController, DispatchController],
+  controllers: [AppController, DispatchController, UserController],
   providers: [AppService, DispatchService, MessagingService, TimeSeriesService,
     UserService, CityService, CloudStorageUploaderService,
     AmbassadorService, AssociationService, LocationRequestService, 

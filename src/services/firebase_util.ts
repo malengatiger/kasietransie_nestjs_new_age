@@ -29,9 +29,9 @@ export class FirebaseAdmin implements OnApplicationBootstrap {
       Logger.log(
         `${tag} ... projectId: 🎽 ${app.options.projectId} storageBucket: ${app.options.storageBucket} \n\n`
       );
-      Logger.log(
-        `${tag} ... credential: 🎽 ${JSON.stringify(app.options.credential, null, 2)} \n\n`
-      );
+      // Logger.log(
+      //   `${tag} ... credential: 🎽 ${JSON.stringify(app.options.credential, null, 2)} \n\n`
+      // );
     } else {
       Logger.debug(`${tag} ... Firebase already initialized ... ignored!`);
     }

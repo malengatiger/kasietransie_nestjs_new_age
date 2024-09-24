@@ -33,7 +33,12 @@ let MongoIndexBuilder = class MongoIndexBuilder {
             common_1.Logger.debug(`${tag} Association unique index created: ${res1}`);
             const collection2 = db.collection("Vehicle");
             const res2 = await collection2.createIndex({ vehicleReg: 1 }, { unique: true });
-            common_1.Logger.debug(`${tag} Vehicle unique index created: ${res2}`);
+            const collection3 = db.collection("User");
+            const res3 = await collection3.createIndex({ email: 1 }, { unique: true });
+            common_1.Logger.debug(`${tag} User unique email index created: ${res3}`);
+            const collection4 = db.collection("User");
+            const res4 = await collection4.createIndex({ cellphone: 1 }, { unique: true });
+            common_1.Logger.debug(`${tag} User unique cellphone index created: ${res4}`);
         }
         catch (error) {
             console.error(`${tag} Error creating indexes:`, error);

@@ -35,7 +35,7 @@ import { LocationResponse } from 'src/data/models/LocationResponse';
 import { VehicleMediaRequest } from 'src/data/models/VehicleMediaRequest';
 import { VehicleBag } from 'src/data/helpers/VehicleBag';
 
-const mm = ' 🚼 🚼 🚼 RouteController  🚼';
+const mm = ' 🚼 🚼 🚼 VehicleController  🚼';
 
 @Controller('vehicle')
 export class VehicleController {
