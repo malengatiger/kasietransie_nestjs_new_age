@@ -64,10 +64,6 @@ let VehicleController = VehicleController_1 = class VehicleController {
         const res = await this.carService.importVehiclesFromCSV(file, associationId);
         return res;
     }
-    async importVehiclesFromJSON(file, associationId) {
-        const res = await this.carService.importVehiclesFromJSON(file, associationId);
-        return res;
-    }
     async addRouteAssignments(assignments) {
         return await this.carService.addRouteAssignments(assignments);
     }
@@ -156,15 +152,6 @@ __decorate([
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], VehicleController.prototype, "importVehiclesFromCSV", null);
-__decorate([
-    (0, common_1.Post)('importVehiclesFromJSON'),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
-    __param(0, (0, common_1.UploadedFile)()),
-    __param(1, (0, common_1.Query)('associationId')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
-    __metadata("design:returntype", Promise)
-], VehicleController.prototype, "importVehiclesFromJSON", null);
 __decorate([
     (0, common_1.Post)('addRouteAssignments'),
     __param(0, (0, common_1.Body)('assignments')),

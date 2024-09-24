@@ -5,6 +5,7 @@ import { ApiProperty } from "@nestjs/swagger";
 @Schema({
   timestamps: true,
   collection: "Vehicle",
+  autoIndex: true,
 })
 export class Vehicle {
   _partitionKey: string;
@@ -31,9 +32,11 @@ export class Vehicle {
   @Prop()
   @ApiProperty()
   associationName: string;
-  @Prop()
+
+  @Prop({required: true, index: { unique: true}})
   @ApiProperty()
   vehicleReg: string;
+  
   @Prop()
   @ApiProperty()
   model: string;

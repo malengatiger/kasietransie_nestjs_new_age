@@ -1,22 +1,22 @@
-import mongoose from 'mongoose';
-import { Vehicle } from 'src/data/models/Vehicle';
-import { Association } from 'src/data/models/Association';
-import { User } from 'src/data/models/User';
-import { Route } from 'src/data/models/Route';
-import { RouteAssignmentList } from 'src/data/helpers/RouteAssignmentList';
-import { RouteAssignment } from 'src/data/models/RouteAssignment';
-import { RoutePoint } from 'src/data/models/RoutePoint';
-import { VehicleHeartbeat } from 'src/data/models/VehicleHeartbeat';
-import { VehicleBag } from 'src/data/helpers/VehicleBag';
-import { AmbassadorPassengerCount } from 'src/data/models/AmbassadorPassengerCount';
-import { DispatchRecord } from 'src/data/models/DispatchRecord';
-import { VehicleArrival } from 'src/data/models/VehicleArrival';
-import { VehicleDeparture } from 'src/data/models/VehicleDeparture';
-import { AssociationService } from '../association/association.service';
-import { CloudStorageUploaderService } from 'src/storage/storage.service';
-import { VehicleMediaRequest } from 'src/data/models/VehicleMediaRequest';
-import { VehiclePhoto } from 'src/data/models/VehiclePhoto';
-import { VehicleVideo } from 'src/data/models/VehicleVideo';
+import mongoose from "mongoose";
+import { Vehicle } from "src/data/models/Vehicle";
+import { Association } from "src/data/models/Association";
+import { User } from "src/data/models/User";
+import { Route } from "src/data/models/Route";
+import { RouteAssignmentList } from "src/data/helpers/RouteAssignmentList";
+import { RouteAssignment } from "src/data/models/RouteAssignment";
+import { RoutePoint } from "src/data/models/RoutePoint";
+import { VehicleHeartbeat } from "src/data/models/VehicleHeartbeat";
+import { VehicleBag } from "src/data/helpers/VehicleBag";
+import { AmbassadorPassengerCount } from "src/data/models/AmbassadorPassengerCount";
+import { DispatchRecord } from "src/data/models/DispatchRecord";
+import { VehicleArrival } from "src/data/models/VehicleArrival";
+import { VehicleDeparture } from "src/data/models/VehicleDeparture";
+import { AssociationService } from "../association/association.service";
+import { CloudStorageUploaderService } from "src/storage/storage.service";
+import { VehicleMediaRequest } from "src/data/models/VehicleMediaRequest";
+import { VehiclePhoto } from "src/data/models/VehiclePhoto";
+import { VehicleVideo } from "src/data/models/VehicleVideo";
 export declare class VehicleService {
     private storage;
     private associationService;
@@ -56,8 +56,12 @@ export declare class VehicleService {
     updateVehicle(vehicle: Vehicle): Promise<Vehicle>;
     getOwnerVehicles(userId: string, page: number): Promise<Vehicle[]>;
     updateVehicleQRCode(vehicle: Vehicle): Promise<number>;
-    importVehiclesFromJSON(file: Express.Multer.File, associationId: string): Promise<Vehicle[]>;
-    private processCars;
-    importVehiclesFromCSV(file: Express.Multer.File, associationId: string): Promise<Vehicle[]>;
+    private addCarsToDatabase;
+    importVehiclesFromCSV(file: Express.Multer.File, associationId: string): Promise<AddCarsResponse>;
+    private handleExtractedCars;
     private buildCar;
+}
+export interface AddCarsResponse {
+    cars: Vehicle[];
+    errors: any[];
 }

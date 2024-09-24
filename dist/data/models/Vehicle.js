@@ -51,7 +51,7 @@ __decorate([
     __metadata("design:type", String)
 ], Vehicle.prototype, "associationName", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true, index: { unique: true } }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Vehicle.prototype, "vehicleReg", void 0);
@@ -104,6 +104,7 @@ exports.Vehicle = Vehicle = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,
         collection: "Vehicle",
+        autoIndex: true,
     })
 ], Vehicle);
 exports.VehicleSchema = mongoose_1.SchemaFactory.createForClass(Vehicle);

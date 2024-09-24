@@ -146,7 +146,7 @@ export class CloudStorageUploaderService {
 
       const resp = await this.vehiclePhotoModel.create(p);
       Logger.log(
-        `${mm} vehicle photo uploaded and added to Atlas: \n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`
+        `\n${mm} 🍎 🍎 vehicle photo uploaded and added to Atlas:🍎 🍎 🍎 🍎 \n\n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`
       );
       return resp;
     } else {
@@ -250,7 +250,7 @@ export class CloudStorageUploaderService {
   public async createQRCode(
     data: KasieQRCode // Add bucketName as a parameter
   ): Promise<string> {
-    Logger.log(`${mm} qrcode prefix: ${data.prefix} - size: ${data.size}`);
+    Logger.log(`${mm} createQRCode: 🌀 qrcode prefix: ${data.prefix} - size: ${data.size}`);
 
     try {
       const fileName = `qrcode_${data.prefix}_${new Date().getTime()}.png`;
@@ -270,15 +270,14 @@ export class CloudStorageUploaderService {
       if (data.size == 3) {
         version = 40;
       }
-      Logger.log(`${mm} qrcode version: ${version}`);
+     
       await qrcode.toFile(tempFilePath, data.data, {
         version: version,
       });
-      Logger.log(`${mm} tempFilePath.length: ${tempFilePath.length} bytes`);
       Logger.log(
-        `${mm} qrcode file: ${tempFilePath} to be uploaded to ${fileName}`
+        `${mm} qrcode file: ${tempFilePath} 🌀🌀 to be uploaded to ${fileName}`
       );
-      return this.uploadFile(fileName, tempFilePath, data.associationId);
+      return await this.uploadFile(fileName, tempFilePath, data.associationId);
     } catch (error) {
       console.error(error);
       throw new Error("Failed to create QR code and upload to Cloud Storage.");

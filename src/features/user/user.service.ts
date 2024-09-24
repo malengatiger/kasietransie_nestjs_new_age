@@ -72,7 +72,7 @@ export class UserService {
           data: JSON.stringify(user),
           prefix: Constants.qrcode_user,
           size: 1,
-          associationId:user.associationId,
+          associationId:user.associationName,
       });
         user.password = null;
         user.qrCodeUrl = url;

@@ -27,7 +27,7 @@ import { DispatchService } from 'src/features/dispatch/dispatch.service';
 import { LocationRequestService } from 'src/features/location_request/location_request.service';
 import { RouteService } from 'src/features/route/route.service';
 import { TimeSeriesService } from 'src/features/time_series/time_series.service';
-import { VehicleService } from 'src/features/vehicle/vehicle.service';
+import { AddCarsResponse, VehicleService } from 'src/features/vehicle/vehicle.service';
 import { KasieError } from 'src/data/models/kasie.error';
 
 import { LocationRequest } from 'src/data/models/LocationRequest';
@@ -89,7 +89,7 @@ export class VehicleController {
   async importVehiclesFromCSV(
     @UploadedFile() file: Express.Multer.File,
     @Query('associationId') associationId: string,
-  ): Promise<Vehicle[]> {
+  ): Promise<AddCarsResponse> {
     const res = await this.carService.importVehiclesFromCSV(
       file,
       associationId,
@@ -98,19 +98,6 @@ export class VehicleController {
     return res;
   }
 
-  @Post('importVehiclesFromJSON')
-  @UseInterceptors(FileInterceptor('file'))
-  async importVehiclesFromJSON(
-    @UploadedFile() file: Express.Multer.File,
-    @Query('associationId') associationId: string,
-  ): Promise<Vehicle[]> {
-    const res = await this.carService.importVehiclesFromJSON(
-      file,
-      associationId,
-    );
-
-    return res;
-  }
   @Post('addRouteAssignments')
   async addRouteAssignments(
     @Body('assignments') assignments: RouteAssignmentList,

@@ -97,7 +97,7 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             p.position = pos;
             p.created = new Date().toISOString();
             const resp = await this.vehiclePhotoModel.create(p);
-            common_1.Logger.log(`${mm} vehicle photo uploaded and added to Atlas: \n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`);
+            common_1.Logger.log(`\n${mm} 🍎 🍎 vehicle photo uploaded and added to Atlas:🍎 🍎 🍎 🍎 \n\n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`);
             return resp;
         }
         else {
@@ -171,7 +171,7 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
         return mimeType || "application/octet-stream";
     }
     async createQRCode(data) {
-        common_1.Logger.log(`${mm} qrcode prefix: ${data.prefix} - size: ${data.size}`);
+        common_1.Logger.log(`${mm} createQRCode: 🌀 qrcode prefix: ${data.prefix} - size: ${data.size}`);
         try {
             const fileName = `qrcode_${data.prefix}_${new Date().getTime()}.png`;
             const tempDir = path.join(__dirname, "..", "tempFiles");
@@ -189,13 +189,11 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             if (data.size == 3) {
                 version = 40;
             }
-            common_1.Logger.log(`${mm} qrcode version: ${version}`);
             await qrcode.toFile(tempFilePath, data.data, {
                 version: version,
             });
-            common_1.Logger.log(`${mm} tempFilePath.length: ${tempFilePath.length} bytes`);
-            common_1.Logger.log(`${mm} qrcode file: ${tempFilePath} to be uploaded to ${fileName}`);
-            return this.uploadFile(fileName, tempFilePath, data.associationId);
+            common_1.Logger.log(`${mm} qrcode file: ${tempFilePath} 🌀🌀 to be uploaded to ${fileName}`);
+            return await this.uploadFile(fileName, tempFilePath, data.associationId);
         }
         catch (error) {
             console.error(error);

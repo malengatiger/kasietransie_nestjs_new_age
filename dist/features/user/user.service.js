@@ -68,7 +68,7 @@ let UserService = class UserService {
                     data: JSON.stringify(user),
                     prefix: constants_1.Constants.qrcode_user,
                     size: 1,
-                    associationId: user.associationId,
+                    associationId: user.associationName,
                 });
                 user.password = null;
                 user.qrCodeUrl = url;

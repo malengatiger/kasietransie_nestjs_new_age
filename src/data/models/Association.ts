@@ -19,9 +19,11 @@ export class Association {
   @Prop()
   @ApiProperty()
   countryId: string;
-  @Prop()
+
+  @Prop({required: true, index: {unique: true}})
   @ApiProperty()
   associationName: string;
+  
   @Prop()
   @ApiProperty()
   active: number;

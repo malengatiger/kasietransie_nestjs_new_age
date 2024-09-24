@@ -7,6 +7,7 @@ const my_utils_1 = require("./my-utils/my-utils");
 const FirebaseService_1 = require("./services/FirebaseService");
 const errors_interceptor_1 = require("./middleware/errors.interceptor");
 const swagger_1 = require("@nestjs/swagger");
+const index_util_1 = require("./services/index_util");
 const mm = "🔵 🔵 🔵 🔵 🔵 🔵 Kasie Transie Bootstrap 🔵 🔵";
 const env = process.env.NODE_ENV;
 common_1.Logger.log(`${mm} Kasie NODE_ENV : ${env}`);
@@ -31,6 +32,7 @@ async function bootstrap() {
     app.useGlobalInterceptors(new errors_interceptor_1.ErrorsInterceptor());
     common_1.Logger.log(`${mm} ... GlobalInterceptors set up .....`);
     await app.listen(port);
+    await index_util_1.MongoIndexBuilder.createIndexes();
     await srv.sendInitializationMessage();
 }
 bootstrap().then((r) => common_1.Logger.debug(`${mm} Bootstrapping is complete. 💖💖💖 ... Lets do this!!`));

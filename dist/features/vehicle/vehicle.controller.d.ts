@@ -9,7 +9,7 @@ import { DispatchService } from 'src/features/dispatch/dispatch.service';
 import { LocationRequestService } from 'src/features/location_request/location_request.service';
 import { RouteService } from 'src/features/route/route.service';
 import { TimeSeriesService } from 'src/features/time_series/time_series.service';
-import { VehicleService } from 'src/features/vehicle/vehicle.service';
+import { AddCarsResponse, VehicleService } from 'src/features/vehicle/vehicle.service';
 import { LocationRequest } from 'src/data/models/LocationRequest';
 import { LocationResponse } from 'src/data/models/LocationResponse';
 import { VehicleMediaRequest } from 'src/data/models/VehicleMediaRequest';
@@ -29,8 +29,7 @@ export declare class VehicleController {
     addVehicleMediaRequest(request: VehicleMediaRequest): Promise<VehicleMediaRequest>;
     addVehiclePhoto(vehiclePhoto: VehiclePhoto): Promise<VehiclePhoto>;
     addVehicleArrival(vehicle: VehicleArrival): Promise<VehicleArrival>;
-    importVehiclesFromCSV(file: Express.Multer.File, associationId: string): Promise<Vehicle[]>;
-    importVehiclesFromJSON(file: Express.Multer.File, associationId: string): Promise<Vehicle[]>;
+    importVehiclesFromCSV(file: Express.Multer.File, associationId: string): Promise<AddCarsResponse>;
     addRouteAssignments(assignments: RouteAssignmentList): Promise<RouteAssignment[]>;
     getPassengerTimeSeries(query: {
         associationId: string;

@@ -7,8 +7,7 @@ import { MyUtils } from "./my-utils/my-utils";
 import { MyFirebaseService } from "./services/FirebaseService";
 import { ErrorsInterceptor } from "./middleware/errors.interceptor";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
-
-// import { pingDatabase } from './database/db_ping';
+import {MongoIndexBuilder} from "./services/index_util";
 const mm = "🔵 🔵 🔵 🔵 🔵 🔵 Kasie Transie Bootstrap 🔵 🔵";
 const env = process.env.NODE_ENV;
 Logger.log(`${mm} Kasie NODE_ENV : ${env}`);
@@ -44,7 +43,7 @@ async function bootstrap() {
   Logger.log(`${mm} ... GlobalInterceptors set up .....`);
   
   await app.listen(port);
-  // await srv.initializeFirebase();
+  await MongoIndexBuilder.createIndexes();
   await srv.sendInitializationMessage();
 
   
