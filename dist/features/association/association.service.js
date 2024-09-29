@@ -36,9 +36,6 @@ const uuid_1 = require("uuid");
 const Commuter_1 = require("../../data/models/Commuter");
 const mm = "🍎🍎🍎 AssociationService: 🍎🍎🍎";
 let AssociationService = class AssociationService {
-    getAssociationById(associationId) {
-        throw new Error('Method not implemented.');
-    }
     constructor(archiveService, userService, cityService, messagingService, associationModel, vehicleModel, settingsModel, userModel, countryModel, associationTokenModel, appErrorModel, exampleFileModel, commuterModel) {
         this.archiveService = archiveService;
         this.userService = userService;
@@ -54,6 +51,17 @@ let AssociationService = class AssociationService {
         this.exampleFileModel = exampleFileModel;
         this.commuterModel = commuterModel;
     }
+    async getAssociationById(associationId) {
+        common_1.Logger.log(`${mm} ... getAssociationById starting, id: ${associationId} ...`);
+        const list = await this.associationModel.find({
+            associationId: associationId,
+        }).limit(1);
+        common_1.Logger.log(`${mm} ... getAssociationById found: ${list.length} ...`);
+        if (list.length > 0) {
+            return list[0];
+        }
+        throw new Error(`Association not found; associationId: ${associationId}`);
+    }
     async getAssociations() {
         common_1.Logger.log(`${mm} ... getAssociations starting ...`);
         const list = await this.associationModel.find({});
@@ -61,7 +69,7 @@ let AssociationService = class AssociationService {
         return list;
     }
     async getAssociationUsers(associationId) {
-        common_1.Logger.log(`${mm} ... getAssociationUsers starting, id: ${associationId} ...`);
+        common_1.Logger.log(`${mm} ... getAssociationUsers starting, id: ${JSON.stringify(associationId)} ...`);
         const list = await this.userModel.find({
             associationId: associationId,
         });

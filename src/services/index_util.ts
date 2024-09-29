@@ -18,7 +18,7 @@ export class MongoIndexBuilder {
   }
   
   private static async buildIndexes(client: MongoClient) {
-    Logger.debug(`${tag} createIndexes ...`);
+    Logger.debug(`${tag} ...... create MongoDB Atlas indexes .........`);
     const db = client.db("kasie_transie");
 
     try {
@@ -34,6 +34,8 @@ export class MongoIndexBuilder {
         { vehicleReg: 1 },
         { unique: true }
       );
+      Logger.debug(`${tag} Vehicle unique index created: ${res2}`);
+
       const collection3 = db.collection("User");
       const res3 = await collection3.createIndex(
         { email: 1 },
@@ -46,7 +48,9 @@ export class MongoIndexBuilder {
         { cellphone: 1 },
         { unique: true }
       );
-      Logger.debug(`${tag} User unique cellphone index created: ${res4}`);
+      Logger.debug(`${tag} User unique cellphone index created: ${res4}\n\n`);
+
+      Logger.log(`${tag} 🌼 🌼 🌼 4 MongoDB Atlas indexes created successfully!  🌼\n\n`);
 
     } catch (error) {
       console.error(`${tag} Error creating indexes:`, error);

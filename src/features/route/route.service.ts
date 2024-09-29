@@ -321,7 +321,7 @@ export class RouteService {
       associationId: associationId,
     });
     Logger.log(
-      `${mm} getAssociationRouteZippedFile: 🍎🍎 🍎🍎 🍎🍎 routes: ${routes.length} `,
+      `${mm} getAssociationRouteZippedFile: 🍎🍎 🍎🍎 🍎🍎 routes: ${routes.length} association: ${associationId}`,
     );
 
     const points: any[] = [];

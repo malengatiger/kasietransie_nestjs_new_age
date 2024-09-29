@@ -7,6 +7,7 @@ import { SettingsModel } from 'src/data/models/SettingsModel';
 import { AppError } from 'src/data/models/AppError';
 import { CloudStorageUploaderService } from 'src/storage/storage.service';
 import { KasieQRCode } from 'src/data/helpers/kasie_qr_code';
+import { User } from 'src/data/models/User';
 
 @Controller('association')
 export class AssociationController {
@@ -47,7 +48,17 @@ export class AssociationController {
   async getAssociations(): Promise<any[]> {
     return this.associationService.getAssociations();
   }
-  
+  @Get('getAssociationById')
+  async getAssociationById(@Query('associationId') associationId: string): Promise<any> {
+    return await this.associationService.getAssociationById(associationId);
+  }
+  @Get('getAssociationUsers')
+  public async getAssociationUsers(
+    @Query() associationId: string,
+  ): Promise<User[]> {
+    return await this.associationService.getAssociationUsers(associationId);
+  }
+
   @Get('getAssociationVehicles')
   public async getAssociationVehicles(
     @Query() associationId: string,

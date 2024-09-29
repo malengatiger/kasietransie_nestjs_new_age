@@ -28,9 +28,6 @@ const mm = "🍎🍎🍎 AssociationService: 🍎🍎🍎";
 
 @Injectable()
 export class AssociationService {
-  getAssociationById(associationId: string) {
-    throw new Error('Method not implemented.');
-  }
   constructor(
     private archiveService: FileArchiverService,
     private userService: UserService,
@@ -63,6 +60,21 @@ export class AssociationService {
 
   ){}
 
+  async getAssociationById(associationId: string): Promise<any> {
+    Logger.log(
+      `${mm} ... getAssociationById starting, id: ${associationId} ...`
+    );
+    const list = await this.associationModel.find( {
+      associationId: associationId,
+    }).limit(1);
+    Logger.log(`${mm} ... getAssociationById found: ${list.length} ...`);
+    if (list.length > 0) {
+      return list[0];
+    } 
+
+    throw new Error(`Association not found; associationId: ${associationId}`);
+  }
+
   //----------------------------------------------------------------
   public async getAssociations(): Promise<any[]> {
     Logger.log(`${mm} ... getAssociations starting ...`);
@@ -73,7 +85,7 @@ export class AssociationService {
 
   public async getAssociationUsers(associationId: string): Promise<any[]> {
     Logger.log(
-      `${mm} ... getAssociationUsers starting, id: ${associationId} ...`
+      `${mm} ... getAssociationUsers starting, id: ${JSON.stringify(associationId)} ...`
     );
     const list = await this.userModel.find( {
       associationId: associationId,

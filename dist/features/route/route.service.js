@@ -228,7 +228,7 @@ let RouteService = class RouteService {
         const routes = await this.routeModel.find({
             associationId: associationId,
         });
-        common_1.Logger.log(`${mm} getAssociationRouteZippedFile: 🍎🍎 🍎🍎 🍎🍎 routes: ${routes.length} `);
+        common_1.Logger.log(`${mm} getAssociationRouteZippedFile: 🍎🍎 🍎🍎 🍎🍎 routes: ${routes.length} association: ${associationId}`);
         const points = [];
         const landmarks = [];
         const cities = [];

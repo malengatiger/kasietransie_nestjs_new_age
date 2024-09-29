@@ -28,7 +28,6 @@ import { ErrorModule } from './features/error/error.module';
 import { MongoDataModule } from './mongo_data/mongo_data.module';
 import { AppErrorSchema } from './data/models/AppError';
 import { KasieErrorSchema } from './data/models/kasie.error';
-import { MyFirebaseService } from './services/FirebaseService';
 import { AmbassadorService } from './features/ambassador/ambassador.service';
 import { AssociationService } from './features/association/association.service';
 import { LocationRequestService } from './features/location_request/location_request.service';
@@ -140,7 +139,7 @@ import { UserController } from './features/user/user.controller';
   providers: [AppService, DispatchService, MessagingService, TimeSeriesService,
     UserService, CityService, CloudStorageUploaderService,
     AmbassadorService, AssociationService, LocationRequestService, 
-    MyFirebaseService, FileArchiverService, FirebaseAdmin,
+    FileArchiverService, FirebaseAdmin,
 
   ],
 })

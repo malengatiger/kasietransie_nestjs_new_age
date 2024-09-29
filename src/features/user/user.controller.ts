@@ -27,6 +27,11 @@ export class UserController {
   async addUser(@Body() user: User): Promise<any>{
     return await this.userService.createUser(user);
   }
+
+  @Post('addAdminUser')
+  async addAdminUser(@Body() user: User): Promise<any>{
+    return await this.userService.createAdminUser(user);
+  }
   @Get('getUserById')
   async getUserById(@Query('userId') userId: string): Promise<User> {
     return this.userService.getUserById(userId);

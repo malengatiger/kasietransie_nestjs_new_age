@@ -1,0 +1,18 @@
+/*
+gcloud projects add-iam-policy-binding familyarchive-01 \
+  --member="serviceAccount:archivebackend-service-account@familyarchive-01.iam.gserviceaccount.com" \
+  --role="roles/serviceusage.serviceUsageConsumer"
+
+  gcloud projects add-iam-policy-binding familyarchive-01 \
+  --member="serviceAccount:archivebackend-service-account@familyarchive-01.iam.gserviceaccount.com" \
+  --role="roles/firebase.admin"
+
+  gcloud projects add-iam-policy-binding familyarchive-01 \
+  --member="serviceAccount:archivebackend-service-account@familyarchive-01.iam.gserviceaccount.com" \
+  --role="roles/datastore.owner"
+
+  gcloud projects add-iam-policy-binding kasie2024 \
+  --member="serviceAccount:kt-nest-1@kasie2024.iam.gserviceaccount.com" \
+  --role="roles/firebasemessaging.admin"
+
+*/

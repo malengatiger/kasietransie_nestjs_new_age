@@ -6,6 +6,9 @@ export class Constants {
   public static readonly DRIVER = 'DRIVER';
   public static readonly OWNER = 'OWNER';
   public static readonly ROUTE_BUILDER = 'ROUTE_BUILDER';
+  public static readonly ADMINISTRATOR_AFTAROBOT = 'ADMINISTRATOR_AFTAROBOT';
+  public static readonly ADMINISTRATOR_ASSOCIATION = 'ADMINISTRATOR_ASSOCIATION';
+
   //
   public static readonly vehicleChanges = 'vehicleChanges';
   public static readonly vehicleArrival = 'vehicleArrival';

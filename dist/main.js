@@ -4,19 +4,29 @@ const core_1 = require("@nestjs/core");
 const app_module_1 = require("./app.module");
 const common_1 = require("@nestjs/common");
 const my_utils_1 = require("./my-utils/my-utils");
-const FirebaseService_1 = require("./services/FirebaseService");
 const errors_interceptor_1 = require("./middleware/errors.interceptor");
 const swagger_1 = require("@nestjs/swagger");
 const index_util_1 = require("./services/index_util");
+const os = require("os");
 const mm = "🔵 🔵 🔵 🔵 🔵 🔵 Kasie Transie Bootstrap 🔵 🔵";
 const env = process.env.NODE_ENV;
 common_1.Logger.log(`${mm} Kasie NODE_ENV : ${env}`);
-const srv = new FirebaseService_1.MyFirebaseService();
 async function bootstrap() {
     common_1.Logger.log(`${mm} ... Kasie NestJS Backend bootstrapping .....`);
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     const port = my_utils_1.MyUtils.getPort();
     common_1.Logger.log(`${mm} ... Kasie Backend running on port : ${port} `);
+    const interfaces = os.networkInterfaces();
+    let serverIP = '127.0.0.1';
+    for (const name of Object.keys(interfaces)) {
+        for (const iface of interfaces[name]) {
+            if (iface.family === 'IPv4' && !iface.internal) {
+                serverIP = iface.address;
+                break;
+            }
+        }
+    }
+    common_1.Logger.log(`\n${mm} ...🔆 Kasie Backend running on: http://${serverIP}:${port}`);
     app.setGlobalPrefix("api/v1");
     const config = new swagger_1.DocumentBuilder()
         .setTitle("KasieTransie Backend")
@@ -33,7 +43,6 @@ async function bootstrap() {
     common_1.Logger.log(`${mm} ... GlobalInterceptors set up .....`);
     await app.listen(port);
     await index_util_1.MongoIndexBuilder.createIndexes();
-    await srv.sendInitializationMessage();
 }
 bootstrap().then((r) => common_1.Logger.debug(`${mm} Bootstrapping is complete. 💖💖💖 ... Lets do this!!`));
 //# sourceMappingURL=main.js.map

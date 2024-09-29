@@ -5,6 +5,7 @@ export declare class UserController {
     private readonly logger;
     constructor(userService: UserService);
     addUser(user: User): Promise<any>;
+    addAdminUser(user: User): Promise<any>;
     getUserById(userId: string): Promise<User>;
     importUsersFromCSV(file: Express.Multer.File, associationId: string): Promise<AddUsersResponse>;
     private sendFile;

@@ -37,7 +37,6 @@ const error_module_1 = require("./features/error/error.module");
 const mongo_data_module_1 = require("./mongo_data/mongo_data.module");
 const AppError_1 = require("./data/models/AppError");
 const kasie_error_1 = require("./data/models/kasie.error");
-const FirebaseService_1 = require("./services/FirebaseService");
 const ambassador_service_1 = require("./features/ambassador/ambassador.service");
 const association_service_1 = require("./features/association/association.service");
 const location_request_service_1 = require("./features/location_request/location_request.service");
@@ -145,7 +144,7 @@ exports.AppModule = AppModule = __decorate([
         providers: [app_service_1.AppService, dispatch_service_1.DispatchService, fcm_service_1.MessagingService, time_series_service_1.TimeSeriesService,
             user_service_1.UserService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService,
             ambassador_service_1.AmbassadorService, association_service_1.AssociationService, location_request_service_1.LocationRequestService,
-            FirebaseService_1.MyFirebaseService, zipper_1.FileArchiverService, firebase_util_1.FirebaseAdmin,
+            zipper_1.FileArchiverService, firebase_util_1.FirebaseAdmin,
         ],
     })
 ], AppModule);

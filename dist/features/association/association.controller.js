@@ -38,6 +38,12 @@ let AssociationController = class AssociationController {
     async getAssociations() {
         return this.associationService.getAssociations();
     }
+    async getAssociationById(associationId) {
+        return await this.associationService.getAssociationById(associationId);
+    }
+    async getAssociationUsers(associationId) {
+        return await this.associationService.getAssociationUsers(associationId);
+    }
     async getAssociationVehicles(associationId) {
         return await this.associationService.getAssociationVehicles(associationId);
     }
@@ -96,6 +102,20 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], AssociationController.prototype, "getAssociations", null);
+__decorate([
+    (0, common_1.Get)('getAssociationById'),
+    __param(0, (0, common_1.Query)('associationId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AssociationController.prototype, "getAssociationById", null);
+__decorate([
+    (0, common_1.Get)('getAssociationUsers'),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AssociationController.prototype, "getAssociationUsers", null);
 __decorate([
     (0, common_1.Get)('getAssociationVehicles'),
     __param(0, (0, common_1.Query)()),

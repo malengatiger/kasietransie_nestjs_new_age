@@ -28,6 +28,9 @@ let UserController = UserController_1 = class UserController {
     async addUser(user) {
         return await this.userService.createUser(user);
     }
+    async addAdminUser(user) {
+        return await this.userService.createAdminUser(user);
+    }
     async getUserById(userId) {
         return this.userService.getUserById(userId);
     }
@@ -51,6 +54,13 @@ __decorate([
     __metadata("design:paramtypes", [User_1.User]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "addUser", null);
+__decorate([
+    (0, common_1.Post)('addAdminUser'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [User_1.User]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "addAdminUser", null);
 __decorate([
     (0, common_1.Get)('getUserById'),
     __param(0, (0, common_1.Query)('userId')),

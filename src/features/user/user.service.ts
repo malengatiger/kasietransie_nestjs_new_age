@@ -35,12 +35,10 @@ export class UserService {
     return fileString;
   }
 
-  async createUser(user: User): Promise<User> {
+  public async createUser(user: User): Promise<User> {
     const storedPassword = user.password;
     const app = this.firebaseAdmin.getFirebaseApp();
-    console.log(
-      `\n\n${mm} create user: ${JSON.stringify(user)} \n`
-    );
+    console.log(`\n\n${mm} create user: ${JSON.stringify(user)} \n`);
 
     try {
       let email = "";
@@ -52,16 +50,17 @@ export class UserService {
       } else {
         email = user.email;
       }
-      console.log(`${mm} createUserAsync  .... 🎽 email: ${email}`);
+      console.log(`${mm} createUser  .... 🎽 email: ${email}`);
 
       const userRecord = await app.auth().createUser({
         email,
         password: user.password,
+        phoneNumber: user.cellphone,
         displayName: `${user.firstName} ${user.lastName}`,
       });
 
       console.log(
-        `${mm} auth user created. userRecord from Firebase : 🎽 ${JSON.stringify(userRecord, null, 2)}`
+        `${mm} createUser: auth user created. userRecord from Firebase : 🎽 ${JSON.stringify(userRecord, null, 2)}`
       );
       if (userRecord.uid) {
         const uid = userRecord.uid;
@@ -70,16 +69,17 @@ export class UserService {
           data: JSON.stringify(user),
           prefix: Constants.qrcode_user,
           size: 1,
-          associationId: user.associationName,
+          associationId: user.associationName?? "ADMIN",
         });
         user.password = null;
         user.qrCodeUrl = url;
+        //
         const mUser = await this.userModel.create(user);
         //
         user.password = storedPassword;
         await app.auth().setCustomUserClaims(uid, {});
         Logger.log(
-          `\n\n${mm} KasieTransie user created. 🥬🥬🥬 ${JSON.stringify(mUser)} 🥬\n\n`
+          `\n\n${mm} createUser: 🔵 user created on Mongo Atlas: 🥬🥬🥬 \n🔵 🔵 ${JSON.stringify(mUser)} 🥬\n\n`
         );
       } else {
         throw new Error(
@@ -93,7 +93,16 @@ export class UserService {
 
     return user;
   }
+  public async createAdminUser(user: User): Promise<User> {
+    console.log(`\n\n${mm} createAdminUser: user: ${JSON.stringify(user)} \n`);
+    user.userType = Constants.ADMINISTRATOR_AFTAROBOT;
+    user.associationId = "ADMIN";
+    user.dateRegistered = new Date().toISOString();
 
+    const res = await this.createUser(user);
+    Logger.log(`${mm} createAdminUser: seems pretty cool,  🔵 🔵 internal admin user has been created\n\n`);
+    return res;
+  }
   public async updateUser(user: User): Promise<User> {
     return null;
   }
@@ -165,7 +174,9 @@ export class UserService {
         });
     });
     Logger.log(`${mm} return response: ${JSON.stringify(response, null, 2)}`);
-    Logger.log(`\n\n${mm} 😎 😎 😎 😎 😎 😎 Work completed! Users from csv file, 🍎 users: ${response.users.length} 🍎 errors: ${response.errors.length}\n\n`);
+    Logger.log(
+      `\n\n${mm} 😎 😎 😎 😎 😎 😎 Work completed! Users from csv file, 🍎 users: ${response.users.length} 🍎 errors: ${response.errors.length}\n\n`
+    );
     return response;
   }
   private async buildUser(data: string[], ass: Association): Promise<User> {

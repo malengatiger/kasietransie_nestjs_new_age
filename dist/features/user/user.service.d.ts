@@ -13,6 +13,7 @@ export declare class UserService {
     constructor(storage: CloudStorageUploaderService, firebaseAdmin: FirebaseAdmin, userModel: mongoose.Model<User>, userGeofenceModel: mongoose.Model<UserGeofenceEvent>, associationModel: mongoose.Model<Association>);
     convertExpressFileToString(expressFile: Express.Multer.File): string;
     createUser(user: User): Promise<User>;
+    createAdminUser(user: User): Promise<User>;
     updateUser(user: User): Promise<User>;
     importUsersFromCSV(file: Express.Multer.File, associationId: string): Promise<AddUsersResponse>;
     private buildUser;

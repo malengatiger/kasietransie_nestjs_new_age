@@ -4,21 +4,36 @@ import { AppModule } from "./app.module";
 import { Logger } from "@nestjs/common";
 
 import { MyUtils } from "./my-utils/my-utils";
-import { MyFirebaseService } from "./services/FirebaseService";
 import { ErrorsInterceptor } from "./middleware/errors.interceptor";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import {MongoIndexBuilder} from "./services/index_util";
+import * as os from "os";
+
 const mm = "🔵 🔵 🔵 🔵 🔵 🔵 Kasie Transie Bootstrap 🔵 🔵";
 const env = process.env.NODE_ENV;
 Logger.log(`${mm} Kasie NODE_ENV : ${env}`);
 
-const srv: MyFirebaseService = new MyFirebaseService();
 async function bootstrap() {
   Logger.log(`${mm} ... Kasie NestJS Backend bootstrapping .....`);
 
   const app = await NestFactory.create(AppModule);
   const port = MyUtils.getPort();
   Logger.log(`${mm} ... Kasie Backend running on port : ${port} `);
+  // Get Server IP Address
+  const interfaces = os.networkInterfaces();
+  let serverIP = '127.0.0.1'; // Default to localhost
+
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name]) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        serverIP = iface.address;
+        break; // Use the first available external IPv4 address
+      }
+    }
+  }
+
+  Logger.log(`\n${mm} ...🔆 Kasie Backend running on: http://${serverIP}:${port}`);
+
   app.setGlobalPrefix("api/v1");
 
   // Swagger
@@ -34,7 +49,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api/v1/api", app, document);
   Logger.log(`${mm} ... Kasie Swagger set up .....`);
-
   // app.use(helmet());
   app.enableCors();
   Logger.log(`${mm} ... CORS set up .....`);
@@ -44,7 +58,6 @@ async function bootstrap() {
   
   await app.listen(port);
   await MongoIndexBuilder.createIndexes();
-  await srv.sendInitializationMessage();
 
   
 }

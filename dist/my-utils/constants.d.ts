@@ -6,6 +6,8 @@ export declare class Constants {
     static readonly DRIVER = "DRIVER";
     static readonly OWNER = "OWNER";
     static readonly ROUTE_BUILDER = "ROUTE_BUILDER";
+    static readonly ADMINISTRATOR_AFTAROBOT = "ADMINISTRATOR_AFTAROBOT";
+    static readonly ADMINISTRATOR_ASSOCIATION = "ADMINISTRATOR_ASSOCIATION";
     static readonly vehicleChanges = "vehicleChanges";
     static readonly vehicleArrival = "vehicleArrival";
     static readonly vehicleDeparture = "vehicleDeparture";

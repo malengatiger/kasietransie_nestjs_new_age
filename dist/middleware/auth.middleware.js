@@ -11,8 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthMiddleware = void 0;
 const common_1 = require("@nestjs/common");
-const admin = require("firebase-admin");
-const FirebaseService_1 = require("../services/FirebaseService");
+const firebase_util_1 = require("../services/firebase_util");
 const mm = '🔐 🔐 🔐 AuthMiddleware 🔐 ';
 const errorMessage = '🔴 🔴 🔴 Request is Unauthorized';
 let AuthMiddleware = class AuthMiddleware {
@@ -21,7 +20,7 @@ let AuthMiddleware = class AuthMiddleware {
     }
     async use(req, res, next) {
         const authToken = req.headers.authorization;
-        common_1.Logger.log(`${mm} request url: ${req.baseUrl} `);
+        common_1.Logger.log(`${mm} request url: ${req.originalUrl} `);
         if (process.env.NODE_ENV == 'development') {
             common_1.Logger.debug(`${mm} 🔴 letting you into the club without a ticket! 🔵 🔵 🔵 `);
             next();
@@ -42,8 +41,10 @@ let AuthMiddleware = class AuthMiddleware {
         }
         try {
             const token = authToken.substring(7);
-            const decodedToken = await admin.auth().verifyIdToken(token);
+            common_1.Logger.log(`${mm} authentication continua: 🔵 token: ${token}`);
+            const decodedToken = await this.fbService.getFirebaseApp().auth().verifyIdToken(token);
             req.user = decodedToken;
+            common_1.Logger.log(`${mm} authentication seems OK; ✅ req: ${req}`);
             next();
         }
         catch (error) {
@@ -59,6 +60,6 @@ let AuthMiddleware = class AuthMiddleware {
 exports.AuthMiddleware = AuthMiddleware;
 exports.AuthMiddleware = AuthMiddleware = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [FirebaseService_1.MyFirebaseService])
+    __metadata("design:paramtypes", [firebase_util_1.FirebaseAdmin])
 ], AuthMiddleware);
 //# sourceMappingURL=auth.middleware.js.map

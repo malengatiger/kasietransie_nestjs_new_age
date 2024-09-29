@@ -27,8 +27,8 @@ export declare class AssociationService {
     private appErrorModel;
     private exampleFileModel;
     private commuterModel;
-    getAssociationById(associationId: string): void;
     constructor(archiveService: FileArchiverService, userService: UserService, cityService: CityService, messagingService: MessagingService, associationModel: mongoose.Model<Association>, vehicleModel: mongoose.Model<Vehicle>, settingsModel: mongoose.Model<SettingsModel>, userModel: mongoose.Model<User>, countryModel: mongoose.Model<Country>, associationTokenModel: mongoose.Model<AssociationToken>, appErrorModel: mongoose.Model<AppError>, exampleFileModel: mongoose.Model<ExampleFile>, commuterModel: mongoose.Model<Commuter>);
+    getAssociationById(associationId: string): Promise<any>;
     getAssociations(): Promise<any[]>;
     getAssociationUsers(associationId: string): Promise<any[]>;
     getAssociationVehicles(associationId: string): Promise<Vehicle[]>;

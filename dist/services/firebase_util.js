@@ -10,6 +10,8 @@ exports.FirebaseAdmin = void 0;
 const common_1 = require("@nestjs/common");
 const admin = require("firebase-admin");
 const app_1 = require("firebase-admin/app");
+const constants_1 = require("../my-utils/constants");
+const my_utils_1 = require("../my-utils/my-utils");
 let app = null;
 const tag = "🌰 🌰 🌰 🌰 FirebaseAdmin 🌰 🌰 ";
 let FirebaseAdmin = class FirebaseAdmin {
@@ -18,26 +20,37 @@ let FirebaseAdmin = class FirebaseAdmin {
             console.log(`\n\n${tag} onApplicationBootstrap: Initializing Firebase app ... \n\n`);
             app = admin.initializeApp({
                 credential: (0, app_1.applicationDefault)(),
-                projectId: "kasie2024",
-                serviceAccountId: "kt-nest-1@kasie2024.iam.gserviceaccount.com",
-                storageBucket: "kasie2024_media",
             });
-            common_1.Logger.log(`${tag} ... Firebase initialized:  🥬 name: ${app.name}   🥬`);
-            const providers = await app.auth().listProviderConfigs({
-                type: "saml",
-            });
-            providers.providerConfigs.forEach((p) => {
-                common_1.Logger.log(`${tag} provider: ${JSON.stringify(p)}`);
-            });
-            common_1.Logger.log(`${tag} ... projectId: 🎽 ${app.options.projectId} storageBucket: ${app.options.storageBucket} \n\n`);
-        }
-        else {
-            common_1.Logger.debug(`${tag} ... Firebase already initialized ... ignored!`);
+            common_1.Logger.log(`${tag} ... Firebase initialized: 🥬 name: ${JSON.stringify(app.options)}   🥬`);
+            this.sendInitializationMessage(app);
         }
     }
     getFirebaseApp() {
         common_1.Logger.log(`${tag} getFirebaseApp: returning Firebase app: ${app.name}`);
         return app;
+    }
+    async sendInitializationMessage(app) {
+        common_1.Logger.log(`${tag} sendInitializationMessage: 🥬 name: ${JSON.stringify(app.name)}   🥬`);
+        const date = my_utils_1.MyUtils.formatISOStringDate(new Date().toISOString(), 'en');
+        const message = {
+            topic: constants_1.Constants.admin,
+            data: {
+                message: '🍑🍑 Kasie Transie Backend Server (Node/NestJS) started OK! 🅿️ 🅿️ 🅿️',
+                date: date,
+            },
+            notification: {
+                title: 'Kasie Transie Backend',
+                body: `Kasie Transie is running good! : ${date}
+        )}🅿️ 🅿️ 🅿️`,
+            },
+        };
+        try {
+            const response = await app.messaging().send(message);
+            common_1.Logger.log(`${tag} FCM initialization message sent, response: ${JSON.stringify(response)}`);
+        }
+        catch (error) {
+            console.error('Error sending message:', error);
+        }
     }
 };
 exports.FirebaseAdmin = FirebaseAdmin;
