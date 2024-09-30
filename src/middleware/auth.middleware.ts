@@ -3,7 +3,7 @@ import { de } from 'date-fns/locale';
 import { Request, Response, NextFunction } from 'express';
 import * as admin from 'firebase-admin';
 import { FirebaseAdmin } from 'src/services/firebase_util';
-const mm = '🔐 🔐 🔐 AuthMiddleware 🔐 ';
+const mm = '🔐🔐🔐 AuthMiddleware 🔐';
 const errorMessage = '🔴 🔴 🔴 Request is Unauthorized';
 
 interface AuthenticatedRequest extends Request {
@@ -25,7 +25,7 @@ export class AuthMiddleware implements NestMiddleware {
       next();
       return;
     }
-    if (req.baseUrl == '/api/v1/getCountries') {
+    if (req.baseUrl == '/api/v1/association/getCountries') {
       Logger.debug(
         `${mm} 🔴 letting you get countries without a ticket! 🔵 🔵 🔵 `,
       );

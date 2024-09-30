@@ -229,27 +229,39 @@ let RouteService = class RouteService {
             associationId: associationId,
         });
         common_1.Logger.log(`${mm} getAssociationRouteZippedFile: 🍎🍎 🍎🍎 🍎🍎 routes: ${routes.length} association: ${associationId}`);
+        if (!associationId) {
+            throw new Error(`${mm} association is undefined: 😈😈`);
+        }
+        if (routes.length == 0) {
+            throw new Error(`${mm} association routes do not exist yet: 😈😈 ${associationId}`);
+        }
         const points = [];
         const landmarks = [];
         const cities = [];
+        let landmarkCount = 0;
+        let citiesCount = 0;
+        let routePointsCount = 0;
         await Promise.all(routes.map(async (route) => {
             const list = await this.routePointModel.find({
                 routeId: route.routeId,
             });
             points.push(list);
+            routePointsCount += list.length;
             const list1 = await this.routeLandmarkModel.find({
                 routeId: route.routeId,
             });
             landmarks.push(list1);
+            landmarkCount += list1.length;
             const list2 = await this.routeCityModel.find({
                 routeId: route.routeId,
             });
             cities.push(list2);
+            citiesCount += list2.length;
         }));
-        common_1.Logger.debug(`${mm} data.route:   🔷🔷 ${routes.length} routes`);
-        common_1.Logger.debug(`${mm} data.marks:   🔷🔷 ${landmarks.length} marks`);
-        common_1.Logger.debug(`${mm} data.cities:  🔷🔷 ${cities.length} cities`);
-        common_1.Logger.debug(`${mm} data.points:  🔷🔷 ${points.length} points`);
+        common_1.Logger.debug(`${mm} to be packed:   🔷🔷 ${routes.length} routes`);
+        common_1.Logger.debug(`${mm} to be packed::  🔷🔷 ${landmarkCount} landmarks`);
+        common_1.Logger.debug(`${mm} to be packed::  🔷🔷 ${citiesCount} cities`);
+        common_1.Logger.debug(`${mm} to be packed::  🔷🔷 ${routePointsCount} route points`);
         const data = {
             routes: routes,
             points: points,

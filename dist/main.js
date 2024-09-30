@@ -15,18 +15,16 @@ async function bootstrap() {
     common_1.Logger.log(`${mm} ... Kasie NestJS Backend bootstrapping .....`);
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     const port = my_utils_1.MyUtils.getPort();
-    common_1.Logger.log(`${mm} ... Kasie Backend running on port : ${port} `);
     const interfaces = os.networkInterfaces();
-    let serverIP = '127.0.0.1';
+    let serverIP = "127.0.0.1";
     for (const name of Object.keys(interfaces)) {
         for (const iface of interfaces[name]) {
-            if (iface.family === 'IPv4' && !iface.internal) {
+            if (iface.family === "IPv4" && !iface.internal) {
                 serverIP = iface.address;
                 break;
             }
         }
     }
-    common_1.Logger.log(`\n${mm} ...🔆 Kasie Backend running on: http://${serverIP}:${port}`);
     app.setGlobalPrefix("api/v1");
     const config = new swagger_1.DocumentBuilder()
         .setTitle("KasieTransie Backend")
@@ -43,6 +41,7 @@ async function bootstrap() {
     common_1.Logger.log(`${mm} ... GlobalInterceptors set up .....`);
     await app.listen(port);
     await index_util_1.MongoIndexBuilder.createIndexes();
+    common_1.Logger.log(`${mm} ...🔆 Kasie Backend running on: http://${serverIP}:${port}`);
 }
-bootstrap().then((r) => common_1.Logger.debug(`${mm} Bootstrapping is complete. 💖💖💖 ... Lets do this!!`));
+bootstrap().then((r) => common_1.Logger.debug(`${mm} Kasie Backend Bootstrapping is complete. 💖💖💖 ... Lets do this!! \n\n`));
 //# sourceMappingURL=main.js.map

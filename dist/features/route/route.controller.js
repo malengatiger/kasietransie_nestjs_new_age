@@ -20,7 +20,6 @@ const Route_1 = require("../../data/models/Route");
 const RouteCity_1 = require("../../data/models/RouteCity");
 const RouteLandmark_1 = require("../../data/models/RouteLandmark");
 const RouteUpdateRequest_1 = require("../../data/models/RouteUpdateRequest");
-const my_utils_1 = require("../../my-utils/my-utils");
 const RoutePointList_1 = require("../../data/models/RoutePointList");
 const route_service_1 = require("./route.service");
 const mm = ' 🚼 🚼 🚼 RouteController  🚼';
@@ -114,8 +113,8 @@ let RouteController = RouteController_1 = class RouteController {
     }
     async getAssociationRouteZippedFile(associationId, res) {
         try {
-            const fileName = await this.routeService.getAssociationRouteZippedFile(associationId);
-            this.sendFile(fileName, res);
+            const filePath = await this.routeService.getAssociationRouteZippedFile(associationId);
+            this.sendFile(filePath, res);
         }
         catch (error) {
             this.logger.error('Error getting route zipped file:', error);
@@ -143,10 +142,9 @@ let RouteController = RouteController_1 = class RouteController {
         }
     }
     sendFile(fileName, res) {
-        this.logger.log('Sending file: ' + fileName);
+        this.logger.debug(`\n\n${mm} .... 💦💦💦💦💦 sending file ....\n💦💦 path:` + fileName);
         res.setHeader('Content-Type', 'application/octet-stream');
         res.setHeader('Content-Disposition', `attachment; filename=route.zip`);
-        my_utils_1.MyUtils.deleteOldFiles();
         res.sendFile(fileName);
     }
 };

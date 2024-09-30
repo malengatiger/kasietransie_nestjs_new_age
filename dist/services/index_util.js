@@ -17,11 +17,11 @@ let MongoIndexBuilder = class MongoIndexBuilder {
         const client = new mongodb_1.MongoClient(uri);
         try {
             await client.connect();
-            console.log(`${tag} Connected to MongoDB`);
-            this.buildIndexes(client);
+            common_1.Logger.log(`${tag} MongoClient connected to MongoDB Atlas`);
+            await this.buildIndexes(client);
         }
         catch (error) {
-            console.error("Error connecting to MongoDB:", error);
+            common_1.Logger.error("Error connecting to MongoDB:", error);
         }
     }
     static async buildIndexes(client) {

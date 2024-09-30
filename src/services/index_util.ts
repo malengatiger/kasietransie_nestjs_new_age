@@ -10,10 +10,10 @@ export class MongoIndexBuilder {
     const client = new MongoClient(uri);
     try {
       await client.connect();
-      console.log(`${tag} Connected to MongoDB`);
-      this.buildIndexes(client);
+      Logger.log(`${tag} MongoClient connected to MongoDB Atlas`);
+      await this.buildIndexes(client);
     } catch (error) {
-      console.error("Error connecting to MongoDB:", error);
+      Logger.error("Error connecting to MongoDB:", error);
     }
   }
   

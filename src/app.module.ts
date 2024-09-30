@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MyUtils } from './my-utils/my-utils';
@@ -64,6 +64,8 @@ import { CloudStorageUploaderService } from './storage/storage.service';
 import { VehiclePhotoSchema } from './data/models/VehiclePhoto';
 import { VehicleVideoSchema } from './data/models/VehicleVideo';
 import { UserController } from './features/user/user.controller';
+import { ElapsedTimeMiddleware } from './middleware/elapsed.middleware';
+import { AuthMiddleware } from './middleware/auth.middleware';
 
 @Module({
   imports: [
@@ -143,4 +145,11 @@ import { UserController } from './features/user/user.controller';
 
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+  .apply(ElapsedTimeMiddleware).forRoutes('*') 
+  .apply(AuthMiddleware).forRoutes('*')
+  
+  }
+}

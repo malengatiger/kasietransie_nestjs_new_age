@@ -314,6 +314,7 @@ export class RouteService {
     ]);
     return fileName;
   }
+
   public async getAssociationRouteZippedFile(
     associationId: string,
   ): Promise<string> {
@@ -323,10 +324,18 @@ export class RouteService {
     Logger.log(
       `${mm} getAssociationRouteZippedFile: 🍎🍎 🍎🍎 🍎🍎 routes: ${routes.length} association: ${associationId}`,
     );
-
+    if (!associationId) {
+      throw new Error(`${mm} association is undefined: 😈😈`);
+    }
+    if (routes.length == 0) {
+      throw new Error(`${mm} association routes do not exist yet: 😈😈 ${associationId}`);
+    }
     const points: any[] = [];
     const landmarks: any[] = [];
     const cities: any[] = [];
+    let landmarkCount = 0;
+    let citiesCount = 0;
+    let routePointsCount = 0;
 
     await Promise.all(
       routes.map(async (route) => {
@@ -334,24 +343,26 @@ export class RouteService {
           routeId: route.routeId,
         });
         points.push(list);
-
+        routePointsCount += list.length;
         const list1 = await this.routeLandmarkModel.find({
           routeId: route.routeId,
         });
 
         landmarks.push(list1);
-
+        landmarkCount += list1.length;
         const list2 = await this.routeCityModel.find({
           routeId: route.routeId,
         });
         cities.push(list2);
+        citiesCount += list2.length;
       }),
     );
     //
-    Logger.debug(`${mm} data.route:   🔷🔷 ${routes.length} routes`);
-    Logger.debug(`${mm} data.marks:   🔷🔷 ${landmarks.length} marks`);
-    Logger.debug(`${mm} data.cities:  🔷🔷 ${cities.length} cities`);
-    Logger.debug(`${mm} data.points:  🔷🔷 ${points.length} points`);
+    
+    Logger.debug(`${mm} to be packed:   🔷🔷 ${routes.length} routes`);
+    Logger.debug(`${mm} to be packed::  🔷🔷 ${landmarkCount} landmarks`);
+    Logger.debug(`${mm} to be packed::  🔷🔷 ${citiesCount} cities`);
+    Logger.debug(`${mm} to be packed::  🔷🔷 ${routePointsCount} route points`);
 
     const data = {
       routes: routes,

@@ -64,15 +64,15 @@ export abstract class MyUtils {
     }
   }
   public static deleteOldFiles(): void {
-    Logger.log(`${mm} Deleting old files ...`);
-    const tempDir = path.join(__dirname, "..", "tempFiles");
-    const files = fs.readdirSync(tempDir);
+    Logger.log(`\n\n${mm} ... Deleting old files ...`);
+    const tempZipsDir = path.join(__dirname, '..', 'tempZips');
+    const files = fs.readdirSync(tempZipsDir);
     const currentTime = Date.now();
     const tenMinutesAgo = currentTime - 10 * 60 * 1000; // 10 minutes in milliseconds
 
     let cnt = 0;
     for (const file of files) {
-      const filePath = path.join(tempDir, file);
+      const filePath = path.join(tempZipsDir, file);
       const fileStats = fs.statSync(filePath);
       const fileCreatedTime = fileStats.ctimeMs;
       if (fileCreatedTime < tenMinutesAgo) {
@@ -80,6 +80,6 @@ export abstract class MyUtils {
         cnt++;
       }
     }
-    Logger.log(`${mm} Deleted: ${cnt} temporary files`);
+    Logger.log(`${mm} ... Deleted: ${cnt} temporary files\n`);
   }
 }

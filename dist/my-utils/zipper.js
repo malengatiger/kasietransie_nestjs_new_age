@@ -18,9 +18,14 @@ let FileArchiverService = class FileArchiverService {
         const randomString = Math.random().toString(36).substring(2, 8);
         const key = `${timestamp}_${randomString}`;
         const zipFileName = `file${key}.zip`;
-        const zipFilePath = path.join(__dirname, '..', 'tempFiles', zipFileName);
-        common_1.Logger.log(`${mm} input content: ${fileContents[0].content.length} bytes`);
-        return new Promise((resolve, reject) => {
+        const tempZipsDir = path.join(__dirname, '..', 'tempZips');
+        if (!fs.existsSync(tempZipsDir)) {
+            fs.mkdirSync(tempZipsDir);
+        }
+        const zipFilePath = path.join(tempZipsDir, zipFileName);
+        const sizeInMB = (fileContents[0].content.length / (1024 * 1024)).toFixed(2);
+        common_1.Logger.log(`${mm} string content to be zipped: ${sizeInMB}MB`);
+        const resultPath = new Promise((resolve, reject) => {
             const output = fs.createWriteStream(zipFilePath);
             const archive = archiver('zip', { zlib: { level: 9 } });
             output.on('data', (chunk) => {
@@ -38,9 +43,11 @@ let FileArchiverService = class FileArchiverService {
             for (const file of fileContents) {
                 archive.append(file.content, { name: zipFileName });
             }
-            common_1.Logger.log(`${mm} ... finalize archive: files zipped`);
+            common_1.Logger.log(`${mm} ... finalize archive: file zipped??`);
             archive.finalize();
         });
+        common_1.Logger.debug(`${mm} zipped file path: 🥬 \n🥬${await resultPath}🥬`);
+        return resultPath;
     }
 };
 exports.FileArchiverService = FileArchiverService;

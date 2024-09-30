@@ -71,7 +71,14 @@ const storage_service_1 = require("./storage/storage.service");
 const VehiclePhoto_1 = require("./data/models/VehiclePhoto");
 const VehicleVideo_1 = require("./data/models/VehicleVideo");
 const user_controller_1 = require("./features/user/user.controller");
+const elapsed_middleware_1 = require("./middleware/elapsed.middleware");
+const auth_middleware_1 = require("./middleware/auth.middleware");
 let AppModule = class AppModule {
+    configure(consumer) {
+        consumer
+            .apply(elapsed_middleware_1.ElapsedTimeMiddleware).forRoutes('*')
+            .apply(auth_middleware_1.AuthMiddleware).forRoutes('*');
+    }
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([

@@ -16,10 +16,21 @@ export class ErrorsInterceptor implements NestInterceptor {
     return next.handle().pipe(catchError(handleError));
 
     function handleError(err: KasieError) {
-      Logger.log(`${mm} ... 😈😈 handling error: ${err} `);
+      Logger.log(`\n\n${mm} ... 😈😈 handling error: ${err} `);
+      sendMessage(err);
       return throwError(
         () => new KasieError(`😈😈 ${err.message}`, HttpStatus.BAD_REQUEST),
       );
+    }
+    async function sendMessage(err: KasieError) {
+       //send message & write to database
+       const x: KasieError = new KasieError(
+        `😈 Error on Kasie Backend, statusCode: ${err.statusCode} 😈 msg: ${err.message}`,
+        HttpStatus.BAD_REQUEST,
+      );
+      await this.kasieErrorModel.create(x);
+      Logger.debug(`${mm} KasieError added to database; 😈 sending error to FCM topic ... `);
+      await this.messagingService.sendKasieErrorMessage(x);
     }
   }
 }

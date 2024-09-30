@@ -178,9 +178,9 @@ export class RouteController {
     @Res() res: Response,
   ) {
     try {
-      const fileName =
+      const filePath =
         await this.routeService.getAssociationRouteZippedFile(associationId);
-      this.sendFile(fileName, res);
+      this.sendFile(filePath, res);
     } catch (error) {
       this.logger.error('Error getting route zipped file:', error);
       res.status(500).send('Error downloading file: ' + error.message);
@@ -212,10 +212,10 @@ export class RouteController {
   }
 
   private sendFile(fileName: string, res: Response) {
-    this.logger.log('Sending file: ' + fileName);
+    this.logger.debug(`\n\n${mm} .... 💦💦💦💦💦 sending file ....\n💦💦 path:` + fileName);
     res.setHeader('Content-Type', 'application/octet-stream');
     res.setHeader('Content-Disposition', `attachment; filename=route.zip`);
-    MyUtils.deleteOldFiles();
+    //MyUtils.deleteOldFiles();
     res.sendFile(fileName);
   }
 }

@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthMiddleware = void 0;
 const common_1 = require("@nestjs/common");
 const firebase_util_1 = require("../services/firebase_util");
-const mm = '🔐 🔐 🔐 AuthMiddleware 🔐 ';
+const mm = '🔐🔐🔐 AuthMiddleware 🔐';
 const errorMessage = '🔴 🔴 🔴 Request is Unauthorized';
 let AuthMiddleware = class AuthMiddleware {
     constructor(fbService) {
@@ -26,7 +26,7 @@ let AuthMiddleware = class AuthMiddleware {
             next();
             return;
         }
-        if (req.baseUrl == '/api/v1/getCountries') {
+        if (req.baseUrl == '/api/v1/association/getCountries') {
             common_1.Logger.debug(`${mm} 🔴 letting you get countries without a ticket! 🔵 🔵 🔵 `);
             next();
             return;
