@@ -5,4 +5,5 @@ export declare abstract class MyUtils {
     static getStartDate(numberOfHours: number): string;
     static formatISOStringDate(dateString: string, locale: string): string;
     static deleteOldFiles(): void;
+    static getServerIPaddress(): string;
 }

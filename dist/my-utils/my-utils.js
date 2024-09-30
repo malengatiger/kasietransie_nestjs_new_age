@@ -4,10 +4,11 @@ exports.MyUtils = void 0;
 const fs = require("fs");
 const path = require("path");
 const common_1 = require("@nestjs/common");
+const os = require("os");
 const mm = "🥦 🥦 🥦 🥦 MyUtils 🥦🥦";
 class MyUtils {
     static createQRCodeAndUploadToCloudStorage(arg0, arg1, arg2) {
-        throw new Error('Method not implemented.');
+        throw new Error("Method not implemented.");
     }
     static getDatabaseUrl() {
         const env = process.env.NODE_ENV;
@@ -66,7 +67,7 @@ class MyUtils {
     }
     static deleteOldFiles() {
         common_1.Logger.log(`\n\n${mm} ... Deleting old files ...`);
-        const tempZipsDir = path.join(__dirname, '..', 'tempZips');
+        const tempZipsDir = path.join(__dirname, "..", "tempZips");
         const files = fs.readdirSync(tempZipsDir);
         const currentTime = Date.now();
         const tenMinutesAgo = currentTime - 10 * 60 * 1000;
@@ -81,6 +82,19 @@ class MyUtils {
             }
         }
         common_1.Logger.log(`${mm} ... Deleted: ${cnt} temporary files\n`);
+    }
+    static getServerIPaddress() {
+        const interfaces = os.networkInterfaces();
+        let serverIP = "127.0.0.1";
+        for (const name of Object.keys(interfaces)) {
+            for (const iface of interfaces[name]) {
+                if (iface.family === "IPv4" && !iface.internal) {
+                    serverIP = iface.address;
+                    break;
+                }
+            }
+        }
+        return serverIP;
     }
 }
 exports.MyUtils = MyUtils;

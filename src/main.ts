@@ -8,7 +8,6 @@ import { ErrorsInterceptor } from "./middleware/errors.interceptor";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { MongoIndexBuilder } from "./services/index_util";
 import * as os from "os";
-import { ElapsedTimeMiddleware } from "./middleware/elapsed.middleware";
 
 const mm = "🔵 🔵 🔵 🔵 🔵 🔵 Kasie Transie Bootstrap 🔵 🔵";
 const env = process.env.NODE_ENV;
@@ -20,19 +19,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   const port = MyUtils.getPort();
-  // Get Server IP Address
-  const interfaces = os.networkInterfaces();
-  let serverIP = "127.0.0.1"; // Default to localhost
-
-  for (const name of Object.keys(interfaces)) {
-    for (const iface of interfaces[name]) {
-      if (iface.family === "IPv4" && !iface.internal) {
-        serverIP = iface.address;
-        break; // Use the first available external IPv4 address
-      }
-    }
-  }
-
   app.setGlobalPrefix("api/v1");
 
   // Swagger
@@ -58,11 +44,14 @@ async function bootstrap() {
 
   await app.listen(port);
   await MongoIndexBuilder.createIndexes();
-
+  //
+  const serverIP = MyUtils.getServerIPaddress(); // Default to localhost
   Logger.log(
     `${mm} ...🔆 Kasie Backend running on: http://${serverIP}:${port}`
   );
 }
 bootstrap().then((r) =>
-  Logger.debug(`${mm} Kasie Backend Bootstrapping is complete. 💖💖💖 ... Lets do this!! \n\n`)
+  Logger.debug(
+    `${mm} Kasie Backend Bootstrapping is complete. 💖💖💖 ... Lets do this!! \n\n`
+  )
 );

@@ -1,11 +1,17 @@
 import * as fs from "fs";
 import * as path from "path";
 import { Logger } from "@nestjs/common";
+import * as os from "os";
+
 const mm = "🥦 🥦 🥦 🥦 MyUtils 🥦🥦";
 
 export abstract class MyUtils {
-  static createQRCodeAndUploadToCloudStorage(arg0: string, arg1: string, arg2: number) {
-    throw new Error('Method not implemented.');
+  static createQRCodeAndUploadToCloudStorage(
+    arg0: string,
+    arg1: string,
+    arg2: number
+  ) {
+    throw new Error("Method not implemented.");
   }
   public static getDatabaseUrl(): string {
     const env = process.env.NODE_ENV;
@@ -65,7 +71,7 @@ export abstract class MyUtils {
   }
   public static deleteOldFiles(): void {
     Logger.log(`\n\n${mm} ... Deleting old files ...`);
-    const tempZipsDir = path.join(__dirname, '..', 'tempZips');
+    const tempZipsDir = path.join(__dirname, "..", "tempZips");
     const files = fs.readdirSync(tempZipsDir);
     const currentTime = Date.now();
     const tenMinutesAgo = currentTime - 10 * 60 * 1000; // 10 minutes in milliseconds
@@ -81,5 +87,19 @@ export abstract class MyUtils {
       }
     }
     Logger.log(`${mm} ... Deleted: ${cnt} temporary files\n`);
+  }
+  public static getServerIPaddress() {
+    const interfaces = os.networkInterfaces();
+    let serverIP = "127.0.0.1"; // Default to localhost
+
+    for (const name of Object.keys(interfaces)) {
+      for (const iface of interfaces[name]) {
+        if (iface.family === "IPv4" && !iface.internal) {
+          serverIP = iface.address;
+          break; // Use the first available external IPv4 address
+        }
+      }
+    }
+    return serverIP;
   }
 }

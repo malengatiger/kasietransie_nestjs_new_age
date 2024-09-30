@@ -11,8 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthMiddleware = void 0;
 const common_1 = require("@nestjs/common");
+const my_utils_1 = require("../my-utils/my-utils");
 const firebase_util_1 = require("../services/firebase_util");
-const mm = '🔐🔐🔐 AuthMiddleware 🔐';
+const mm = '🔑🔑🔑🔑 AuthMiddleware 🔑🔑';
 const errorMessage = '🔴 🔴 🔴 Request is Unauthorized';
 let AuthMiddleware = class AuthMiddleware {
     constructor(fbService) {
@@ -21,6 +22,13 @@ let AuthMiddleware = class AuthMiddleware {
     async use(req, res, next) {
         const authToken = req.headers.authorization;
         common_1.Logger.log(`${mm} request url: ${req.originalUrl} `);
+        const serverIP = my_utils_1.MyUtils.getServerIPaddress();
+        common_1.Logger.debug(`${mm} server ip address: ${serverIP}`);
+        if (serverIP.includes('192.168.64.1') || serverIP.includes('localhost')) {
+            common_1.Logger.debug(`${mm} 🔵🔵🔵🔵🔵🔵 Getting into the club without a Diddy pass! 🥦 You are from: 🔵 ${serverIP} 🔵🔵`);
+            next();
+            return;
+        }
         if (process.env.NODE_ENV == 'development') {
             common_1.Logger.debug(`${mm} 🔴 letting you into the club without a ticket! 🔵 🔵 🔵 `);
             next();

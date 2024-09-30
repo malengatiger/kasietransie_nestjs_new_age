@@ -2,8 +2,9 @@ import { Injectable, Logger, NestMiddleware } from '@nestjs/common';
 import { de } from 'date-fns/locale';
 import { Request, Response, NextFunction } from 'express';
 import * as admin from 'firebase-admin';
+import { MyUtils } from 'src/my-utils/my-utils';
 import { FirebaseAdmin } from 'src/services/firebase_util';
-const mm = '🔐🔐🔐 AuthMiddleware 🔐';
+const mm = '🔑🔑🔑🔑 AuthMiddleware 🔑🔑';
 const errorMessage = '🔴 🔴 🔴 Request is Unauthorized';
 
 interface AuthenticatedRequest extends Request {
@@ -17,7 +18,14 @@ export class AuthMiddleware implements NestMiddleware {
     const authToken = req.headers.authorization;
 
     Logger.log(`${mm} request url: ${req.originalUrl} `);
-     
+    //  Allow requests from localhost and 192.168.64.1 without authentication
+    const serverIP = MyUtils.getServerIPaddress();
+    Logger.debug(`${mm} server ip address: ${serverIP}`);
+    if (serverIP.includes('192.168.64.1') || serverIP.includes('localhost')) {
+      Logger.debug(`${mm} 🔵🔵🔵🔵🔵🔵 Getting into the club without a Diddy pass! 🥦 You are from: 🔵 ${serverIP} 🔵🔵`);
+      next();
+      return;
+    }
     if (process.env.NODE_ENV == 'development') {
       Logger.debug(
         `${mm} 🔴 letting you into the club without a ticket! 🔵 🔵 🔵 `,
@@ -41,13 +49,10 @@ export class AuthMiddleware implements NestMiddleware {
       });
     }
     try {
-      // Logger.log(`${mm} authentication starting: 🔵 authToken: ${authToken}`);
-      // Verify the authentication token using Firebase Admin SDK
-      //await this.fbService.initializeFirebase(); Bearer
       const token = authToken.substring(7);
       Logger.log(`${mm} authentication continua: 🔵 token: ${token}`);
-
-      const decodedToken = await this.fbService.getFirebaseApp().auth().verifyIdToken(token);
+      const decodedToken = await this.fbService.getFirebaseApp().auth()
+        .verifyIdToken(token);
       req.user = decodedToken; // Set the authenticated user in the request object
       Logger.log(`${mm} authentication seems OK; ✅ req: ${req}`);
 
