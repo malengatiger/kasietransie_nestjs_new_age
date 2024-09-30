@@ -8,15 +8,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ElapsedTimeMiddleware = void 0;
 const common_1 = require("@nestjs/common");
+const mongoose_1 = require("@nestjs/mongoose");
+const mongoose_2 = require("mongoose");
 const app_service_1 = require("../app.service");
 const QueryElapsedTime_1 = require("../data/models/QueryElapsedTime");
 const mm = " 🔇 🔇 🔇 ElapsedTimeMiddleware 🌸";
 let ElapsedTimeMiddleware = class ElapsedTimeMiddleware {
-    constructor(appService) {
+    constructor(appService, qelModel) {
         this.appService = appService;
+        this.qelModel = qelModel;
     }
     use(req, res, next) {
         const start = Date.now();
@@ -28,8 +34,15 @@ let ElapsedTimeMiddleware = class ElapsedTimeMiddleware {
                 tag = "😈😈😈";
             }
             const qel = new QueryElapsedTime_1.QueryElapsedTime();
-            qel;
-            common_1.Logger.log(`${mm} request took 💦 ${elapsed} seconds; ${tag} statusCode: ${res.statusCode} ${tag}`);
+            qel.created = new Date().toISOString();
+            qel.elapsedSeconds = elapsed;
+            qel.statusCode = res.statusCode;
+            qel.queryParameters = JSON.stringify(req.query);
+            qel.url = req.url;
+            qel.queryId = `${new Date().getTime()}${Math.random() * 100}`;
+            await this.qelModel.create(qel);
+            common_1.Logger.debug(`${mm} QueryElapsedTime added to MongoDB Atlas  🔶 🔶 🔶 \n🔶 🔶 🔶 ${JSON.stringify(qel)}`);
+            common_1.Logger.debug(`${mm} request took 💦 ${elapsed} seconds; ${tag} statusCode: ${res.statusCode} ${tag}`);
         });
         next();
     }
@@ -37,6 +50,7 @@ let ElapsedTimeMiddleware = class ElapsedTimeMiddleware {
 exports.ElapsedTimeMiddleware = ElapsedTimeMiddleware;
 exports.ElapsedTimeMiddleware = ElapsedTimeMiddleware = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [app_service_1.AppService])
+    __param(1, (0, mongoose_1.InjectModel)(QueryElapsedTime_1.QueryElapsedTime.name)),
+    __metadata("design:paramtypes", [app_service_1.AppService, mongoose_2.default.Model])
 ], ElapsedTimeMiddleware);
 //# sourceMappingURL=elapsed.middleware.js.map

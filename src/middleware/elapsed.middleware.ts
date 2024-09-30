@@ -1,27 +1,40 @@
 import { Injectable, Logger, NestMiddleware } from "@nestjs/common";
+import { InjectModel } from "@nestjs/mongoose";
 import { Request, Response, NextFunction } from "express";
+import mongoose from "mongoose";
 import { AppService } from "src/app.service";
 import { QueryElapsedTime } from "src/data/models/QueryElapsedTime";
 
 const mm = " 🔇 🔇 🔇 ElapsedTimeMiddleware 🌸";
 @Injectable()
 export class ElapsedTimeMiddleware implements NestMiddleware {
-  constructor(private readonly appService: AppService){}
+  constructor(
+    private readonly appService: AppService,
+    @InjectModel(QueryElapsedTime.name)
+    private qelModel: mongoose.Model<QueryElapsedTime>
+  ) {}
   use(req: Request, res: Response, next: NextFunction) {
     const start = Date.now();
 
     res.on("finish", async () => {
       const elapsed = (Date.now() - start) / 1000;
-      Logger.log(
-        `${mm} ${req.originalUrl} `
-      );
+      Logger.log(`${mm} ${req.originalUrl} `);
       let tag = "🥬🥬🥬";
       if (res.statusCode > 201) {
         tag = "😈😈😈";
       }
       const qel = new QueryElapsedTime();
-      qel
-      Logger.log(
+      qel.created = new Date().toISOString();
+      qel.elapsedSeconds = elapsed;
+      qel.statusCode = res.statusCode;
+      qel.queryParameters = JSON.stringify(req.query);
+      qel.url = req.url;
+      qel.queryId = `${new Date().getTime()}${Math.random() * 100}`;
+
+      await this.qelModel.create(qel);
+
+      Logger.debug(`${mm} QueryElapsedTime added to MongoDB Atlas  🔶 🔶 🔶 \n🔶 🔶 🔶 ${JSON.stringify(qel)}`);
+      Logger.debug(
         `${mm} request took 💦 ${elapsed} seconds; ${tag} statusCode: ${res.statusCode} ${tag}`
       );
     });

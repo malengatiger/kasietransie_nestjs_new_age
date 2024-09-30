@@ -11,14 +11,17 @@ export class QueryElapsedTime {
   queryId: string;
   @Prop()
   @ApiProperty()
-  query: string;
+  queryParameters: string;
+  @Prop()
+  @ApiProperty()
+  url: string;
   @Prop()
   @ApiProperty()
   elapsedSeconds: number;
   @Prop()
   @ApiProperty()
   created: string;
-  
+
   @Prop()
   @ApiProperty()
   statusCode: number;
