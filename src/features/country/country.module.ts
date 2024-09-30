@@ -9,6 +9,7 @@ import { CitySchema } from 'src/data/models/City';
 import { AppErrorSchema } from 'src/data/models/AppError';
 import { KasieErrorSchema } from 'src/data/models/kasie.error';
 import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
+import { FileArchiverService } from 'src/my-utils/zipper';
 
 @Module({
   imports: [
@@ -25,6 +26,6 @@ import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
   ],  
   
   controllers: [CountryController],
-  providers: [CountryService, MessagingService],
+  providers: [CountryService, MessagingService, FileArchiverService],
 })
 export class CountryModule {}

@@ -132,23 +132,7 @@ export class AssociationService {
     return file;
   }
 
-  public async getCountryCitiesZippedFile(countryId: string): Promise<string> {
-    Logger.log(
-      `${mm} ... getCountryCitiesZippedFile starting, id: ${countryId} ...`
-    );
-    const list = await this.cityService.getCountryCities(countryId);
-    const json = JSON.stringify(list);
 
-    const file = await this.archiveService.zip([{ content: json }]);
-    Logger.log(
-      `${mm} ... getCountryCitiesZippedFile found: ${list.length} ...`
-    );
-    return file;
-  }
-
-  public async getCountries(): Promise<Country[]> {
-    return await this.countryModel.find({});
-  }
 
   public async getAssociationSettingsModels(
     associationId: string

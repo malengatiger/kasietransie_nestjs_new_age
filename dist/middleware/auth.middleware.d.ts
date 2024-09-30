@@ -9,5 +9,6 @@ export declare class AuthMiddleware implements NestMiddleware {
     private readonly fbService;
     constructor(fbService: FirebaseAdmin);
     use(req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<Response<any, Record<string, any>>>;
+    private getClientIP;
 }
 export {};

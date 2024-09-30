@@ -66,6 +66,7 @@ import { VehicleVideoSchema } from './data/models/VehicleVideo';
 import { UserController } from './features/user/user.controller';
 import { ElapsedTimeMiddleware } from './middleware/elapsed.middleware';
 import { AuthMiddleware } from './middleware/auth.middleware';
+import { QueryElapsedTimeSchema } from './data/models/QueryElapsedTime';
 
 @Module({
   imports: [
@@ -111,6 +112,7 @@ import { AuthMiddleware } from './middleware/auth.middleware';
       { name: "CommuterRequest", schema: CommuterRequestSchema },
       { name: "LocationResponse", schema: LocationResponseSchema },
       { name: "AmbassadorCheckIn", schema: AmbassadorCheckInSchema },
+      { name: "QueryElapsedTime", schema: QueryElapsedTimeSchema },
 
       { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCountSchema },
 

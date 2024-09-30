@@ -99,17 +99,6 @@ let AssociationService = class AssociationService {
         common_1.Logger.log(`${mm} ... getOwnerVehiclesZippedFile found: ${list.length} ...`);
         return file;
     }
-    async getCountryCitiesZippedFile(countryId) {
-        common_1.Logger.log(`${mm} ... getCountryCitiesZippedFile starting, id: ${countryId} ...`);
-        const list = await this.cityService.getCountryCities(countryId);
-        const json = JSON.stringify(list);
-        const file = await this.archiveService.zip([{ content: json }]);
-        common_1.Logger.log(`${mm} ... getCountryCitiesZippedFile found: ${list.length} ...`);
-        return file;
-    }
-    async getCountries() {
-        return await this.countryModel.find({});
-    }
     async getAssociationSettingsModels(associationId) {
         const list = await this.settingsModel.find({ associationId: associationId });
         common_1.Logger.log(`${mm} ... getAssociationSettingsModels found: ${list.length} ...`);

@@ -25,18 +25,10 @@ let CityService = class CityService {
         this.cityModel = cityModel;
     }
     async addCity(city) {
-        return null;
-    }
-    async getCountryCities(countryId) {
-        return await this.cityModel
-            .find({ countryId: countryId })
-            .sort({ name: 1 });
-    }
-    async getCountries() {
-        return [];
+        return this.cityModel.create(city);
     }
     async findCitiesByLocation(latitude, longitude, radiusInKM, limit) {
-        return [];
+        return await this.getCitiesNear(latitude, longitude, radiusInKM * 1000);
     }
     async getCitiesNear(latitude, longitude, maxDistanceInMetres) {
         const query = {

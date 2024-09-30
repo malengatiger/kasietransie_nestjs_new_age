@@ -19,16 +19,7 @@ export class CityService {
   ) {}
 
   public async addCity(city: City): Promise<City> {
-    return null;
-  }
-  public async getCountryCities(countryId: string): Promise<City[]> {
-    return await this.cityModel
-      .find({ countryId: countryId })
-      .sort({ name: 1 });
-  }
-
-  public async getCountries(): Promise<Country[]> {
-    return [];
+    return this.cityModel.create(city);
   }
   public async findCitiesByLocation(
     latitude: number,
@@ -36,7 +27,7 @@ export class CityService {
     radiusInKM: number,
     limit: number,
   ): Promise<City[]> {
-    return [];
+    return await this.getCitiesNear(latitude,longitude,radiusInKM * 1000);
   }
   public async getCitiesNear(
     latitude: number,

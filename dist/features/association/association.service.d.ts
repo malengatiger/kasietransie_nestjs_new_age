@@ -34,8 +34,6 @@ export declare class AssociationService {
     getAssociationVehicles(associationId: string): Promise<Vehicle[]>;
     getAssociationVehiclesZippedFile(associationId: string): Promise<string>;
     getOwnerVehiclesZippedFile(userId: string): Promise<string>;
-    getCountryCitiesZippedFile(countryId: string): Promise<string>;
-    getCountries(): Promise<Country[]>;
     getAssociationSettingsModels(associationId: string): Promise<any[]>;
     getAllSettingsModels(): Promise<any[]>;
     downloadExampleVehiclesFile(): Promise<File>;

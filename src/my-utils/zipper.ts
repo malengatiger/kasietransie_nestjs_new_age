@@ -32,7 +32,12 @@ export class FileArchiverService {
         Logger.log(`${mm} ... on data: chunk length: ${chunk.length} bytes`);
       });
       output.on('close', () => {
-        Logger.log(`${mm} ... onClose .. resolved the Promise`);
+        // Get the size of the zipped file
+        const stats = fs.statSync(zipFilePath);
+        const fileSizeInBytes = stats.size;
+        const fileSizeInMB = (fileSizeInBytes / (1024 * 1024)).toFixed(2);
+
+        Logger.log(`${mm} ... onClose .. zipped file size: 🔷 ${fileSizeInMB}MB 🔷`);
         resolve(zipFilePath);
       });
 

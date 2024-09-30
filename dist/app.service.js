@@ -17,19 +17,25 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const Association_1 = require("./data/models/Association");
 const mongoose_2 = require("mongoose");
+const QueryElapsedTime_1 = require("./data/models/QueryElapsedTime");
 let AppService = class AppService {
-    constructor(assocModel) {
+    constructor(assocModel, qelModel) {
         this.assocModel = assocModel;
+        this.qelModel = qelModel;
     }
     async shakeKasieUp() {
         const assocs = await this.assocModel.find();
         return `🔵 🔵 🔵 This is KasieTransie!  🍎 Where can I take you today? \n ${JSON.stringify(assocs, null, 2)}  🍎 \nI have 😎 ${assocs.length} 😎 associations for you to choose from `;
+    }
+    async addQueryElapsedTime(queryElapsedTime) {
+        return await this.qelModel.create(queryElapsedTime);
     }
 };
 exports.AppService = AppService;
 exports.AppService = AppService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(Association_1.Association.name)),
-    __metadata("design:paramtypes", [mongoose_2.default.Model])
+    __param(1, (0, mongoose_1.InjectModel)(QueryElapsedTime_1.QueryElapsedTime.name)),
+    __metadata("design:paramtypes", [mongoose_2.default.Model, mongoose_2.default.Model])
 ], AppService);
 //# sourceMappingURL=app.service.js.map

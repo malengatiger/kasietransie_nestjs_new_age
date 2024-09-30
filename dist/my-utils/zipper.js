@@ -32,7 +32,10 @@ let FileArchiverService = class FileArchiverService {
                 common_1.Logger.log(`${mm} ... on data: chunk length: ${chunk.length} bytes`);
             });
             output.on('close', () => {
-                common_1.Logger.log(`${mm} ... onClose .. resolved the Promise`);
+                const stats = fs.statSync(zipFilePath);
+                const fileSizeInBytes = stats.size;
+                const fileSizeInMB = (fileSizeInBytes / (1024 * 1024)).toFixed(2);
+                common_1.Logger.log(`${mm} ... onClose .. zipped file size: 🔷 ${fileSizeInMB}MB 🔷`);
                 resolve(zipFilePath);
             });
             archive.on('error', (error) => {

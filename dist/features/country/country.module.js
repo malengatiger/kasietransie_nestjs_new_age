@@ -17,6 +17,7 @@ const City_1 = require("../../data/models/City");
 const AppError_1 = require("../../data/models/AppError");
 const kasie_error_1 = require("../../data/models/kasie.error");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
+const zipper_1 = require("../../my-utils/zipper");
 let CountryModule = class CountryModule {
 };
 exports.CountryModule = CountryModule;
@@ -32,7 +33,7 @@ exports.CountryModule = CountryModule = __decorate([
             ]),
         ],
         controllers: [country_controller_1.CountryController],
-        providers: [country_service_1.CountryService, fcm_service_1.MessagingService],
+        providers: [country_service_1.CountryService, fcm_service_1.MessagingService, zipper_1.FileArchiverService],
     })
 ], CountryModule);
 //# sourceMappingURL=country.module.js.map

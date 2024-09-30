@@ -8,16 +8,39 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CityController = void 0;
 const common_1 = require("@nestjs/common");
 const city_service_1 = require("./city.service");
+const City_1 = require("../../data/models/City");
 let CityController = class CityController {
     constructor(cityService) {
         this.cityService = cityService;
     }
+    async addCity(city) {
+        return this.cityService.addCity(city);
+    }
+    async getCitiesNear(latitude, longitude, maxDistanceInMetres) {
+        return this.cityService.getCitiesNear(latitude, longitude, maxDistanceInMetres);
+    }
 };
 exports.CityController = CityController;
+__decorate([
+    (0, common_1.Post)('addCity'),
+    __param(0, (0, common_1.Body)('city')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [City_1.City]),
+    __metadata("design:returntype", Promise)
+], CityController.prototype, "addCity", null);
+__decorate([
+    (0, common_1.Get)('getCitiesNear'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Number, Number]),
+    __metadata("design:returntype", Promise)
+], CityController.prototype, "getCitiesNear", null);
 exports.CityController = CityController = __decorate([
     (0, common_1.Controller)('city'),
     __metadata("design:paramtypes", [city_service_1.CityService])

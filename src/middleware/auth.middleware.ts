@@ -18,14 +18,26 @@ export class AuthMiddleware implements NestMiddleware {
     const authToken = req.headers.authorization;
 
     Logger.log(`${mm} request url: ${req.originalUrl} `);
-    //  Allow requests from localhost and 192.168.64.1 without authentication
-    const serverIP = MyUtils.getServerIPaddress();
-    Logger.debug(`${mm} server ip address: ${serverIP}`);
-    if (serverIP.includes('192.168.64.1') || serverIP.includes('localhost')) {
-      Logger.debug(`${mm} 🔵🔵🔵🔵🔵🔵 Getting into the club without a Diddy pass! 🥦 You are from: 🔵 ${serverIP} 🔵🔵`);
-      next();
-      return;
+    
+  //Allow requests from localhost and 192.168.64.1 without authentication
+  const allowedIPs = ['127.0.0.1', '::1', '192.168.64.1', 'localhost']; 
+
+  // Get the client's IP address
+  const clientIP = this.getClientIP(req);
+  Logger.debug(`${mm} client ip address: ${clientIP}`);
+
+  // Check if the client IP is in the whitelist
+  let allow = false;
+  allowedIPs.forEach((ip) => {
+    if (clientIP.includes(ip)) {
+      allow = true;
     }
+  });
+  if (allow) {
+    Logger.debug(`${mm} 🔵🔵🔵🔵🔵🔵 Letting you into the club without a Diddy ticket! 🍎 Request from: 🔵 ${clientIP} 🔵🔵`);
+    next();
+    return;
+  }
     if (process.env.NODE_ENV == 'development') {
       Logger.debug(
         `${mm} 🔴 letting you into the club without a ticket! 🔵 🔵 🔵 `,
@@ -66,4 +78,25 @@ export class AuthMiddleware implements NestMiddleware {
       });
     }
   }
-}
+  private getClientIP(req: Request): string {
+    // Check for the 'x-forwarded-for' header first
+    let ip = req.headers['x-forwarded-for'] as string;
+  
+    // If not present, use the request's remote address
+    if (!ip && req.socket) {
+      ip = req.socket.remoteAddress;
+    }
+  
+    // Handle multiple IPs in 'x-forwarded-for' (if any)
+    if (typeof ip === 'string' && ip.includes(',')) {
+      ip = ip.split(',')[0].trim();
+    }
+  
+   // Construct the full URL 
+  const protocol = req.protocol; 
+  const host = ip || 'unknown'; // Use the retrieved IP or 'unknown'
+  const port = req.socket?.localPort ? `:${req.socket.localPort}` : ''; 
+
+  return host; 
+  }
+}  

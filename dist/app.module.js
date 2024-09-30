@@ -73,6 +73,7 @@ const VehicleVideo_1 = require("./data/models/VehicleVideo");
 const user_controller_1 = require("./features/user/user.controller");
 const elapsed_middleware_1 = require("./middleware/elapsed.middleware");
 const auth_middleware_1 = require("./middleware/auth.middleware");
+const QueryElapsedTime_1 = require("./data/models/QueryElapsedTime");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
@@ -125,6 +126,7 @@ exports.AppModule = AppModule = __decorate([
                 { name: "CommuterRequest", schema: CommuterRequest_1.CommuterRequestSchema },
                 { name: "LocationResponse", schema: LocationResponse_1.LocationResponseSchema },
                 { name: "AmbassadorCheckIn", schema: AmbassadorCheckIn_1.AmbassadorCheckInSchema },
+                { name: "QueryElapsedTime", schema: QueryElapsedTime_1.QueryElapsedTimeSchema },
                 { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCount_1.AmbassadorPassengerCountSchema },
             ]),
             dispatch_module_1.DispatchModule,
