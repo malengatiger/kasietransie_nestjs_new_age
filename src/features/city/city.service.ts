@@ -8,16 +8,33 @@ import { Country } from 'src/data/models/Country';
 import { StateProvince } from 'src/data/models/StateProvince';
 import { MyUtils } from 'src/my-utils/my-utils';
 
-const mm = 'CityService';
+const mm = '🌼🌼🌼 CityService 🌼';
 
 @Injectable()
 export class CityService {
   constructor(
-    private cityService: ConfigService,
     @InjectModel(City.name)
     private cityModel: mongoose.Model<City>,
   ) {}
+  public async fixCreated(countryId: string) {
+    Logger.log (`\n\n${mm} fix city created date ...`);
 
+    const cars: City[] = await this.cityModel.find({countryId: countryId});
+    let counter = 0;
+    for (const city of cars) {
+      city.created = new Date().toISOString();
+      await this.cityModel.updateOne({ _id: city._id }, city); 
+      counter++;
+      if (counter % 100 === 0) {
+        Logger.log(`${mm} Processed 🍎 ${counter} cities 🍎`);
+      }
+      await this.delay(10);
+    }
+    return `${mm} work done; cities fixed: 🔵🔵 ${cars.length} 🔵🔵\n\n`;
+  }
+ async delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
   public async addCity(city: City): Promise<City> {
     return this.cityModel.create(city);
   }

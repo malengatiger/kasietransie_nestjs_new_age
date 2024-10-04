@@ -71,6 +71,11 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], City.prototype, "longitude", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], City.prototype, "created", void 0);
 exports.City = City = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

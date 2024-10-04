@@ -26,6 +26,9 @@ let CityController = class CityController {
     async getCitiesNear(latitude, longitude, maxDistanceInMetres) {
         return this.cityService.getCitiesNear(latitude, longitude, maxDistanceInMetres);
     }
+    async fix(countryId) {
+        return await this.cityService.fixCreated(countryId);
+    }
 };
 exports.CityController = CityController;
 __decorate([
@@ -41,6 +44,13 @@ __decorate([
     __metadata("design:paramtypes", [Number, Number, Number]),
     __metadata("design:returntype", Promise)
 ], CityController.prototype, "getCitiesNear", null);
+__decorate([
+    (0, common_1.Get)('fix'),
+    __param(0, (0, common_1.Query)('countryId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], CityController.prototype, "fix", null);
 exports.CityController = CityController = __decorate([
     (0, common_1.Controller)('city'),
     __metadata("design:paramtypes", [city_service_1.CityService])

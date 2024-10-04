@@ -49,6 +49,7 @@ export declare class RouteController {
     refreshRoute(routeId: string, res: Response): Promise<void>;
     getAssociationRouteZippedFile(associationId: string, res: Response): Promise<void>;
     getRoutePointLandmarks(routeId: string): Promise<RouteLandmark[]>;
+    fix(routeId: string): Promise<any>;
     getRoutePoints(routeId: string): Promise<RoutePoint[]>;
     private sendFile;
 }

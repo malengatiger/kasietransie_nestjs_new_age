@@ -29,7 +29,7 @@ const City_1 = require("../../data/models/City");
 const city_service_1 = require("../city/city.service");
 const fcm_service_1 = require("../fcm/fcm.service");
 const storage_service_1 = require("../../storage/storage.service");
-const mm = 'RouteService';
+const mm = "🌿🌿🌿 RouteService 🌿";
 let RouteService = class RouteService {
     constructor(storage, archiveService, messagingService, cityService, routeUpdateRequestModel, vehicleMediaRequestModel, routeLandmarkModel, routeCityModel, cityModel, routePointModel, calculatedDistanceModel, routeModel) {
         this.storage = storage;
@@ -63,7 +63,7 @@ let RouteService = class RouteService {
     async addRoute(route) {
         const url = await this.storage.createQRCode({
             data: JSON.stringify(route),
-            prefix: 'route',
+            prefix: "route",
             size: 2,
             associationId: route.associationId,
         });
@@ -73,7 +73,7 @@ let RouteService = class RouteService {
     async createRouteQRCode(route) {
         const url = await this.storage.createQRCode({
             data: JSON.stringify(route),
-            prefix: 'route',
+            prefix: "route",
             size: 1,
             associationId: route.associationId,
         });
@@ -136,6 +136,17 @@ let RouteService = class RouteService {
             routeId: routeId,
         });
         return await this.calculatedDistanceModel.insertMany(list);
+    }
+    async fix(routeId) {
+        const points = await this.routePointModel.find({ routeId: routeId });
+        common_1.Logger.debug(`${mm} fixing ${points.length} route points ...`);
+        let count = 0;
+        points.forEach(async (p) => {
+            p.position.type = "Point";
+            await this.routePointModel.updateOne({ _id: p._id }, p);
+            count++;
+        });
+        return `${mm} RoutePoints fixed: ${count}`;
     }
     async addRouteLandmark(routeLandmark) {
         const cities = await this.cityService.getCitiesNear(routeLandmark.position.coordinates.at(1), routeLandmark.position.coordinates.at(0), 5 * 1000);
@@ -228,7 +239,7 @@ let RouteService = class RouteService {
         const routes = await this.routeModel.find({
             associationId: associationId,
         });
-        common_1.Logger.log(`${mm} getAssociationRouteZippedFile: 🍎🍎 🍎🍎 🍎🍎 routes: ${routes.length} association: ${associationId}`);
+        common_1.Logger.debug(`${mm} getAssociationRouteZippedFile: 🍎🍎 🍎🍎 🍎🍎 routes: ${routes.length} association: ${associationId}`);
         if (!associationId) {
             throw new Error(`${mm} association is undefined: 😈😈`);
         }
@@ -304,7 +315,7 @@ let RouteService = class RouteService {
             position: {
                 $near: {
                     $geometry: {
-                        type: 'Point',
+                        type: "Point",
                         coordinates: [Number(longitude), Number(latitude)],
                     },
                     $maxDistance: distance,
@@ -313,7 +324,7 @@ let RouteService = class RouteService {
         };
         const points = await this.routePointModel.find(query);
         if (points.length == 0) {
-            throw new Error('Nearest routePoints not found');
+            throw new Error("Nearest routePoints not found");
         }
         const point = points[0];
         const res = await this.routePointModel.deleteMany({
@@ -336,7 +347,7 @@ let RouteService = class RouteService {
             common_1.Logger.log(`${mm} Removing routePoints from ${route.name}`);
             this.removeDuplicateRoutePoints(route.routeId);
         });
-        return { message: 'removeAllDuplicateRoutePoints done' };
+        return { message: "removeAllDuplicateRoutePoints done" };
     }
     async removeDuplicateRoutePoints(routeId) {
         let cnt = 0;
@@ -349,9 +360,9 @@ let RouteService = class RouteService {
                 },
                 {
                     $group: {
-                        _id: { index: '$index' },
+                        _id: { index: "$index" },
                         count: { $sum: 1 },
-                        ids: { $push: '$_id' },
+                        ids: { $push: "$_id" },
                     },
                 },
                 {
@@ -371,7 +382,7 @@ let RouteService = class RouteService {
             common_1.Logger.log(`${mm} Duplicate route points removed successfully. ${cnt} routePoints`);
         }
         catch (error) {
-            common_1.Logger.error('Error removing duplicate route points:', error);
+            common_1.Logger.error("Error removing duplicate route points:", error);
         }
         return {
             message: `${mm} Duplicate route points removed successfully`,

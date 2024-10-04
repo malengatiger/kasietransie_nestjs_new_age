@@ -43,6 +43,9 @@ export class City {
   @Prop()
   @ApiProperty()
   longitude: number;
+  @Prop()
+  @ApiProperty()
+  created: string;
 }
 
 export const CitySchema = SchemaFactory.createForClass(City);

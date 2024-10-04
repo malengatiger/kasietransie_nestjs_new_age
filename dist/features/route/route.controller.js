@@ -131,6 +131,9 @@ let RouteController = RouteController_1 = class RouteController {
             throw error;
         }
     }
+    async fix(routeId) {
+        return await this.routeService.fix(routeId);
+    }
     async getRoutePoints(routeId) {
         try {
             const list = await this.routeService.getRoutePoints(routeId);
@@ -285,6 +288,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "getRoutePointLandmarks", null);
+__decorate([
+    (0, common_1.Get)('fix'),
+    __param(0, (0, common_1.Query)('routeId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], RouteController.prototype, "fix", null);
 __decorate([
     (0, common_1.Get)('getRoutePoints'),
     __param(0, (0, common_1.Query)('routeId')),

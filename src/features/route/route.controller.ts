@@ -198,6 +198,10 @@ export class RouteController {
       throw error;
     }
   }
+  @Get('fix') 
+  public async fix(@Query('routeId') routeId: string) : Promise<any> {
+    return await this.routeService.fix(routeId);
+  }
   @Get('getRoutePoints')
   public async getRoutePoints(
     @Query('routeId') routeId: string,

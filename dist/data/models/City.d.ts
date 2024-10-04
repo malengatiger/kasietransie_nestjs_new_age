@@ -13,6 +13,7 @@ export declare class City {
     position: Position;
     latitude: number;
     longitude: number;
+    created: string;
 }
 export declare const CitySchema: import("mongoose").Schema<City, import("mongoose").Model<City, any, any, any, import("mongoose").Document<unknown, any, City> & City & Required<{
     _id: string;

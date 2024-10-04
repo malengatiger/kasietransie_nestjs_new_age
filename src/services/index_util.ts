@@ -22,6 +22,66 @@ export class MongoIndexBuilder {
     const db = client.db("kasie_transie");
 
     try {
+      const collectionI = db.collection("UserGeofenceEvent");
+      const resI = await collectionI.createIndex(
+        { position: "2dsphere" },
+      );
+      Logger.debug(`${tag} UserGeofenceEvent spatial index created: ${resI}`);
+
+      const collectionH = db.collection("VehicleVideo");
+      const resH = await collectionH.createIndex(
+        { position: "2dsphere" },
+      );
+      Logger.debug(`${tag} VehicleVideo spatial index created: ${resH}`);
+
+      const collectionG = db.collection("VehiclePhoto");
+      const resG = await collectionG.createIndex(
+        { position: "2dsphere" },
+      );
+      Logger.debug(`${tag} VehiclePhoto spatial index created: ${resG}`);
+
+      const collectionF = db.collection("VehicleHeartbeat");
+      const resF = await collectionF.createIndex(
+        { position: "2dsphere" },
+      );
+      Logger.debug(`${tag} VehicleHeartbeat spatial index created: ${resF}`);
+
+      const collectionE = db.collection("VehicleDeparture");
+      const resE = await collectionE.createIndex(
+        { position: "2dsphere" },
+      );
+      Logger.debug(`${tag} VehicleDeparture spatial index created: ${resE}`);
+
+      const collectionD = db.collection("VehicleArrival");
+      const resD = await collectionD.createIndex(
+        { position: "2dsphere" },
+      );
+      Logger.debug(`${tag} VehicleArrival spatial index created: ${resD}`);
+      
+      const collectionC = db.collection("RouteLandmark");
+      const resC = await collectionC.createIndex(
+        { position: "2dsphere" },
+      );
+      Logger.debug(`${tag} RouteLandmark spatial index created: ${resC}`);
+      
+      const collectionB = db.collection("RouteCity");
+      const resB = await collectionB.createIndex(
+        { position: "2dsphere" },
+      );
+      Logger.debug(`${tag} RouteCity spatial index created: ${resB}`);
+      
+      const collectionA = db.collection("RoutePoint");
+      const resA = await collectionA.createIndex(
+        { position: "2dsphere" },
+      );
+      Logger.debug(`${tag} RoutePoint spatial index created: ${resA}`);
+
+      const collection0 = db.collection("City");
+      const res0 = await collection0.createIndex(
+        { position: "2dsphere" },
+      );
+      Logger.debug(`${tag} City spatial index created: ${res0}`);
+
       const collection1 = db.collection("Association");
       const res1 = await collection1.createIndex(
         { associationName: 1 },

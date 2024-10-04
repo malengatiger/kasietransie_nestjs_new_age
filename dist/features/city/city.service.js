@@ -14,15 +14,31 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CityService = void 0;
 const common_1 = require("@nestjs/common");
-const config_1 = require("@nestjs/config");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const City_1 = require("../../data/models/City");
-const mm = 'CityService';
+const mm = '🌼🌼🌼 CityService 🌼';
 let CityService = class CityService {
-    constructor(cityService, cityModel) {
-        this.cityService = cityService;
+    constructor(cityModel) {
         this.cityModel = cityModel;
+    }
+    async fixCreated(countryId) {
+        common_1.Logger.log(`\n\n${mm} fix city created date ...`);
+        const cars = await this.cityModel.find({ countryId: countryId });
+        let counter = 0;
+        for (const city of cars) {
+            city.created = new Date().toISOString();
+            await this.cityModel.updateOne({ _id: city._id }, city);
+            counter++;
+            if (counter % 100 === 0) {
+                common_1.Logger.log(`${mm} Processed 🍎 ${counter} cities 🍎`);
+            }
+            await this.delay(10);
+        }
+        return `${mm} work done; cities fixed: 🔵🔵 ${cars.length} 🔵🔵\n\n`;
+    }
+    async delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
     async addCity(city) {
         return this.cityModel.create(city);
@@ -52,7 +68,7 @@ let CityService = class CityService {
 exports.CityService = CityService;
 exports.CityService = CityService = __decorate([
     (0, common_1.Injectable)(),
-    __param(1, (0, mongoose_1.InjectModel)(City_1.City.name)),
-    __metadata("design:paramtypes", [config_1.ConfigService, mongoose_2.default.Model])
+    __param(0, (0, mongoose_1.InjectModel)(City_1.City.name)),
+    __metadata("design:paramtypes", [mongoose_2.default.Model])
 ], CityService);
 //# sourceMappingURL=city.service.js.map

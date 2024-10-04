@@ -8,7 +8,10 @@ import { ErrorsInterceptor } from "./middleware/errors.interceptor";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { MongoIndexBuilder } from "./services/index_util";
 import * as os from "os";
-
+import { MessagingService } from "./features/fcm/fcm.service";
+import getModelForClass from "mongoose";
+import mongoose  from 'mongoose';
+import { KasieError } from "./data/models/kasie.error";
 const mm = "🔵 🔵 🔵 🔵 🔵 🔵 Kasie Transie Bootstrap 🔵 🔵";
 const env = process.env.NODE_ENV;
 Logger.log(`${mm} Kasie NODE_ENV : ${env}`);
@@ -38,7 +41,11 @@ async function bootstrap() {
   app.enableCors();
   Logger.log(`${mm} ... CORS set up .....`);
 
-  app.useGlobalInterceptors(new ErrorsInterceptor());
+  const messageService = app.get(MessagingService); // Inject the service
+
+  app.useGlobalInterceptors(
+    new ErrorsInterceptor(messageService)
+  );
 
   Logger.log(`${mm} ... GlobalInterceptors set up .....`);
 

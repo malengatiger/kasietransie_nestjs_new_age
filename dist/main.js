@@ -7,6 +7,7 @@ const my_utils_1 = require("./my-utils/my-utils");
 const errors_interceptor_1 = require("./middleware/errors.interceptor");
 const swagger_1 = require("@nestjs/swagger");
 const index_util_1 = require("./services/index_util");
+const fcm_service_1 = require("./features/fcm/fcm.service");
 const mm = "🔵 🔵 🔵 🔵 🔵 🔵 Kasie Transie Bootstrap 🔵 🔵";
 const env = process.env.NODE_ENV;
 common_1.Logger.log(`${mm} Kasie NODE_ENV : ${env}`);
@@ -26,7 +27,8 @@ async function bootstrap() {
     common_1.Logger.log(`${mm} ... Kasie Swagger set up .....`);
     app.enableCors();
     common_1.Logger.log(`${mm} ... CORS set up .....`);
-    app.useGlobalInterceptors(new errors_interceptor_1.ErrorsInterceptor());
+    const messageService = app.get(fcm_service_1.MessagingService);
+    app.useGlobalInterceptors(new errors_interceptor_1.ErrorsInterceptor(messageService));
     common_1.Logger.log(`${mm} ... GlobalInterceptors set up .....`);
     await app.listen(port);
     await index_util_1.MongoIndexBuilder.createIndexes();

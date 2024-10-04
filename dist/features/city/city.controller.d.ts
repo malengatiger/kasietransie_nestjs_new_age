@@ -5,4 +5,5 @@ export declare class CityController {
     constructor(cityService: CityService);
     addCity(city: City): Promise<any>;
     getCitiesNear(latitude: number, longitude: number, maxDistanceInMetres: number): Promise<City[]>;
+    fix(countryId: string): Promise<string>;
 }

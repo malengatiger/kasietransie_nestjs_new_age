@@ -21,7 +21,7 @@ let AuthMiddleware = class AuthMiddleware {
     async use(req, res, next) {
         const authToken = req.headers.authorization;
         common_1.Logger.log(`${mm} request url: ${req.originalUrl} `);
-        const allowedIPs = ['127.0.0.1', '::1', '192.168.64.1', 'localhost'];
+        const allowedIPs = ['127.0.0.1', '::1', '192.168.64.1', 'localhost', '192.168.88.253'];
         const clientIP = this.getClientIP(req);
         common_1.Logger.debug(`${mm} client ip address: ${clientIP}`);
         let allow = false;

@@ -20,7 +20,7 @@ export class AuthMiddleware implements NestMiddleware {
     Logger.log(`${mm} request url: ${req.originalUrl} `);
     
   //Allow requests from localhost and 192.168.64.1 without authentication
-  const allowedIPs = ['127.0.0.1', '::1', '192.168.64.1', 'localhost']; 
+  const allowedIPs = ['127.0.0.1', '::1', '192.168.64.1', 'localhost', '192.168.88.253']; 
 
   // Get the client's IP address
   const clientIP = this.getClientIP(req);

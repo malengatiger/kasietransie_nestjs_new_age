@@ -25,6 +25,10 @@ export class QueryElapsedTime {
   @Prop()
   @ApiProperty()
   statusCode: number;
+
+  @Prop()
+  @ApiProperty()
+  longDate: number;
   
 }
 

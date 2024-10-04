@@ -15,7 +15,7 @@ export class ElapsedTimeMiddleware implements NestMiddleware {
   ) {}
   use(req: Request, res: Response, next: NextFunction) {
     const start = Date.now();
-
+    Logger.debug(`${mm} User IP Address: ${req.ip}`);
     res.on("finish", async () => {
       const elapsed = (Date.now() - start) / 1000;
       Logger.log(`${mm} ${req.originalUrl} `);
@@ -23,17 +23,23 @@ export class ElapsedTimeMiddleware implements NestMiddleware {
       if (res.statusCode > 201) {
         tag = "😈😈😈";
       }
-      const qel = new QueryElapsedTime();
-      qel.created = new Date().toISOString();
-      qel.elapsedSeconds = elapsed;
-      qel.statusCode = res.statusCode;
-      qel.queryParameters = JSON.stringify(req.query);
-      qel.url = req.url;
-      qel.queryId = `${new Date().getTime()}${Math.random() * 100}`;
+      const yes = process.env.ADD_ELAPSED_TIME;
+      if (yes === "yes") {
+        const qel = new QueryElapsedTime();
+        qel.created = new Date().toISOString();
+        qel.elapsedSeconds = elapsed;
+        qel.statusCode = res.statusCode;
+        qel.queryParameters = JSON.stringify(req.query);
+        qel.url = req.url;
+        qel.longDate = new Date().getTime();
+        qel.queryId = `${new Date().getTime()}${Math.random() * 100}`;
 
-      await this.qelModel.create(qel);
+        await this.qelModel.create(qel);
 
-      Logger.debug(`${mm} QueryElapsedTime added to MongoDB Atlas  🔶 🔶 🔶 \n🔶 🔶 🔶 ${JSON.stringify(qel)}`);
+        Logger.debug(
+          `${mm} QueryElapsedTime added to MongoDB Atlas 🔶 🔶 🔶 \n🔶 🔶 🔶 QueryElapsedTime: ${JSON.stringify(qel, null, 2)}`
+        );
+      }
       Logger.debug(
         `${mm} request took 💦 ${elapsed} seconds; ${tag} statusCode: ${res.statusCode} ${tag}`
       );
