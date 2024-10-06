@@ -43,8 +43,6 @@ export declare class RouteController {
     getRoutePointsZipped(routeId: string, res: Response): Promise<void>;
     deleteRoutePoints(query: {
         routeId: string;
-        latitude: number;
-        longitude: number;
     }, res: Response): Promise<void>;
     refreshRoute(routeId: string, res: Response): Promise<void>;
     getAssociationRouteZippedFile(associationId: string, res: Response): Promise<void>;

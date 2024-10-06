@@ -8,6 +8,6 @@ export declare class CityService {
     delay(ms: number): Promise<unknown>;
     addCity(city: City): Promise<City>;
     findCitiesByLocation(latitude: number, longitude: number, radiusInKM: number, limit: number): Promise<City[]>;
-    getCitiesNear(latitude: number, longitude: number, maxDistanceInMetres: number): Promise<City[]>;
+    private getCitiesNear;
     getCountryStates(countryId: string): Promise<StateProvince[]>;
 }

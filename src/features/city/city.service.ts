@@ -44,13 +44,15 @@ export class CityService {
     radiusInKM: number,
     limit: number,
   ): Promise<City[]> {
-    return await this.getCitiesNear(latitude,longitude,radiusInKM * 1000);
+    return await this.getCitiesNear(latitude,longitude,radiusInKM * 1000, limit);
   }
-  public async getCitiesNear(
+  private async getCitiesNear(
     latitude: number,
     longitude: number,
     maxDistanceInMetres: number,
+    limit: number,
   ): Promise<City[]> {
+    Logger.debug(`${mm} latitude: ${latitude} longitude: ${longitude} max: ${maxDistanceInMetres} limit: ${limit}`);
     const query = {
       position: {
         $near: {
@@ -63,7 +65,8 @@ export class CityService {
       },
     };
     // Find documents based on our query
-    const cities = await this.cityModel.find(query);
+    const cities = await this.cityModel.find(query).limit(limit);
+    Logger.log(`${mm} cities found by location: ${cities.length}`);
     return cities;
   }
   public async getCountryStates(countryId: string): Promise<StateProvince[]> {

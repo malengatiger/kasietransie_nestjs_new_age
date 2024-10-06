@@ -93,12 +93,12 @@ let RouteController = RouteController_1 = class RouteController {
     }
     async deleteRoutePoints(query, res) {
         try {
-            const fileName = await this.routeService.deleteRoutePoints(query.routeId, query.latitude, query.longitude);
-            this.sendFile(fileName, res);
+            const fileName = await this.routeService.deleteRoutePoints(query.routeId);
+            res.status(200).send(fileName);
         }
         catch (error) {
             this.logger.error('Error getting routePoint zipped file:', error);
-            res.status(500).send('Error downloading file: ' + error.message);
+            res.status(500).send('Error deleting RoutePoints: ' + error.message);
         }
     }
     async refreshRoute(routeId, res) {

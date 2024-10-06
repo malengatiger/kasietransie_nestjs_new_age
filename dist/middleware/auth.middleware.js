@@ -12,18 +12,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthMiddleware = void 0;
 const common_1 = require("@nestjs/common");
 const firebase_util_1 = require("../services/firebase_util");
-const mm = '🔑🔑🔑🔑 AuthMiddleware 🔑🔑';
-const errorMessage = '🔴 🔴 🔴 Request is Unauthorized';
+const mm = "🔑🔑 AuthMiddleware 🔑";
+const errorMessage = "🔴 🔴 🔴 Request is Unauthorized";
 let AuthMiddleware = class AuthMiddleware {
     constructor(fbService) {
         this.fbService = fbService;
     }
     async use(req, res, next) {
         const authToken = req.headers.authorization;
-        common_1.Logger.log(`${mm} request url: ${req.originalUrl} `);
-        const allowedIPs = ['127.0.0.1', '::1', '192.168.64.1', 'localhost', '192.168.88.253'];
+        const allowedIPs = [
+            "127.0.0.1",
+            "::1",
+            "192.168.64.1",
+            "localhost",
+            "192.168.88.253",
+        ];
         const clientIP = this.getClientIP(req);
-        common_1.Logger.debug(`${mm} client ip address: ${clientIP}`);
         let allow = false;
         allowedIPs.forEach((ip) => {
             if (clientIP.includes(ip)) {
@@ -31,16 +35,16 @@ let AuthMiddleware = class AuthMiddleware {
             }
         });
         if (allow) {
-            common_1.Logger.debug(`${mm} 🔵🔵🔵🔵🔵🔵 Letting you into the club without a Diddy ticket! 🍎 Request from: 🔵 ${clientIP} 🔵🔵`);
+            common_1.Logger.log(`${mm} 🔵🔵🔵🔵🔵🔵 Letting you into the club without a Diddy ticket! 🍎 Request from: 🔵  ${req.originalUrl}  🔵🔵`);
             next();
             return;
         }
-        if (process.env.NODE_ENV == 'development') {
+        if (process.env.NODE_ENV == "development") {
             common_1.Logger.debug(`${mm} 🔴 letting you into the club without a ticket! 🔵 🔵 🔵 `);
             next();
             return;
         }
-        if (req.baseUrl == '/api/v1/association/getCountries') {
+        if (req.baseUrl == "/api/v1/association/getCountries") {
             common_1.Logger.debug(`${mm} 🔴 letting you get countries without a ticket! 🔵 🔵 🔵 `);
             next();
             return;
@@ -56,7 +60,9 @@ let AuthMiddleware = class AuthMiddleware {
         try {
             const token = authToken.substring(7);
             common_1.Logger.log(`${mm} authentication continua: 🔵 token: ${token}`);
-            const decodedToken = await this.fbService.getFirebaseApp().auth()
+            const decodedToken = await this.fbService
+                .getFirebaseApp()
+                .auth()
                 .verifyIdToken(token);
             req.user = decodedToken;
             common_1.Logger.log(`${mm} authentication seems OK; ✅ req: ${req}`);
@@ -72,16 +78,16 @@ let AuthMiddleware = class AuthMiddleware {
         }
     }
     getClientIP(req) {
-        let ip = req.headers['x-forwarded-for'];
+        let ip = req.headers["x-forwarded-for"];
         if (!ip && req.socket) {
             ip = req.socket.remoteAddress;
         }
-        if (typeof ip === 'string' && ip.includes(',')) {
-            ip = ip.split(',')[0].trim();
+        if (typeof ip === "string" && ip.includes(",")) {
+            ip = ip.split(",")[0].trim();
         }
         const protocol = req.protocol;
-        const host = ip || 'unknown';
-        const port = req.socket?.localPort ? `:${req.socket.localPort}` : '';
+        const host = ip || "unknown";
+        const port = req.socket?.localPort ? `:${req.socket.localPort}` : "";
         return host;
     }
 };

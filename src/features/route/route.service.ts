@@ -94,7 +94,12 @@ export class RouteService {
       associationId: route.associationId,
     });
     route.qrCodeUrl = url;
-    return await this.routeModel.create(route);
+    const res = await this.routeModel.create(route);
+    Logger.log(
+      `\n\n${mm} route ${route.name} has been added to Atlas\n ${JSON.stringify(res, null, 2)}`
+    );
+
+    return route;
   }
   public async createRouteQRCode(route: Route): Promise<Route> {
     const url = await this.storage.createQRCode({
@@ -173,14 +178,25 @@ export class RouteService {
     routeId: string,
     index: number
   ): Promise<RoutePoint[]> {
-    const list = await this.routePointModel.deleteMany({
-      routeId: routeId,
-      index: { $gte: index },
+    const points = await this.routePointModel.find({ routeId: routeId });
+    let count = 0;
+    points.forEach(async (doc) => {
+      if (doc.index >= index) {
+        await doc.deleteOne();
+        count++;
+      }
     });
-    Logger.log(`deleteRoutePoints deleted: ${list.deletedCount}`);
-    return await this.routePointModel
+
+    Logger.debug(`${mm} deleteRoutePoints deleted: ${count}`);
+
+    const resultPoints = await this.routePointModel
       .find({ routeId: routeId })
       .sort({ index: 1 });
+    Logger.debug(
+      `${mm} updated RoutePoints after delete: ${resultPoints.length}`
+    );
+
+    return resultPoints;
   }
   public async addCalculatedDistances(
     list: CalculatedDistance[]
@@ -208,10 +224,11 @@ export class RouteService {
     routeLandmark: RouteLandmark
   ): Promise<RouteLandmark[]> {
     //get nearest cities; within 5 km
-    const cities = await this.cityService.getCitiesNear(
+    const cities = await this.cityService.findCitiesByLocation(
       routeLandmark.position.coordinates.at(1),
       routeLandmark.position.coordinates.at(0),
-      5 * 1000
+      5 * 1000,
+      200
     );
     const routeCities: RouteCity[] = [];
     cities.forEach((c) => {
@@ -417,42 +434,23 @@ export class RouteService {
   /**
    * Delete route points starting nearest to supplied location and return remaining points
    * @param routeId
-   * @param latitude
-   * @param longitude
-   * @returns RoutePoint[]
+   * @returns string
    */
-  public async deleteRoutePoints(
-    routeId: string,
-    latitude: number,
-    longitude: number
-  ): Promise<string> {
-    const distance = 100;
-    Logger.log(
-      `${mm} latitude: ${latitude}, longitude: ${longitude} route: ${routeId}`
-    );
+  public async deleteRoutePoints(routeId: string): Promise<string> {
+    Logger.log(`${mm} delete routePoints for route: ${routeId}`);
     const query = {
       routeId: routeId,
-      position: {
-        $near: {
-          $geometry: {
-            type: "Point",
-            coordinates: [Number(longitude), Number(latitude)],
-          },
-          $maxDistance: distance,
-        },
-      },
     };
     // Find documents based on our query
     const points = await this.routePointModel.find(query);
 
     if (points.length == 0) {
-      throw new Error("Nearest routePoints not found");
+      throw new Error("RoutePoints not found");
     }
     const point = points[0];
     //delete points
     const res = await this.routePointModel.deleteMany({
       routeId: point.routeId,
-      index: { $gte: point.index },
     });
     //get remaining points
     const list = await this.routePointModel
@@ -461,12 +459,9 @@ export class RouteService {
       })
       .sort({ index: 1 });
     const json = JSON.stringify(list);
-    Logger.debug(
-      `${mm} Nearest points found: ${points.length} deletion result: ${res}
-      total points remaining: ${list.length} raw json string size: ${json.length} bytes`
-    );
+    Logger.debug(`${mm} Route points deleted:d: ${res.deletedCount} `);
 
-    return await this.archiveService.zip([{ content: json }]);
+    return `${mm} Route points deleted:d: ${res.deletedCount} `;
   }
   async removeAllDuplicateRoutePoints(): Promise<any> {
     const list = await this.routeModel.find({});

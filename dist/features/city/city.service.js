@@ -44,9 +44,10 @@ let CityService = class CityService {
         return this.cityModel.create(city);
     }
     async findCitiesByLocation(latitude, longitude, radiusInKM, limit) {
-        return await this.getCitiesNear(latitude, longitude, radiusInKM * 1000);
+        return await this.getCitiesNear(latitude, longitude, radiusInKM * 1000, limit);
     }
-    async getCitiesNear(latitude, longitude, maxDistanceInMetres) {
+    async getCitiesNear(latitude, longitude, maxDistanceInMetres, limit) {
+        common_1.Logger.debug(`${mm} latitude: ${latitude} longitude: ${longitude} max: ${maxDistanceInMetres} limit: ${limit}`);
         const query = {
             position: {
                 $near: {
@@ -58,7 +59,8 @@ let CityService = class CityService {
                 },
             },
         };
-        const cities = await this.cityModel.find(query);
+        const cities = await this.cityModel.find(query).limit(limit);
+        common_1.Logger.log(`${mm} cities found by location: ${cities.length}`);
         return cities;
     }
     async getCountryStates(countryId) {

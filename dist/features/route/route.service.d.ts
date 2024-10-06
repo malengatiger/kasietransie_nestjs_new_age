@@ -59,7 +59,7 @@ export declare class RouteService {
     getRoutePoints(routeId: string): Promise<RoutePoint[]>;
     getRoutePointsZipped(routeId: string): Promise<string>;
     getRoute(routeId: string): Promise<Route>;
-    deleteRoutePoints(routeId: string, latitude: number, longitude: number): Promise<string>;
+    deleteRoutePoints(routeId: string): Promise<string>;
     removeAllDuplicateRoutePoints(): Promise<any>;
     removeDuplicateRoutePoints(routeId: string): Promise<any>;
 }

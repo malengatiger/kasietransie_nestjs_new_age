@@ -15,10 +15,8 @@ export class ElapsedTimeMiddleware implements NestMiddleware {
   ) {}
   use(req: Request, res: Response, next: NextFunction) {
     const start = Date.now();
-    Logger.debug(`${mm} User IP Address: ${req.ip}`);
     res.on("finish", async () => {
       const elapsed = (Date.now() - start) / 1000;
-      Logger.log(`${mm} ${req.originalUrl} `);
       let tag = "🥬🥬🥬";
       if (res.statusCode > 201) {
         tag = "😈😈😈";
@@ -41,7 +39,7 @@ export class ElapsedTimeMiddleware implements NestMiddleware {
         );
       }
       Logger.debug(
-        `${mm} request took 💦 ${elapsed} seconds; ${tag} statusCode: ${res.statusCode} ${tag}`
+        `${mm} request ${req.originalUrl} took 💦 ${elapsed} seconds; ${tag} statusCode: ${res.statusCode} ${tag}`
       );
     });
 

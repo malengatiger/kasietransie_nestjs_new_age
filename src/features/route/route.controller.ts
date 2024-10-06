@@ -17,8 +17,6 @@ import { RouteCity } from 'src/data/models/RouteCity';
 import { RouteLandmark } from 'src/data/models/RouteLandmark';
 import { RoutePoint } from 'src/data/models/RoutePoint';
 import { RouteUpdateRequest } from 'src/data/models/RouteUpdateRequest';
-import { MyUtils } from 'src/my-utils/my-utils';
-import * as fs from 'fs';
 import { RoutePointList } from 'src/data/models/RoutePointList';
 import { RouteService } from 'src/features/route/route.service';
 
@@ -29,7 +27,7 @@ export class RouteController {
   private readonly logger = new Logger(RouteController.name);
 
   constructor(private readonly routeService: RouteService) {}
-  //addRouteUpdateRequest
+ 
   @Post('addRoute')
   async addRoute(@Body() route: Route): Promise<Route> {
     return await this.routeService.addRoute(route);
@@ -144,19 +142,15 @@ export class RouteController {
   }
   @Get('deleteRoutePoints')
   public async deleteRoutePoints(
-    @Query() query: { routeId: string; latitude: number; longitude: number },
+    @Query() query: { routeId: string; },
     @Res() res: Response,
   ) {
     try {
-      const fileName = await this.routeService.deleteRoutePoints(
-        query.routeId,
-        query.latitude,
-        query.longitude,
-      );
-      this.sendFile(fileName, res);
+      const fileName = await this.routeService.deleteRoutePoints(query.routeId);
+      res.status(200).send(fileName);
     } catch (error) {
       this.logger.error('Error getting routePoint zipped file:', error);
-      res.status(500).send('Error downloading file: ' + error.message);
+      res.status(500).send('Error deleting RoutePoints: ' + error.message);
     }
   }
   @Get('refreshRoute')

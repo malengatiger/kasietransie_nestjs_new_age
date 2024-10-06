@@ -16,6 +16,7 @@ exports.CityController = void 0;
 const common_1 = require("@nestjs/common");
 const city_service_1 = require("./city.service");
 const City_1 = require("../../data/models/City");
+const mm = '🌼🌼🌼 CityController  🌼';
 let CityController = class CityController {
     constructor(cityService) {
         this.cityService = cityService;
@@ -23,8 +24,9 @@ let CityController = class CityController {
     async addCity(city) {
         return this.cityService.addCity(city);
     }
-    async getCitiesNear(latitude, longitude, maxDistanceInMetres) {
-        return this.cityService.getCitiesNear(latitude, longitude, maxDistanceInMetres);
+    async findCitiesByLocation(latitude, longitude, maxDistanceInMetres, limit) {
+        common_1.Logger.debug(`${mm} latitude: ${latitude} longitude: ${longitude} max: ${maxDistanceInMetres} limit: ${limit}`);
+        return this.cityService.findCitiesByLocation(latitude, longitude, maxDistanceInMetres, limit);
     }
     async fix(countryId) {
         return await this.cityService.fixCreated(countryId);
@@ -39,11 +41,15 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], CityController.prototype, "addCity", null);
 __decorate([
-    (0, common_1.Get)('getCitiesNear'),
+    (0, common_1.Get)('findCitiesByLocation'),
+    __param(0, (0, common_1.Query)('latitude')),
+    __param(1, (0, common_1.Query)('longitude')),
+    __param(2, (0, common_1.Query)('maxDistanceInMetres')),
+    __param(3, (0, common_1.Query)('limit')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number, Number]),
+    __metadata("design:paramtypes", [Number, Number, Number, Number]),
     __metadata("design:returntype", Promise)
-], CityController.prototype, "getCitiesNear", null);
+], CityController.prototype, "findCitiesByLocation", null);
 __decorate([
     (0, common_1.Get)('fix'),
     __param(0, (0, common_1.Query)('countryId')),

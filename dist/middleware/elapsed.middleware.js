@@ -26,10 +26,8 @@ let ElapsedTimeMiddleware = class ElapsedTimeMiddleware {
     }
     use(req, res, next) {
         const start = Date.now();
-        common_1.Logger.debug(`${mm} User IP Address: ${req.ip}`);
         res.on("finish", async () => {
             const elapsed = (Date.now() - start) / 1000;
-            common_1.Logger.log(`${mm} ${req.originalUrl} `);
             let tag = "🥬🥬🥬";
             if (res.statusCode > 201) {
                 tag = "😈😈😈";
@@ -47,7 +45,7 @@ let ElapsedTimeMiddleware = class ElapsedTimeMiddleware {
                 await this.qelModel.create(qel);
                 common_1.Logger.debug(`${mm} QueryElapsedTime added to MongoDB Atlas 🔶 🔶 🔶 \n🔶 🔶 🔶 QueryElapsedTime: ${JSON.stringify(qel, null, 2)}`);
             }
-            common_1.Logger.debug(`${mm} request took 💦 ${elapsed} seconds; ${tag} statusCode: ${res.statusCode} ${tag}`);
+            common_1.Logger.debug(`${mm} request ${req.originalUrl} took 💦 ${elapsed} seconds; ${tag} statusCode: ${res.statusCode} ${tag}`);
         });
         next();
     }

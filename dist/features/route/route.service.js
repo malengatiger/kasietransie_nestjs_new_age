@@ -68,7 +68,9 @@ let RouteService = class RouteService {
             associationId: route.associationId,
         });
         route.qrCodeUrl = url;
-        return await this.routeModel.create(route);
+        const res = await this.routeModel.create(route);
+        common_1.Logger.log(`\n\n${mm} route ${route.name} has been added to Atlas\n ${JSON.stringify(res, null, 2)}`);
+        return route;
     }
     async createRouteQRCode(route) {
         const url = await this.storage.createQRCode({
@@ -121,14 +123,20 @@ let RouteService = class RouteService {
         return pp.length;
     }
     async deleteRoutePointsFromIndex(routeId, index) {
-        const list = await this.routePointModel.deleteMany({
-            routeId: routeId,
-            index: { $gte: index },
+        const points = await this.routePointModel.find({ routeId: routeId });
+        let count = 0;
+        points.forEach(async (doc) => {
+            if (doc.index >= index) {
+                await doc.deleteOne();
+                count++;
+            }
         });
-        common_1.Logger.log(`deleteRoutePoints deleted: ${list.deletedCount}`);
-        return await this.routePointModel
+        common_1.Logger.debug(`${mm} deleteRoutePoints deleted: ${count}`);
+        const resultPoints = await this.routePointModel
             .find({ routeId: routeId })
             .sort({ index: 1 });
+        common_1.Logger.debug(`${mm} updated RoutePoints after delete: ${resultPoints.length}`);
+        return resultPoints;
     }
     async addCalculatedDistances(list) {
         const routeId = list[0].routeId;
@@ -149,7 +157,7 @@ let RouteService = class RouteService {
         return `${mm} RoutePoints fixed: ${count}`;
     }
     async addRouteLandmark(routeLandmark) {
-        const cities = await this.cityService.getCitiesNear(routeLandmark.position.coordinates.at(1), routeLandmark.position.coordinates.at(0), 5 * 1000);
+        const cities = await this.cityService.findCitiesByLocation(routeLandmark.position.coordinates.at(1), routeLandmark.position.coordinates.at(0), 5 * 1000, 200);
         const routeCities = [];
         cities.forEach((c) => {
             const routeCity = new RouteCity_1.RouteCity();
@@ -307,29 +315,18 @@ let RouteService = class RouteService {
     async getRoute(routeId) {
         return this.routeModel.findOne({ routeId: routeId });
     }
-    async deleteRoutePoints(routeId, latitude, longitude) {
-        const distance = 100;
-        common_1.Logger.log(`${mm} latitude: ${latitude}, longitude: ${longitude} route: ${routeId}`);
+    async deleteRoutePoints(routeId) {
+        common_1.Logger.log(`${mm} delete routePoints for route: ${routeId}`);
         const query = {
             routeId: routeId,
-            position: {
-                $near: {
-                    $geometry: {
-                        type: "Point",
-                        coordinates: [Number(longitude), Number(latitude)],
-                    },
-                    $maxDistance: distance,
-                },
-            },
         };
         const points = await this.routePointModel.find(query);
         if (points.length == 0) {
-            throw new Error("Nearest routePoints not found");
+            throw new Error("RoutePoints not found");
         }
         const point = points[0];
         const res = await this.routePointModel.deleteMany({
             routeId: point.routeId,
-            index: { $gte: point.index },
         });
         const list = await this.routePointModel
             .find({
@@ -337,9 +334,8 @@ let RouteService = class RouteService {
         })
             .sort({ index: 1 });
         const json = JSON.stringify(list);
-        common_1.Logger.debug(`${mm} Nearest points found: ${points.length} deletion result: ${res}
-      total points remaining: ${list.length} raw json string size: ${json.length} bytes`);
-        return await this.archiveService.zip([{ content: json }]);
+        common_1.Logger.debug(`${mm} Route points deleted:d: ${res.deletedCount} `);
+        return `${mm} Route points deleted:d: ${res.deletedCount} `;
     }
     async removeAllDuplicateRoutePoints() {
         const list = await this.routeModel.find({});
