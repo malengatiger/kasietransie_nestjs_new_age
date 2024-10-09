@@ -41,7 +41,9 @@ let CityService = class CityService {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
     async addCity(city) {
-        return this.cityModel.create(city);
+        common_1.Logger.log(`${mm} addCity: ${JSON.stringify(city)}`);
+        const res = await this.cityModel.create(city);
+        return res;
     }
     async findCitiesByLocation(latitude, longitude, radiusInKM, limit) {
         return await this.getCitiesNear(latitude, longitude, radiusInKM * 1000, limit);

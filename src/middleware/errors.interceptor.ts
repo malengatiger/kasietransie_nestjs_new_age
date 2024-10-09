@@ -1,33 +1,20 @@
 import {
   Injectable,
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler,
   Logger,
   HttpStatus,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
 import { MongoClient } from 'mongodb';
-import mongoose, { Model } from 'mongoose';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
 import { KasieError } from 'src/data/models/kasie.error';
 import { MessagingService } from 'src/features/fcm/fcm.service';
 
-const mm: string = '🔴 🔴 🔴 🔴 🔴 🔴 ErrorsInterceptor 🔴 ';
+const mm: string = '🔴 🔴 🔴 🔴 🔴 🔴 ErrorHandler 🔴 ';
 
 @Injectable()
-export class ErrorsInterceptor implements NestInterceptor {
-  constructor(
-    private readonly messageService: MessagingService,
-     ) {}
+export class ErrorHandler  {
+  constructor(private readonly messageService: MessagingService) {}
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    return next.handle().pipe(catchError(this.handleError.bind(this))); // Bind 'this'
-  }
-
-  private async handleError(err: KasieError) {
-    Logger.error(`\n\n${mm} ... 😈😈 handling error: \n${err} `);
+  public async handleError(error: any) { 
+    Logger.error(`\n\n${mm} ... 😈😈 handling error: \n${error} `);
 
     try {
       const uri = process.env.REMOTE_DB_URI;
@@ -35,10 +22,9 @@ export class ErrorsInterceptor implements NestInterceptor {
       const client = new MongoClient(uri);
       const db = client.db("kasie_transie");
 
-    
-      const errorData = { 
-        message: `😈 Error on Kasie Backend, statusCode: ${err.statusCode} 😈 msg: ${err.message}`,
-        statusCode: HttpStatus.BAD_REQUEST,
+      const errorData = {
+        message: error.message, // Log the original error message
+        statusCode: error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR, // Use the original status code if available
       };
       await db.collection('KasieError').insertOne(errorData);
       Logger.debug(
@@ -46,23 +32,19 @@ export class ErrorsInterceptor implements NestInterceptor {
       );
 
       // Send cloud message (if needed)
-      await this.sendCloudMessage(err); 
+      await this.sendCloudMessage(error);
     } catch (e) {
       Logger.error(`${mm} Error handling error: ${e}`);
     }
 
-    return throwError(
-      () => new KasieError(`😈😈 ${err.message}`, HttpStatus.BAD_REQUEST),
-    );
   }
 
-  private async sendCloudMessage(err: KasieError) {
+  private async sendCloudMessage(err: any) {
     try {
-      const error: KasieError = new KasieError(
-        `😈 Error on Kasie Backend, statusCode: ${err.statusCode} 😈 msg: ${err.message}`,
-        HttpStatus.BAD_REQUEST,
+      const errorMessage = err.message || 'An unexpected error occurred.';
+      await this.messageService.sendKasieErrorMessage(
+        new KasieError(errorMessage, err.statusCode || HttpStatus.INTERNAL_SERVER_ERROR),
       );
-      await this.messageService.sendKasieErrorMessage(error);
     } catch (e) {
       Logger.error(`${mm} ${e}`);
     }

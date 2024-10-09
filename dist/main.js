@@ -4,7 +4,6 @@ const core_1 = require("@nestjs/core");
 const app_module_1 = require("./app.module");
 const common_1 = require("@nestjs/common");
 const my_utils_1 = require("./my-utils/my-utils");
-const errors_interceptor_1 = require("./middleware/errors.interceptor");
 const swagger_1 = require("@nestjs/swagger");
 const index_util_1 = require("./services/index_util");
 const fcm_service_1 = require("./features/fcm/fcm.service");
@@ -28,7 +27,6 @@ async function bootstrap() {
     app.enableCors();
     common_1.Logger.log(`${mm} ... CORS set up .....`);
     const messageService = app.get(fcm_service_1.MessagingService);
-    app.useGlobalInterceptors(new errors_interceptor_1.ErrorsInterceptor(messageService));
     common_1.Logger.log(`${mm} ... GlobalInterceptors set up .....`);
     await app.listen(port);
     await index_util_1.MongoIndexBuilder.createIndexes();

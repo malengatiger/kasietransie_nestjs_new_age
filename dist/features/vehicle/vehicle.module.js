@@ -55,6 +55,7 @@ const PassengerTimeSeries_1 = require("../../data/models/PassengerTimeSeries");
 const RouteUpdateRequest_1 = require("../../data/models/RouteUpdateRequest");
 const storage_service_1 = require("../../storage/storage.service");
 const firebase_util_1 = require("../../services/firebase_util");
+const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 let VehicleModule = class VehicleModule {
 };
 exports.VehicleModule = VehicleModule;
@@ -108,6 +109,7 @@ exports.VehicleModule = VehicleModule = __decorate([
             vehicle_service_1.VehicleService,
             user_service_1.UserService,
             city_service_1.CityService,
+            errors_interceptor_1.ErrorHandler,
             route_service_1.RouteService,
             time_series_service_1.TimeSeriesService,
             dispatch_service_1.DispatchService,

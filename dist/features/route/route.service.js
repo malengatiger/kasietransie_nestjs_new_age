@@ -29,13 +29,15 @@ const City_1 = require("../../data/models/City");
 const city_service_1 = require("../city/city.service");
 const fcm_service_1 = require("../fcm/fcm.service");
 const storage_service_1 = require("../../storage/storage.service");
+const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 const mm = "🌿🌿🌿 RouteService 🌿";
 let RouteService = class RouteService {
-    constructor(storage, archiveService, messagingService, cityService, routeUpdateRequestModel, vehicleMediaRequestModel, routeLandmarkModel, routeCityModel, cityModel, routePointModel, calculatedDistanceModel, routeModel) {
+    constructor(storage, archiveService, messagingService, cityService, errorHandler, routeUpdateRequestModel, vehicleMediaRequestModel, routeLandmarkModel, routeCityModel, cityModel, routePointModel, calculatedDistanceModel, routeModel) {
         this.storage = storage;
         this.archiveService = archiveService;
         this.messagingService = messagingService;
         this.cityService = cityService;
+        this.errorHandler = errorHandler;
         this.routeUpdateRequestModel = routeUpdateRequestModel;
         this.vehicleMediaRequestModel = vehicleMediaRequestModel;
         this.routeLandmarkModel = routeLandmarkModel;
@@ -61,16 +63,29 @@ let RouteService = class RouteService {
         return routeLandmarks;
     }
     async addRoute(route) {
-        const url = await this.storage.createQRCode({
-            data: JSON.stringify(route),
-            prefix: "route",
-            size: 2,
-            associationId: route.associationId,
+        try {
+            const url = await this.storage.createQRCode({
+                data: JSON.stringify(route),
+                prefix: "route",
+                size: 2,
+                associationId: route.associationId,
+            });
+            route.qrCodeUrl = url;
+            const res = await this.routeModel.create(route);
+            common_1.Logger.log(`\n\n${mm} route ${route.name} has been added to Atlas\n ${JSON.stringify(res, null, 2)}`);
+            return res;
+        }
+        catch (e) {
+            this.handleError(e);
+        }
+    }
+    handleError(e) {
+        common_1.Logger.error(`${mm} ${e}`);
+        this.errorHandler.handleError({
+            statusCode: common_1.HttpStatus.BAD_REQUEST,
+            message: `Failed to add route to database: ${e}`,
         });
-        route.qrCodeUrl = url;
-        const res = await this.routeModel.create(route);
-        common_1.Logger.log(`\n\n${mm} route ${route.name} has been added to Atlas\n ${JSON.stringify(res, null, 2)}`);
-        return route;
+        throw new common_1.HttpException(`Failed to add route to database: ${e}`, common_1.HttpStatus.BAD_REQUEST);
     }
     async createRouteQRCode(route) {
         const url = await this.storage.createQRCode({
@@ -157,29 +172,34 @@ let RouteService = class RouteService {
         return `${mm} RoutePoints fixed: ${count}`;
     }
     async addRouteLandmark(routeLandmark) {
-        const cities = await this.cityService.findCitiesByLocation(routeLandmark.position.coordinates.at(1), routeLandmark.position.coordinates.at(0), 5 * 1000, 200);
-        const routeCities = [];
-        cities.forEach((c) => {
-            const routeCity = new RouteCity_1.RouteCity();
-            routeCity.routeId = routeLandmark.routeId;
-            routeCity.associationId = routeLandmark.associationId;
-            routeCity.cityId = c.cityId;
-            routeCity.cityName = c.name;
-            routeCity.position = c.position;
-            routeCity.created = new Date().toISOString();
-            routeCity.routeName = routeLandmark.routeName;
-            routeCity.routeLandmarkId = routeLandmark.landmarkId;
-            routeCity.routeLandmarkName = routeLandmark.landmarkName;
-            routeCities.push(routeCity);
-        });
-        const rc = await this.routeCityModel.insertMany(routeCities);
-        common_1.Logger.log(`${mm} route cities added: ${rc.length} for landmark: ${routeLandmark.landmarkName}`);
-        const mark = await this.routeLandmarkModel.create(routeLandmark);
-        common_1.Logger.log(`${mm} route landmark added: ${mark.landmarkName}`);
-        const rem = await this.routeLandmarkModel
-            .find({ routeId: mark.routeId })
-            .sort({ index: 1 });
-        return rem;
+        try {
+            const cities = await this.cityService.findCitiesByLocation(routeLandmark.position.coordinates.at(1), routeLandmark.position.coordinates.at(0), 5 * 1000, 200);
+            const routeCities = [];
+            cities.forEach((c) => {
+                const routeCity = new RouteCity_1.RouteCity();
+                routeCity.routeId = routeLandmark.routeId;
+                routeCity.associationId = routeLandmark.associationId;
+                routeCity.cityId = c.cityId;
+                routeCity.cityName = c.name;
+                routeCity.position = c.position;
+                routeCity.created = new Date().toISOString();
+                routeCity.routeName = routeLandmark.routeName;
+                routeCity.routeLandmarkId = routeLandmark.landmarkId;
+                routeCity.routeLandmarkName = routeLandmark.landmarkName;
+                routeCities.push(routeCity);
+            });
+            const rc = await this.routeCityModel.insertMany(routeCities);
+            common_1.Logger.log(`${mm} route cities added: ${rc.length} for landmark: ${routeLandmark.landmarkName}`);
+            const mark = await this.routeLandmarkModel.create(routeLandmark);
+            common_1.Logger.log(`${mm} route landmark added: ${mark.landmarkName}`);
+            const rem = await this.routeLandmarkModel
+                .find({ routeId: mark.routeId })
+                .sort({ index: 1 });
+            return rem;
+        }
+        catch (e) {
+            this.handleError(e);
+        }
     }
     async deleteRouteLandmark(routeLandmarkId) {
         const mark = await this.routeLandmarkModel.findOne({
@@ -389,17 +409,18 @@ let RouteService = class RouteService {
 exports.RouteService = RouteService;
 exports.RouteService = RouteService = __decorate([
     (0, common_1.Injectable)(),
-    __param(4, (0, mongoose_1.InjectModel)(RouteUpdateRequest_1.RouteUpdateRequest.name)),
-    __param(5, (0, mongoose_1.InjectModel)(VehicleMediaRequest_1.VehicleMediaRequest.name)),
-    __param(6, (0, mongoose_1.InjectModel)(RouteLandmark_1.RouteLandmark.name)),
-    __param(7, (0, mongoose_1.InjectModel)(RouteCity_1.RouteCity.name)),
-    __param(8, (0, mongoose_1.InjectModel)(City_1.City.name)),
-    __param(9, (0, mongoose_1.InjectModel)(RoutePoint_1.RoutePoint.name)),
-    __param(10, (0, mongoose_1.InjectModel)(CalculatedDistance_1.CalculatedDistance.name)),
-    __param(11, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
+    __param(5, (0, mongoose_1.InjectModel)(RouteUpdateRequest_1.RouteUpdateRequest.name)),
+    __param(6, (0, mongoose_1.InjectModel)(VehicleMediaRequest_1.VehicleMediaRequest.name)),
+    __param(7, (0, mongoose_1.InjectModel)(RouteLandmark_1.RouteLandmark.name)),
+    __param(8, (0, mongoose_1.InjectModel)(RouteCity_1.RouteCity.name)),
+    __param(9, (0, mongoose_1.InjectModel)(City_1.City.name)),
+    __param(10, (0, mongoose_1.InjectModel)(RoutePoint_1.RoutePoint.name)),
+    __param(11, (0, mongoose_1.InjectModel)(CalculatedDistance_1.CalculatedDistance.name)),
+    __param(12, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
     __metadata("design:paramtypes", [storage_service_1.CloudStorageUploaderService,
         zipper_1.FileArchiverService,
         fcm_service_1.MessagingService,
-        city_service_1.CityService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        city_service_1.CityService,
+        errors_interceptor_1.ErrorHandler, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], RouteService);
 //# sourceMappingURL=route.service.js.map

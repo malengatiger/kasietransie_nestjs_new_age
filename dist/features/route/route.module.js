@@ -31,6 +31,7 @@ const ExampleFile_1 = require("../../data/models/ExampleFile");
 const VehiclePhoto_1 = require("../../data/models/VehiclePhoto");
 const VehicleVideo_1 = require("../../data/models/VehicleVideo");
 const Vehicle_1 = require("../../data/models/Vehicle");
+const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 let RouteModule = class RouteModule {
 };
 exports.RouteModule = RouteModule;
@@ -57,7 +58,7 @@ exports.RouteModule = RouteModule = __decorate([
             ]),
         ],
         controllers: [route_controller_1.RouteController],
-        providers: [route_service_1.RouteService, zipper_1.FileArchiverService, fcm_service_1.MessagingService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService],
+        providers: [route_service_1.RouteService, errors_interceptor_1.ErrorHandler, zipper_1.FileArchiverService, fcm_service_1.MessagingService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService],
     })
 ], RouteModule);
 //# sourceMappingURL=route.module.js.map

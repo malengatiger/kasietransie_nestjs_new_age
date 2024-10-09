@@ -35,7 +35,7 @@ let CityController = class CityController {
 exports.CityController = CityController;
 __decorate([
     (0, common_1.Post)('addCity'),
-    __param(0, (0, common_1.Body)('city')),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [City_1.City]),
     __metadata("design:returntype", Promise)

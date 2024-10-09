@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable, Logger } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose from "mongoose";
 import { RouteUpdateRequest } from "src/data/models/RouteUpdateRequest";
@@ -17,6 +17,8 @@ import { City } from "src/data/models/City";
 import { CityService } from "../city/city.service";
 import { MessagingService } from "../fcm/fcm.service";
 import { CloudStorageUploaderService } from "src/storage/storage.service";
+import { KasieError } from "src/data/models/kasie.error";
+import { ErrorHandler } from "src/middleware/errors.interceptor";
 
 const mm = "🌿🌿🌿 RouteService 🌿";
 
@@ -28,6 +30,7 @@ export class RouteService {
     private readonly archiveService: FileArchiverService,
     private readonly messagingService: MessagingService,
     private readonly cityService: CityService,
+    private readonly errorHandler: ErrorHandler,
 
     @InjectModel(RouteUpdateRequest.name)
     private routeUpdateRequestModel: mongoose.Model<RouteUpdateRequest>,
@@ -87,20 +90,36 @@ export class RouteService {
   }
 
   public async addRoute(route: Route): Promise<Route> {
-    const url = await this.storage.createQRCode({
-      data: JSON.stringify(route),
-      prefix: "route",
-      size: 2,
-      associationId: route.associationId,
-    });
-    route.qrCodeUrl = url;
-    const res = await this.routeModel.create(route);
-    Logger.log(
-      `\n\n${mm} route ${route.name} has been added to Atlas\n ${JSON.stringify(res, null, 2)}`
-    );
-
-    return route;
+    try {
+      const url = await this.storage.createQRCode({
+        data: JSON.stringify(route),
+        prefix: "route",
+        size: 2,
+        associationId: route.associationId,
+      });
+      route.qrCodeUrl = url;
+      const res = await this.routeModel.create(route);
+      Logger.log(
+        `\n\n${mm} route ${route.name} has been added to Atlas\n ${JSON.stringify(res, null, 2)}`
+      );
+      return res; // Return the result from the database
+    } catch (e) {
+      this.handleError(e);
+    }
   }
+
+  private handleError(e: any) {
+    Logger.error(`${mm} ${e}`);
+    this.errorHandler.handleError({
+      statusCode: HttpStatus.BAD_REQUEST,
+      message: `Failed to add route to database: ${e}`,
+    });
+    throw new HttpException(
+      `Failed to add route to database: ${e}`,
+      HttpStatus.BAD_REQUEST
+    );
+  }
+
   public async createRouteQRCode(route: Route): Promise<Route> {
     const url = await this.storage.createQRCode({
       data: JSON.stringify(route),
@@ -224,36 +243,40 @@ export class RouteService {
     routeLandmark: RouteLandmark
   ): Promise<RouteLandmark[]> {
     //get nearest cities; within 5 km
-    const cities = await this.cityService.findCitiesByLocation(
-      routeLandmark.position.coordinates.at(1),
-      routeLandmark.position.coordinates.at(0),
-      5 * 1000,
-      200
-    );
-    const routeCities: RouteCity[] = [];
-    cities.forEach((c) => {
-      const routeCity = new RouteCity();
-      routeCity.routeId = routeLandmark.routeId;
-      routeCity.associationId = routeLandmark.associationId;
-      routeCity.cityId = c.cityId;
-      routeCity.cityName = c.name;
-      routeCity.position = c.position;
-      routeCity.created = new Date().toISOString();
-      routeCity.routeName = routeLandmark.routeName;
-      routeCity.routeLandmarkId = routeLandmark.landmarkId;
-      routeCity.routeLandmarkName = routeLandmark.landmarkName;
-      routeCities.push(routeCity);
-    });
-    const rc = await this.routeCityModel.insertMany(routeCities);
-    Logger.log(
-      `${mm} route cities added: ${rc.length} for landmark: ${routeLandmark.landmarkName}`
-    );
-    const mark = await this.routeLandmarkModel.create(routeLandmark);
-    Logger.log(`${mm} route landmark added: ${mark.landmarkName}`);
-    const rem = await this.routeLandmarkModel
-      .find({ routeId: mark.routeId })
-      .sort({ index: 1 });
-    return rem;
+    try {
+      const cities = await this.cityService.findCitiesByLocation(
+        routeLandmark.position.coordinates.at(1),
+        routeLandmark.position.coordinates.at(0),
+        5 * 1000,
+        200
+      );
+      const routeCities: RouteCity[] = [];
+      cities.forEach((c) => {
+        const routeCity = new RouteCity();
+        routeCity.routeId = routeLandmark.routeId;
+        routeCity.associationId = routeLandmark.associationId;
+        routeCity.cityId = c.cityId;
+        routeCity.cityName = c.name;
+        routeCity.position = c.position;
+        routeCity.created = new Date().toISOString();
+        routeCity.routeName = routeLandmark.routeName;
+        routeCity.routeLandmarkId = routeLandmark.landmarkId;
+        routeCity.routeLandmarkName = routeLandmark.landmarkName;
+        routeCities.push(routeCity);
+      });
+      const rc = await this.routeCityModel.insertMany(routeCities);
+      Logger.log(
+        `${mm} route cities added: ${rc.length} for landmark: ${routeLandmark.landmarkName}`
+      );
+      const mark = await this.routeLandmarkModel.create(routeLandmark);
+      Logger.log(`${mm} route landmark added: ${mark.landmarkName}`);
+      const rem = await this.routeLandmarkModel
+        .find({ routeId: mark.routeId })
+        .sort({ index: 1 });
+      return rem;
+    } catch (e) {
+      this.handleError(e);
+    }
   }
   public async deleteRouteLandmark(
     routeLandmarkId: string

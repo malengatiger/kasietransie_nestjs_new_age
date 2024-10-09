@@ -108,7 +108,14 @@ export class MongoIndexBuilder {
         { cellphone: 1 },
         { unique: true }
       );
-      Logger.debug(`${tag} User unique cellphone index created: ${res4}\n\n`);
+      Logger.debug(`${tag} User unique cellphone index created: ${res4}`);
+
+      const collection5 = db.collection("Route");
+      const res5 = await collection5.createIndex(
+        { associationId: 1, name: 1 },
+        { unique: true }
+      );
+      Logger.debug(`${tag} Route association/name unique index created: ${res5}\n\n`);
 
       Logger.log(`${tag} 🌼 🌼 🌼 4 MongoDB Atlas indexes created successfully!  🌼\n\n`);
 

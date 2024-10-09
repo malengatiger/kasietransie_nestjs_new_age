@@ -1,10 +1,7 @@
-import { NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { MessagingService } from 'src/features/fcm/fcm.service';
-export declare class ErrorsInterceptor implements NestInterceptor {
+export declare class ErrorHandler {
     private readonly messageService;
     constructor(messageService: MessagingService);
-    intercept(context: ExecutionContext, next: CallHandler): Observable<any>;
-    private handleError;
+    handleError(error: any): Promise<void>;
     private sendCloudMessage;
 }

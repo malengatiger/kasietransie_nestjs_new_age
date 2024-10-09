@@ -4,7 +4,7 @@ import { AppModule } from "./app.module";
 import { Logger } from "@nestjs/common";
 
 import { MyUtils } from "./my-utils/my-utils";
-import { ErrorsInterceptor } from "./middleware/errors.interceptor";
+import { ErrorHandler } from "./middleware/errors.interceptor";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { MongoIndexBuilder } from "./services/index_util";
 import * as os from "os";
@@ -43,9 +43,10 @@ async function bootstrap() {
 
   const messageService = app.get(MessagingService); // Inject the service
 
-  app.useGlobalInterceptors(
-    new ErrorsInterceptor(messageService)
-  );
+  // app.useGlobalInterceptors(
+  //   new ErrorsInterceptor(messageService)
+  // );
+
 
   Logger.log(`${mm} ... GlobalInterceptors set up .....`);
 

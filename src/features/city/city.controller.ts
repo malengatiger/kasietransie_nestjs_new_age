@@ -7,7 +7,7 @@ export class CityController {
   constructor(private readonly cityService: CityService) {}
 
   @Post('addCity')
-  async addCity(@Body('city') city: City): Promise<any>{
+  async addCity(@Body() city: City): Promise<any>{
     return this.cityService.addCity(city);
   }
 

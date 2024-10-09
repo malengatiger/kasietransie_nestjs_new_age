@@ -46,6 +46,7 @@ import { PassengerTimeSeriesSchema } from "src/data/models/PassengerTimeSeries";
 import { RouteUpdateRequestSchema } from "src/data/models/RouteUpdateRequest";
 import { CloudStorageUploaderService } from "src/storage/storage.service";
 import { FirebaseAdmin } from "src/services/firebase_util";
+import { ErrorHandler } from "src/middleware/errors.interceptor";
 
 @Module({
   imports: [
@@ -99,7 +100,7 @@ import { FirebaseAdmin } from "src/services/firebase_util";
     VehicleService,
     UserService,
     CityService,
-    //
+    ErrorHandler,
     RouteService,
     TimeSeriesService,
     DispatchService,

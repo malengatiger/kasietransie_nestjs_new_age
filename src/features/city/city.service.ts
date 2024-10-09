@@ -36,7 +36,9 @@ export class CityService {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
   public async addCity(city: City): Promise<City> {
-    return this.cityModel.create(city);
+    Logger.log(`${mm} addCity: ${JSON.stringify(city)}`)
+    const res = await this.cityModel.create(city);
+    return res;
   }
   public async findCitiesByLocation(
     latitude: number,
