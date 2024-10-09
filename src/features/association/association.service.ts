@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable, Logger } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose from "mongoose";
@@ -22,7 +22,9 @@ import { MessagingService } from "../fcm/fcm.service";
 import { CityService } from "../city/city.service";
 import { UserService } from "../user/user.service";
 import { v4 as uuidv4 } from "uuid";
-import { Commuter } from 'src/data/models/Commuter';
+import { Commuter } from "src/data/models/Commuter";
+import { Constants } from "src/my-utils/constants";
+import { ErrorHandler } from "src/middleware/errors.interceptor";
 
 const mm = "🍎🍎🍎 AssociationService: 🍎🍎🍎";
 
@@ -33,6 +35,8 @@ export class AssociationService {
     private userService: UserService,
     private cityService: CityService,
     private messagingService: MessagingService,
+    private readonly errorHandler: ErrorHandler,
+
     @InjectModel(Association.name)
     private associationModel: mongoose.Model<Association>,
     @InjectModel(Vehicle.name)
@@ -51,26 +55,27 @@ export class AssociationService {
 
     @InjectModel(AppError.name)
     private appErrorModel: mongoose.Model<AppError>,
-    
+
     @InjectModel(ExampleFile.name)
     private exampleFileModel: mongoose.Model<ExampleFile>,
-    
-    @InjectModel(Commuter.name)
-    private commuterModel: mongoose.Model<Commuter>,
 
-  ){}
+    @InjectModel(Commuter.name)
+    private commuterModel: mongoose.Model<Commuter>
+  ) {}
 
   async getAssociationById(associationId: string): Promise<any> {
     Logger.log(
       `${mm} ... getAssociationById starting, id: ${associationId} ...`
     );
-    const list = await this.associationModel.find( {
-      associationId: associationId,
-    }).limit(1);
+    const list = await this.associationModel
+      .find({
+        associationId: associationId,
+      })
+      .limit(1);
     Logger.log(`${mm} ... getAssociationById found: ${list.length} ...`);
     if (list.length > 0) {
       return list[0];
-    } 
+    }
 
     throw new Error(`Association not found; associationId: ${associationId}`);
   }
@@ -87,7 +92,7 @@ export class AssociationService {
     Logger.log(
       `${mm} ... getAssociationUsers starting, id: ${JSON.stringify(associationId)} ...`
     );
-    const list = await this.userModel.find( {
+    const list = await this.userModel.find({
       associationId: associationId,
     });
     Logger.log(`${mm} ... getAssociationUsers found: ${list.length} ...`);
@@ -100,7 +105,7 @@ export class AssociationService {
     Logger.log(
       `${mm} ... getAssociationVehicles starting, id: ${associationId} ...`
     );
-    const list = await this.vehicleModel.find( {
+    const list = await this.vehicleModel.find({
       associationId: associationId,
     });
     Logger.log(`${mm} ... getAssociationVehicles found: ${list.length} ...`);
@@ -132,12 +137,12 @@ export class AssociationService {
     return file;
   }
 
-
-
   public async getAssociationSettingsModels(
     associationId: string
   ): Promise<any[]> {
-    const list = await this.settingsModel.find({associationId: associationId});
+    const list = await this.settingsModel.find({
+      associationId: associationId,
+    });
     Logger.log(
       `${mm} ... getAssociationSettingsModels found: ${list.length} ...`
     );
@@ -224,83 +229,100 @@ export class AssociationService {
     association: Association
   ): Promise<RegistrationBag> {
     const associationId = this.generateUniqueId();
+
     Logger.log(`${mm} registerAssociation ... id: ${associationId}`);
 
-    const u = new User();
-    u.firstName = association.adminUserFirstName;
-    u.lastName = association.adminUserLastName;
-    u.email = association.adminEmail;
-    u.cellphone = association.adminCellphone;
-    u.countryId = association.countryId;
-    u.countryName = association.countryName;
-    u.associationId = associationId;
-    u.associationName = association.associationName;
-    u.dateRegistered = new Date().toISOString();
+    try {
+      const u = new User();
+      u.firstName = association.adminUserFirstName;
+      u.lastName = association.adminUserLastName;
+      u.email = association.adminEmail;
+      u.cellphone = association.adminCellphone;
+      u.countryId = association.countryId;
+      u.countryName = association.countryName;
+      u.associationId = associationId;
+      u.associationName = association.associationName;
+      u.dateRegistered = new Date().toISOString();
+      u.password = association.password;
+      u.userType = Constants.ADMINISTRATOR_ASSOCIATION;
+      association.password = null;
 
-    const user = await this.userService.createUser(u);
-    association.userId = user.userId;
+      const user = await this.userService.createUser(u);
+      association.userId = user.userId;
 
-    const ass = new Association();
-    ass.userId = user.userId;
-    ass.associationName = association.associationName;
-    ass.associationId = associationId;
-    ass.adminUserFirstName = association.adminUserFirstName;
-    ass.adminUserLastName = association.adminUserLastName;
-    ass.adminEmail = association.adminEmail;
-    ass.adminCellphone = association.adminCellphone;
-    ass.countryId = association.countryId;
-    ass.countryName = association.countryName;
-    ass.dateRegistered = new Date().toISOString();
-    ass.userId = user.userId;
+      const ass = new Association();
+      ass.userId = user.userId;
+      ass.associationName = association.associationName;
+      ass.associationId = associationId;
+      ass.adminUserFirstName = association.adminUserFirstName;
+      ass.adminUserLastName = association.adminUserLastName;
+      ass.adminEmail = association.adminEmail;
+      ass.adminCellphone = association.adminCellphone;
+      ass.countryId = association.countryId;
+      ass.countryName = association.countryName;
+      ass.dateRegistered = new Date().toISOString();
+      ass.userId = user.userId;
 
-    const settings = new SettingsModel();
-    settings.created = new Date().toISOString();
-    settings.associationId = associationId;
-    settings.commuterGeoQueryRadius = 50;
-    settings.commuterGeofenceRadius = 200;
-    settings.commuterSearchMinutes = 30;
-    settings.distanceFilter = 25;
-    settings.geofenceRadius = 200;
-    settings.heartbeatIntervalSeconds = 600;
-    settings.locale = "en";
-    settings.loiteringDelay = 60;
-    settings.refreshRateInSeconds = 600;
-    settings.themeIndex = 0;
-    settings.vehicleGeoQueryRadius = 100;
-    settings.vehicleSearchMinutes = 30;
+      const settings = new SettingsModel();
+      settings.created = new Date().toISOString();
+      settings.associationId = associationId;
+      settings.commuterGeoQueryRadius = 50;
+      settings.commuterGeofenceRadius = 200;
+      settings.commuterSearchMinutes = 30;
+      settings.distanceFilter = 25;
+      settings.geofenceRadius = 200;
+      settings.heartbeatIntervalSeconds = 600;
+      settings.locale = "en";
+      settings.loiteringDelay = 60;
+      settings.refreshRateInSeconds = 600;
+      settings.themeIndex = 0;
+      settings.vehicleGeoQueryRadius = 100;
+      settings.vehicleSearchMinutes = 30;
 
-    const files = await this.getExampleFiles();
+      const files = await this.getExampleFiles();
 
-    const bag = new RegistrationBag();
-    bag.association = ass;
-    bag.settings = settings;
-    bag.user = user;
-    bag.exampleFiles = files;
+      const bag = new RegistrationBag();
+      bag.association = ass;
+      bag.settings = settings;
+      bag.user = user;
+      bag.exampleFiles = files;
 
-    if (ass.countryId) {
-      const c = await this.countryModel.find( {
-        countryId: ass.countryId,
-      });
-      if (c.length > 0) {
-        bag.country = c[0];
+      if (ass.countryId) {
+        const country = await this.countryModel.find({
+          countryId: ass.countryId,
+        });
+        if (country.length > 0) {
+          bag.country = country[0];
+        }
       }
+      Logger.log(`\n${mm} send association and settings to Atlas ...`);
+
+      const resp1 = await this.settingsModel.create(settings);
+      const resp2 = await this.associationModel.create(ass);
+
+      Logger.log(
+        `${mm} 🥬 association and settings added to Atlas ...` +
+          `\n${JSON.stringify(resp1, null, 2)}\n\n${JSON.stringify(resp2, null, 2)}}\n`
+      );
+
+      await this.messagingService.sendAssociationRegisteredMessage(ass);
+
+      Logger.log(
+        `\n${mm} 🥬 association registered: 🥬 🥬 🥬 ${JSON.stringify(bag, null, 2)} 🥬 \n\n`
+      );
+      return bag;
+    } catch (e) {
+      this.handleError(e);
     }
-    Logger.log(`\n${mm} send association and settings to Atlas ...`);
-
-    const resp1 = await this.settingsModel.create(settings);
-    const resp2 = await this.associationModel.create(ass);
-
-    Logger.log(`${mm} 🥬 association and settings added to Atlas ...` +
-      `\n${JSON.stringify(resp1, null, 2)}\n\n${JSON.stringify(resp2, null, 2)}}\n`);
-
-    await this.messagingService.sendAssociationRegisteredMessage(ass);
-
-    Logger.log(
-      `\n${mm} 🥬 association registered: 🥬 🥬 🥬 ${JSON.stringify(bag, null, 2)} 🥬 \n\n`
-    );
-    return bag;
   }
-
+  private handleError(e: any) {
+    Logger.error(`${mm} ${e}`);
+    this.errorHandler.handleError({
+      statusCode: HttpStatus.BAD_REQUEST,
+      message: `Failed to add route to database: ${e}`,
+    });
+    throw new HttpException(`${e}`, HttpStatus.BAD_REQUEST);
+  }
   public async addSettingsModel(model: SettingsModel): Promise<any> {
     Logger.log(`adding addSettingsModel${model}`);
     return await this.settingsModel.create(model);
@@ -315,7 +337,7 @@ export class AssociationService {
     at.associationId = associationId;
     at.userId = userId;
     at.token = token;
-    
+
     return await this.associationTokenModel.create(at);
   }
 
@@ -330,7 +352,7 @@ export class AssociationService {
     });
   }
   public async getRandomCommuters(limit: number): Promise<any[]> {
-    return this.commuterModel.find({limit});
+    return this.commuterModel.find({ limit });
   }
 
   public async getAppErrors(startDate: string): Promise<any[]> {

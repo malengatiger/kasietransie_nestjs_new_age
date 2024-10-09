@@ -74,6 +74,7 @@ const user_controller_1 = require("./features/user/user.controller");
 const elapsed_middleware_1 = require("./middleware/elapsed.middleware");
 const auth_middleware_1 = require("./middleware/auth.middleware");
 const QueryElapsedTime_1 = require("./data/models/QueryElapsedTime");
+const errors_interceptor_1 = require("./middleware/errors.interceptor");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
@@ -151,7 +152,7 @@ exports.AppModule = AppModule = __decorate([
         ],
         controllers: [app_controller_1.AppController, dispatch_controller_1.DispatchController, user_controller_1.UserController],
         providers: [app_service_1.AppService, dispatch_service_1.DispatchService, fcm_service_1.MessagingService, time_series_service_1.TimeSeriesService,
-            user_service_1.UserService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService,
+            user_service_1.UserService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService, errors_interceptor_1.ErrorHandler,
             ambassador_service_1.AmbassadorService, association_service_1.AssociationService, location_request_service_1.LocationRequestService,
             zipper_1.FileArchiverService, firebase_util_1.FirebaseAdmin,
         ],

@@ -34,13 +34,16 @@ const city_service_1 = require("../city/city.service");
 const user_service_1 = require("../user/user.service");
 const uuid_1 = require("uuid");
 const Commuter_1 = require("../../data/models/Commuter");
+const constants_1 = require("../../my-utils/constants");
+const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 const mm = "🍎🍎🍎 AssociationService: 🍎🍎🍎";
 let AssociationService = class AssociationService {
-    constructor(archiveService, userService, cityService, messagingService, associationModel, vehicleModel, settingsModel, userModel, countryModel, associationTokenModel, appErrorModel, exampleFileModel, commuterModel) {
+    constructor(archiveService, userService, cityService, messagingService, errorHandler, associationModel, vehicleModel, settingsModel, userModel, countryModel, associationTokenModel, appErrorModel, exampleFileModel, commuterModel) {
         this.archiveService = archiveService;
         this.userService = userService;
         this.cityService = cityService;
         this.messagingService = messagingService;
+        this.errorHandler = errorHandler;
         this.associationModel = associationModel;
         this.vehicleModel = vehicleModel;
         this.settingsModel = settingsModel;
@@ -53,9 +56,11 @@ let AssociationService = class AssociationService {
     }
     async getAssociationById(associationId) {
         common_1.Logger.log(`${mm} ... getAssociationById starting, id: ${associationId} ...`);
-        const list = await this.associationModel.find({
+        const list = await this.associationModel
+            .find({
             associationId: associationId,
-        }).limit(1);
+        })
+            .limit(1);
         common_1.Logger.log(`${mm} ... getAssociationById found: ${list.length} ...`);
         if (list.length > 0) {
             return list[0];
@@ -100,7 +105,9 @@ let AssociationService = class AssociationService {
         return file;
     }
     async getAssociationSettingsModels(associationId) {
-        const list = await this.settingsModel.find({ associationId: associationId });
+        const list = await this.settingsModel.find({
+            associationId: associationId,
+        });
         common_1.Logger.log(`${mm} ... getAssociationSettingsModels found: ${list.length} ...`);
         return list;
     }
@@ -165,67 +172,83 @@ let AssociationService = class AssociationService {
     async registerAssociation(association) {
         const associationId = this.generateUniqueId();
         common_1.Logger.log(`${mm} registerAssociation ... id: ${associationId}`);
-        const u = new User_1.User();
-        u.firstName = association.adminUserFirstName;
-        u.lastName = association.adminUserLastName;
-        u.email = association.adminEmail;
-        u.cellphone = association.adminCellphone;
-        u.countryId = association.countryId;
-        u.countryName = association.countryName;
-        u.associationId = associationId;
-        u.associationName = association.associationName;
-        u.dateRegistered = new Date().toISOString();
-        const user = await this.userService.createUser(u);
-        association.userId = user.userId;
-        const ass = new Association_1.Association();
-        ass.userId = user.userId;
-        ass.associationName = association.associationName;
-        ass.associationId = associationId;
-        ass.adminUserFirstName = association.adminUserFirstName;
-        ass.adminUserLastName = association.adminUserLastName;
-        ass.adminEmail = association.adminEmail;
-        ass.adminCellphone = association.adminCellphone;
-        ass.countryId = association.countryId;
-        ass.countryName = association.countryName;
-        ass.dateRegistered = new Date().toISOString();
-        ass.userId = user.userId;
-        const settings = new SettingsModel_1.SettingsModel();
-        settings.created = new Date().toISOString();
-        settings.associationId = associationId;
-        settings.commuterGeoQueryRadius = 50;
-        settings.commuterGeofenceRadius = 200;
-        settings.commuterSearchMinutes = 30;
-        settings.distanceFilter = 25;
-        settings.geofenceRadius = 200;
-        settings.heartbeatIntervalSeconds = 600;
-        settings.locale = "en";
-        settings.loiteringDelay = 60;
-        settings.refreshRateInSeconds = 600;
-        settings.themeIndex = 0;
-        settings.vehicleGeoQueryRadius = 100;
-        settings.vehicleSearchMinutes = 30;
-        const files = await this.getExampleFiles();
-        const bag = new RegistrationBag_1.RegistrationBag();
-        bag.association = ass;
-        bag.settings = settings;
-        bag.user = user;
-        bag.exampleFiles = files;
-        if (ass.countryId) {
-            const c = await this.countryModel.find({
-                countryId: ass.countryId,
-            });
-            if (c.length > 0) {
-                bag.country = c[0];
+        try {
+            const u = new User_1.User();
+            u.firstName = association.adminUserFirstName;
+            u.lastName = association.adminUserLastName;
+            u.email = association.adminEmail;
+            u.cellphone = association.adminCellphone;
+            u.countryId = association.countryId;
+            u.countryName = association.countryName;
+            u.associationId = associationId;
+            u.associationName = association.associationName;
+            u.dateRegistered = new Date().toISOString();
+            u.password = association.password;
+            u.userType = constants_1.Constants.ADMINISTRATOR_ASSOCIATION;
+            association.password = null;
+            const user = await this.userService.createUser(u);
+            association.userId = user.userId;
+            const ass = new Association_1.Association();
+            ass.userId = user.userId;
+            ass.associationName = association.associationName;
+            ass.associationId = associationId;
+            ass.adminUserFirstName = association.adminUserFirstName;
+            ass.adminUserLastName = association.adminUserLastName;
+            ass.adminEmail = association.adminEmail;
+            ass.adminCellphone = association.adminCellphone;
+            ass.countryId = association.countryId;
+            ass.countryName = association.countryName;
+            ass.dateRegistered = new Date().toISOString();
+            ass.userId = user.userId;
+            const settings = new SettingsModel_1.SettingsModel();
+            settings.created = new Date().toISOString();
+            settings.associationId = associationId;
+            settings.commuterGeoQueryRadius = 50;
+            settings.commuterGeofenceRadius = 200;
+            settings.commuterSearchMinutes = 30;
+            settings.distanceFilter = 25;
+            settings.geofenceRadius = 200;
+            settings.heartbeatIntervalSeconds = 600;
+            settings.locale = "en";
+            settings.loiteringDelay = 60;
+            settings.refreshRateInSeconds = 600;
+            settings.themeIndex = 0;
+            settings.vehicleGeoQueryRadius = 100;
+            settings.vehicleSearchMinutes = 30;
+            const files = await this.getExampleFiles();
+            const bag = new RegistrationBag_1.RegistrationBag();
+            bag.association = ass;
+            bag.settings = settings;
+            bag.user = user;
+            bag.exampleFiles = files;
+            if (ass.countryId) {
+                const country = await this.countryModel.find({
+                    countryId: ass.countryId,
+                });
+                if (country.length > 0) {
+                    bag.country = country[0];
+                }
             }
+            common_1.Logger.log(`\n${mm} send association and settings to Atlas ...`);
+            const resp1 = await this.settingsModel.create(settings);
+            const resp2 = await this.associationModel.create(ass);
+            common_1.Logger.log(`${mm} 🥬 association and settings added to Atlas ...` +
+                `\n${JSON.stringify(resp1, null, 2)}\n\n${JSON.stringify(resp2, null, 2)}}\n`);
+            await this.messagingService.sendAssociationRegisteredMessage(ass);
+            common_1.Logger.log(`\n${mm} 🥬 association registered: 🥬 🥬 🥬 ${JSON.stringify(bag, null, 2)} 🥬 \n\n`);
+            return bag;
         }
-        common_1.Logger.log(`\n${mm} send association and settings to Atlas ...`);
-        const resp1 = await this.settingsModel.create(settings);
-        const resp2 = await this.associationModel.create(ass);
-        common_1.Logger.log(`${mm} 🥬 association and settings added to Atlas ...` +
-            `\n${JSON.stringify(resp1, null, 2)}\n\n${JSON.stringify(resp2, null, 2)}}\n`);
-        await this.messagingService.sendAssociationRegisteredMessage(ass);
-        common_1.Logger.log(`\n${mm} 🥬 association registered: 🥬 🥬 🥬 ${JSON.stringify(bag, null, 2)} 🥬 \n\n`);
-        return bag;
+        catch (e) {
+            this.handleError(e);
+        }
+    }
+    handleError(e) {
+        common_1.Logger.error(`${mm} ${e}`);
+        this.errorHandler.handleError({
+            statusCode: common_1.HttpStatus.BAD_REQUEST,
+            message: `Failed to add route to database: ${e}`,
+        });
+        throw new common_1.HttpException(`${e}`, common_1.HttpStatus.BAD_REQUEST);
     }
     async addSettingsModel(model) {
         common_1.Logger.log(`adding addSettingsModel${model}`);
@@ -292,18 +315,19 @@ let AssociationService = class AssociationService {
 exports.AssociationService = AssociationService;
 exports.AssociationService = AssociationService = __decorate([
     (0, common_1.Injectable)(),
-    __param(4, (0, mongoose_1.InjectModel)(Association_1.Association.name)),
-    __param(5, (0, mongoose_1.InjectModel)(Vehicle_1.Vehicle.name)),
-    __param(6, (0, mongoose_1.InjectModel)(SettingsModel_1.SettingsModel.name)),
-    __param(7, (0, mongoose_1.InjectModel)(User_1.User.name)),
-    __param(8, (0, mongoose_1.InjectModel)(Country_1.Country.name)),
-    __param(9, (0, mongoose_1.InjectModel)(AssociationToken_1.AssociationToken.name)),
-    __param(10, (0, mongoose_1.InjectModel)(AppError_1.AppError.name)),
-    __param(11, (0, mongoose_1.InjectModel)(ExampleFile_1.ExampleFile.name)),
-    __param(12, (0, mongoose_1.InjectModel)(Commuter_1.Commuter.name)),
+    __param(5, (0, mongoose_1.InjectModel)(Association_1.Association.name)),
+    __param(6, (0, mongoose_1.InjectModel)(Vehicle_1.Vehicle.name)),
+    __param(7, (0, mongoose_1.InjectModel)(SettingsModel_1.SettingsModel.name)),
+    __param(8, (0, mongoose_1.InjectModel)(User_1.User.name)),
+    __param(9, (0, mongoose_1.InjectModel)(Country_1.Country.name)),
+    __param(10, (0, mongoose_1.InjectModel)(AssociationToken_1.AssociationToken.name)),
+    __param(11, (0, mongoose_1.InjectModel)(AppError_1.AppError.name)),
+    __param(12, (0, mongoose_1.InjectModel)(ExampleFile_1.ExampleFile.name)),
+    __param(13, (0, mongoose_1.InjectModel)(Commuter_1.Commuter.name)),
     __metadata("design:paramtypes", [zipper_1.FileArchiverService,
         user_service_1.UserService,
         city_service_1.CityService,
-        fcm_service_1.MessagingService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        fcm_service_1.MessagingService,
+        errors_interceptor_1.ErrorHandler, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], AssociationService);
 //# sourceMappingURL=association.service.js.map

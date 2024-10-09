@@ -38,6 +38,7 @@ const storage_service_1 = require("../../storage/storage.service");
 const firebase_util_1 = require("../../services/firebase_util");
 const VehiclePhoto_1 = require("../../data/models/VehiclePhoto");
 const VehicleVideo_1 = require("../../data/models/VehicleVideo");
+const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 let AssociationModule = class AssociationModule {
 };
 exports.AssociationModule = AssociationModule;
@@ -76,6 +77,7 @@ exports.AssociationModule = AssociationModule = __decorate([
             user_service_1.UserService,
             city_service_1.CityService,
             fcm_service_1.MessagingService,
+            errors_interceptor_1.ErrorHandler,
             storage_service_1.CloudStorageUploaderService, firebase_util_1.FirebaseAdmin,
         ],
     })

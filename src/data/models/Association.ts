@@ -54,6 +54,7 @@ export class Association {
   @Prop()
   @ApiProperty()
   adminEmail: string;
+  password: string;
 }
 
 export const AssociationSchema = SchemaFactory.createForClass(Association);

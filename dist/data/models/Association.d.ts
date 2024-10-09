@@ -16,6 +16,7 @@ export declare class Association {
     userId: string;
     adminCellphone: string;
     adminEmail: string;
+    password: string;
 }
 export declare const AssociationSchema: import("mongoose").Schema<Association, import("mongoose").Model<Association, any, any, any, import("mongoose").Document<unknown, any, Association> & Association & Required<{
     _id: string;

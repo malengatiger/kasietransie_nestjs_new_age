@@ -72,7 +72,10 @@ let MongoIndexBuilder = class MongoIndexBuilder {
             common_1.Logger.debug(`${tag} User unique cellphone index created: ${res4}`);
             const collection5 = db.collection("Route");
             const res5 = await collection5.createIndex({ associationId: 1, name: 1 }, { unique: true });
-            common_1.Logger.debug(`${tag} Route association/name unique index created: ${res5}\n\n`);
+            common_1.Logger.debug(`${tag} Route association/route name unique index created: ${res5}`);
+            const collection6 = db.collection("Association");
+            const res6 = await collection6.createIndex({ countryId: 1, associationName: 1 }, { unique: true });
+            common_1.Logger.debug(`${tag}  Association country/associationName unique index created: ${res6}\n\n`);
             common_1.Logger.log(`${tag} 🌼 🌼 🌼 4 MongoDB Atlas indexes created successfully!  🌼\n\n`);
         }
         catch (error) {

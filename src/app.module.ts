@@ -67,6 +67,7 @@ import { UserController } from './features/user/user.controller';
 import { ElapsedTimeMiddleware } from './middleware/elapsed.middleware';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { QueryElapsedTimeSchema } from './data/models/QueryElapsedTime';
+import { ErrorHandler } from "src/middleware/errors.interceptor";
 
 @Module({
   imports: [
@@ -141,7 +142,7 @@ import { QueryElapsedTimeSchema } from './data/models/QueryElapsedTime';
   ],
   controllers: [AppController, DispatchController, UserController],
   providers: [AppService, DispatchService, MessagingService, TimeSeriesService,
-    UserService, CityService, CloudStorageUploaderService,
+    UserService, CityService, CloudStorageUploaderService, ErrorHandler,
     AmbassadorService, AssociationService, LocationRequestService, 
     FileArchiverService, FirebaseAdmin,
 
