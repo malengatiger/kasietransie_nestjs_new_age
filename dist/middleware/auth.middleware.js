@@ -35,7 +35,7 @@ let AuthMiddleware = class AuthMiddleware {
             }
         });
         if (allow) {
-            common_1.Logger.log(`${mm} 🔵🔵🔵🔵🔵🔵 Letting you into the club without a Diddy ticket! 🍎 Request from: 🔵  ${req.originalUrl}  🔵🔵`);
+            common_1.Logger.log(`\n\n${mm} 🔵🔵🔵🔵🔵🔵 Letting you into the club without a Diddy ticket! 🍎 Request from: 🔵  ${req.originalUrl}  🔵🔵\n`);
             next();
             return;
         }

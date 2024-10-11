@@ -196,7 +196,7 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             return await this.uploadFile(fileName, tempFilePath, data.associationId);
         }
         catch (error) {
-            console.error(error);
+            common_1.Logger.error(error);
             throw new Error("Failed to create QR code and upload to Cloud Storage.");
         }
     }

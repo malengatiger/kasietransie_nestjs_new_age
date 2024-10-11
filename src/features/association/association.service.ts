@@ -90,7 +90,7 @@ export class AssociationService {
 
   public async getAssociationUsers(associationId: string): Promise<any[]> {
     Logger.log(
-      `${mm} ... getAssociationUsers starting, id: ${JSON.stringify(associationId)} ...`
+      `${mm} ... getAssociationUsers starting, id: ${associationId} ...`
     );
     const list = await this.userModel.find({
       associationId: associationId,

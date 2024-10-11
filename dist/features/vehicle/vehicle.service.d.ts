@@ -17,9 +17,13 @@ import { CloudStorageUploaderService } from "src/storage/storage.service";
 import { VehicleMediaRequest } from "src/data/models/VehicleMediaRequest";
 import { VehiclePhoto } from "src/data/models/VehiclePhoto";
 import { VehicleVideo } from "src/data/models/VehicleVideo";
+import { ErrorHandler } from "src/middleware/errors.interceptor";
+import { UserService } from "../user/user.service";
 export declare class VehicleService {
     private storage;
     private associationService;
+    private userService;
+    private readonly errorHandler;
     private vehicleModel;
     private dispatchRecordModel;
     private vehicleArrivalModel;
@@ -33,7 +37,7 @@ export declare class VehicleService {
     private vehicleMediaRequestModel;
     private vehiclePhotoModel;
     private vehicleVideoModel;
-    constructor(storage: CloudStorageUploaderService, associationService: AssociationService, vehicleModel: mongoose.Model<Vehicle>, dispatchRecordModel: mongoose.Model<DispatchRecord>, vehicleArrivalModel: mongoose.Model<VehicleArrival>, vehicleHeartbeatModel: mongoose.Model<VehicleHeartbeat>, ambassadorPassengerCountModel: mongoose.Model<AmbassadorPassengerCount>, vehicleDepartureModel: mongoose.Model<VehicleDeparture>, associationModel: mongoose.Model<Association>, userModel: mongoose.Model<User>, assignModel: mongoose.Model<RouteAssignment>, routeModel: mongoose.Model<Route>, vehicleMediaRequestModel: mongoose.Model<VehicleMediaRequest>, vehiclePhotoModel: mongoose.Model<VehiclePhoto>, vehicleVideoModel: mongoose.Model<VehicleVideo>);
+    constructor(storage: CloudStorageUploaderService, associationService: AssociationService, userService: UserService, errorHandler: ErrorHandler, vehicleModel: mongoose.Model<Vehicle>, dispatchRecordModel: mongoose.Model<DispatchRecord>, vehicleArrivalModel: mongoose.Model<VehicleArrival>, vehicleHeartbeatModel: mongoose.Model<VehicleHeartbeat>, ambassadorPassengerCountModel: mongoose.Model<AmbassadorPassengerCount>, vehicleDepartureModel: mongoose.Model<VehicleDeparture>, associationModel: mongoose.Model<Association>, userModel: mongoose.Model<User>, assignModel: mongoose.Model<RouteAssignment>, routeModel: mongoose.Model<Route>, vehicleMediaRequestModel: mongoose.Model<VehicleMediaRequest>, vehiclePhotoModel: mongoose.Model<VehiclePhoto>, vehicleVideoModel: mongoose.Model<VehicleVideo>);
     getAssociationVehicleMediaRequests(associationId: string, startDate: string): Promise<VehicleMediaRequest[]>;
     addVehiclePhoto(vehiclePhoto: VehiclePhoto): Promise<VehiclePhoto>;
     getVehicleMediaRequests(vehicleId: string): Promise<VehicleMediaRequest[]>;
@@ -58,8 +62,10 @@ export declare class VehicleService {
     updateVehicleQRCode(vehicle: Vehicle): Promise<number>;
     private addCarsToDatabase;
     importVehiclesFromCSV(file: Express.Multer.File, associationId: string): Promise<AddCarsResponse>;
+    private handleError;
     private handleExtractedCars;
     private buildCar;
+    private handleOwner;
 }
 export interface AddCarsResponse {
     cars: Vehicle[];

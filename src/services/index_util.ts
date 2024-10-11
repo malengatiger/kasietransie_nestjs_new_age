@@ -96,19 +96,19 @@ export class MongoIndexBuilder {
       );
       Logger.debug(`${tag} Vehicle unique index created: ${res2}`);
 
-      const collection3 = db.collection("User");
-      const res3 = await collection3.createIndex(
-        { email: 1 },
-        { unique: true }
-      );
-      Logger.debug(`${tag} User unique email index created: ${res3}`);
+      // const collection3 = db.collection("User");
+      // const res3 = await collection3.createIndex(
+      //   { email: 1 },
+      //   { unique: true }
+      // );
+      // Logger.debug(`${tag} User unique email index created: ${res3}`);
 
-      const collection4 = db.collection("User");
-      const res4 = await collection4.createIndex(
-        { cellphone: 1 },
-        { unique: true }
-      );
-      Logger.debug(`${tag} User unique cellphone index created: ${res4}`);
+      // const collection4 = db.collection("User");
+      // const res4 = await collection4.createIndex(
+      //   { cellphone: 1 },
+      //   { unique: true }
+      // );
+      // Logger.debug(`${tag} User unique cellphone index created: ${res4}`);
 
       const collection5 = db.collection("Route");
       const res5 = await collection5.createIndex(
@@ -122,7 +122,35 @@ export class MongoIndexBuilder {
         { countryId: 1, associationName: 1 },
         { unique: true }
       );
-      Logger.debug(`${tag}  Association country/associationName unique index created: ${res6}\n\n`);
+      Logger.debug(`${tag} Association country/associationName unique index created: ${res6}`);
+
+      const collection7 = db.collection("Vehicle");
+      const res7 = await collection7.createIndex(
+        { associationId: 1, vehicleReg: 1 },
+        { unique: true }
+      );
+      Logger.debug(`${tag} Vehicle association/vehicleReg unique index created: ${res7}`);
+
+      const collection8 = db.collection("User");
+      const res8 = await collection8.createIndex(
+        { associationId: 1, lastName: 1, firstName: 1 },
+        { unique: true }
+      );
+      Logger.debug(`${tag} User association/lastName/firstName unique index created: ${res8}`);
+
+      const collection9 = db.collection("User");
+      const res9 = await collection9.createIndex(
+        { associationId: 1, email: 1 },
+        { unique: true }
+      );
+      Logger.debug(`${tag} User association/email unique index created: ${res9}`);
+
+      // const collection10 = db.collection("User");
+      // const res10 = await collection10.createIndex(
+      //   { associationId: 1, cellphone: 1 },
+      //   { unique: true }
+      // );
+      // Logger.debug(`${tag} User association/cellphone unique index created: ${res10}\n\n`);
 
       Logger.log(`${tag} 🌼 🌼 🌼 4 MongoDB Atlas indexes created successfully!  🌼\n\n`);
 

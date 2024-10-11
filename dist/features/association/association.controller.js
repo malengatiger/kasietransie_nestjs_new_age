@@ -111,14 +111,14 @@ __decorate([
 ], AssociationController.prototype, "getAssociationById", null);
 __decorate([
     (0, common_1.Get)('getAssociationUsers'),
-    __param(0, (0, common_1.Query)()),
+    __param(0, (0, common_1.Query)('associationId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], AssociationController.prototype, "getAssociationUsers", null);
 __decorate([
     (0, common_1.Get)('getAssociationVehicles'),
-    __param(0, (0, common_1.Query)()),
+    __param(0, (0, common_1.Query)('associationId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)

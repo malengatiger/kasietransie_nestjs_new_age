@@ -279,7 +279,7 @@ export class CloudStorageUploaderService {
       );
       return await this.uploadFile(fileName, tempFilePath, data.associationId);
     } catch (error) {
-      console.error(error);
+      Logger.error(error);
       throw new Error("Failed to create QR code and upload to Cloud Storage.");
     }
   }

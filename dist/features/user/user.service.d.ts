@@ -4,6 +4,7 @@ import { Association } from "src/data/models/Association";
 import { UserGeofenceEvent } from "src/data/models/UserGeofenceEvent";
 import { CloudStorageUploaderService } from "src/storage/storage.service";
 import { FirebaseAdmin } from "src/services/firebase_util";
+import { Vehicle } from "src/data/models/Vehicle";
 export declare class UserService {
     readonly storage: CloudStorageUploaderService;
     private readonly firebaseAdmin;
@@ -19,6 +20,9 @@ export declare class UserService {
     private buildUser;
     getUserById(userId: string): Promise<User>;
     getUserByEmail(email: string): Promise<User>;
+    getUserByName(firstName: string, lastName: string): Promise<User | null>;
+    fix(): Promise<number>;
+    createOwner(car: Vehicle): Promise<User>;
     addUserGeofenceEvent(userGeofenceEvent: UserGeofenceEvent): Promise<UserGeofenceEvent>;
 }
 export interface AddUsersResponse {

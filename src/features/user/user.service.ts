@@ -14,6 +14,7 @@ import { Constants } from "src/my-utils/constants";
 import { FirebaseAdmin } from "src/services/firebase_util";
 import * as os from "os";
 import * as path from "path";
+import { Vehicle } from "src/data/models/Vehicle";
 
 const mm = "🏈 🏈 🏈 UserService 🏈 🏈";
 
@@ -38,7 +39,9 @@ export class UserService {
   public async createUser(user: User): Promise<User> {
     const storedPassword = user.password;
     const app = this.firebaseAdmin.getFirebaseApp();
-    console.log(`\n\n${mm} create user: ${JSON.stringify(user)} \n`);
+    Logger.log(
+      `\n\n${mm} ........ create user: ${JSON.stringify(user, null, 2)} \n`
+    );
 
     try {
       let email = "";
@@ -50,7 +53,7 @@ export class UserService {
       } else {
         email = user.email;
       }
-      console.log(`${mm} createUser  .... 🎽 email: ${email}`);
+      Logger.log(`${mm} createUser  .... 🎽 email: ${email}`);
 
       const userRecord = await app.auth().createUser({
         email,
@@ -59,48 +62,46 @@ export class UserService {
         displayName: `${user.firstName} ${user.lastName}`,
       });
 
-      console.log(
-        `${mm} createUser: auth user created. userRecord from Firebase : 🎽 ${JSON.stringify(userRecord, null, 2)}`
+      Logger.log(
+        `${mm} createUser: Firebase auth user created. userRecord from Firebase : 🎽 ${JSON.stringify(userRecord, null, 2)}`
       );
-      if (userRecord.uid) {
-        const uid = userRecord.uid;
-        user.userId = uid;
-        const url = await this.storage.createQRCode({
-          data: JSON.stringify(user),
-          prefix: Constants.qrcode_user,
-          size: 1,
-          associationId: user.associationName?? "ADMIN",
-        });
-        user.password = null;
-        user.qrCodeUrl = url;
-        //
-        const mUser = await this.userModel.create(user);
-        //
-        user.password = storedPassword;
-        await app.auth().setCustomUserClaims(uid, {});
-        Logger.log(
-          `\n\n${mm} createUser: 🔵 user created on Mongo Atlas: 🥬🥬🥬 \n🔵 🔵 ${JSON.stringify(mUser)} 🥬\n\n`
-        );
-      } else {
-        throw new Error(
-          "userRecord.uid == null. We have a problem with Firebase, Jack!"
-        );
-      }
+      const uid = userRecord.uid;
+      user.userId = uid;
+      const url = await this.storage.createQRCode({
+        data: JSON.stringify(user),
+        prefix: Constants.qrcode_user,
+        size: 1,
+        associationId: user.associationName ?? "ADMIN",
+      });
+      Logger.debug(`${mm} ... qrCode url: ${url}`);
+      user.password = null;
+      user.qrCodeUrl = url;
+      //
+      Logger.debug(
+        `${mm} ... adding user to Mongo, userId: ${user.userId} - ${user.firstName}`
+      );
+      const mUser = await this.userModel.create(user);
+      user.password = storedPassword;
+      Logger.log(
+        `\n\n${mm} createUser: 🔵 user created on Mongo Atlas: 🥬🥬🥬 \n🔵 🔵 ${JSON.stringify(mUser, null, 2)} 🥬\n\n`
+      );
     } catch (e) {
-      console.error(e);
+      Logger.error(`${mm} User creation failed: ${e}`);
       throw new Error(`User creation failed: ${e}`);
     }
 
     return user;
   }
   public async createAdminUser(user: User): Promise<User> {
-    console.log(`\n\n${mm} createAdminUser: user: ${JSON.stringify(user)} \n`);
+    Logger.log(`\n\n${mm} createAdminUser: user: ${JSON.stringify(user)} \n`);
     user.userType = Constants.ADMINISTRATOR_AFTAROBOT;
     user.associationId = "ADMIN";
     user.dateRegistered = new Date().toISOString();
 
     const res = await this.createUser(user);
-    Logger.log(`${mm} createAdminUser: seems pretty cool,  🔵 🔵 internal admin user has been created\n\n`);
+    Logger.log(
+      `${mm} createAdminUser: seems pretty cool,  🔵 🔵 internal admin user has been created\n\n`
+    );
     return res;
   }
   public async updateUser(user: User): Promise<User> {
@@ -199,6 +200,69 @@ export class UserService {
   public async getUserByEmail(email: string): Promise<User> {
     const user = await this.userModel.findOne({ email: email });
     return user;
+  }
+  public async getUserByName(
+    firstName: string,
+    lastName: string
+  ): Promise<User | null> {
+    const user = await this.userModel.findOne({
+      firstName: firstName,
+      lastName: lastName,
+    });
+    if (user) {
+      Logger.debug(`$mm user found by name: ${JSON.stringify(user)}`);
+    } else {
+      Logger.log(
+        `${mm} user not found by name: ${user} - ${firstName} ${lastName}`
+      );
+    }
+    return user;
+  }
+
+  public async fix() {
+    const list = await this.userModel.find({});
+    Logger.log(`${mm} fix all users ...`);
+    let cnt = 0;
+    for (const u of list) {
+      if (u.firstName) {
+        u.firstName = u.firstName.trim();
+      }
+      if (u.lastName) {
+        u.lastName = u.lastName.trim();
+      }
+      await u.save();
+      cnt++;
+    }
+    Logger.log(`${mm} fixed ${cnt} users`);
+    return cnt;
+  }
+
+  public async createOwner(car: Vehicle): Promise<User> {
+    var asses = await this.associationModel
+      .find({ associationId: car.associationId })
+      .limit(1);
+    let ass: Association = null;
+    const nameParts = car.ownerName.split(" ");
+    const firstName = nameParts.slice(0, -1).join(" "); // Join all parts except the last one
+    const lastName = nameParts[nameParts.length - 1];
+
+    if (asses.length > 0) {
+      ass = asses[0];
+      const user = new User();
+      user.associationId = car.associationId;
+      user.associationName = car.associationName;
+      user.firstName = firstName;
+      user.lastName = lastName;
+      user.userType = Constants.OWNER;
+
+      const emailSuffix = ass.adminEmail.split("@")[1];
+      const emailPrefix = car.ownerName.replaceAll(" ", "_").toLowerCase();
+      user.email = emailPrefix + "@" + emailSuffix;
+
+      var mUser = await this.createUser(user);
+      return mUser;
+    }
+    return null;
   }
 
   public async addUserGeofenceEvent(

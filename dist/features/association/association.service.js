@@ -74,7 +74,7 @@ let AssociationService = class AssociationService {
         return list;
     }
     async getAssociationUsers(associationId) {
-        common_1.Logger.log(`${mm} ... getAssociationUsers starting, id: ${JSON.stringify(associationId)} ...`);
+        common_1.Logger.log(`${mm} ... getAssociationUsers starting, id: ${associationId} ...`);
         const list = await this.userModel.find({
             associationId: associationId,
         });

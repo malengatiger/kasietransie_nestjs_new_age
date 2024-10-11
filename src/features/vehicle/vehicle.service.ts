@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable, Logger } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose from "mongoose";
 import { Vehicle } from "src/data/models/Vehicle";
@@ -26,6 +26,8 @@ import { VehicleVideo } from "src/data/models/VehicleVideo";
 import * as os from "os";
 import * as path from "path";
 import { parse } from "csv";
+import { ErrorHandler } from "src/middleware/errors.interceptor";
+import { UserService } from "../user/user.service";
 const mm = "💚 💚 💚 VehicleService  💚 ";
 
 @Injectable()
@@ -33,6 +35,10 @@ export class VehicleService {
   constructor(
     private storage: CloudStorageUploaderService,
     private associationService: AssociationService,
+    private userService: UserService,
+
+    private readonly errorHandler: ErrorHandler,
+
     @InjectModel(Vehicle.name)
     private vehicleModel: mongoose.Model<Vehicle>,
     @InjectModel(DispatchRecord.name)
@@ -250,7 +256,9 @@ export class VehicleService {
       try {
         const c = await this.vehicleModel.create(mCar);
         uList.push(c);
-        Logger.log(`${mm} car added to Atlas: 🍎 ${JSON.stringify(c, null, 2)}\n`);
+        Logger.log(
+          `${mm} car added to Atlas: 🍎 ${JSON.stringify(c, null, 2)}\n`
+        );
       } catch (e) {
         errors.push(mCar);
         Logger.error(
@@ -259,7 +267,9 @@ export class VehicleService {
       }
     }
 
-    Logger.log(`${mm}  🍎🍎🍎🍎 ${uList.length} cars added to Atlas 🍎🍎 🥬 🥬\n`);
+    Logger.log(
+      `${mm}  🍎🍎🍎🍎 ${uList.length} cars added to Atlas 🍎🍎 🥬 🥬\n`
+    );
     Logger.log(
       `${mm} 😈 👿 errors encountered adding cars to Atlas: ${errors.length} 😈 👿`
     );
@@ -271,7 +281,7 @@ export class VehicleService {
     associationId: string
   ): Promise<AddCarsResponse> {
     Logger.log(
-      `\n\n${mm} importVehiclesFromCSV:... 🍎🍎 associationId: ${associationId} 🍎🍎 ... find association ...`
+      `\n\n${mm} importVehiclesFromCSV: ... 🍎🍎 associationId: ${associationId} 🍎🍎 ... find association ...`
     );
     Logger.debug(
       `${mm} importVehiclesFromCSV:... file size: ${file.buffer.length} bytes`
@@ -303,7 +313,6 @@ export class VehicleService {
       let index = 0;
       // Write the uploaded file data to the temporary file
       await fs.promises.writeFile(tempFilePath, file.buffer);
-
       // Wrap the entire stream processing in a Promise
       response = await new Promise<AddCarsResponse>((resolve, reject) => {
         fs.createReadStream(tempFilePath)
@@ -330,33 +339,46 @@ export class VehicleService {
       Logger.error(
         `${mm} 😈😈 Error processing vehicles CSV file: 😈😈 ${err}`
       );
-      throw new Error(`Error processing vehicles CSV file: ${err}`);
+      this.handleError(err);
     }
 
     // Now 'response' will have the correct value
     if (response) {
       Logger.log(`${mm} return response: ${JSON.stringify(response, null, 2)}`);
-
       return response;
     } else {
       // This should ideally never happen now
       Logger.error(`${mm} Unexpected error: response is undefined`);
-      throw new Error("An unexpected error occurred.");
+      this.handleError("Unexpected error");
     }
   }
-
+  private handleError(e: any) {
+    Logger.error(`${mm} ${e}`);
+    this.errorHandler.handleError({
+      statusCode: HttpStatus.BAD_REQUEST,
+      message: `Failed to add route to database: ${e}`,
+    });
+    throw new HttpException(
+      `Failed to add route to database: ${e}`,
+      HttpStatus.BAD_REQUEST
+    );
+  }
   private async handleExtractedCars(
     carList: any[],
     cars: Vehicle[],
     ass: Association
   ) {
     Logger.debug(`${mm} handleExtractedCars: 🔷 ${carList.length} cars`);
-
+    let userCount = 0;
     for (const mCar of carList) {
       const car: Vehicle = await this.buildCar(mCar, ass);
+      userCount += await this.handleOwner(car);
       cars.push(car);
     }
 
+    Logger.debug(
+      `\n\n${mm} handleExtractedCars: 🔷 ${userCount} 🔷 owners have been added to Atlas`
+    );
     Logger.debug(
       `${mm} handleExtractedCars: 🔷 ${cars.length} 🔷 cars to be added to Atlas`
     );
@@ -376,12 +398,11 @@ export class VehicleService {
     const myCar = new Vehicle();
     myCar.vehicleId = randomUUID().trim();
     myCar.ownerName = data[0];
-    myCar.cellphone = data[1];
-    myCar.vehicleReg = data[2];
-    myCar.model = data[3];
-    myCar.make = data[4];
-    myCar.year = data[5];
-    myCar.passengerCapacity = parseInt(data[6]);
+    myCar.vehicleReg = data[1];
+    myCar.model = data[2];
+    myCar.make = data[3];
+    myCar.year = data[4];
+    myCar.passengerCapacity = parseInt(data[5]);
 
     myCar.associationId = ass.associationId;
     myCar.associationName = ass.associationName;
@@ -399,6 +420,39 @@ export class VehicleService {
       `\n${mm} buildCar:... 🔵 vehicle built: ${JSON.stringify(myCar, null, 2)} 🔵\n\n`
     );
     return myCar;
+  }
+
+  private async handleOwner(car: Vehicle): Promise<number> {
+    Logger.debug(`\n${mm} handleOwner: for car: 🔵 ${car.vehicleReg}`);
+
+    const nameParts = car.ownerName.split(" ");
+    const firstName = nameParts.slice(0, -1).join(" "); // Join all parts except the last one
+    const lastName = nameParts[nameParts.length - 1]; // Take the last part as the last name
+    Logger.debug(
+      `\n${mm} handleOwner: firstName: ${firstName} lastName: ${lastName}`
+    );
+
+    const user = await this.userService.getUserByName(firstName, lastName);
+    try {
+      if (user == null) {
+        const mUser = await this.userService.createOwner(car);
+        car.ownerId = mUser.userId;
+        car.ownerName = mUser.firstName + " " + mUser.lastName;
+        Logger.debug(
+          `\n\n${mm} new owner created! 🍎 🍎 ${JSON.stringify(mUser, null, 2)} 🍎 🍎\n\n`
+        );
+        return 1;
+      }
+    } catch (e) {
+      //TODO ignore for now
+      return 0;
+    }
+
+    Logger.debug(
+      `${mm} owner exists already!  🔵 🔵 ${user.firstName} ${user.lastName}`
+    );
+    car.ownerId = user.userId;
+    return 0;
   }
 }
 

@@ -37,7 +37,7 @@ export class AuthMiddleware implements NestMiddleware {
     });
     if (allow) {
       Logger.log(
-        `${mm} 🔵🔵🔵🔵🔵🔵 Letting you into the club without a Diddy ticket! 🍎 Request from: 🔵  ${req.originalUrl}  🔵🔵`
+        `\n\n${mm} 🔵🔵🔵🔵🔵🔵 Letting you into the club without a Diddy ticket! 🍎 Request from: 🔵  ${req.originalUrl}  🔵🔵\n`
       );
       next();
       return;

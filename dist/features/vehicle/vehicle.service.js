@@ -34,11 +34,15 @@ const storage_service_1 = require("../../storage/storage.service");
 const os = require("os");
 const path = require("path");
 const csv_1 = require("csv");
+const errors_interceptor_1 = require("../../middleware/errors.interceptor");
+const user_service_1 = require("../user/user.service");
 const mm = "💚 💚 💚 VehicleService  💚 ";
 let VehicleService = class VehicleService {
-    constructor(storage, associationService, vehicleModel, dispatchRecordModel, vehicleArrivalModel, vehicleHeartbeatModel, ambassadorPassengerCountModel, vehicleDepartureModel, associationModel, userModel, assignModel, routeModel, vehicleMediaRequestModel, vehiclePhotoModel, vehicleVideoModel) {
+    constructor(storage, associationService, userService, errorHandler, vehicleModel, dispatchRecordModel, vehicleArrivalModel, vehicleHeartbeatModel, ambassadorPassengerCountModel, vehicleDepartureModel, associationModel, userModel, assignModel, routeModel, vehicleMediaRequestModel, vehiclePhotoModel, vehicleVideoModel) {
         this.storage = storage;
         this.associationService = associationService;
+        this.userService = userService;
+        this.errorHandler = errorHandler;
         this.vehicleModel = vehicleModel;
         this.dispatchRecordModel = dispatchRecordModel;
         this.vehicleArrivalModel = vehicleArrivalModel;
@@ -186,7 +190,7 @@ let VehicleService = class VehicleService {
         return { cars: uList, errors: errors };
     }
     async importVehiclesFromCSV(file, associationId) {
-        common_1.Logger.log(`\n\n${mm} importVehiclesFromCSV:... 🍎🍎 associationId: ${associationId} 🍎🍎 ... find association ...`);
+        common_1.Logger.log(`\n\n${mm} importVehiclesFromCSV: ... 🍎🍎 associationId: ${associationId} 🍎🍎 ... find association ...`);
         common_1.Logger.debug(`${mm} importVehiclesFromCSV:... file size: ${file.buffer.length} bytes`);
         const list = await this.associationModel.find({
             associationId: associationId,
@@ -228,7 +232,7 @@ let VehicleService = class VehicleService {
         }
         catch (err) {
             common_1.Logger.error(`${mm} 😈😈 Error processing vehicles CSV file: 😈😈 ${err}`);
-            throw new Error(`Error processing vehicles CSV file: ${err}`);
+            this.handleError(err);
         }
         if (response) {
             common_1.Logger.log(`${mm} return response: ${JSON.stringify(response, null, 2)}`);
@@ -236,15 +240,26 @@ let VehicleService = class VehicleService {
         }
         else {
             common_1.Logger.error(`${mm} Unexpected error: response is undefined`);
-            throw new Error("An unexpected error occurred.");
+            this.handleError("Unexpected error");
         }
+    }
+    handleError(e) {
+        common_1.Logger.error(`${mm} ${e}`);
+        this.errorHandler.handleError({
+            statusCode: common_1.HttpStatus.BAD_REQUEST,
+            message: `Failed to add route to database: ${e}`,
+        });
+        throw new common_1.HttpException(`Failed to add route to database: ${e}`, common_1.HttpStatus.BAD_REQUEST);
     }
     async handleExtractedCars(carList, cars, ass) {
         common_1.Logger.debug(`${mm} handleExtractedCars: 🔷 ${carList.length} cars`);
+        let userCount = 0;
         for (const mCar of carList) {
             const car = await this.buildCar(mCar, ass);
+            userCount += await this.handleOwner(car);
             cars.push(car);
         }
+        common_1.Logger.debug(`\n\n${mm} handleExtractedCars: 🔷 ${userCount} 🔷 owners have been added to Atlas`);
         common_1.Logger.debug(`${mm} handleExtractedCars: 🔷 ${cars.length} 🔷 cars to be added to Atlas`);
         const response = await this.addCarsToDatabase(cars);
         return response;
@@ -255,12 +270,11 @@ let VehicleService = class VehicleService {
         const myCar = new Vehicle_1.Vehicle();
         myCar.vehicleId = (0, crypto_1.randomUUID)().trim();
         myCar.ownerName = data[0];
-        myCar.cellphone = data[1];
-        myCar.vehicleReg = data[2];
-        myCar.model = data[3];
-        myCar.make = data[4];
-        myCar.year = data[5];
-        myCar.passengerCapacity = parseInt(data[6]);
+        myCar.vehicleReg = data[1];
+        myCar.model = data[2];
+        myCar.make = data[3];
+        myCar.year = data[4];
+        myCar.passengerCapacity = parseInt(data[5]);
         myCar.associationId = ass.associationId;
         myCar.associationName = ass.associationName;
         myCar.active = 0;
@@ -275,24 +289,49 @@ let VehicleService = class VehicleService {
         common_1.Logger.debug(`\n${mm} buildCar:... 🔵 vehicle built: ${JSON.stringify(myCar, null, 2)} 🔵\n\n`);
         return myCar;
     }
+    async handleOwner(car) {
+        common_1.Logger.debug(`\n${mm} handleOwner: for car: 🔵 ${car.vehicleReg}`);
+        const nameParts = car.ownerName.split(" ");
+        const firstName = nameParts.slice(0, -1).join(" ");
+        const lastName = nameParts[nameParts.length - 1];
+        common_1.Logger.debug(`\n${mm} handleOwner: firstName: ${firstName} lastName: ${lastName}`);
+        const user = await this.userService.getUserByName(firstName, lastName);
+        try {
+            if (user == null) {
+                const mUser = await this.userService.createOwner(car);
+                car.ownerId = mUser.userId;
+                car.ownerName = mUser.firstName + " " + mUser.lastName;
+                common_1.Logger.debug(`\n\n${mm} new owner created! 🍎 🍎 ${JSON.stringify(mUser, null, 2)} 🍎 🍎\n\n`);
+                return 1;
+            }
+        }
+        catch (e) {
+            return 0;
+        }
+        common_1.Logger.debug(`${mm} owner exists already!  🔵 🔵 ${user.firstName} ${user.lastName}`);
+        car.ownerId = user.userId;
+        return 0;
+    }
 };
 exports.VehicleService = VehicleService;
 exports.VehicleService = VehicleService = __decorate([
     (0, common_1.Injectable)(),
-    __param(2, (0, mongoose_1.InjectModel)(Vehicle_1.Vehicle.name)),
-    __param(3, (0, mongoose_1.InjectModel)(DispatchRecord_1.DispatchRecord.name)),
-    __param(4, (0, mongoose_1.InjectModel)(VehicleArrival_1.VehicleArrival.name)),
-    __param(5, (0, mongoose_1.InjectModel)(VehicleHeartbeat_1.VehicleHeartbeat.name)),
-    __param(6, (0, mongoose_1.InjectModel)(AmbassadorPassengerCount_1.AmbassadorPassengerCount.name)),
-    __param(7, (0, mongoose_1.InjectModel)(VehicleDeparture_1.VehicleDeparture.name)),
-    __param(8, (0, mongoose_1.InjectModel)(Association_1.Association.name)),
-    __param(9, (0, mongoose_1.InjectModel)(User_1.User.name)),
-    __param(10, (0, mongoose_1.InjectModel)(RouteAssignment_1.RouteAssignment.name)),
-    __param(11, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
-    __param(12, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
+    __param(4, (0, mongoose_1.InjectModel)(Vehicle_1.Vehicle.name)),
+    __param(5, (0, mongoose_1.InjectModel)(DispatchRecord_1.DispatchRecord.name)),
+    __param(6, (0, mongoose_1.InjectModel)(VehicleArrival_1.VehicleArrival.name)),
+    __param(7, (0, mongoose_1.InjectModel)(VehicleHeartbeat_1.VehicleHeartbeat.name)),
+    __param(8, (0, mongoose_1.InjectModel)(AmbassadorPassengerCount_1.AmbassadorPassengerCount.name)),
+    __param(9, (0, mongoose_1.InjectModel)(VehicleDeparture_1.VehicleDeparture.name)),
+    __param(10, (0, mongoose_1.InjectModel)(Association_1.Association.name)),
+    __param(11, (0, mongoose_1.InjectModel)(User_1.User.name)),
+    __param(12, (0, mongoose_1.InjectModel)(RouteAssignment_1.RouteAssignment.name)),
     __param(13, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
     __param(14, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
+    __param(15, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
+    __param(16, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
     __metadata("design:paramtypes", [storage_service_1.CloudStorageUploaderService,
-        association_service_1.AssociationService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        association_service_1.AssociationService,
+        user_service_1.UserService,
+        errors_interceptor_1.ErrorHandler, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], VehicleService);
 //# sourceMappingURL=vehicle.service.js.map

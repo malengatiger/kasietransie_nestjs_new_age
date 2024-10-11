@@ -54,14 +54,14 @@ export class AssociationController {
   }
   @Get('getAssociationUsers')
   public async getAssociationUsers(
-    @Query() associationId: string,
+    @Query('associationId') associationId: string,
   ): Promise<User[]> {
     return await this.associationService.getAssociationUsers(associationId);
   }
 
   @Get('getAssociationVehicles')
   public async getAssociationVehicles(
-    @Query() associationId: string,
+    @Query('associationId') associationId: string,
   ): Promise<Vehicle[]> {
     return await this.associationService.getAssociationVehicles(associationId);
   }
