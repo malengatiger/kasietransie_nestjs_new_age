@@ -62,7 +62,7 @@ export class AuthMiddleware implements NestMiddleware {
     if (!authToken) {
       Logger.log(`${mm} authentication token not found in request header 🔴`);
       return res.status(401).json({
-        message: errorMessage,
+        message: `authentication token not found in request header 🔴`,
         statusCode: 401,
         date: new Date().toISOString(),
       });
@@ -70,16 +70,28 @@ export class AuthMiddleware implements NestMiddleware {
     try {
       const token = authToken.substring(7);
       Logger.log(`${mm} authentication continua: 🔵 token: ${token}`);
-      const decodedToken = await this.fbService
-        .getFirebaseApp()
-        .auth()
-        .verifyIdToken(token);
-      req.user = decodedToken; // Set the authenticated user in the request object
-      Logger.log(`\n\n${mm} authentication seems OK; ✅ ✅ ✅ req user email: ${req.user.email} ✅ \n`);
+      if (token) {
+        const decodedToken = await this.fbService
+          .getFirebaseApp()
+          .auth()
+          .verifyIdToken(token);
+        req.user = decodedToken; // Set the authenticated user in the request object
+        Logger.log(
+          `\n\n${mm} authentication seems OK; ✅ ✅ ✅ request user email: ${req.user.email} ✅ \n`
+        );
 
-      next();
+        next();
+      } else {
+        return res.status(403).json({
+          message: `🔴🔴🔴 Authentication Token missing 🔴🔴🔴`,
+          statusCode: 401,
+          date: new Date().toISOString(),
+        });
+      }
     } catch (error) {
-      Logger.log(`\n\n${mm} Error verifying authentication token: 🔴 ${error} 🔴`);
+      Logger.log(
+        `\n\n${mm} Error verifying authentication token: 🔴 ${error} 🔴`
+      );
       return res.status(403).json({
         message: `🔴🔴🔴 ${error} 🔴🔴🔴`,
         statusCode: 403,

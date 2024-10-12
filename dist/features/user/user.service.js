@@ -177,7 +177,16 @@ let UserService = class UserService {
         return uu;
     }
     async getUserById(userId) {
+        common_1.Logger.debug(`${mm} getting user by id: ${userId}`);
         const user = await this.userModel.findOne({ userId: userId });
+        if (user) {
+            common_1.Logger.debug(`${mm} getting user found: ${JSON.stringify(user)}`);
+        }
+        else {
+            common_1.Logger.error(`${mm} user not found`);
+            this.errorHandler.handleError('User not found', 'N/A');
+            throw new common_1.HttpException('User fucked!', common_1.HttpStatus.BAD_REQUEST);
+        }
         return user;
     }
     async getUserByEmail(email) {

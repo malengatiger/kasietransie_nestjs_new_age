@@ -55,7 +55,7 @@ let AuthMiddleware = class AuthMiddleware {
         if (!authToken) {
             common_1.Logger.log(`${mm} authentication token not found in request header 🔴`);
             return res.status(401).json({
-                message: errorMessage,
+                message: `authentication token not found in request header 🔴`,
                 statusCode: 401,
                 date: new Date().toISOString(),
             });
@@ -63,13 +63,22 @@ let AuthMiddleware = class AuthMiddleware {
         try {
             const token = authToken.substring(7);
             common_1.Logger.log(`${mm} authentication continua: 🔵 token: ${token}`);
-            const decodedToken = await this.fbService
-                .getFirebaseApp()
-                .auth()
-                .verifyIdToken(token);
-            req.user = decodedToken;
-            common_1.Logger.log(`\n\n${mm} authentication seems OK; ✅ ✅ ✅ req user email: ${req.user.email} ✅ \n`);
-            next();
+            if (token) {
+                const decodedToken = await this.fbService
+                    .getFirebaseApp()
+                    .auth()
+                    .verifyIdToken(token);
+                req.user = decodedToken;
+                common_1.Logger.log(`\n\n${mm} authentication seems OK; ✅ ✅ ✅ request user email: ${req.user.email} ✅ \n`);
+                next();
+            }
+            else {
+                return res.status(403).json({
+                    message: `🔴🔴🔴 Authentication Token missing 🔴🔴🔴`,
+                    statusCode: 401,
+                    date: new Date().toISOString(),
+                });
+            }
         }
         catch (error) {
             common_1.Logger.log(`\n\n${mm} Error verifying authentication token: 🔴 ${error} 🔴`);

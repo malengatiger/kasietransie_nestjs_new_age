@@ -152,6 +152,7 @@ export class UserService {
     Logger.log(
       `${mm} importUsersFromCSV:... 🔵 read csv file: ${file.originalname}`
     );
+
     await fs.promises.writeFile(tempFilePath, file.buffer);
     response = await new Promise<AddUsersResponse>((resolve, reject) => {
       fs.createReadStream(tempFilePath)
@@ -206,7 +207,15 @@ export class UserService {
   }
 
   public async getUserById(userId: string): Promise<User> {
+    Logger.debug(`${mm} getting user by id: ${userId}`);
     const user = await this.userModel.findOne({ userId: userId });
+    if (user) {
+      Logger.debug(`${mm} getting user found: ${JSON.stringify(user)}`);
+    } else {
+      Logger.error(`${mm} user not found`);
+      this.errorHandler.handleError('User not found', 'N/A');
+      throw new HttpException('User fucked!', HttpStatus.BAD_REQUEST);
+    }
     return user;
   }
   public async getUserByEmail(email: string): Promise<User> {
