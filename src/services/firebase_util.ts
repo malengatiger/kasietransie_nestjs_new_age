@@ -24,7 +24,7 @@ export class FirebaseAdmin implements OnApplicationBootstrap {
   }
 
   getFirebaseApp() {
-    Logger.log(`${tag} getFirebaseApp: returning Firebase app: ${app.name}`);
+    // Logger.log(`${tag} getFirebaseApp: returning Firebase app: ${app.name}`);
     return app;
   }
   async sendInitializationMessage(app: admin.app.App) {

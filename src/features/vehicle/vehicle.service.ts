@@ -151,14 +151,29 @@ export class VehicleService {
     return null;
   }
   public async addVehicle(vehicle: Vehicle): Promise<Vehicle> {
-    const url = await this.storage.createQRCode({
-      data: JSON.stringify(vehicle),
-      prefix: vehicle.vehicleReg,
-      size: 2,
-      associationId: vehicle.associationId,
-    });
-    vehicle.qrCodeUrl = url;
-    return await this.vehicleModel.create(vehicle);
+    try {
+      if (vehicle.ownerName != null) {
+        Logger.debug(`${mm} ... checking owner ... create if none.`)
+        const userCount = await this.handleOwner(vehicle);
+        Logger.debug(`${mm} owner created fresh: ${userCount} `);
+      }
+
+      const url = await this.storage.createQRCode({
+        data: JSON.stringify(vehicle),
+        prefix: vehicle.vehicleReg.replaceAll(" ", ""),
+        size: 2,
+        associationId: vehicle.associationId,
+      });
+      vehicle.qrCodeUrl = url;
+      return await this.vehicleModel.create(vehicle);
+    } catch (e) {
+      Logger.debug(`${mm} add car failed: ${e}`);
+      this.errorHandler.handleError(
+        `Vehicle add failed: ${e}`,
+        vehicle.associationId
+      );
+      throw new HttpException(`🔴🔴 ${e} 🔴🔴`, HttpStatus.BAD_REQUEST);
+    }
   }
 
   public async getVehicleBag(
@@ -349,10 +364,10 @@ export class VehicleService {
     } else {
       // This should ideally never happen now
       Logger.error(`${mm} Unexpected error: response is undefined`);
-      this.errorHandler.handleError('Unexpected Error', ass.associationId);
+      this.errorHandler.handleError("Unexpected Error", ass.associationId);
     }
   }
- 
+
   private async handleExtractedCars(
     carList: any[],
     cars: Vehicle[],

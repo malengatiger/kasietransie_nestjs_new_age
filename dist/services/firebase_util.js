@@ -26,7 +26,6 @@ let FirebaseAdmin = class FirebaseAdmin {
         }
     }
     getFirebaseApp() {
-        common_1.Logger.log(`${tag} getFirebaseApp: returning Firebase app: ${app.name}`);
         return app;
     }
     async sendInitializationMessage(app) {

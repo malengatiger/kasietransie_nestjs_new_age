@@ -62,7 +62,6 @@ let AuthMiddleware = class AuthMiddleware {
         }
         try {
             const token = authToken.substring(7);
-            common_1.Logger.log(`${mm} authentication continua: 🔵 token: ${token}`);
             if (token) {
                 const decodedToken = await this.fbService
                     .getFirebaseApp()

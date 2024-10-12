@@ -69,7 +69,7 @@ export class AuthMiddleware implements NestMiddleware {
     }
     try {
       const token = authToken.substring(7);
-      Logger.log(`${mm} authentication continua: 🔵 token: ${token}`);
+      // Logger.log(`${mm} authentication continua: 🔵 checking token ...`);
       if (token) {
         const decodedToken = await this.fbService
           .getFirebaseApp()

@@ -121,7 +121,6 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
         common_1.Logger.log(`${mm} Example files uploaded and written to Atlas ✅ `);
     }
     async getSignedUrl(file) {
-        common_1.Logger.log(`${mm} getSignedUrl for cloud storage: ${file.name}`);
         const signedUrlOptions = {
             action: "read",
             expires: Date.now() + 365 * 24 * 60 * 60 * 1000 * 30,
@@ -136,15 +135,12 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
         }
     }
     async uploadFile(objectName, filePath, folder) {
-        common_1.Logger.log(`${mm} uploadFile to cloud storage: 🔵 ${objectName} in associationId: 🔵 ${folder}}`);
         const storage = new storage_1.Storage({ projectId: this.projectId });
         const bucket = storage.bucket(this.bucketName);
         const bucketFileName = `${this.cloudStorageDirectory}/${folder}/${objectName}`;
-        common_1.Logger.log(`\n\n${mm} .... bucketFileName: ${bucketFileName}\n\n`);
         const file = bucket.file(bucketFileName);
         try {
             const contentType = this.getFileContentType(filePath);
-            common_1.Logger.log(`${mm} uploadFile to cloud storage, contentType: 🔵 ${contentType}`);
             const options = {
                 destination: bucketFileName,
                 preconditionOpts: {},
@@ -156,9 +152,8 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             const response = await storage
                 .bucket(this.bucketName)
                 .upload(filePath, options);
-            common_1.Logger.log(`${mm} File uploaded to cloud storage; \n\n🔵 🍐🍐 metadata = ${JSON.stringify(response[0].metadata)} 🍐🍐\n`);
             const signedUrl = await this.getSignedUrl(file);
-            common_1.Logger.log(`${mm} File uploaded to cloud storage; ✅ url: \n\n 🍐🍐 ${signedUrl} 🍐🍐\n`);
+            common_1.Logger.log(`${mm} File uploaded to cloud storage and signed url obtained ✅✅✅\n`);
             return signedUrl;
         }
         catch (error) {
@@ -192,7 +187,6 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             await qrcode.toFile(tempFilePath, data.data, {
                 version: version,
             });
-            common_1.Logger.log(`${mm} qrcode file: ${tempFilePath} 🌀🌀 to be uploaded to ${fileName}`);
             return await this.uploadFile(fileName, tempFilePath, data.associationId);
         }
         catch (error) {

@@ -97,14 +97,26 @@ let VehicleService = class VehicleService {
         return null;
     }
     async addVehicle(vehicle) {
-        const url = await this.storage.createQRCode({
-            data: JSON.stringify(vehicle),
-            prefix: vehicle.vehicleReg,
-            size: 2,
-            associationId: vehicle.associationId,
-        });
-        vehicle.qrCodeUrl = url;
-        return await this.vehicleModel.create(vehicle);
+        try {
+            if (vehicle.ownerName != null) {
+                common_1.Logger.debug(`${mm} ... checking owner ... create if none.`);
+                const userCount = await this.handleOwner(vehicle);
+                common_1.Logger.debug(`${mm} owner created fresh: ${userCount} `);
+            }
+            const url = await this.storage.createQRCode({
+                data: JSON.stringify(vehicle),
+                prefix: vehicle.vehicleReg.replaceAll(" ", ""),
+                size: 2,
+                associationId: vehicle.associationId,
+            });
+            vehicle.qrCodeUrl = url;
+            return await this.vehicleModel.create(vehicle);
+        }
+        catch (e) {
+            common_1.Logger.debug(`${mm} add car failed: ${e}`);
+            this.errorHandler.handleError(`Vehicle add failed: ${e}`, vehicle.associationId);
+            throw new common_1.HttpException(`🔴🔴 ${e} 🔴🔴`, common_1.HttpStatus.BAD_REQUEST);
+        }
     }
     async getVehicleBag(vehicleId, startDate) {
         const dispatches = await this.dispatchRecordModel.find({
@@ -240,7 +252,7 @@ let VehicleService = class VehicleService {
         }
         else {
             common_1.Logger.error(`${mm} Unexpected error: response is undefined`);
-            this.errorHandler.handleError('Unexpected Error', ass.associationId);
+            this.errorHandler.handleError("Unexpected Error", ass.associationId);
         }
     }
     async handleExtractedCars(carList, cars, ass) {
