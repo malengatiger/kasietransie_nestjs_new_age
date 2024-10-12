@@ -239,16 +239,8 @@ let AssociationService = class AssociationService {
             return bag;
         }
         catch (e) {
-            this.handleError(e);
+            this.errorHandler.handleError(e, association.associationId);
         }
-    }
-    handleError(e) {
-        common_1.Logger.error(`${mm} ${e}`);
-        this.errorHandler.handleError({
-            statusCode: common_1.HttpStatus.BAD_REQUEST,
-            message: `Failed to add route to database: ${e}`,
-        });
-        throw new common_1.HttpException(`${e}`, common_1.HttpStatus.BAD_REQUEST);
     }
     async addSettingsModel(model) {
         common_1.Logger.log(`adding addSettingsModel${model}`);
@@ -328,6 +320,6 @@ exports.AssociationService = AssociationService = __decorate([
         user_service_1.UserService,
         city_service_1.CityService,
         fcm_service_1.MessagingService,
-        errors_interceptor_1.ErrorHandler, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        errors_interceptor_1.KasieErrorHandler, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], AssociationService);
 //# sourceMappingURL=association.service.js.map

@@ -58,7 +58,7 @@ exports.RouteModule = RouteModule = __decorate([
             ]),
         ],
         controllers: [route_controller_1.RouteController],
-        providers: [route_service_1.RouteService, errors_interceptor_1.ErrorHandler, zipper_1.FileArchiverService, fcm_service_1.MessagingService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService],
+        providers: [route_service_1.RouteService, errors_interceptor_1.KasieErrorHandler, zipper_1.FileArchiverService, fcm_service_1.MessagingService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService],
     })
 ], RouteModule);
 //# sourceMappingURL=route.module.js.map

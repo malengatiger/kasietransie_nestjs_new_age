@@ -16,7 +16,6 @@ import admin from "firebase-admin";
 import { Vehicle } from "src/data/models/Vehicle";
 import { FileArchiverService } from "src/my-utils/zipper";
 import { Country } from "src/data/models/Country";
-//import { NewMongoService } from "src/data/new_mongo_service";
 import { AssociationToken } from "src/data/models/AssociationToken";
 import { MessagingService } from "../fcm/fcm.service";
 import { CityService } from "../city/city.service";
@@ -24,7 +23,7 @@ import { UserService } from "../user/user.service";
 import { v4 as uuidv4 } from "uuid";
 import { Commuter } from "src/data/models/Commuter";
 import { Constants } from "src/my-utils/constants";
-import { ErrorHandler } from "src/middleware/errors.interceptor";
+import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 
 const mm = "🍎🍎🍎 AssociationService: 🍎🍎🍎";
 
@@ -35,7 +34,7 @@ export class AssociationService {
     private userService: UserService,
     private cityService: CityService,
     private messagingService: MessagingService,
-    private readonly errorHandler: ErrorHandler,
+    private readonly errorHandler: KasieErrorHandler,
 
     @InjectModel(Association.name)
     private associationModel: mongoose.Model<Association>,
@@ -312,17 +311,10 @@ export class AssociationService {
       );
       return bag;
     } catch (e) {
-      this.handleError(e);
+      this.errorHandler.handleError(e, association.associationId);
     }
   }
-  private handleError(e: any) {
-    Logger.error(`${mm} ${e}`);
-    this.errorHandler.handleError({
-      statusCode: HttpStatus.BAD_REQUEST,
-      message: `Failed to add route to database: ${e}`,
-    });
-    throw new HttpException(`${e}`, HttpStatus.BAD_REQUEST);
-  }
+
   public async addSettingsModel(model: SettingsModel): Promise<any> {
     Logger.log(`adding addSettingsModel${model}`);
     return await this.settingsModel.create(model);

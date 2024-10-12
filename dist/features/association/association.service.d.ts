@@ -13,7 +13,7 @@ import { MessagingService } from "../fcm/fcm.service";
 import { CityService } from "../city/city.service";
 import { UserService } from "../user/user.service";
 import { Commuter } from "src/data/models/Commuter";
-import { ErrorHandler } from "src/middleware/errors.interceptor";
+import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 export declare class AssociationService {
     private archiveService;
     private userService;
@@ -29,7 +29,7 @@ export declare class AssociationService {
     private appErrorModel;
     private exampleFileModel;
     private commuterModel;
-    constructor(archiveService: FileArchiverService, userService: UserService, cityService: CityService, messagingService: MessagingService, errorHandler: ErrorHandler, associationModel: mongoose.Model<Association>, vehicleModel: mongoose.Model<Vehicle>, settingsModel: mongoose.Model<SettingsModel>, userModel: mongoose.Model<User>, countryModel: mongoose.Model<Country>, associationTokenModel: mongoose.Model<AssociationToken>, appErrorModel: mongoose.Model<AppError>, exampleFileModel: mongoose.Model<ExampleFile>, commuterModel: mongoose.Model<Commuter>);
+    constructor(archiveService: FileArchiverService, userService: UserService, cityService: CityService, messagingService: MessagingService, errorHandler: KasieErrorHandler, associationModel: mongoose.Model<Association>, vehicleModel: mongoose.Model<Vehicle>, settingsModel: mongoose.Model<SettingsModel>, userModel: mongoose.Model<User>, countryModel: mongoose.Model<Country>, associationTokenModel: mongoose.Model<AssociationToken>, appErrorModel: mongoose.Model<AppError>, exampleFileModel: mongoose.Model<ExampleFile>, commuterModel: mongoose.Model<Commuter>);
     getAssociationById(associationId: string): Promise<any>;
     getAssociations(): Promise<any[]>;
     getAssociationUsers(associationId: string): Promise<any[]>;
@@ -46,7 +46,6 @@ export declare class AssociationService {
     downloadFileFromStorage(fileName: string): Promise<string>;
     private generateUniqueId;
     registerAssociation(association: Association): Promise<RegistrationBag>;
-    private handleError;
     addSettingsModel(model: SettingsModel): Promise<any>;
     addAssociationToken(associationId: string, userId: string, token: string): Promise<any>;
     getAssociationAppErrors(associationId: string, startDate: string, endDate: string): Promise<AppError[]>;

@@ -30,7 +30,7 @@ import { CloudStorageUploaderService } from "src/storage/storage.service";
 import { FirebaseAdmin } from "src/services/firebase_util";
 import { VehiclePhotoSchema } from "src/data/models/VehiclePhoto";
 import { VehicleVideoSchema } from "src/data/models/VehicleVideo";
-import { ErrorHandler } from "src/middleware/errors.interceptor";
+import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 
 @Module({
   imports: [
@@ -68,7 +68,7 @@ import { ErrorHandler } from "src/middleware/errors.interceptor";
     UserService,
     CityService,
     MessagingService,
-    ErrorHandler,
+    KasieErrorHandler,
     //
     CloudStorageUploaderService, FirebaseAdmin,
   ],

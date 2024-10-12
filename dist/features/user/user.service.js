@@ -27,11 +27,13 @@ const constants_1 = require("../../my-utils/constants");
 const firebase_util_1 = require("../../services/firebase_util");
 const os = require("os");
 const path = require("path");
+const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 const mm = "🏈 🏈 🏈 UserService 🏈 🏈";
 let UserService = class UserService {
-    constructor(storage, firebaseAdmin, userModel, userGeofenceModel, associationModel) {
+    constructor(storage, firebaseAdmin, errorHandler, userModel, userGeofenceModel, associationModel) {
         this.storage = storage;
         this.firebaseAdmin = firebaseAdmin;
+        this.errorHandler = errorHandler;
         this.userModel = userModel;
         this.userGeofenceModel = userGeofenceModel;
         this.associationModel = associationModel;
@@ -72,7 +74,7 @@ let UserService = class UserService {
                 size: 1,
                 associationId: user.associationName ?? "ADMIN",
             });
-            common_1.Logger.debug(`${mm} ... qrCode url: ${url}`);
+            common_1.Logger.debug(`${mm} createUser: ... qrCode url: ${url}`);
             user.password = null;
             user.qrCodeUrl = url;
             common_1.Logger.debug(`${mm} ... adding user to Mongo, userId: ${user.userId} - ${user.firstName}`);
@@ -82,7 +84,8 @@ let UserService = class UserService {
         }
         catch (e) {
             common_1.Logger.error(`${mm} User creation failed: ${e}`);
-            throw new Error(`User creation failed: ${e}`);
+            this.errorHandler.handleError(`User creation failed: ${e}`, user.associationId);
+            throw new common_1.HttpException(e, common_1.HttpStatus.BAD_REQUEST);
         }
         return user;
     }
@@ -91,9 +94,15 @@ let UserService = class UserService {
         user.userType = constants_1.Constants.ADMINISTRATOR_AFTAROBOT;
         user.associationId = "ADMIN";
         user.dateRegistered = new Date().toISOString();
-        const res = await this.createUser(user);
-        common_1.Logger.log(`${mm} createAdminUser: seems pretty cool,  🔵 🔵 internal admin user has been created\n\n`);
-        return res;
+        try {
+            const res = await this.createUser(user);
+            common_1.Logger.log(`${mm} createAdminUser: seems pretty cool,  🔵 🔵 internal admin user has been created\n\n`);
+            return res;
+        }
+        catch (e) {
+            this.errorHandler.handleError(e, user.associationId);
+            throw new common_1.HttpException(e, common_1.HttpStatus.BAD_REQUEST);
+        }
     }
     async updateUser(user) {
         return null;
@@ -236,10 +245,11 @@ let UserService = class UserService {
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([
     (0, common_1.Injectable)(),
-    __param(2, (0, mongoose_1.InjectModel)(User_1.User.name)),
-    __param(3, (0, mongoose_1.InjectModel)(UserGeofenceEvent_1.UserGeofenceEvent.name)),
-    __param(4, (0, mongoose_1.InjectModel)(Association_1.Association.name)),
+    __param(3, (0, mongoose_1.InjectModel)(User_1.User.name)),
+    __param(4, (0, mongoose_1.InjectModel)(UserGeofenceEvent_1.UserGeofenceEvent.name)),
+    __param(5, (0, mongoose_1.InjectModel)(Association_1.Association.name)),
     __metadata("design:paramtypes", [storage_service_1.CloudStorageUploaderService,
-        firebase_util_1.FirebaseAdmin, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        firebase_util_1.FirebaseAdmin,
+        errors_interceptor_1.KasieErrorHandler, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], UserService);
 //# sourceMappingURL=user.service.js.map

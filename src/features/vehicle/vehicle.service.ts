@@ -26,7 +26,7 @@ import { VehicleVideo } from "src/data/models/VehicleVideo";
 import * as os from "os";
 import * as path from "path";
 import { parse } from "csv";
-import { ErrorHandler } from "src/middleware/errors.interceptor";
+import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 import { UserService } from "../user/user.service";
 const mm = "💚 💚 💚 VehicleService  💚 ";
 
@@ -37,7 +37,7 @@ export class VehicleService {
     private associationService: AssociationService,
     private userService: UserService,
 
-    private readonly errorHandler: ErrorHandler,
+    private readonly errorHandler: KasieErrorHandler,
 
     @InjectModel(Vehicle.name)
     private vehicleModel: mongoose.Model<Vehicle>,
@@ -339,7 +339,7 @@ export class VehicleService {
       Logger.error(
         `${mm} 😈😈 Error processing vehicles CSV file: 😈😈 ${err}`
       );
-      this.handleError(err);
+      this.errorHandler.handleError(err, ass.associationId);
     }
 
     // Now 'response' will have the correct value
@@ -349,20 +349,10 @@ export class VehicleService {
     } else {
       // This should ideally never happen now
       Logger.error(`${mm} Unexpected error: response is undefined`);
-      this.handleError("Unexpected error");
+      this.errorHandler.handleError('Unexpected Error', ass.associationId);
     }
   }
-  private handleError(e: any) {
-    Logger.error(`${mm} ${e}`);
-    this.errorHandler.handleError({
-      statusCode: HttpStatus.BAD_REQUEST,
-      message: `Failed to add route to database: ${e}`,
-    });
-    throw new HttpException(
-      `Failed to add route to database: ${e}`,
-      HttpStatus.BAD_REQUEST
-    );
-  }
+ 
   private async handleExtractedCars(
     carList: any[],
     cars: Vehicle[],

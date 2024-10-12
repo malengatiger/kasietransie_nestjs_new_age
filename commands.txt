@@ -15,4 +15,25 @@ gcloud projects add-iam-policy-binding familyarchive-01 \
   --member="serviceAccount:kt-nest-1@kasie2024.iam.gserviceaccount.com" \
   --role="roles/firebasemessaging.admin"
 
+gcloud projects add-iam-policy-binding kasie-transie-3 \
+  --member="serviceAccount:firebase-adminsdk-efvna@kasie-transie-3.iam.gserviceaccount.com" \
+  --role="projects/kasie-transie-3/roles/MyCustomRole"
+
+gcloud projects add-iam-policy-binding kasie-transie-3 \
+  --member="serviceAccount:firebase-adminsdk-efvna@kasie-transie-3.iam.gserviceaccount.com" \
+  --role="roles/iam.serviceAccountTokenCreator"
+
+  gcloud projects add-iam-policy-binding kasie-transie-3 \
+  --member="serviceAccount:firebase-adminsdk-efvna@kasie-transie-3.iam.gserviceaccount.com" \
+  --role="roles/iam.serviceAccounts.signBlob"
+
+gcloud projects add-iam-policy-binding kasie-transie-3 \
+  --member="serviceAccount:firebase-adminsdk-efvna@kasie-transie-3.iam.gserviceaccount.com" \
+  --role="roles/cloudkms.cryptoKeySigner"
+
+  gcloud iam service-accounts add-iam-policy-binding \
+  --service-account serviceAccount:firebase-adminsdk-efvna@kasie-transie-3.iam.gserviceaccount.com \
+  --role roles/storage.objectViewer \
+  --project kasie-transie-3
+
 */

@@ -76,16 +76,8 @@ let RouteService = class RouteService {
             return res;
         }
         catch (e) {
-            this.handleError(e);
+            this.errorHandler.handleError(e, route.associationId);
         }
-    }
-    handleError(e) {
-        common_1.Logger.error(`${mm} ${e}`);
-        this.errorHandler.handleError({
-            statusCode: common_1.HttpStatus.BAD_REQUEST,
-            message: `Failed to add route to database: ${e}`,
-        });
-        throw new common_1.HttpException(`Failed to add route to database: ${e}`, common_1.HttpStatus.BAD_REQUEST);
     }
     async createRouteQRCode(route) {
         const url = await this.storage.createQRCode({
@@ -198,7 +190,7 @@ let RouteService = class RouteService {
             return rem;
         }
         catch (e) {
-            this.handleError(e);
+            this.errorHandler.handleError(e, routeLandmark.associationId);
         }
     }
     async deleteRouteLandmark(routeLandmarkId) {
@@ -421,6 +413,6 @@ exports.RouteService = RouteService = __decorate([
         zipper_1.FileArchiverService,
         fcm_service_1.MessagingService,
         city_service_1.CityService,
-        errors_interceptor_1.ErrorHandler, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        errors_interceptor_1.KasieErrorHandler, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], RouteService);
 //# sourceMappingURL=route.service.js.map

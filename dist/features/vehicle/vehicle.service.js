@@ -232,7 +232,7 @@ let VehicleService = class VehicleService {
         }
         catch (err) {
             common_1.Logger.error(`${mm} 😈😈 Error processing vehicles CSV file: 😈😈 ${err}`);
-            this.handleError(err);
+            this.errorHandler.handleError(err, ass.associationId);
         }
         if (response) {
             common_1.Logger.log(`${mm} return response: ${JSON.stringify(response, null, 2)}`);
@@ -240,16 +240,8 @@ let VehicleService = class VehicleService {
         }
         else {
             common_1.Logger.error(`${mm} Unexpected error: response is undefined`);
-            this.handleError("Unexpected error");
+            this.errorHandler.handleError('Unexpected Error', ass.associationId);
         }
-    }
-    handleError(e) {
-        common_1.Logger.error(`${mm} ${e}`);
-        this.errorHandler.handleError({
-            statusCode: common_1.HttpStatus.BAD_REQUEST,
-            message: `Failed to add route to database: ${e}`,
-        });
-        throw new common_1.HttpException(`Failed to add route to database: ${e}`, common_1.HttpStatus.BAD_REQUEST);
     }
     async handleExtractedCars(carList, cars, ass) {
         common_1.Logger.debug(`${mm} handleExtractedCars: 🔷 ${carList.length} cars`);
@@ -332,6 +324,6 @@ exports.VehicleService = VehicleService = __decorate([
     __metadata("design:paramtypes", [storage_service_1.CloudStorageUploaderService,
         association_service_1.AssociationService,
         user_service_1.UserService,
-        errors_interceptor_1.ErrorHandler, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        errors_interceptor_1.KasieErrorHandler, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], VehicleService);
 //# sourceMappingURL=vehicle.service.js.map

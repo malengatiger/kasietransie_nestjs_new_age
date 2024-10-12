@@ -12,7 +12,7 @@ import { City } from "src/data/models/City";
 import { CityService } from "../city/city.service";
 import { MessagingService } from "../fcm/fcm.service";
 import { CloudStorageUploaderService } from "src/storage/storage.service";
-import { ErrorHandler } from "src/middleware/errors.interceptor";
+import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 export declare class RouteService {
     private storage;
     private readonly archiveService;
@@ -27,13 +27,12 @@ export declare class RouteService {
     private routePointModel;
     private calculatedDistanceModel;
     private routeModel;
-    constructor(storage: CloudStorageUploaderService, archiveService: FileArchiverService, messagingService: MessagingService, cityService: CityService, errorHandler: ErrorHandler, routeUpdateRequestModel: mongoose.Model<RouteUpdateRequest>, vehicleMediaRequestModel: mongoose.Model<VehicleMediaRequest>, routeLandmarkModel: mongoose.Model<RouteLandmark>, routeCityModel: mongoose.Model<RouteCity>, cityModel: mongoose.Model<City>, routePointModel: mongoose.Model<RoutePoint>, calculatedDistanceModel: mongoose.Model<CalculatedDistance>, routeModel: mongoose.Model<Route>);
+    constructor(storage: CloudStorageUploaderService, archiveService: FileArchiverService, messagingService: MessagingService, cityService: CityService, errorHandler: KasieErrorHandler, routeUpdateRequestModel: mongoose.Model<RouteUpdateRequest>, vehicleMediaRequestModel: mongoose.Model<VehicleMediaRequest>, routeLandmarkModel: mongoose.Model<RouteLandmark>, routeCityModel: mongoose.Model<RouteCity>, cityModel: mongoose.Model<City>, routePointModel: mongoose.Model<RoutePoint>, calculatedDistanceModel: mongoose.Model<CalculatedDistance>, routeModel: mongoose.Model<Route>);
     findAssociationRouteLandmarksByLocation(associationId: string, latitude: number, longitude: number, radiusInKM: number): Promise<RouteLandmark[]>;
     findRouteLandmarksByLocation(latitude: number, longitude: number, radiusInKM: number): Promise<RouteLandmark[]>;
     findAssociationRoutesByLocation(associationId: string, latitude: number, longitude: number, radiusInKM: number): Promise<Route[]>;
     getAssociationRouteLandmarks(associationId: string): Promise<RouteLandmark[]>;
     addRoute(route: Route): Promise<Route>;
-    private handleError;
     createRouteQRCode(route: Route): Promise<Route>;
     getCalculatedDistances(routeId: string): Promise<CalculatedDistance[]>;
     getRouteUpdateRequests(routeId: string): Promise<RouteUpdateRequest[]>;

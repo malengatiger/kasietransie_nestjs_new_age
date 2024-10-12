@@ -11,6 +11,10 @@ import { ExampleFileSchema } from 'src/data/models/ExampleFile';
 import { VehiclePhotoSchema } from 'src/data/models/VehiclePhoto';
 import { VehicleVideoSchema } from 'src/data/models/VehicleVideo';
 import { VehicleSchema } from 'src/data/models/Vehicle';
+import { KasieErrorHandler } from 'src/middleware/errors.interceptor';
+import { MessagingService } from '../fcm/fcm.service';
+import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
+import { KasieErrorSchema } from 'src/data/models/kasie.error';
 
 @Module({
   imports: [
@@ -22,9 +26,12 @@ import { VehicleSchema } from 'src/data/models/Vehicle';
       { name: "VehicleVideo", schema: VehicleVideoSchema },
       { name: "VehiclePhoto", schema: VehiclePhotoSchema },
       { name: "Vehicle", schema: VehicleSchema },
+      { name: "AssociationToken", schema: AssociationTokenSchema },
+
+      { name: "KasieError", schema: KasieErrorSchema },
 
     ]),
   ],  controllers: [UserController],
-  providers: [UserService, CloudStorageUploaderService, FirebaseAdmin],
+  providers: [UserService, CloudStorageUploaderService, FirebaseAdmin, KasieErrorHandler, MessagingService],
 })
 export class UserModule {}

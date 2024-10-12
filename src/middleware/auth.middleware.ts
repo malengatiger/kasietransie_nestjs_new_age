@@ -17,30 +17,33 @@ export class AuthMiddleware implements NestMiddleware {
   async use(req: AuthenticatedRequest, res: Response, next: NextFunction) {
     const authToken = req.headers.authorization;
 
-    //Allow requests from localhost and 192.168.64.1 without authentication
-    const allowedIPs = [
-      "127.0.0.1",
-      "::1",
-      "192.168.64.1",
-      "localhost",
-      "192.168.88.253",
-    ];
+    const authOverride = process.env.AUTH_OVERRIDE;
+    if (authOverride == "yes") {
+      //Allow requests from localhost and 192.168.64.1 without authentication
+      const allowedIPs = [
+        "127.0.0.1",
+        "::1",
+        "192.168.64.1",
+        "localhost",
+        "192.168.88.253",
+      ];
 
-    // Get the client's IP address
-    const clientIP = this.getClientIP(req);
-    // Check if the client IP is in the whitelist
-    let allow = false;
-    allowedIPs.forEach((ip) => {
-      if (clientIP.includes(ip)) {
-        allow = true;
+      // Get the client's IP address
+      const clientIP = this.getClientIP(req);
+      // Check if the client IP is in the whitelist
+      let allow = false;
+      allowedIPs.forEach((ip) => {
+        if (clientIP.includes(ip)) {
+          allow = true;
+        }
+      });
+      if (allow) {
+        Logger.log(
+          `\n\n${mm} 🔵🔵🔵🔵🔵🔵 Letting you into the club without a Diddy ticket! 🍎 Request from: 🔵  ${req.originalUrl}  🔵🔵\n`
+        );
+        next();
+        return;
       }
-    });
-    if (allow) {
-      Logger.log(
-        `\n\n${mm} 🔵🔵🔵🔵🔵🔵 Letting you into the club without a Diddy ticket! 🍎 Request from: 🔵  ${req.originalUrl}  🔵🔵\n`
-      );
-      next();
-      return;
     }
     if (process.env.NODE_ENV == "development") {
       Logger.debug(
@@ -72,13 +75,13 @@ export class AuthMiddleware implements NestMiddleware {
         .auth()
         .verifyIdToken(token);
       req.user = decodedToken; // Set the authenticated user in the request object
-      Logger.log(`${mm} authentication seems OK; ✅ req: ${req}`);
+      Logger.log(`\n\n${mm} authentication seems OK; ✅ ✅ ✅ req user email: ${req.user.email} ✅ \n`);
 
       next();
     } catch (error) {
-      Logger.log(`${mm} Error verifying authentication token: 🔴 ${error} 🔴`);
+      Logger.log(`\n\n${mm} Error verifying authentication token: 🔴 ${error} 🔴`);
       return res.status(403).json({
-        message: errorMessage,
+        message: `🔴🔴🔴 ${error} 🔴🔴🔴`,
         statusCode: 403,
         date: new Date().toISOString(),
       });

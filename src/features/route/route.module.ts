@@ -22,7 +22,7 @@ import { ExampleFileSchema } from 'src/data/models/ExampleFile';
 import { VehiclePhotoSchema } from 'src/data/models/VehiclePhoto';
 import { VehicleVideoSchema } from 'src/data/models/VehicleVideo';
 import { VehicleSchema } from 'src/data/models/Vehicle';
-import { ErrorHandler } from 'src/middleware/errors.interceptor';
+import { KasieErrorHandler } from 'src/middleware/errors.interceptor';
 
 @Module({
   imports: [
@@ -48,6 +48,6 @@ import { ErrorHandler } from 'src/middleware/errors.interceptor';
     ]),
   ],
   controllers: [RouteController],
-  providers: [RouteService, ErrorHandler, FileArchiverService, MessagingService, CityService, CloudStorageUploaderService],
+  providers: [RouteService, KasieErrorHandler, FileArchiverService, MessagingService, CityService, CloudStorageUploaderService],
 })
 export class RouteModule {}

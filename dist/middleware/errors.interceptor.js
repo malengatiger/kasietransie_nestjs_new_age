@@ -9,17 +9,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ErrorHandler = void 0;
+exports.KasieErrorHandler = void 0;
 const common_1 = require("@nestjs/common");
 const mongodb_1 = require("mongodb");
 const kasie_error_1 = require("../data/models/kasie.error");
 const fcm_service_1 = require("../features/fcm/fcm.service");
-const mm = '🔴 🔴 🔴 🔴 🔴 🔴 ErrorHandler 🔴 ';
-let ErrorHandler = class ErrorHandler {
+const mm = '🔴 🔴 🔴 🔴 🔴 🔴 KasieErrorHandler 🔴 ';
+let KasieErrorHandler = class KasieErrorHandler {
     constructor(messageService) {
         this.messageService = messageService;
     }
-    async handleError(error) {
+    async handleError(error, associationId) {
         common_1.Logger.error(`\n\n${mm} ... 😈😈 handling error: \n${error} `);
         try {
             const uri = process.env.REMOTE_DB_URI;
@@ -27,12 +27,15 @@ let ErrorHandler = class ErrorHandler {
             const client = new mongodb_1.MongoClient(uri);
             const db = client.db("kasie_transie");
             const errorData = {
+                associationId: associationId,
+                date: new Date().getTime(),
+                dateString: new Date().toISOString(),
                 message: error.message,
                 statusCode: error.statusCode || common_1.HttpStatus.INTERNAL_SERVER_ERROR,
             };
             await db.collection('KasieError').insertOne(errorData);
             common_1.Logger.debug(`${mm} KasieError added to database; 😈 sending error to FCM topic ... `);
-            await this.sendCloudMessage(error);
+            await this.sendCloudMessage(errorData);
         }
         catch (e) {
             common_1.Logger.error(`${mm} Error handling error: ${e}`);
@@ -48,9 +51,9 @@ let ErrorHandler = class ErrorHandler {
         }
     }
 };
-exports.ErrorHandler = ErrorHandler;
-exports.ErrorHandler = ErrorHandler = __decorate([
+exports.KasieErrorHandler = KasieErrorHandler;
+exports.KasieErrorHandler = KasieErrorHandler = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [fcm_service_1.MessagingService])
-], ErrorHandler);
+], KasieErrorHandler);
 //# sourceMappingURL=errors.interceptor.js.map

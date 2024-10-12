@@ -152,7 +152,7 @@ exports.AppModule = AppModule = __decorate([
         ],
         controllers: [app_controller_1.AppController, dispatch_controller_1.DispatchController, user_controller_1.UserController],
         providers: [app_service_1.AppService, dispatch_service_1.DispatchService, fcm_service_1.MessagingService, time_series_service_1.TimeSeriesService,
-            user_service_1.UserService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService, errors_interceptor_1.ErrorHandler,
+            user_service_1.UserService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService, errors_interceptor_1.KasieErrorHandler,
             ambassador_service_1.AmbassadorService, association_service_1.AssociationService, location_request_service_1.LocationRequestService,
             zipper_1.FileArchiverService, firebase_util_1.FirebaseAdmin,
         ],

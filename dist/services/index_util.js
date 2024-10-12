@@ -79,7 +79,7 @@ let MongoIndexBuilder = class MongoIndexBuilder {
             const collection9 = db.collection("User");
             const res9 = await collection9.createIndex({ associationId: 1, email: 1 }, { unique: true });
             common_1.Logger.debug(`${tag} User association/email unique index created: ${res9}`);
-            common_1.Logger.log(`${tag} 🌼 🌼 🌼 4 MongoDB Atlas indexes created successfully!  🌼\n\n`);
+            common_1.Logger.log(`${tag} 🌼 🌼 🌼 17 MongoDB Atlas indexes created successfully!  🌼\n\n`);
         }
         catch (error) {
             console.error(`${tag} Error creating indexes:`, error);

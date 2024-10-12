@@ -5,13 +5,15 @@ import { UserGeofenceEvent } from "src/data/models/UserGeofenceEvent";
 import { CloudStorageUploaderService } from "src/storage/storage.service";
 import { FirebaseAdmin } from "src/services/firebase_util";
 import { Vehicle } from "src/data/models/Vehicle";
+import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 export declare class UserService {
     readonly storage: CloudStorageUploaderService;
     private readonly firebaseAdmin;
+    private readonly errorHandler;
     private userModel;
     private userGeofenceModel;
     private associationModel;
-    constructor(storage: CloudStorageUploaderService, firebaseAdmin: FirebaseAdmin, userModel: mongoose.Model<User>, userGeofenceModel: mongoose.Model<UserGeofenceEvent>, associationModel: mongoose.Model<Association>);
+    constructor(storage: CloudStorageUploaderService, firebaseAdmin: FirebaseAdmin, errorHandler: KasieErrorHandler, userModel: mongoose.Model<User>, userGeofenceModel: mongoose.Model<UserGeofenceEvent>, associationModel: mongoose.Model<Association>);
     convertExpressFileToString(expressFile: Express.Multer.File): string;
     createUser(user: User): Promise<User>;
     createAdminUser(user: User): Promise<User>;

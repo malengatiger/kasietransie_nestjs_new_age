@@ -18,7 +18,7 @@ import { CityService } from "../city/city.service";
 import { MessagingService } from "../fcm/fcm.service";
 import { CloudStorageUploaderService } from "src/storage/storage.service";
 import { KasieError } from "src/data/models/kasie.error";
-import { ErrorHandler } from "src/middleware/errors.interceptor";
+import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 
 const mm = "🌿🌿🌿 RouteService 🌿";
 
@@ -30,7 +30,7 @@ export class RouteService {
     private readonly archiveService: FileArchiverService,
     private readonly messagingService: MessagingService,
     private readonly cityService: CityService,
-    private readonly errorHandler: ErrorHandler,
+    private readonly errorHandler: KasieErrorHandler,
 
     @InjectModel(RouteUpdateRequest.name)
     private routeUpdateRequestModel: mongoose.Model<RouteUpdateRequest>,
@@ -104,21 +104,10 @@ export class RouteService {
       );
       return res; // Return the result from the database
     } catch (e) {
-      this.handleError(e);
+      this.errorHandler.handleError(e, route.associationId);
     }
   }
 
-  private handleError(e: any) {
-    Logger.error(`${mm} ${e}`);
-    this.errorHandler.handleError({
-      statusCode: HttpStatus.BAD_REQUEST,
-      message: `Failed to add route to database: ${e}`,
-    });
-    throw new HttpException(
-      `Failed to add route to database: ${e}`,
-      HttpStatus.BAD_REQUEST
-    );
-  }
 
   public async createRouteQRCode(route: Route): Promise<Route> {
     const url = await this.storage.createQRCode({
@@ -275,7 +264,7 @@ export class RouteService {
         .sort({ index: 1 });
       return rem;
     } catch (e) {
-      this.handleError(e);
+      this.errorHandler.handleError(e, routeLandmark.associationId);
     }
   }
   public async deleteRouteLandmark(

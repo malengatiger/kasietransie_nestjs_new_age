@@ -20,6 +20,10 @@ const ExampleFile_1 = require("../../data/models/ExampleFile");
 const VehiclePhoto_1 = require("../../data/models/VehiclePhoto");
 const VehicleVideo_1 = require("../../data/models/VehicleVideo");
 const Vehicle_1 = require("../../data/models/Vehicle");
+const errors_interceptor_1 = require("../../middleware/errors.interceptor");
+const fcm_service_1 = require("../fcm/fcm.service");
+const AssociationToken_1 = require("../../data/models/AssociationToken");
+const kasie_error_1 = require("../../data/models/kasie.error");
 let UserModule = class UserModule {
 };
 exports.UserModule = UserModule;
@@ -34,9 +38,11 @@ exports.UserModule = UserModule = __decorate([
                 { name: "VehicleVideo", schema: VehicleVideo_1.VehicleVideoSchema },
                 { name: "VehiclePhoto", schema: VehiclePhoto_1.VehiclePhotoSchema },
                 { name: "Vehicle", schema: Vehicle_1.VehicleSchema },
+                { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
+                { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
             ]),
         ], controllers: [user_controller_1.UserController],
-        providers: [user_service_1.UserService, storage_service_1.CloudStorageUploaderService, firebase_util_1.FirebaseAdmin],
+        providers: [user_service_1.UserService, storage_service_1.CloudStorageUploaderService, firebase_util_1.FirebaseAdmin, errors_interceptor_1.KasieErrorHandler, fcm_service_1.MessagingService],
     })
 ], UserModule);
 //# sourceMappingURL=user.module.js.map

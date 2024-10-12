@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable, Logger } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose from "mongoose";
 import { User } from "src/data/models/User";
@@ -15,6 +15,8 @@ import { FirebaseAdmin } from "src/services/firebase_util";
 import * as os from "os";
 import * as path from "path";
 import { Vehicle } from "src/data/models/Vehicle";
+import { KasieErrorHandler } from "src/middleware/errors.interceptor";
+import { error } from "console";
 
 const mm = "🏈 🏈 🏈 UserService 🏈 🏈";
 
@@ -23,6 +25,8 @@ export class UserService {
   constructor(
     readonly storage: CloudStorageUploaderService,
     private readonly firebaseAdmin: FirebaseAdmin,
+    private readonly errorHandler: KasieErrorHandler,
+
     @InjectModel(User.name)
     private userModel: mongoose.Model<User>,
     @InjectModel(UserGeofenceEvent.name)
@@ -73,7 +77,7 @@ export class UserService {
         size: 1,
         associationId: user.associationName ?? "ADMIN",
       });
-      Logger.debug(`${mm} ... qrCode url: ${url}`);
+      Logger.debug(`${mm} createUser: ... qrCode url: ${url}`);
       user.password = null;
       user.qrCodeUrl = url;
       //
@@ -87,7 +91,9 @@ export class UserService {
       );
     } catch (e) {
       Logger.error(`${mm} User creation failed: ${e}`);
-      throw new Error(`User creation failed: ${e}`);
+      this.errorHandler.handleError(`User creation failed: ${e}`, user.associationId);
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+
     }
 
     return user;
@@ -98,11 +104,17 @@ export class UserService {
     user.associationId = "ADMIN";
     user.dateRegistered = new Date().toISOString();
 
-    const res = await this.createUser(user);
-    Logger.log(
-      `${mm} createAdminUser: seems pretty cool,  🔵 🔵 internal admin user has been created\n\n`
-    );
-    return res;
+    try {
+      const res = await this.createUser(user);
+      Logger.log(
+        `${mm} createAdminUser: seems pretty cool,  🔵 🔵 internal admin user has been created\n\n`
+      );
+      return res;
+    } catch (e) {
+      this.errorHandler.handleError(e, user.associationId);
+      throw new HttpException(e, HttpStatus.BAD_REQUEST);
+
+    }
   }
   public async updateUser(user: User): Promise<User> {
     return null;

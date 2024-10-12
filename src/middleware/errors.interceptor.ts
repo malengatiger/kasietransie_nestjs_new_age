@@ -2,18 +2,19 @@ import {
   Injectable,
   Logger,
   HttpStatus,
+  HttpException,
 } from '@nestjs/common';
 import { MongoClient } from 'mongodb';
 import { KasieError } from 'src/data/models/kasie.error';
 import { MessagingService } from 'src/features/fcm/fcm.service';
 
-const mm: string = '🔴 🔴 🔴 🔴 🔴 🔴 ErrorHandler 🔴 ';
+const mm: string = '🔴 🔴 🔴 🔴 🔴 🔴 KasieErrorHandler 🔴 ';
 
 @Injectable()
-export class ErrorHandler  {
+export class KasieErrorHandler  {
   constructor(private readonly messageService: MessagingService) {}
 
-  public async handleError(error: any) { 
+  public async handleError(error: any, associationId: string) { 
     Logger.error(`\n\n${mm} ... 😈😈 handling error: \n${error} `);
 
     try {
@@ -23,6 +24,9 @@ export class ErrorHandler  {
       const db = client.db("kasie_transie");
 
       const errorData = {
+        associationId: associationId,
+        date: new Date().getTime(),
+        dateString: new Date().toISOString(),
         message: error.message, // Log the original error message
         statusCode: error.statusCode || HttpStatus.INTERNAL_SERVER_ERROR, // Use the original status code if available
       };
@@ -32,7 +36,7 @@ export class ErrorHandler  {
       );
 
       // Send cloud message (if needed)
-      await this.sendCloudMessage(error);
+      await this.sendCloudMessage(errorData);
     } catch (e) {
       Logger.error(`${mm} Error handling error: ${e}`);
     }

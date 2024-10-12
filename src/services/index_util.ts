@@ -152,7 +152,7 @@ export class MongoIndexBuilder {
       // );
       // Logger.debug(`${tag} User association/cellphone unique index created: ${res10}\n\n`);
 
-      Logger.log(`${tag} 🌼 🌼 🌼 4 MongoDB Atlas indexes created successfully!  🌼\n\n`);
+      Logger.log(`${tag} 🌼 🌼 🌼 17 MongoDB Atlas indexes created successfully!  🌼\n\n`);
 
     } catch (error) {
       console.error(`${tag} Error creating indexes:`, error);

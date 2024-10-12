@@ -20,24 +20,27 @@ let AuthMiddleware = class AuthMiddleware {
     }
     async use(req, res, next) {
         const authToken = req.headers.authorization;
-        const allowedIPs = [
-            "127.0.0.1",
-            "::1",
-            "192.168.64.1",
-            "localhost",
-            "192.168.88.253",
-        ];
-        const clientIP = this.getClientIP(req);
-        let allow = false;
-        allowedIPs.forEach((ip) => {
-            if (clientIP.includes(ip)) {
-                allow = true;
+        const authOverride = process.env.AUTH_OVERRIDE;
+        if (authOverride == "yes") {
+            const allowedIPs = [
+                "127.0.0.1",
+                "::1",
+                "192.168.64.1",
+                "localhost",
+                "192.168.88.253",
+            ];
+            const clientIP = this.getClientIP(req);
+            let allow = false;
+            allowedIPs.forEach((ip) => {
+                if (clientIP.includes(ip)) {
+                    allow = true;
+                }
+            });
+            if (allow) {
+                common_1.Logger.log(`\n\n${mm} 🔵🔵🔵🔵🔵🔵 Letting you into the club without a Diddy ticket! 🍎 Request from: 🔵  ${req.originalUrl}  🔵🔵\n`);
+                next();
+                return;
             }
-        });
-        if (allow) {
-            common_1.Logger.log(`\n\n${mm} 🔵🔵🔵🔵🔵🔵 Letting you into the club without a Diddy ticket! 🍎 Request from: 🔵  ${req.originalUrl}  🔵🔵\n`);
-            next();
-            return;
         }
         if (process.env.NODE_ENV == "development") {
             common_1.Logger.debug(`${mm} 🔴 letting you into the club without a ticket! 🔵 🔵 🔵 `);
@@ -65,13 +68,13 @@ let AuthMiddleware = class AuthMiddleware {
                 .auth()
                 .verifyIdToken(token);
             req.user = decodedToken;
-            common_1.Logger.log(`${mm} authentication seems OK; ✅ req: ${req}`);
+            common_1.Logger.log(`\n\n${mm} authentication seems OK; ✅ ✅ ✅ req user email: ${req.user.email} ✅ \n`);
             next();
         }
         catch (error) {
-            common_1.Logger.log(`${mm} Error verifying authentication token: 🔴 ${error} 🔴`);
+            common_1.Logger.log(`\n\n${mm} Error verifying authentication token: 🔴 ${error} 🔴`);
             return res.status(403).json({
-                message: errorMessage,
+                message: `🔴🔴🔴 ${error} 🔴🔴🔴`,
                 statusCode: 403,
                 date: new Date().toISOString(),
             });

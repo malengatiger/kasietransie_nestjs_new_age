@@ -209,7 +209,7 @@ export class CloudStorageUploaderService {
     const storage: Storage = new Storage({ projectId: this.projectId });
     const bucket: Bucket = storage.bucket(this.bucketName);
     const bucketFileName = `${this.cloudStorageDirectory}/${folder}/${objectName}`;
-    Logger.log(`${mm} .... bucketFileName: ${bucketFileName}`);
+    Logger.log(`\n\n${mm} .... bucketFileName: ${bucketFileName}\n\n`);
     const file: File = bucket.file(bucketFileName);
 
     try {
@@ -237,7 +237,7 @@ export class CloudStorageUploaderService {
       );
       return signedUrl;
     } catch (error) {
-      Logger.error(`${mm} Error uploading file: ${error}`);
+      Logger.error(`${mm} Error uploading file to cloud storage: ${error}`);
       throw error;
     }
   }

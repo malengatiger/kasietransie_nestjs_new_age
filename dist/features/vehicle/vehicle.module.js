@@ -109,7 +109,7 @@ exports.VehicleModule = VehicleModule = __decorate([
             vehicle_service_1.VehicleService,
             user_service_1.UserService,
             city_service_1.CityService,
-            errors_interceptor_1.ErrorHandler,
+            errors_interceptor_1.KasieErrorHandler,
             route_service_1.RouteService,
             time_series_service_1.TimeSeriesService,
             dispatch_service_1.DispatchService,
