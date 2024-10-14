@@ -68,6 +68,7 @@ import { ElapsedTimeMiddleware } from './middleware/elapsed.middleware';
 import { AuthMiddleware } from './middleware/auth.middleware';
 import { QueryElapsedTimeSchema } from './data/models/QueryElapsedTime';
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
+import { TicketModule } from './features/ticket/ticket.module';
 
 @Module({
   imports: [
@@ -139,6 +140,7 @@ import { KasieErrorHandler } from "src/middleware/errors.interceptor";
     ErrorModule,
     MongoDataModule,
     StorageModule,
+    TicketModule,
   ],
   controllers: [AppController, DispatchController, UserController],
   providers: [AppService, DispatchService, MessagingService, TimeSeriesService,

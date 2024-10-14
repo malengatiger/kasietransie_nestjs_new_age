@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose from "mongoose";
 import { RouteUpdateRequest } from "src/data/models/RouteUpdateRequest";
@@ -10,14 +10,12 @@ import { Route } from "src/data/models/Route";
 import { RouteBag } from "src/data/helpers/RouteBag";
 import { CalculatedDistance } from "src/data/models/CalculatedDistance";
 import { RoutePoint } from "src/data/models/RoutePoint";
-import { MyUtils } from "src/my-utils/my-utils";
 import { FileArchiverService } from "src/my-utils/zipper";
 import { RoutePointList } from "src/data/models/RoutePointList";
 import { City } from "src/data/models/City";
 import { CityService } from "../city/city.service";
 import { MessagingService } from "../fcm/fcm.service";
 import { CloudStorageUploaderService } from "src/storage/storage.service";
-import { KasieError } from "src/data/models/kasie.error";
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 
 const mm = "🌿🌿🌿 RouteService 🌿";
