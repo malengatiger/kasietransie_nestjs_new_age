@@ -35,7 +35,7 @@ export class Ticket {
 
   @Prop()
   @ApiProperty()
-  ticketType: number;
+  ticketType: string;
   
   @Prop()
   @ApiProperty()
@@ -43,7 +43,7 @@ export class Ticket {
   @Prop()
   @ApiProperty()
   associationName: string;
-  
+
   @Prop()
   @ApiProperty()
   qrCodeUrl: string;
@@ -51,6 +51,11 @@ export class Ticket {
   @Prop()
   @ApiProperty()
   ticketRoutes: TicketRoute[];
+
+  @Prop()
+  @ApiProperty()
+  numberOfTrips: number;
+
   
 }
 

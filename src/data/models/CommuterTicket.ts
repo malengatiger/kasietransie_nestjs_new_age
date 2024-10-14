@@ -55,6 +55,9 @@ export class CommuterTicket {
   @ApiProperty()
   ticketRoutes: TicketRoute[];
   
+  @Prop()
+  @ApiProperty()
+  numberOfTrips: number;
 }
 
 export const CommuterTicketSchema = SchemaFactory.createForClass(CommuterTicket);

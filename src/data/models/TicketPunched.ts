@@ -24,7 +24,7 @@ export class CommuterTicketPunched {
   userId: string;
   @Prop()
   @ApiProperty()
-  date: string;
+  created: string;
   @Prop()
   @ApiProperty()
   commuterId: string;

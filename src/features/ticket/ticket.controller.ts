@@ -9,9 +9,7 @@ export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
 
   @Post('addTicket')
-  async addTicket(@Body() ticket: Ticket): Promise<any> {
-    //TODO - create qrcode
-    
+  async addTicket(@Body() ticket: Ticket): Promise<any> {    
     return this.ticketService.createTicket(ticket);
   }
   @Post('addCommuterTicketPunched')

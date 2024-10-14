@@ -10,6 +10,10 @@ import { ExampleFileSchema } from 'src/data/models/ExampleFile';
 import { VehicleSchema } from 'src/data/models/Vehicle';
 import { VehiclePhotoSchema } from 'src/data/models/VehiclePhoto';
 import { VehicleVideoSchema } from 'src/data/models/VehicleVideo';
+import { KasieErrorHandler } from 'src/middleware/errors.interceptor';
+import { MessagingService } from '../fcm/fcm.service';
+import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
+import { KasieErrorSchema } from 'src/data/models/kasie.error';
 
 @Module({
   imports: [
@@ -19,12 +23,15 @@ import { VehicleVideoSchema } from 'src/data/models/VehicleVideo';
       { name: "CommuterTicketPunched", schema: CommuterTicketPunchedSchema },
       { name: "ExampleFile", schema: ExampleFileSchema },
       { name: "Vehicle", schema: VehicleSchema },
+      { name: "KasieError", schema: KasieErrorSchema },
 
       { name: "VehicleVideo", schema: VehicleVideoSchema },
       { name: "VehiclePhoto", schema: VehiclePhotoSchema },
+      { name: "AssociationToken", schema: AssociationTokenSchema },
+
     ]),
   ],
   controllers: [TicketController],
-  providers: [TicketService, CloudStorageUploaderService],
+  providers: [TicketService, CloudStorageUploaderService, KasieErrorHandler, MessagingService],
 })
 export class TicketModule {}

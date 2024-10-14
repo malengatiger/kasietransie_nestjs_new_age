@@ -9,7 +9,6 @@ export class TicketRoute {
   @Prop()
   @ApiProperty()
   routeId: string;
-  
   @Prop()
   @ApiProperty()
   routeName: string;
@@ -19,13 +18,6 @@ export class TicketRoute {
   @Prop()
   @ApiProperty()
   endCityName: string;
-  
-  @Prop()
-  @ApiProperty()
-  associationId: string;
-  @Prop()
-  @ApiProperty()
-  associationName: string;
   
   
 }
