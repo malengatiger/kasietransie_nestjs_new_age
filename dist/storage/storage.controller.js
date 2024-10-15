@@ -19,10 +19,14 @@ const platform_express_1 = require("@nestjs/platform-express");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+const UserPhoto_1 = require("../data/models/UserPhoto");
 const tag = "🔵 🔵 🔵 StorageController 🔵 ";
 let StorageController = class StorageController {
     constructor(storageService) {
         this.storageService = storageService;
+    }
+    async addUserPhoto(userPhoto) {
+        return await this.storageService.createUserPhoto(userPhoto);
     }
     async uploadExampleFiles(files) {
         const userFile = files.userFile[0];
@@ -47,6 +51,18 @@ let StorageController = class StorageController {
         await this.storageService.uploadVehiclePhoto(vehicleId, imageTempFile, thumbTempFile, latitude, longitude);
         return `${tag} Files uploaded successfully`;
     }
+    async uploadUserProfilePicture(files, userId) {
+        common_1.Logger.log(`${tag} imageFile: ${files.imageFile[0].originalname} 🥦 `);
+        common_1.Logger.log(`${tag} thumbFile: ${files.thumbFile[0].originalname} 🥦 `);
+        const imageTempFile = path.join(os.tmpdir(), files.imageFile[0].originalname);
+        const thumbTempFile = path.join(os.tmpdir(), files.thumbFile[0].originalname);
+        await fs.promises.writeFile(imageTempFile, files.imageFile[0].buffer);
+        await fs.promises.writeFile(thumbTempFile, files.thumbFile[0].buffer);
+        common_1.Logger.log(`${tag} ${files.imageFile[0].originalname} 🥦 saved to ${imageTempFile}`);
+        common_1.Logger.log(`${tag}${files.thumbFile[0].originalname} 🥦 saved to ${thumbTempFile}`);
+        const user = await this.storageService.uploadUserProfilePicture(userId, imageTempFile, thumbTempFile);
+        return user;
+    }
     async uploadVehicleVideo(file, data) {
         const { vehicleId, latitude, longitude } = data;
         const vehicleImageFile = file;
@@ -59,7 +75,13 @@ let StorageController = class StorageController {
 };
 exports.StorageController = StorageController;
 __decorate([
-    (0, common_1.Post)("uploadExampleFiles"),
+    (0, common_1.Post)("addUserPhoto"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [UserPhoto_1.UserPhoto]),
+    __metadata("design:returntype", Promise)
+], StorageController.prototype, "addUserPhoto", null);
+__decorate([
     (0, common_1.UseInterceptors)((0, platform_express_1.FileFieldsInterceptor)([
         { name: "userFile", maxCount: 1 },
         { name: "vehicleFile", maxCount: 1 },
@@ -71,17 +93,29 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], StorageController.prototype, "uploadExampleFiles", null);
 __decorate([
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileFieldsInterceptor)([
-        { name: 'imageFile' },
-        { name: 'thumbFile' },
-    ])),
     (0, common_1.Post)("uploadVehiclePhoto"),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileFieldsInterceptor)([
+        { name: "imageFile", maxCount: 1 },
+        { name: "thumbFile", maxCount: 1 },
+    ])),
     __param(0, (0, common_1.UploadedFiles)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], StorageController.prototype, "uploadVehiclePhotoFiles", null);
+__decorate([
+    (0, common_1.Post)("uploadUserProfilePicture"),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileFieldsInterceptor)([
+        { name: "imageFile", maxCount: 1 },
+        { name: "thumbFile", maxCount: 1 },
+    ])),
+    __param(0, (0, common_1.UploadedFiles)()),
+    __param(1, (0, common_1.Query)("userId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
+], StorageController.prototype, "uploadUserProfilePicture", null);
 __decorate([
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)("file")),
     (0, common_1.Post)("uploadVehicleVideo"),

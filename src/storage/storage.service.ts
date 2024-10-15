@@ -1,4 +1,4 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import {
   Storage,
   Bucket,
@@ -22,8 +22,12 @@ import { VehiclePhoto } from "src/data/models/VehiclePhoto";
 import { Vehicle } from "src/data/models/Vehicle";
 import sharp from "sharp";
 import { Position } from "src/data/models/position";
+import { User } from "src/data/models/User";
+import { UserPhoto } from "src/data/models/UserPhoto";
+import { randomUUID } from "crypto";
+import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 
-console.log(`${typeof sharp} - Should output "function"`); // 
+console.log(`${typeof sharp} - Should output "function"`); //
 const mm = "🔶🔶🔶 CloudStorageUploaderService 🔶 ";
 
 @Injectable()
@@ -34,11 +38,19 @@ export class CloudStorageUploaderService {
 
   constructor(
     private configService: ConfigService,
+    private readonly errorHandler: KasieErrorHandler,
+
     @InjectModel(ExampleFile.name)
     private exampleFileModel: mongoose.Model<ExampleFile>,
 
     @InjectModel(Vehicle.name)
     private vehicleModel: mongoose.Model<Vehicle>,
+
+    @InjectModel(User.name)
+    private userModel: mongoose.Model<User>,
+
+    @InjectModel(UserPhoto.name)
+    private userPhotoModel: mongoose.Model<UserPhoto>,
 
     @InjectModel(VehiclePhoto.name)
     private vehiclePhotoModel: mongoose.Model<VehiclePhoto>,
@@ -85,7 +97,7 @@ export class CloudStorageUploaderService {
       p.associationId = car.associationId;
       p.vehicleVideoId = `${vehicleId}_${dt}`;
       p.url = url;
-      p.thumbNailUrl = 'tbd';
+      p.thumbNailUrl = "tbd";
       p.vehicleId = car.vehicleId;
       p.vehicleReg = car.vehicleReg;
       const pos = new Position();
@@ -110,7 +122,9 @@ export class CloudStorageUploaderService {
     latitude: number,
     longitude: number
   ): Promise<any> {
-    Logger.log(`${mm} uploadVehiclePhoto: getting vehicle from Atlas, 🔵 car: ${vehicleId}`);
+    Logger.log(
+      `${mm} uploadVehiclePhoto: getting vehicle from Atlas, 🔵 car: ${vehicleId}`
+    );
     const cars = await this.vehicleModel
       .find({ vehicleId: vehicleId })
       .limit(1);
@@ -137,7 +151,7 @@ export class CloudStorageUploaderService {
       p.thumbNailUrl = thumbUrl;
       p.vehicleId = car.vehicleId;
       p.vehicleReg = car.vehicleReg;
-    
+
       const pos = new Position();
       pos.type = "Point";
       pos.coordinates = [longitude, latitude];
@@ -151,6 +165,93 @@ export class CloudStorageUploaderService {
       return resp;
     } else {
       throw new Error("Vehicle not found");
+    }
+  }
+
+  public async createUserPhoto(userPhoto: UserPhoto): Promise<User> {
+    userPhoto.userPhotoId = randomUUID();
+    userPhoto.created = new Date().toISOString();
+    const users = await this.userModel.find({ userId: userPhoto.userId }).limit(1);
+    console.log(users);
+    const dt = new Date().getTime();
+    if (users.length > 0) {
+      const user = users[0];
+      user.profileUrl = userPhoto.url;
+      user.profileThumbnail = userPhoto.thumbNailUrl;
+      await this.userModel.updateOne(
+        {
+          userId: userPhoto.userId,
+        },
+        user
+      );
+      Logger.log(
+        `\n${mm} 🍎 🍎 user profile url updated 🍎 🍎 ${JSON.stringify(user)} 🍎 🍎`
+      );
+      const resp = await this.userPhotoModel.create(userPhoto);
+      Logger.log(
+        `\n${mm} 🍎 🍎 user photo uploaded and added to Atlas:🍎 🍎 🍎 🍎 \n\n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`
+      );
+      return user;
+    }
+    Logger.error(`${mm} .. user photo upload failed`);
+    const msg = `Failed to upload user photo`;
+    await this.errorHandler.handleError(msg, userPhoto.associationId);
+    throw new HttpException(msg, HttpStatus.BAD_REQUEST);
+  }
+  public async uploadUserProfilePicture(
+    userId: string,
+    filePath: string,
+    thumbFilePath: string
+  ): Promise<any> {
+    Logger.log(
+      `${mm} uploadUserProfilePicture: getting user from Atlas, 🔵 userId: ${userId}`
+    );
+    const users = await this.userModel.find({ userId: userId }).limit(1);
+    console.log(users);
+    const dt = new Date().getTime();
+    if (users.length > 0) {
+      const user = users[0];
+      Logger.log(`${mm} uploading user photo, 🔵 user: ${user.firstName}`);
+      const url = await this.uploadFile(
+        `photo_${userId}_${dt}`,
+        filePath,
+        user.associationName
+      );
+      const thumbUrl = await this.uploadFile(
+        `thumbnail_${userId}_${dt}`,
+        thumbFilePath,
+        user.associationName
+      );
+
+      const p = new UserPhoto();
+      p.associationId = user.associationId;
+      p.userPhotoId = `${userId}_${dt}`;
+      p.url = url;
+      p.thumbNailUrl = thumbUrl;
+      p.userId = user.userId;
+      p.userName = user.firstName + " " + user.lastName;
+      p.associationName = user.associationName;
+      p.created = new Date().toISOString();
+
+      user.profileUrl = url;
+      user.profileThumbnail = thumbUrl;
+
+      await this.userModel.updateOne(
+        {
+          userId: userId,
+        },
+        user
+      );
+      Logger.log(
+        `\n${mm} 🍎 🍎 user profile url updated 🍎 🍎 ${JSON.stringify(user)} 🍎 🍎`
+      );
+      const resp = await this.userPhotoModel.create(p);
+      Logger.log(
+        `\n${mm} 🍎 🍎 user photo uploaded and added to Atlas:🍎 🍎 🍎 🍎 \n\n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`
+      );
+      return resp;
+    } else {
+      throw new Error("User not found");
     }
   }
 
@@ -210,7 +311,15 @@ export class CloudStorageUploaderService {
     const bucket: Bucket = storage.bucket(this.bucketName);
     const bucketFileName = `${this.cloudStorageDirectory}/${folder}/${objectName}`;
     const file: File = bucket.file(bucketFileName);
-
+    await storage.bucket(this.bucketName).setCorsConfiguration([
+      {
+        method: ['*'],
+        origin: ['*'],
+      },
+    ]);
+  
+    Logger.log(`Bucket ${this.bucketName} was updated with a CORS config
+        to allow all requests from any origin`);
     try {
       const contentType = this.getFileContentType(filePath);
       const options = {
@@ -224,7 +333,7 @@ export class CloudStorageUploaderService {
       const response = await storage
         .bucket(this.bucketName)
         .upload(filePath, options);
-      
+
       const signedUrl = await this.getSignedUrl(file);
       Logger.log(
         `${mm} File uploaded to cloud storage and signed url obtained ✅✅✅\n`
@@ -244,7 +353,9 @@ export class CloudStorageUploaderService {
   public async createQRCode(
     data: KasieQRCode // Add bucketName as a parameter
   ): Promise<string> {
-    Logger.log(`${mm} createQRCode: 🌀 qrcode prefix: ${data.prefix} - size: ${data.size}`);
+    Logger.log(
+      `${mm} createQRCode: 🌀 qrcode prefix: ${data.prefix} - size: ${data.size}`
+    );
 
     try {
       const fileName = `qrcode_${data.prefix}_${new Date().getTime()}.png`;
@@ -264,11 +375,11 @@ export class CloudStorageUploaderService {
       if (data.size == 3) {
         version = 40;
       }
-     
+
       await qrcode.toFile(tempFilePath, data.data, {
         version: version,
       });
-    
+
       return await this.uploadFile(fileName, tempFilePath, data.associationId);
     } catch (error) {
       Logger.error(error);

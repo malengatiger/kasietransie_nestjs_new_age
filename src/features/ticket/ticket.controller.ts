@@ -3,7 +3,7 @@ import { TicketService } from './ticket.service';
 import { Ticket } from 'src/data/models/Ticket';
 import { CommuterTicketPunched } from 'src/data/models/TicketPunched';
 import { CommuterTicket } from 'src/data/models/CommuterTicket';
-
+import crypto from 'crypto';
 @Controller('ticket')
 export class TicketController {
   constructor(private readonly ticketService: TicketService) {}

@@ -31,6 +31,7 @@ import { FirebaseAdmin } from "src/services/firebase_util";
 import { VehiclePhotoSchema } from "src/data/models/VehiclePhoto";
 import { VehicleVideoSchema } from "src/data/models/VehicleVideo";
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
+import { UserPhotoSchema } from "src/data/models/UserPhoto";
 
 @Module({
   imports: [
@@ -57,6 +58,8 @@ import { KasieErrorHandler } from "src/middleware/errors.interceptor";
       { name: "AssociationToken", schema: AssociationTokenSchema },
       { name: "SettingsModel", schema: SettingsModelSchema },
       { name: "KasieError", schema: KasieErrorSchema },
+      { name: "UserPhoto", schema: UserPhotoSchema },
+
 
       { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCountSchema },
     ]),

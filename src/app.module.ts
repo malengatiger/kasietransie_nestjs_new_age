@@ -69,6 +69,8 @@ import { AuthMiddleware } from './middleware/auth.middleware';
 import { QueryElapsedTimeSchema } from './data/models/QueryElapsedTime';
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 import { TicketModule } from './features/ticket/ticket.module';
+import { PayfastModule } from './features/payfast/payfast.module';
+import { UserPhotoSchema } from './data/models/UserPhoto';
 
 @Module({
   imports: [
@@ -115,6 +117,8 @@ import { TicketModule } from './features/ticket/ticket.module';
       { name: "LocationResponse", schema: LocationResponseSchema },
       { name: "AmbassadorCheckIn", schema: AmbassadorCheckInSchema },
       { name: "QueryElapsedTime", schema: QueryElapsedTimeSchema },
+      { name: "UserPhoto", schema: UserPhotoSchema },
+
 
       { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCountSchema },
 
@@ -141,6 +145,7 @@ import { TicketModule } from './features/ticket/ticket.module';
     MongoDataModule,
     StorageModule,
     TicketModule,
+    PayfastModule,
   ],
   controllers: [AppController, DispatchController, UserController],
   providers: [AppService, DispatchService, MessagingService, TimeSeriesService,

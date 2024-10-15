@@ -23,6 +23,8 @@ import { VehiclePhotoSchema } from 'src/data/models/VehiclePhoto';
 import { VehicleVideoSchema } from 'src/data/models/VehicleVideo';
 import { VehicleSchema } from 'src/data/models/Vehicle';
 import { KasieErrorHandler } from 'src/middleware/errors.interceptor';
+import { UserSchema } from 'src/data/models/User';
+import { UserPhotoSchema } from 'src/data/models/UserPhoto';
 
 @Module({
   imports: [
@@ -45,6 +47,9 @@ import { KasieErrorHandler } from 'src/middleware/errors.interceptor';
       { name: "CalculatedDistance", schema: CalculatedDistanceSchema },
       { name: "Country", schema: CountrySchema },
       { name: 'ExampleFile', schema: ExampleFileSchema },
+      { name: "User", schema: UserSchema },
+      { name: "UserPhoto", schema: UserPhotoSchema },
+
     ]),
   ],
   controllers: [RouteController],

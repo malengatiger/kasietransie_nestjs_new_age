@@ -28,13 +28,20 @@ const VehiclePhoto_1 = require("../data/models/VehiclePhoto");
 const Vehicle_1 = require("../data/models/Vehicle");
 const sharp_1 = require("sharp");
 const position_1 = require("../data/models/position");
+const User_1 = require("../data/models/User");
+const UserPhoto_1 = require("../data/models/UserPhoto");
+const crypto_1 = require("crypto");
+const errors_interceptor_1 = require("../middleware/errors.interceptor");
 console.log(`${typeof sharp_1.default} - Should output "function"`);
 const mm = "🔶🔶🔶 CloudStorageUploaderService 🔶 ";
 let CloudStorageUploaderService = class CloudStorageUploaderService {
-    constructor(configService, exampleFileModel, vehicleModel, vehiclePhotoModel, vehicleVideoModel) {
+    constructor(configService, errorHandler, exampleFileModel, vehicleModel, userModel, userPhotoModel, vehiclePhotoModel, vehicleVideoModel) {
         this.configService = configService;
+        this.errorHandler = errorHandler;
         this.exampleFileModel = exampleFileModel;
         this.vehicleModel = vehicleModel;
+        this.userModel = userModel;
+        this.userPhotoModel = userPhotoModel;
         this.vehiclePhotoModel = vehiclePhotoModel;
         this.vehicleVideoModel = vehicleVideoModel;
         this.bucketName = this.configService.get("BUCKET_NAME");
@@ -56,7 +63,7 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             p.associationId = car.associationId;
             p.vehicleVideoId = `${vehicleId}_${dt}`;
             p.url = url;
-            p.thumbNailUrl = 'tbd';
+            p.thumbNailUrl = "tbd";
             p.vehicleId = car.vehicleId;
             p.vehicleReg = car.vehicleReg;
             const pos = new position_1.Position();
@@ -104,6 +111,62 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             throw new Error("Vehicle not found");
         }
     }
+    async createUserPhoto(userPhoto) {
+        userPhoto.userPhotoId = (0, crypto_1.randomUUID)();
+        userPhoto.created = new Date().toISOString();
+        const users = await this.userModel.find({ userId: userPhoto.userId }).limit(1);
+        console.log(users);
+        const dt = new Date().getTime();
+        if (users.length > 0) {
+            const user = users[0];
+            user.profileUrl = userPhoto.url;
+            user.profileThumbnail = userPhoto.thumbNailUrl;
+            await this.userModel.updateOne({
+                userId: userPhoto.userId,
+            }, user);
+            common_1.Logger.log(`\n${mm} 🍎 🍎 user profile url updated 🍎 🍎 ${JSON.stringify(user)} 🍎 🍎`);
+            const resp = await this.userPhotoModel.create(userPhoto);
+            common_1.Logger.log(`\n${mm} 🍎 🍎 user photo uploaded and added to Atlas:🍎 🍎 🍎 🍎 \n\n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`);
+            return user;
+        }
+        common_1.Logger.error(`${mm} .. user photo upload failed`);
+        const msg = `Failed to upload user photo`;
+        await this.errorHandler.handleError(msg, userPhoto.associationId);
+        throw new common_1.HttpException(msg, common_1.HttpStatus.BAD_REQUEST);
+    }
+    async uploadUserProfilePicture(userId, filePath, thumbFilePath) {
+        common_1.Logger.log(`${mm} uploadUserProfilePicture: getting user from Atlas, 🔵 userId: ${userId}`);
+        const users = await this.userModel.find({ userId: userId }).limit(1);
+        console.log(users);
+        const dt = new Date().getTime();
+        if (users.length > 0) {
+            const user = users[0];
+            common_1.Logger.log(`${mm} uploading user photo, 🔵 user: ${user.firstName}`);
+            const url = await this.uploadFile(`photo_${userId}_${dt}`, filePath, user.associationName);
+            const thumbUrl = await this.uploadFile(`thumbnail_${userId}_${dt}`, thumbFilePath, user.associationName);
+            const p = new UserPhoto_1.UserPhoto();
+            p.associationId = user.associationId;
+            p.userPhotoId = `${userId}_${dt}`;
+            p.url = url;
+            p.thumbNailUrl = thumbUrl;
+            p.userId = user.userId;
+            p.userName = user.firstName + " " + user.lastName;
+            p.associationName = user.associationName;
+            p.created = new Date().toISOString();
+            user.profileUrl = url;
+            user.profileThumbnail = thumbUrl;
+            await this.userModel.updateOne({
+                userId: userId,
+            }, user);
+            common_1.Logger.log(`\n${mm} 🍎 🍎 user profile url updated 🍎 🍎 ${JSON.stringify(user)} 🍎 🍎`);
+            const resp = await this.userPhotoModel.create(p);
+            common_1.Logger.log(`\n${mm} 🍎 🍎 user photo uploaded and added to Atlas:🍎 🍎 🍎 🍎 \n\n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`);
+            return resp;
+        }
+        else {
+            throw new Error("User not found");
+        }
+    }
     async uploadExampleFiles(userFilePath, vehicleFilePath) {
         common_1.Logger.log(`${mm} ... upload example files ... 🍐 users: ${userFilePath} 🍐 cars: ${vehicleFilePath}`);
         const userUrl = await this.uploadFile("users.csv", userFilePath, "admin");
@@ -139,6 +202,14 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
         const bucket = storage.bucket(this.bucketName);
         const bucketFileName = `${this.cloudStorageDirectory}/${folder}/${objectName}`;
         const file = bucket.file(bucketFileName);
+        await storage.bucket(this.bucketName).setCorsConfiguration([
+            {
+                method: ['*'],
+                origin: ['*'],
+            },
+        ]);
+        common_1.Logger.log(`Bucket ${this.bucketName} was updated with a CORS config
+        to allow all requests from any origin`);
         try {
             const contentType = this.getFileContentType(filePath);
             const options = {
@@ -198,10 +269,13 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
 exports.CloudStorageUploaderService = CloudStorageUploaderService;
 exports.CloudStorageUploaderService = CloudStorageUploaderService = __decorate([
     (0, common_1.Injectable)(),
-    __param(1, (0, mongoose_2.InjectModel)(ExampleFile_1.ExampleFile.name)),
-    __param(2, (0, mongoose_2.InjectModel)(Vehicle_1.Vehicle.name)),
-    __param(3, (0, mongoose_2.InjectModel)(VehiclePhoto_1.VehiclePhoto.name)),
-    __param(4, (0, mongoose_2.InjectModel)(VehicleVideo_1.VehicleVideo.name)),
-    __metadata("design:paramtypes", [config_1.ConfigService, mongoose_1.default.Model, mongoose_1.default.Model, mongoose_1.default.Model, mongoose_1.default.Model])
+    __param(2, (0, mongoose_2.InjectModel)(ExampleFile_1.ExampleFile.name)),
+    __param(3, (0, mongoose_2.InjectModel)(Vehicle_1.Vehicle.name)),
+    __param(4, (0, mongoose_2.InjectModel)(User_1.User.name)),
+    __param(5, (0, mongoose_2.InjectModel)(UserPhoto_1.UserPhoto.name)),
+    __param(6, (0, mongoose_2.InjectModel)(VehiclePhoto_1.VehiclePhoto.name)),
+    __param(7, (0, mongoose_2.InjectModel)(VehicleVideo_1.VehicleVideo.name)),
+    __metadata("design:paramtypes", [config_1.ConfigService,
+        errors_interceptor_1.KasieErrorHandler, mongoose_1.default.Model, mongoose_1.default.Model, mongoose_1.default.Model, mongoose_1.default.Model, mongoose_1.default.Model, mongoose_1.default.Model])
 ], CloudStorageUploaderService);
 //# sourceMappingURL=storage.service.js.map

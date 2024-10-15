@@ -6,6 +6,12 @@ import { ExampleFileSchema } from 'src/data/models/ExampleFile';
 import { VehiclePhotoSchema } from 'src/data/models/VehiclePhoto';
 import { VehicleVideoSchema } from 'src/data/models/VehicleVideo';
 import { VehicleSchema } from 'src/data/models/Vehicle';
+import { UserPhotoSchema } from 'src/data/models/UserPhoto';
+import { UserSchema } from 'src/data/models/User';
+import { KasieErrorHandler } from 'src/middleware/errors.interceptor';
+import { MessagingService } from 'src/features/fcm/fcm.service';
+import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
+import { KasieErrorSchema } from 'src/data/models/kasie.error';
 
 @Module({
   imports: [
@@ -14,10 +20,16 @@ import { VehicleSchema } from 'src/data/models/Vehicle';
       { name: "VehicleVideo", schema: VehicleVideoSchema },
       { name: "VehiclePhoto", schema: VehiclePhotoSchema },
       { name: "Vehicle", schema: VehicleSchema },
+      { name: "UserPhoto", schema: UserPhotoSchema },
+      { name: "User", schema: UserSchema },
+      { name: "AssociationToken", schema: AssociationTokenSchema },
+
+      { name: "KasieError", schema: KasieErrorSchema },
+
 
     ])
   ],
   controllers: [StorageController],
-  providers: [CloudStorageUploaderService],
+  providers: [CloudStorageUploaderService, KasieErrorHandler, MessagingService],
 })
 export class StorageModule {}

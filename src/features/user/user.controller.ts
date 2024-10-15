@@ -17,6 +17,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { User } from "src/data/models/User";
 import { MyUtils } from "src/my-utils/my-utils";
 import { AddUsersResponse, UserService } from "src/features/user/user.service";
+import { UserPhoto } from "src/data/models/UserPhoto";
 
 const mm = " 🚼 🚼 🚼 UserController  🚼";
 

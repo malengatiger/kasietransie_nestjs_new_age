@@ -56,6 +56,7 @@ const RouteUpdateRequest_1 = require("../../data/models/RouteUpdateRequest");
 const storage_service_1 = require("../../storage/storage.service");
 const firebase_util_1 = require("../../services/firebase_util");
 const errors_interceptor_1 = require("../../middleware/errors.interceptor");
+const UserPhoto_1 = require("../../data/models/UserPhoto");
 let VehicleModule = class VehicleModule {
 };
 exports.VehicleModule = VehicleModule;
@@ -102,6 +103,7 @@ exports.VehicleModule = VehicleModule = __decorate([
                 { name: "PassengerTimeSeries", schema: PassengerTimeSeries_1.PassengerTimeSeriesSchema },
                 { name: "City", schema: City_1.CitySchema },
                 { name: "City", schema: City_1.CitySchema },
+                { name: "UserPhoto", schema: UserPhoto_1.UserPhotoSchema },
             ]),
         ],
         controllers: [vehicle_controller_1.VehicleController],

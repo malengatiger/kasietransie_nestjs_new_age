@@ -15,6 +15,12 @@ const ExampleFile_1 = require("../data/models/ExampleFile");
 const VehiclePhoto_1 = require("../data/models/VehiclePhoto");
 const VehicleVideo_1 = require("../data/models/VehicleVideo");
 const Vehicle_1 = require("../data/models/Vehicle");
+const UserPhoto_1 = require("../data/models/UserPhoto");
+const User_1 = require("../data/models/User");
+const errors_interceptor_1 = require("../middleware/errors.interceptor");
+const fcm_service_1 = require("../features/fcm/fcm.service");
+const AssociationToken_1 = require("../data/models/AssociationToken");
+const kasie_error_1 = require("../data/models/kasie.error");
 let StorageModule = class StorageModule {
 };
 exports.StorageModule = StorageModule;
@@ -26,10 +32,14 @@ exports.StorageModule = StorageModule = __decorate([
                 { name: "VehicleVideo", schema: VehicleVideo_1.VehicleVideoSchema },
                 { name: "VehiclePhoto", schema: VehiclePhoto_1.VehiclePhotoSchema },
                 { name: "Vehicle", schema: Vehicle_1.VehicleSchema },
+                { name: "UserPhoto", schema: UserPhoto_1.UserPhotoSchema },
+                { name: "User", schema: User_1.UserSchema },
+                { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
+                { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
             ])
         ],
         controllers: [storage_controller_1.StorageController],
-        providers: [storage_service_1.CloudStorageUploaderService],
+        providers: [storage_service_1.CloudStorageUploaderService, errors_interceptor_1.KasieErrorHandler, fcm_service_1.MessagingService],
     })
 ], StorageModule);
 //# sourceMappingURL=storage.module.js.map

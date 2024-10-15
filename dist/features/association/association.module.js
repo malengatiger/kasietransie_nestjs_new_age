@@ -39,6 +39,7 @@ const firebase_util_1 = require("../../services/firebase_util");
 const VehiclePhoto_1 = require("../../data/models/VehiclePhoto");
 const VehicleVideo_1 = require("../../data/models/VehicleVideo");
 const errors_interceptor_1 = require("../../middleware/errors.interceptor");
+const UserPhoto_1 = require("../../data/models/UserPhoto");
 let AssociationModule = class AssociationModule {
 };
 exports.AssociationModule = AssociationModule;
@@ -67,6 +68,7 @@ exports.AssociationModule = AssociationModule = __decorate([
                 { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
                 { name: "SettingsModel", schema: SettingsModel_1.SettingsModelSchema },
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
+                { name: "UserPhoto", schema: UserPhoto_1.UserPhotoSchema },
                 { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCount_1.AmbassadorPassengerCountSchema },
             ]),
         ],

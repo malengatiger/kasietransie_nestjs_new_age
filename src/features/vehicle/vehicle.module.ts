@@ -47,6 +47,7 @@ import { RouteUpdateRequestSchema } from "src/data/models/RouteUpdateRequest";
 import { CloudStorageUploaderService } from "src/storage/storage.service";
 import { FirebaseAdmin } from "src/services/firebase_util";
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
+import { UserPhotoSchema } from "src/data/models/UserPhoto";
 
 @Module({
   imports: [
@@ -92,6 +93,8 @@ import { KasieErrorHandler } from "src/middleware/errors.interceptor";
       { name: "PassengerTimeSeries", schema: PassengerTimeSeriesSchema },
       { name: "City", schema: CitySchema },
       { name: "City", schema: CitySchema },
+      { name: "UserPhoto", schema: UserPhotoSchema },
+
 
     ]),
   ],

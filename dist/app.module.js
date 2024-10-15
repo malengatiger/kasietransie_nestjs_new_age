@@ -76,6 +76,8 @@ const auth_middleware_1 = require("./middleware/auth.middleware");
 const QueryElapsedTime_1 = require("./data/models/QueryElapsedTime");
 const errors_interceptor_1 = require("./middleware/errors.interceptor");
 const ticket_module_1 = require("./features/ticket/ticket.module");
+const payfast_module_1 = require("./features/payfast/payfast.module");
+const UserPhoto_1 = require("./data/models/UserPhoto");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
@@ -129,6 +131,7 @@ exports.AppModule = AppModule = __decorate([
                 { name: "LocationResponse", schema: LocationResponse_1.LocationResponseSchema },
                 { name: "AmbassadorCheckIn", schema: AmbassadorCheckIn_1.AmbassadorCheckInSchema },
                 { name: "QueryElapsedTime", schema: QueryElapsedTime_1.QueryElapsedTimeSchema },
+                { name: "UserPhoto", schema: UserPhoto_1.UserPhotoSchema },
                 { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCount_1.AmbassadorPassengerCountSchema },
             ]),
             dispatch_module_1.DispatchModule,
@@ -151,6 +154,7 @@ exports.AppModule = AppModule = __decorate([
             mongo_data_module_1.MongoDataModule,
             storage_module_1.StorageModule,
             ticket_module_1.TicketModule,
+            payfast_module_1.PayfastModule,
         ],
         controllers: [app_controller_1.AppController, dispatch_controller_1.DispatchController, user_controller_1.UserController],
         providers: [app_service_1.AppService, dispatch_service_1.DispatchService, fcm_service_1.MessagingService, time_series_service_1.TimeSeriesService,

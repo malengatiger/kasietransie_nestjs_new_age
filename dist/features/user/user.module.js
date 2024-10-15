@@ -24,6 +24,7 @@ const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 const fcm_service_1 = require("../fcm/fcm.service");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
 const kasie_error_1 = require("../../data/models/kasie.error");
+const UserPhoto_1 = require("../../data/models/UserPhoto");
 let UserModule = class UserModule {
 };
 exports.UserModule = UserModule;
@@ -39,6 +40,7 @@ exports.UserModule = UserModule = __decorate([
                 { name: "VehiclePhoto", schema: VehiclePhoto_1.VehiclePhotoSchema },
                 { name: "Vehicle", schema: Vehicle_1.VehicleSchema },
                 { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
+                { name: "UserPhoto", schema: UserPhoto_1.UserPhotoSchema },
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
             ]),
         ], controllers: [user_controller_1.UserController],

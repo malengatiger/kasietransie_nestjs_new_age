@@ -16,12 +16,18 @@ import {
 import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
+import { UserPhoto } from "src/data/models/UserPhoto";
+import { User } from "src/data/models/User";
+
 const tag = "🔵 🔵 🔵 StorageController 🔵 ";
 @Controller("storage")
 export class StorageController {
   constructor(private readonly storageService: CloudStorageUploaderService) {}
 
-  @Post("uploadExampleFiles")
+  @Post("addUserPhoto")
+  async addUserPhoto(@Body() userPhoto: UserPhoto): Promise<any> {
+    return await this.storageService.createUserPhoto(userPhoto);
+  }
   @UseInterceptors(
     FileFieldsInterceptor([
       { name: "userFile", maxCount: 1 },
@@ -55,31 +61,40 @@ export class StorageController {
 
     return `${tag} Files uploaded successfully`;
   }
+
+  @Post("uploadVehiclePhoto")
   @UseInterceptors(
     FileFieldsInterceptor([
-      { name: 'imageFile' },
-      { name: 'thumbFile'},
-    ]),
+      { name: "imageFile", maxCount: 1 },
+      { name: "thumbFile", maxCount: 1 },
+    ])
   )
-  
-  @Post("uploadVehiclePhoto")
   async uploadVehiclePhotoFiles(
     @UploadedFiles()
     files: {
       imageFile: Express.Multer.File[];
       thumbFile: Express.Multer.File[];
     },
-    @Body() data: { vehicleId: string; latitude: number; longitude: number },
-  ): Promise<string> {    
-
-    const imageTempFile = path.join(os.tmpdir(), files.imageFile[0].originalname);
-    const thumbTempFile = path.join(os.tmpdir(), files.thumbFile[0].originalname);
+    @Body() data: { vehicleId: string; latitude: number; longitude: number }
+  ): Promise<string> {
+    const imageTempFile = path.join(
+      os.tmpdir(),
+      files.imageFile[0].originalname
+    );
+    const thumbTempFile = path.join(
+      os.tmpdir(),
+      files.thumbFile[0].originalname
+    );
 
     await fs.promises.writeFile(imageTempFile, files.imageFile[0].buffer);
     await fs.promises.writeFile(thumbTempFile, files.thumbFile[0].buffer);
 
-    Logger.log(`${tag} ${files.imageFile[0].originalname} 🥦 saved to ${imageTempFile}`);
-    Logger.log(`${tag}${files.thumbFile[0].originalname} 🥦 saved to ${thumbTempFile}`);
+    Logger.log(
+      `${tag} ${files.imageFile[0].originalname} 🥦 saved to ${imageTempFile}`
+    );
+    Logger.log(
+      `${tag}${files.thumbFile[0].originalname} 🥦 saved to ${thumbTempFile}`
+    );
 
     const { vehicleId, latitude, longitude } = data; // Access data from body
 
@@ -93,50 +108,53 @@ export class StorageController {
 
     return `${tag} Files uploaded successfully`;
   }
-  // @UseInterceptors(FileInterceptor("file"))
-  // @Post("uploadVehiclePhoto")
-  // async uploadVehiclePhoto(
-  //   @UploadedFile() file: Express.Multer.File,
-  //   @Body() data: { vehicleId: string; latitude: number; longitude: number }
-  // ): Promise<any> {
-  //   const vehicleImageFile: Express.Multer.File = file;
-  //   const { vehicleId, latitude, longitude } = data; // Access data from body
-  //   // ... rest of your code ...
-  //   const vehicleTempFile: string = path.join(
-  //     os.tmpdir(),
-  //     "vehicleImageFile_" + new Date().getTime() + ".jpg"
-  //   );
 
-  //   Logger.debug(
-  //     `${tag} latitude: ${latitude} longitude: ${longitude} vehicleId:${vehicleId}`
-  //   );
+  @Post("uploadUserProfilePicture")
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: "imageFile", maxCount: 1 },
+      { name: "thumbFile", maxCount: 1 },
+    ])
+  )
+  async uploadUserProfilePicture(
+    @UploadedFiles()
+    files: {
+      imageFile: Express.Multer.File[];
+      thumbFile: Express.Multer.File[];
+    },
+    @Query("userId") userId: string
+  ): Promise<User> {
+    Logger.log(`${tag} imageFile: ${files.imageFile[0].originalname} 🥦 `);
+    Logger.log(`${tag} thumbFile: ${files.thumbFile[0].originalname} 🥦 `);
 
-  //   if (!file) {
-  //     throw new Error(
-  //       `${tag} 😈😈😈 No file uploaded, please check your request. 😈`
-  //     );
-  //   }
-  //   Logger.debug(
-  //     `${tag} vehicleImageFile, buffer length: ${file.buffer.length}`
-  //   );
+    const imageTempFile = path.join(
+      os.tmpdir(),
+      files.imageFile[0].originalname
+    );
+    const thumbTempFile = path.join(
+      os.tmpdir(),
+      files.thumbFile[0].originalname
+    );
 
-  //   Logger.debug(`${tag} vehicleImageFile, size: ${file.size}`);
-  //   Logger.debug(`${tag} vehicleImageFile, originalname: ${file.originalname}`);
+    await fs.promises.writeFile(imageTempFile, files.imageFile[0].buffer);
+    await fs.promises.writeFile(thumbTempFile, files.thumbFile[0].buffer);
 
-  //   await fs.promises.writeFile(vehicleTempFile, file.buffer);
+    Logger.log(
+      `${tag} ${files.imageFile[0].originalname} 🥦 saved to ${imageTempFile}`
+    );
+    Logger.log(
+      `${tag}${files.thumbFile[0].originalname} 🥦 saved to ${thumbTempFile}`
+    );
 
-  //   Logger.log(
-  //     `${tag} ${vehicleImageFile.originalname} 🥦 saved to ${vehicleTempFile}`
-  //   );
-  //   const resp = await this.storageService.uploadVehiclePhoto(
-  //     vehicleId,
-  //     vehicleTempFile,
-  //     latitude,
-  //     longitude
-  //   );
+    const user = await this.storageService.uploadUserProfilePicture(
+      userId,
+      imageTempFile,
+      thumbTempFile
+    );
 
-  //   return resp;
-  // }
+    return user;
+  }
+
   @UseInterceptors(FileInterceptor("file"))
   @Post("uploadVehicleVideo")
   async uploadVehicleVideo(
