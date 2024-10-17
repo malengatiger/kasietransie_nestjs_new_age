@@ -48,7 +48,9 @@ export class MediaService {
     return null;
   }
   public async getVehiclePhotos(vehicleId: string): Promise<VehiclePhoto[]> {
-    return [];
+    return await this.vehiclePhotoModel.find({
+      vehicleId: vehicleId
+    });
   }
   public async getVehicleVideos(vehicleId: string): Promise<VehicleVideo[]> {
     return [];

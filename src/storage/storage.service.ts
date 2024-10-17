@@ -28,7 +28,7 @@ import { randomUUID } from "crypto";
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 
 console.log(`${typeof sharp} - Should output "function"`); //
-const mm = "🔶🔶🔶 CloudStorageUploaderService 🔶 ";
+const mm = "🔶🔶🔶 StorageService 🔶 ";
 
 @Injectable()
 export class CloudStorageUploaderService {
@@ -86,12 +86,6 @@ export class CloudStorageUploaderService {
         filePath,
         car.associationId
       );
-      // const thumbnailPath = await this.createThumbnail(filePath);
-      // const thumbUrl = await this.uploadFile(
-      //   `thumbnail_${vehicleId}_${dt}`,
-      //   thumbnailPath,
-      //   car.associationId
-      // );
 
       const p = new VehicleVideo();
       p.associationId = car.associationId;
@@ -100,9 +94,7 @@ export class CloudStorageUploaderService {
       p.thumbNailUrl = "tbd";
       p.vehicleId = car.vehicleId;
       p.vehicleReg = car.vehicleReg;
-      const pos = new Position();
-      pos.type = "Point";
-      pos.coordinates = [longitude, latitude];
+      const pos = new Position('Point', [longitude, latitude]);
       p.position = pos;
       p.created = new Date().toISOString();
       const resp = await this.vehicleVideoModel.create(p);
@@ -119,12 +111,15 @@ export class CloudStorageUploaderService {
     vehicleId: string,
     filePath: string,
     thumbFilePath: string,
-    latitude: number,
-    longitude: number
-  ): Promise<any> {
+    latitude: string,
+    longitude: string
+  ): Promise<VehiclePhoto> {
     Logger.log(
-      `${mm} uploadVehiclePhoto: getting vehicle from Atlas, 🔵 car: ${vehicleId}`
+      `\n\n${mm} uploadVehiclePhoto: getting vehicle from Atlas, 🔵 vehicleId: ${vehicleId} 🔵 latitude: ${latitude} 🔵 longitude: ${longitude}`
     );
+    // Convert latitude and longitude to numbers
+    const latitudeNum = parseFloat(latitude);
+    const longitudeNum = parseFloat(longitude);
     const cars = await this.vehicleModel
       .find({ vehicleId: vehicleId })
       .limit(1);
@@ -132,7 +127,7 @@ export class CloudStorageUploaderService {
     const dt = new Date().getTime();
     if (cars.length > 0) {
       const car = cars[0];
-      Logger.log(`${mm} uploading vehicle photo, 🔵 car: ${car.vehicleReg}`);
+      Logger.debug(`${mm} ...... uploading vehicle photo, 🔵 car: ${car.vehicleReg}`);
       const url = await this.uploadFile(
         `photo_${vehicleId}_${dt}`,
         filePath,
@@ -144,21 +139,20 @@ export class CloudStorageUploaderService {
         car.associationName
       );
 
-      const p = new VehiclePhoto();
-      p.associationId = car.associationId;
-      p.vehiclePhotoId = `${vehicleId}_${dt}`;
-      p.url = url;
-      p.thumbNailUrl = thumbUrl;
-      p.vehicleId = car.vehicleId;
-      p.vehicleReg = car.vehicleReg;
+      const photo = new VehiclePhoto();
+      photo.associationId = car.associationId;
+      photo.vehiclePhotoId = `${vehicleId}_${dt}`;
+      photo.url = url;
+      photo.thumbNailUrl = thumbUrl;
+      photo.vehicleId = car.vehicleId;
+      photo.vehicleReg = car.vehicleReg;
 
-      const pos = new Position();
-      pos.type = "Point";
-      pos.coordinates = [longitude, latitude];
-      p.position = pos;
-      p.created = new Date().toISOString();
+      const pos = new Position('Point', [longitudeNum, latitudeNum]);  
+      photo.position = pos;
+      photo.created = new Date().toISOString();
 
-      const resp = await this.vehiclePhotoModel.create(p);
+      Logger.debug(`${mm} vehicle photo about to be added: 🔵${JSON.stringify(photo, null, 2)}🔵`);
+      const resp = await this.vehiclePhotoModel.create(photo);
       Logger.log(
         `\n${mm} 🍎 🍎 vehicle photo uploaded and added to Atlas:🍎 🍎 🍎 🍎 \n\n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`
       );
@@ -336,7 +330,7 @@ export class CloudStorageUploaderService {
 
       const signedUrl = await this.getSignedUrl(file);
       Logger.log(
-        `${mm} File uploaded to cloud storage and signed url obtained ✅✅✅\n`
+        `${mm} ${bucketFileName} uploaded to cloud storage and signed url obtained ✅✅✅\n`
       );
       return signedUrl;
     } catch (error) {

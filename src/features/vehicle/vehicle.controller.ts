@@ -34,6 +34,7 @@ import { LocationRequest } from 'src/data/models/LocationRequest';
 import { LocationResponse } from 'src/data/models/LocationResponse';
 import { VehicleMediaRequest } from 'src/data/models/VehicleMediaRequest';
 import { VehicleBag } from 'src/data/helpers/VehicleBag';
+import { VehicleVideo } from 'src/data/models/VehicleVideo';
 
 const mm = ' 🚼 🚼 🚼 VehicleController  🚼';
 
@@ -143,10 +144,18 @@ export class VehicleController {
   }
   @Get('getOwnerVehicles')
   async getOwnerVehicles(@Query('userId') userId: string): Promise<Vehicle[]> {
-    if (userId) {
-      throw new KasieError('getOwnerVehicles: UserId is missing!', HttpStatus.BAD_REQUEST);
-    }
+  
     return await this.carService.getOwnerVehicles(userId, 0);
+  }
+  @Get('getVehiclePhotos')
+  async getVehiclePhotos(@Query('vehicleId') vehicleId: string): Promise<VehiclePhoto[]> {
+    
+    return await this.carService.getVehiclePhotos(vehicleId);
+  }
+  @Get('getVehicleVideos')
+  async getVehicleVideos(@Query('vehicleId') vehicleId: string): Promise<VehicleVideo[]> {
+    
+    return await this.carService.getVehicleVideos(vehicleId);
   }
   @Get('getVehicleRouteAssignments')
   async getVehicleRouteAssignments(

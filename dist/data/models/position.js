@@ -12,6 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Position = void 0;
 const swagger_1 = require("@nestjs/swagger");
 class Position {
+    constructor(type, coordinates) {
+        this.type = type;
+        this.coordinates = coordinates;
+    }
 }
 exports.Position = Position;
 __decorate([

@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { ApiProperty } from "@nestjs/swagger";
+import { VehiclePhoto } from "./VehiclePhoto";
+import { VehicleVideo } from "./VehicleVideo";
+
 
 @Schema({
   timestamps: true,
@@ -64,6 +67,9 @@ export class Vehicle {
   @Prop()
   @ApiProperty()
   qrCodeUrl: string;
+
+  photos: VehiclePhoto[];
+  videos: VehicleVideo[];
 }
 
 export const VehicleSchema = SchemaFactory.createForClass(Vehicle);

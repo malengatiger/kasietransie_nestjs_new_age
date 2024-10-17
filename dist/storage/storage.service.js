@@ -33,7 +33,7 @@ const UserPhoto_1 = require("../data/models/UserPhoto");
 const crypto_1 = require("crypto");
 const errors_interceptor_1 = require("../middleware/errors.interceptor");
 console.log(`${typeof sharp_1.default} - Should output "function"`);
-const mm = "🔶🔶🔶 CloudStorageUploaderService 🔶 ";
+const mm = "🔶🔶🔶 StorageService 🔶 ";
 let CloudStorageUploaderService = class CloudStorageUploaderService {
     constructor(configService, errorHandler, exampleFileModel, vehicleModel, userModel, userPhotoModel, vehiclePhotoModel, vehicleVideoModel) {
         this.configService = configService;
@@ -66,9 +66,7 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             p.thumbNailUrl = "tbd";
             p.vehicleId = car.vehicleId;
             p.vehicleReg = car.vehicleReg;
-            const pos = new position_1.Position();
-            pos.type = "Point";
-            pos.coordinates = [longitude, latitude];
+            const pos = new position_1.Position('Point', [longitude, latitude]);
             p.position = pos;
             p.created = new Date().toISOString();
             const resp = await this.vehicleVideoModel.create(p);
@@ -80,7 +78,9 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
         }
     }
     async uploadVehiclePhoto(vehicleId, filePath, thumbFilePath, latitude, longitude) {
-        common_1.Logger.log(`${mm} uploadVehiclePhoto: getting vehicle from Atlas, 🔵 car: ${vehicleId}`);
+        common_1.Logger.log(`\n\n${mm} uploadVehiclePhoto: getting vehicle from Atlas, 🔵 vehicleId: ${vehicleId} 🔵 latitude: ${latitude} 🔵 longitude: ${longitude}`);
+        const latitudeNum = parseFloat(latitude);
+        const longitudeNum = parseFloat(longitude);
         const cars = await this.vehicleModel
             .find({ vehicleId: vehicleId })
             .limit(1);
@@ -88,22 +88,21 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
         const dt = new Date().getTime();
         if (cars.length > 0) {
             const car = cars[0];
-            common_1.Logger.log(`${mm} uploading vehicle photo, 🔵 car: ${car.vehicleReg}`);
+            common_1.Logger.debug(`${mm} ...... uploading vehicle photo, 🔵 car: ${car.vehicleReg}`);
             const url = await this.uploadFile(`photo_${vehicleId}_${dt}`, filePath, car.associationName);
             const thumbUrl = await this.uploadFile(`thumbnail_${vehicleId}_${dt}`, thumbFilePath, car.associationName);
-            const p = new VehiclePhoto_1.VehiclePhoto();
-            p.associationId = car.associationId;
-            p.vehiclePhotoId = `${vehicleId}_${dt}`;
-            p.url = url;
-            p.thumbNailUrl = thumbUrl;
-            p.vehicleId = car.vehicleId;
-            p.vehicleReg = car.vehicleReg;
-            const pos = new position_1.Position();
-            pos.type = "Point";
-            pos.coordinates = [longitude, latitude];
-            p.position = pos;
-            p.created = new Date().toISOString();
-            const resp = await this.vehiclePhotoModel.create(p);
+            const photo = new VehiclePhoto_1.VehiclePhoto();
+            photo.associationId = car.associationId;
+            photo.vehiclePhotoId = `${vehicleId}_${dt}`;
+            photo.url = url;
+            photo.thumbNailUrl = thumbUrl;
+            photo.vehicleId = car.vehicleId;
+            photo.vehicleReg = car.vehicleReg;
+            const pos = new position_1.Position('Point', [longitudeNum, latitudeNum]);
+            photo.position = pos;
+            photo.created = new Date().toISOString();
+            common_1.Logger.debug(`${mm} vehicle photo about to be added: 🔵${JSON.stringify(photo, null, 2)}🔵`);
+            const resp = await this.vehiclePhotoModel.create(photo);
             common_1.Logger.log(`\n${mm} 🍎 🍎 vehicle photo uploaded and added to Atlas:🍎 🍎 🍎 🍎 \n\n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`);
             return resp;
         }
@@ -224,7 +223,7 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
                 .bucket(this.bucketName)
                 .upload(filePath, options);
             const signedUrl = await this.getSignedUrl(file);
-            common_1.Logger.log(`${mm} File uploaded to cloud storage and signed url obtained ✅✅✅\n`);
+            common_1.Logger.log(`${mm} ${bucketFileName} uploaded to cloud storage and signed url obtained ✅✅✅\n`);
             return signedUrl;
         }
         catch (error) {

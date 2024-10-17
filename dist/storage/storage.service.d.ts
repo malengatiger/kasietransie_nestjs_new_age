@@ -22,7 +22,7 @@ export declare class CloudStorageUploaderService {
     private cloudStorageDirectory;
     constructor(configService: ConfigService, errorHandler: KasieErrorHandler, exampleFileModel: mongoose.Model<ExampleFile>, vehicleModel: mongoose.Model<Vehicle>, userModel: mongoose.Model<User>, userPhotoModel: mongoose.Model<UserPhoto>, vehiclePhotoModel: mongoose.Model<VehiclePhoto>, vehicleVideoModel: mongoose.Model<VehicleVideo>);
     uploadVehicleVideo(vehicleId: string, filePath: string, latitude: number, longitude: number): Promise<any>;
-    uploadVehiclePhoto(vehicleId: string, filePath: string, thumbFilePath: string, latitude: number, longitude: number): Promise<any>;
+    uploadVehiclePhoto(vehicleId: string, filePath: string, thumbFilePath: string, latitude: string, longitude: string): Promise<VehiclePhoto>;
     createUserPhoto(userPhoto: UserPhoto): Promise<User>;
     uploadUserProfilePicture(userId: string, filePath: string, thumbFilePath: string): Promise<any>;
     uploadExampleFiles(userFilePath: string, vehicleFilePath: string): Promise<void>;

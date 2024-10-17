@@ -1,6 +1,7 @@
 import { CloudStorageUploaderService } from "./storage.service";
 import { UserPhoto } from "src/data/models/UserPhoto";
 import { User } from "src/data/models/User";
+import { VehiclePhoto } from "src/data/models/VehiclePhoto";
 export declare class StorageController {
     private readonly storageService;
     constructor(storageService: CloudStorageUploaderService);
@@ -9,14 +10,10 @@ export declare class StorageController {
         userFile: Express.Multer.File[];
         vehicleFile: Express.Multer.File[];
     }): Promise<string>;
-    uploadVehiclePhotoFiles(files: {
+    uploadVehiclePhoto(files: {
         imageFile: Express.Multer.File[];
         thumbFile: Express.Multer.File[];
-    }, data: {
-        vehicleId: string;
-        latitude: number;
-        longitude: number;
-    }): Promise<string>;
+    }, vehicleId: string, latitude: string, longitude: string): Promise<VehiclePhoto>;
     uploadUserProfilePicture(files: {
         imageFile: Express.Multer.File[];
         thumbFile: Express.Multer.File[];

@@ -40,16 +40,15 @@ let StorageController = class StorageController {
         await this.storageService.uploadExampleFiles(userTempFile, vehicleTempFile);
         return `${tag} Files uploaded successfully`;
     }
-    async uploadVehiclePhotoFiles(files, data) {
+    async uploadVehiclePhoto(files, vehicleId, latitude, longitude) {
         const imageTempFile = path.join(os.tmpdir(), files.imageFile[0].originalname);
         const thumbTempFile = path.join(os.tmpdir(), files.thumbFile[0].originalname);
         await fs.promises.writeFile(imageTempFile, files.imageFile[0].buffer);
         await fs.promises.writeFile(thumbTempFile, files.thumbFile[0].buffer);
-        common_1.Logger.log(`${tag} ${files.imageFile[0].originalname} 🥦 saved to ${imageTempFile}`);
-        common_1.Logger.log(`${tag}${files.thumbFile[0].originalname} 🥦 saved to ${thumbTempFile}`);
-        const { vehicleId, latitude, longitude } = data;
-        await this.storageService.uploadVehiclePhoto(vehicleId, imageTempFile, thumbTempFile, latitude, longitude);
-        return `${tag} Files uploaded successfully`;
+        common_1.Logger.debug(`${tag} ${files.imageFile[0].originalname} 🥦 saved to ${imageTempFile}`);
+        common_1.Logger.debug(`${tag}${files.thumbFile[0].originalname} 🥦 saved to ${thumbTempFile}`);
+        const res = await this.storageService.uploadVehiclePhoto(vehicleId, imageTempFile, thumbTempFile, latitude, longitude);
+        return res;
     }
     async uploadUserProfilePicture(files, userId) {
         common_1.Logger.log(`${tag} imageFile: ${files.imageFile[0].originalname} 🥦 `);
@@ -99,11 +98,13 @@ __decorate([
         { name: "thumbFile", maxCount: 1 },
     ])),
     __param(0, (0, common_1.UploadedFiles)()),
-    __param(1, (0, common_1.Body)()),
+    __param(1, (0, common_1.Query)('vehicleId')),
+    __param(2, (0, common_1.Query)('latitude')),
+    __param(3, (0, common_1.Query)('longitude')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object, String, String, String]),
     __metadata("design:returntype", Promise)
-], StorageController.prototype, "uploadVehiclePhotoFiles", null);
+], StorageController.prototype, "uploadVehiclePhoto", null);
 __decorate([
     (0, common_1.Post)("uploadUserProfilePicture"),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileFieldsInterceptor)([

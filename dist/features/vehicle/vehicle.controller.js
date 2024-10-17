@@ -27,7 +27,6 @@ const location_request_service_1 = require("../location_request/location_request
 const route_service_1 = require("../route/route.service");
 const time_series_service_1 = require("../time_series/time_series.service");
 const vehicle_service_1 = require("./vehicle.service");
-const kasie_error_1 = require("../../data/models/kasie.error");
 const LocationRequest_1 = require("../../data/models/LocationRequest");
 const LocationResponse_1 = require("../../data/models/LocationResponse");
 const VehicleMediaRequest_1 = require("../../data/models/VehicleMediaRequest");
@@ -81,10 +80,13 @@ let VehicleController = VehicleController_1 = class VehicleController {
         }
     }
     async getOwnerVehicles(userId) {
-        if (userId) {
-            throw new kasie_error_1.KasieError('getOwnerVehicles: UserId is missing!', common_1.HttpStatus.BAD_REQUEST);
-        }
         return await this.carService.getOwnerVehicles(userId, 0);
+    }
+    async getVehiclePhotos(vehicleId) {
+        return await this.carService.getVehiclePhotos(vehicleId);
+    }
+    async getVehicleVideos(vehicleId) {
+        return await this.carService.getVehicleVideos(vehicleId);
     }
     async getVehicleRouteAssignments(vehicleId) {
         return await this.carService.getVehicleRouteAssignments(vehicleId);
@@ -181,6 +183,20 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], VehicleController.prototype, "getOwnerVehicles", null);
+__decorate([
+    (0, common_1.Get)('getVehiclePhotos'),
+    __param(0, (0, common_1.Query)('vehicleId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], VehicleController.prototype, "getVehiclePhotos", null);
+__decorate([
+    (0, common_1.Get)('getVehicleVideos'),
+    __param(0, (0, common_1.Query)('vehicleId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], VehicleController.prototype, "getVehicleVideos", null);
 __decorate([
     (0, common_1.Get)('getVehicleRouteAssignments'),
     __param(0, (0, common_1.Query)('vehicleId')),

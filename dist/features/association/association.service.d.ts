@@ -14,6 +14,8 @@ import { CityService } from "../city/city.service";
 import { UserService } from "../user/user.service";
 import { Commuter } from "src/data/models/Commuter";
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
+import { VehiclePhoto } from "src/data/models/VehiclePhoto";
+import { VehicleVideo } from "src/data/models/VehicleVideo";
 export declare class AssociationService {
     private archiveService;
     private userService;
@@ -27,9 +29,11 @@ export declare class AssociationService {
     private countryModel;
     private associationTokenModel;
     private appErrorModel;
+    private vehiclePhotoModel;
+    private vehicleVideoModel;
     private exampleFileModel;
     private commuterModel;
-    constructor(archiveService: FileArchiverService, userService: UserService, cityService: CityService, messagingService: MessagingService, errorHandler: KasieErrorHandler, associationModel: mongoose.Model<Association>, vehicleModel: mongoose.Model<Vehicle>, settingsModel: mongoose.Model<SettingsModel>, userModel: mongoose.Model<User>, countryModel: mongoose.Model<Country>, associationTokenModel: mongoose.Model<AssociationToken>, appErrorModel: mongoose.Model<AppError>, exampleFileModel: mongoose.Model<ExampleFile>, commuterModel: mongoose.Model<Commuter>);
+    constructor(archiveService: FileArchiverService, userService: UserService, cityService: CityService, messagingService: MessagingService, errorHandler: KasieErrorHandler, associationModel: mongoose.Model<Association>, vehicleModel: mongoose.Model<Vehicle>, settingsModel: mongoose.Model<SettingsModel>, userModel: mongoose.Model<User>, countryModel: mongoose.Model<Country>, associationTokenModel: mongoose.Model<AssociationToken>, appErrorModel: mongoose.Model<AppError>, vehiclePhotoModel: mongoose.Model<VehiclePhoto>, vehicleVideoModel: mongoose.Model<VehicleVideo>, exampleFileModel: mongoose.Model<ExampleFile>, commuterModel: mongoose.Model<Commuter>);
     getAssociationById(associationId: string): Promise<any>;
     getAssociations(): Promise<any[]>;
     getAssociationUsers(associationId: string): Promise<any[]>;

@@ -24,6 +24,8 @@ import { v4 as uuidv4 } from "uuid";
 import { Commuter } from "src/data/models/Commuter";
 import { Constants } from "src/my-utils/constants";
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
+import { VehiclePhoto } from "src/data/models/VehiclePhoto";
+import { VehicleVideo } from "src/data/models/VehicleVideo";
 
 const mm = "🍎🍎🍎 AssociationService: 🍎🍎🍎";
 
@@ -54,6 +56,12 @@ export class AssociationService {
 
     @InjectModel(AppError.name)
     private appErrorModel: mongoose.Model<AppError>,
+
+    @InjectModel(VehiclePhoto.name)
+    private vehiclePhotoModel: mongoose.Model<VehiclePhoto>,
+
+    @InjectModel(VehicleVideo.name)
+    private vehicleVideoModel: mongoose.Model<VehicleVideo>,
 
     @InjectModel(ExampleFile.name)
     private exampleFileModel: mongoose.Model<ExampleFile>,

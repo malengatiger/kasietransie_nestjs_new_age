@@ -68,13 +68,13 @@ export class VehicleService {
     @InjectModel(Route.name)
     private routeModel: mongoose.Model<Route>,
 
-    @InjectModel(Route.name)
+    @InjectModel(VehicleMediaRequest.name)
     private vehicleMediaRequestModel: mongoose.Model<VehicleMediaRequest>,
 
-    @InjectModel(Route.name)
+    @InjectModel(VehiclePhoto.name)
     private vehiclePhotoModel: mongoose.Model<VehiclePhoto>,
 
-    @InjectModel(Route.name)
+    @InjectModel(VehicleVideo.name)
     private vehicleVideoModel: mongoose.Model<VehicleVideo>
   ) {}
 
@@ -103,7 +103,11 @@ export class VehicleService {
     return await this.vehicleVideoModel.create(vehicleVideo);
   }
   public async getVehiclePhotos(vehicleId: string): Promise<VehiclePhoto[]> {
-    return [];
+    const photos = await this.vehiclePhotoModel.find({
+      vehicleId: vehicleId
+    });
+    Logger.debug(`${mm} vehicle photos found: ${photos.length}`);
+    return photos;
   }
   public async getVehicleVideos(vehicleId: string): Promise<VehicleVideo[]> {
     return [];

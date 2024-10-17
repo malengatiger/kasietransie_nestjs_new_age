@@ -31,6 +31,9 @@ const VehicleArrival_1 = require("../../data/models/VehicleArrival");
 const VehicleDeparture_1 = require("../../data/models/VehicleDeparture");
 const association_service_1 = require("../association/association.service");
 const storage_service_1 = require("../../storage/storage.service");
+const VehicleMediaRequest_1 = require("../../data/models/VehicleMediaRequest");
+const VehiclePhoto_1 = require("../../data/models/VehiclePhoto");
+const VehicleVideo_1 = require("../../data/models/VehicleVideo");
 const os = require("os");
 const path = require("path");
 const csv_1 = require("csv");
@@ -73,7 +76,11 @@ let VehicleService = class VehicleService {
         return await this.vehicleVideoModel.create(vehicleVideo);
     }
     async getVehiclePhotos(vehicleId) {
-        return [];
+        const photos = await this.vehiclePhotoModel.find({
+            vehicleId: vehicleId
+        });
+        common_1.Logger.debug(`${mm} vehicle photos found: ${photos.length}`);
+        return photos;
     }
     async getVehicleVideos(vehicleId) {
         return [];
@@ -330,9 +337,9 @@ exports.VehicleService = VehicleService = __decorate([
     __param(11, (0, mongoose_1.InjectModel)(User_1.User.name)),
     __param(12, (0, mongoose_1.InjectModel)(RouteAssignment_1.RouteAssignment.name)),
     __param(13, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
-    __param(14, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
-    __param(15, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
-    __param(16, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
+    __param(14, (0, mongoose_1.InjectModel)(VehicleMediaRequest_1.VehicleMediaRequest.name)),
+    __param(15, (0, mongoose_1.InjectModel)(VehiclePhoto_1.VehiclePhoto.name)),
+    __param(16, (0, mongoose_1.InjectModel)(VehicleVideo_1.VehicleVideo.name)),
     __metadata("design:paramtypes", [storage_service_1.CloudStorageUploaderService,
         association_service_1.AssociationService,
         user_service_1.UserService,

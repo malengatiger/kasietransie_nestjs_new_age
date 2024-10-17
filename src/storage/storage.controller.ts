@@ -18,6 +18,7 @@ import * as os from "os";
 import * as path from "path";
 import { UserPhoto } from "src/data/models/UserPhoto";
 import { User } from "src/data/models/User";
+import { VehiclePhoto } from "src/data/models/VehiclePhoto";
 
 const tag = "🔵 🔵 🔵 StorageController 🔵 ";
 @Controller("storage")
@@ -69,14 +70,16 @@ export class StorageController {
       { name: "thumbFile", maxCount: 1 },
     ])
   )
-  async uploadVehiclePhotoFiles(
+  async uploadVehiclePhoto(
     @UploadedFiles()
     files: {
       imageFile: Express.Multer.File[];
       thumbFile: Express.Multer.File[];
     },
-    @Body() data: { vehicleId: string; latitude: number; longitude: number }
-  ): Promise<string> {
+    @Query('vehicleId')  vehicleId: string, 
+    @Query('latitude') latitude: string, 
+    @Query('longitude') longitude: string 
+  ): Promise<VehiclePhoto> {
     const imageTempFile = path.join(
       os.tmpdir(),
       files.imageFile[0].originalname
@@ -89,16 +92,14 @@ export class StorageController {
     await fs.promises.writeFile(imageTempFile, files.imageFile[0].buffer);
     await fs.promises.writeFile(thumbTempFile, files.thumbFile[0].buffer);
 
-    Logger.log(
+    Logger.debug(
       `${tag} ${files.imageFile[0].originalname} 🥦 saved to ${imageTempFile}`
     );
-    Logger.log(
+    Logger.debug(
       `${tag}${files.thumbFile[0].originalname} 🥦 saved to ${thumbTempFile}`
     );
 
-    const { vehicleId, latitude, longitude } = data; // Access data from body
-
-    await this.storageService.uploadVehiclePhoto(
+    const res = await this.storageService.uploadVehiclePhoto(
       vehicleId,
       imageTempFile,
       thumbTempFile,
@@ -106,7 +107,7 @@ export class StorageController {
       longitude
     );
 
-    return `${tag} Files uploaded successfully`;
+    return res;
   }
 
   @Post("uploadUserProfilePicture")

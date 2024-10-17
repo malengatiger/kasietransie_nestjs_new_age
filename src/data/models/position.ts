@@ -5,4 +5,9 @@ export class Position {
   type: string;
   @ApiProperty()
   coordinates: number[];
+
+  constructor(type: string, coordinates: number[]) {
+    this.type = type;
+    this.coordinates = coordinates;
+  }
 }

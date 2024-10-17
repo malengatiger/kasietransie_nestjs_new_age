@@ -44,7 +44,9 @@ let MediaService = class MediaService {
         return null;
     }
     async getVehiclePhotos(vehicleId) {
-        return [];
+        return await this.vehiclePhotoModel.find({
+            vehicleId: vehicleId
+        });
     }
     async getVehicleVideos(vehicleId) {
         return [];

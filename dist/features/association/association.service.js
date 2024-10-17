@@ -36,9 +36,11 @@ const uuid_1 = require("uuid");
 const Commuter_1 = require("../../data/models/Commuter");
 const constants_1 = require("../../my-utils/constants");
 const errors_interceptor_1 = require("../../middleware/errors.interceptor");
+const VehiclePhoto_1 = require("../../data/models/VehiclePhoto");
+const VehicleVideo_1 = require("../../data/models/VehicleVideo");
 const mm = "🍎🍎🍎 AssociationService: 🍎🍎🍎";
 let AssociationService = class AssociationService {
-    constructor(archiveService, userService, cityService, messagingService, errorHandler, associationModel, vehicleModel, settingsModel, userModel, countryModel, associationTokenModel, appErrorModel, exampleFileModel, commuterModel) {
+    constructor(archiveService, userService, cityService, messagingService, errorHandler, associationModel, vehicleModel, settingsModel, userModel, countryModel, associationTokenModel, appErrorModel, vehiclePhotoModel, vehicleVideoModel, exampleFileModel, commuterModel) {
         this.archiveService = archiveService;
         this.userService = userService;
         this.cityService = cityService;
@@ -51,6 +53,8 @@ let AssociationService = class AssociationService {
         this.countryModel = countryModel;
         this.associationTokenModel = associationTokenModel;
         this.appErrorModel = appErrorModel;
+        this.vehiclePhotoModel = vehiclePhotoModel;
+        this.vehicleVideoModel = vehicleVideoModel;
         this.exampleFileModel = exampleFileModel;
         this.commuterModel = commuterModel;
     }
@@ -314,12 +318,14 @@ exports.AssociationService = AssociationService = __decorate([
     __param(9, (0, mongoose_1.InjectModel)(Country_1.Country.name)),
     __param(10, (0, mongoose_1.InjectModel)(AssociationToken_1.AssociationToken.name)),
     __param(11, (0, mongoose_1.InjectModel)(AppError_1.AppError.name)),
-    __param(12, (0, mongoose_1.InjectModel)(ExampleFile_1.ExampleFile.name)),
-    __param(13, (0, mongoose_1.InjectModel)(Commuter_1.Commuter.name)),
+    __param(12, (0, mongoose_1.InjectModel)(VehiclePhoto_1.VehiclePhoto.name)),
+    __param(13, (0, mongoose_1.InjectModel)(VehicleVideo_1.VehicleVideo.name)),
+    __param(14, (0, mongoose_1.InjectModel)(ExampleFile_1.ExampleFile.name)),
+    __param(15, (0, mongoose_1.InjectModel)(Commuter_1.Commuter.name)),
     __metadata("design:paramtypes", [zipper_1.FileArchiverService,
         user_service_1.UserService,
         city_service_1.CityService,
         fcm_service_1.MessagingService,
-        errors_interceptor_1.KasieErrorHandler, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        errors_interceptor_1.KasieErrorHandler, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], AssociationService);
 //# sourceMappingURL=association.service.js.map

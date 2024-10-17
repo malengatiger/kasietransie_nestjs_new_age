@@ -3,6 +3,7 @@
         "assocs",
         "disps",
         "Geofence",
-        "medialink"
+        "medialink",
+        "Vehiclevideo"
     ]
 }

@@ -14,6 +14,7 @@ import { LocationRequest } from 'src/data/models/LocationRequest';
 import { LocationResponse } from 'src/data/models/LocationResponse';
 import { VehicleMediaRequest } from 'src/data/models/VehicleMediaRequest';
 import { VehicleBag } from 'src/data/helpers/VehicleBag';
+import { VehicleVideo } from 'src/data/models/VehicleVideo';
 export declare class VehicleController {
     private readonly carService;
     private readonly dispatchService;
@@ -42,6 +43,8 @@ export declare class VehicleController {
         startDate: string;
     }, res: Response): Promise<void>;
     getOwnerVehicles(userId: string): Promise<Vehicle[]>;
+    getVehiclePhotos(vehicleId: string): Promise<VehiclePhoto[]>;
+    getVehicleVideos(vehicleId: string): Promise<VehicleVideo[]>;
     getVehicleRouteAssignments(vehicleId: string): Promise<RouteAssignment[]>;
     getVehicleBag(query: {
         vehicleId: string;
