@@ -1,13 +1,13 @@
-import { Response } from 'express';
-import { CalculatedDistanceList } from 'src/data/helpers/CalculatedDistanceList';
-import { CalculatedDistance } from 'src/data/models/CalculatedDistance';
-import { Route } from 'src/data/models/Route';
-import { RouteCity } from 'src/data/models/RouteCity';
-import { RouteLandmark } from 'src/data/models/RouteLandmark';
-import { RoutePoint } from 'src/data/models/RoutePoint';
-import { RouteUpdateRequest } from 'src/data/models/RouteUpdateRequest';
-import { RoutePointList } from 'src/data/models/RoutePointList';
-import { RouteService } from 'src/features/route/route.service';
+import { Response } from "express";
+import { CalculatedDistanceList } from "src/data/helpers/CalculatedDistanceList";
+import { CalculatedDistance } from "src/data/models/CalculatedDistance";
+import { Route } from "src/data/models/Route";
+import { RouteCity } from "src/data/models/RouteCity";
+import { RouteLandmark } from "src/data/models/RouteLandmark";
+import { RoutePoint } from "src/data/models/RoutePoint";
+import { RouteUpdateRequest } from "src/data/models/RouteUpdateRequest";
+import { RoutePointList } from "src/data/models/RoutePointList";
+import { RouteService } from "src/features/route/route.service";
 export declare class RouteController {
     private readonly routeService;
     private readonly logger;
@@ -23,6 +23,7 @@ export declare class RouteController {
         routeId: string;
         index: number;
     }): Promise<RoutePoint[]>;
+    deleteRoutePoint(routePointId: string): Promise<any>;
     updateRouteColor(query: {
         routeId: string;
         color: string;

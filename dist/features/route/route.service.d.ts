@@ -44,6 +44,7 @@ export declare class RouteService {
     fix(routeId: string): Promise<any>;
     addRouteLandmark(routeLandmark: RouteLandmark): Promise<RouteLandmark[]>;
     deleteRouteLandmark(routeLandmarkId: string): Promise<RouteLandmark[]>;
+    deleteRoutePoint(routePointId: string): Promise<any>;
     addVehicleMediaRequest(vehicleMediaRequest: VehicleMediaRequest): Promise<VehicleMediaRequest>;
     addRouteUpdateRequest(routeUpdateRequest: RouteUpdateRequest): Promise<RouteUpdateRequest>;
     updateRouteLandmark(routeLandmark: RouteLandmark): Promise<RouteLandmark>;

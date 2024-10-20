@@ -64,7 +64,7 @@ export declare class VehicleService {
     importVehiclesFromCSV(file: Express.Multer.File, associationId: string): Promise<AddCarsResponse>;
     private handleExtractedCars;
     private buildCar;
-    private handleOwner;
+    createOwnerIfNotExists(car: Vehicle): Promise<number>;
 }
 export interface AddCarsResponse {
     cars: Vehicle[];

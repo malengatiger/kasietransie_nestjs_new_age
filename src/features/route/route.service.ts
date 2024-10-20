@@ -293,6 +293,19 @@ export class RouteService {
 
     return res;
   }
+  public async deleteRoutePoint(
+    routePointId: string
+  ): Promise<any> {
+    const mark = await this.routePointModel.deleteOne({
+      routePointId: routePointId,
+    });
+  
+    Logger.debug(
+      `${mm} deleteRoutePoint successful: ${JSON.stringify(mark)}, }`
+    );
+
+    return mark;
+  }
   public async addVehicleMediaRequest(
     vehicleMediaRequest: VehicleMediaRequest
   ): Promise<VehicleMediaRequest> {

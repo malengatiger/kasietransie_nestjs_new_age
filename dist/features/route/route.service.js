@@ -215,6 +215,13 @@ let RouteService = class RouteService {
         common_1.Logger.log(`${mm} routeLandmark deleted successfully, returning ${res.length}`);
         return res;
     }
+    async deleteRoutePoint(routePointId) {
+        const mark = await this.routePointModel.deleteOne({
+            routePointId: routePointId,
+        });
+        common_1.Logger.debug(`${mm} deleteRoutePoint successful: ${JSON.stringify(mark)}, }`);
+        return mark;
+    }
     async addVehicleMediaRequest(vehicleMediaRequest) {
         return await this.vehicleMediaRequestModel.create(vehicleMediaRequest);
     }

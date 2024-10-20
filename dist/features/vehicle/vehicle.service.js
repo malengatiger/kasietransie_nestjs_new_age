@@ -77,7 +77,7 @@ let VehicleService = class VehicleService {
     }
     async getVehiclePhotos(vehicleId) {
         const photos = await this.vehiclePhotoModel.find({
-            vehicleId: vehicleId
+            vehicleId: vehicleId,
         });
         common_1.Logger.debug(`${mm} vehicle photos found: ${photos.length}`);
         return photos;
@@ -107,17 +107,34 @@ let VehicleService = class VehicleService {
         try {
             if (vehicle.ownerName != null) {
                 common_1.Logger.debug(`${mm} ... checking owner ... create if none.`);
-                const userCount = await this.handleOwner(vehicle);
-                common_1.Logger.debug(`${mm} owner created fresh: ${userCount} `);
+                const userCount = await this.createOwnerIfNotExists(vehicle);
+                common_1.Logger.debug(`${mm} fresh new owner created: ${userCount} `);
             }
-            const url = await this.storage.createQRCode({
-                data: JSON.stringify(vehicle),
-                prefix: vehicle.vehicleReg.replaceAll(" ", ""),
-                size: 2,
-                associationId: vehicle.associationId,
+            const existingCar = await this.vehicleModel.findOne({
+                vehicleId: vehicle.vehicleId,
             });
-            vehicle.qrCodeUrl = url;
-            return await this.vehicleModel.create(vehicle);
+            if (existingCar) {
+                common_1.Logger.debug(`${mm} ... car exists; will update ...`);
+                vehicle.updated = new Date().toISOString();
+                const res = await this.vehicleModel.updateOne({
+                    vehicleId: vehicle.vehicleId,
+                }, vehicle);
+                common_1.Logger.debug(`$mm car updated, result: ${JSON.stringify(res)}`);
+                return vehicle;
+            }
+            else {
+                common_1.Logger.debug(`${mm} creating new vehicle ...`);
+                vehicle.vehicleId = (0, crypto_1.randomUUID)();
+                vehicle.created = new Date().toISOString();
+                const url = await this.storage.createQRCode({
+                    data: JSON.stringify(vehicle),
+                    prefix: vehicle.vehicleReg.replaceAll(" ", ""),
+                    size: 2,
+                    associationId: vehicle.associationId,
+                });
+                vehicle.qrCodeUrl = url;
+                return await this.vehicleModel.create(vehicle);
+            }
         }
         catch (e) {
             common_1.Logger.debug(`${mm} add car failed: ${e}`);
@@ -267,7 +284,7 @@ let VehicleService = class VehicleService {
         let userCount = 0;
         for (const mCar of carList) {
             const car = await this.buildCar(mCar, ass);
-            userCount += await this.handleOwner(car);
+            userCount += await this.createOwnerIfNotExists(car);
             cars.push(car);
         }
         common_1.Logger.debug(`\n\n${mm} handleExtractedCars: 🔷 ${userCount} 🔷 owners have been added to Atlas`);
@@ -300,7 +317,7 @@ let VehicleService = class VehicleService {
         common_1.Logger.debug(`\n${mm} buildCar:... 🔵 vehicle built: ${JSON.stringify(myCar, null, 2)} 🔵\n\n`);
         return myCar;
     }
-    async handleOwner(car) {
+    async createOwnerIfNotExists(car) {
         common_1.Logger.debug(`\n${mm} handleOwner: for car: 🔵 ${car.vehicleReg}`);
         const nameParts = car.ownerName.split(" ");
         const firstName = nameParts.slice(0, -1).join(" ");

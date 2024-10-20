@@ -22,7 +22,7 @@ const RouteLandmark_1 = require("../../data/models/RouteLandmark");
 const RouteUpdateRequest_1 = require("../../data/models/RouteUpdateRequest");
 const RoutePointList_1 = require("../../data/models/RoutePointList");
 const route_service_1 = require("./route.service");
-const mm = ' 🚼 🚼 🚼 RouteController  🚼';
+const mm = " 🚼 🚼 🚼 RouteController  🚼";
 let RouteController = RouteController_1 = class RouteController {
     constructor(routeService) {
         this.routeService = routeService;
@@ -53,6 +53,10 @@ let RouteController = RouteController_1 = class RouteController {
     }
     async deleteRoutePointsFromIndex(query) {
         const list = await this.routeService.deleteRoutePointsFromIndex(query.routeId, query.index);
+        return list;
+    }
+    async deleteRoutePoint(routePointId) {
+        const list = await this.routeService.deleteRoutePoint(routePointId);
         return list;
     }
     async updateRouteColor(query) {
@@ -87,8 +91,8 @@ let RouteController = RouteController_1 = class RouteController {
             this.sendFile(fileName, res);
         }
         catch (error) {
-            this.logger.error('Error getting route zipped file:', error);
-            res.status(500).send('Error downloading file: ' + error.message);
+            this.logger.error("Error getting route zipped file:", error);
+            res.status(500).send("Error downloading file: " + error.message);
         }
     }
     async deleteRoutePoints(query, res) {
@@ -97,8 +101,8 @@ let RouteController = RouteController_1 = class RouteController {
             res.status(200).send(fileName);
         }
         catch (error) {
-            this.logger.error('Error getting routePoint zipped file:', error);
-            res.status(500).send('Error deleting RoutePoints: ' + error.message);
+            this.logger.error("Error getting routePoint zipped file:", error);
+            res.status(500).send("Error deleting RoutePoints: " + error.message);
         }
     }
     async refreshRoute(routeId, res) {
@@ -107,8 +111,8 @@ let RouteController = RouteController_1 = class RouteController {
             this.sendFile(fileName, res);
         }
         catch (error) {
-            this.logger.error('Error getting route zipped file:', error);
-            res.status(500).send('Error downloading file: ' + error.message);
+            this.logger.error("Error getting route zipped file:", error);
+            res.status(500).send("Error downloading file: " + error.message);
         }
     }
     async getAssociationRouteZippedFile(associationId, res) {
@@ -117,8 +121,8 @@ let RouteController = RouteController_1 = class RouteController {
             this.sendFile(filePath, res);
         }
         catch (error) {
-            this.logger.error('Error getting route zipped file:', error);
-            res.status(500).send('Error downloading file: ' + error.message);
+            this.logger.error("Error getting route zipped file:", error);
+            res.status(500).send("Error downloading file: " + error.message);
         }
     }
     async getRoutePointLandmarks(routeId) {
@@ -127,7 +131,7 @@ let RouteController = RouteController_1 = class RouteController {
             return list;
         }
         catch (error) {
-            this.logger.error('Error getting route landmarks:', error);
+            this.logger.error("Error getting route landmarks:", error);
             throw error;
         }
     }
@@ -140,125 +144,132 @@ let RouteController = RouteController_1 = class RouteController {
             return list;
         }
         catch (error) {
-            this.logger.error('Error getting route points:', error);
+            this.logger.error("Error getting route points:", error);
             throw error;
         }
     }
     sendFile(fileName, res) {
         this.logger.debug(`\n\n${mm} .... 💦💦💦💦💦 sending file ....\n💦💦 path:` + fileName);
-        res.setHeader('Content-Type', 'application/octet-stream');
-        res.setHeader('Content-Disposition', `attachment; filename=route.zip`);
+        res.setHeader("Content-Type", "application/octet-stream");
+        res.setHeader("Content-Disposition", `attachment; filename=route.zip`);
         res.sendFile(fileName);
     }
 };
 exports.RouteController = RouteController;
 __decorate([
-    (0, common_1.Post)('addRoute'),
+    (0, common_1.Post)("addRoute"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Route_1.Route]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "addRoute", null);
 __decorate([
-    (0, common_1.Post)('addRouteLandmark'),
+    (0, common_1.Post)("addRouteLandmark"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [RouteLandmark_1.RouteLandmark]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "addRouteLandmark", null);
 __decorate([
-    (0, common_1.Post)('addRouteUpdateRequest'),
+    (0, common_1.Post)("addRouteUpdateRequest"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [RouteUpdateRequest_1.RouteUpdateRequest]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "addRouteUpdateRequest", null);
 __decorate([
-    (0, common_1.Post)('addRouteCity'),
+    (0, common_1.Post)("addRouteCity"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [RouteCity_1.RouteCity]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "addRouteCity", null);
 __decorate([
-    (0, common_1.Post)('addRouteCities'),
+    (0, common_1.Post)("addRouteCities"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Array]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "addRouteCities", null);
 __decorate([
-    (0, common_1.Post)('addCalculatedDistances'),
+    (0, common_1.Post)("addCalculatedDistances"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [CalculatedDistanceList_1.CalculatedDistanceList]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "addCalculatedDistances", null);
 __decorate([
-    (0, common_1.Post)('addRoutePoints'),
+    (0, common_1.Post)("addRoutePoints"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [RoutePointList_1.RoutePointList]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "addRoutePoints", null);
 __decorate([
-    (0, common_1.Get)('deleteRoutePointsFromIndex'),
+    (0, common_1.Get)("deleteRoutePointsFromIndex"),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "deleteRoutePointsFromIndex", null);
 __decorate([
-    (0, common_1.Get)('updateRouteColor'),
+    (0, common_1.Get)("deleteRoutePoint"),
+    __param(0, (0, common_1.Query)("routePointId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], RouteController.prototype, "deleteRoutePoint", null);
+__decorate([
+    (0, common_1.Get)("updateRouteColor"),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "updateRouteColor", null);
 __decorate([
-    (0, common_1.Get)('deleteRouteLandmark'),
+    (0, common_1.Get)("deleteRouteLandmark"),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "deleteRouteLandmark", null);
 __decorate([
-    (0, common_1.Get)('removeAllDuplicateRoutePoints'),
+    (0, common_1.Get)("removeAllDuplicateRoutePoints"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "removeAllDuplicateRoutePoints", null);
 __decorate([
-    (0, common_1.Get)('getAssociationRoutes'),
+    (0, common_1.Get)("getAssociationRoutes"),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "getAssociationRoutes", null);
 __decorate([
-    (0, common_1.Get)('getAssociationRouteLandmarks'),
+    (0, common_1.Get)("getAssociationRouteLandmarks"),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "getAssociationRouteLandmarks", null);
 __decorate([
-    (0, common_1.Get)('getCalculatedDistances'),
+    (0, common_1.Get)("getCalculatedDistances"),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "getCalculatedDistances", null);
 __decorate([
-    (0, common_1.Get)('getRoutePointsZipped'),
-    __param(0, (0, common_1.Query)('routeId')),
+    (0, common_1.Get)("getRoutePointsZipped"),
+    __param(0, (0, common_1.Query)("routeId")),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "getRoutePointsZipped", null);
 __decorate([
-    (0, common_1.Get)('deleteRoutePoints'),
+    (0, common_1.Get)("deleteRoutePoints"),
     __param(0, (0, common_1.Query)()),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
@@ -266,44 +277,44 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "deleteRoutePoints", null);
 __decorate([
-    (0, common_1.Get)('refreshRoute'),
-    __param(0, (0, common_1.Query)('routeId')),
+    (0, common_1.Get)("refreshRoute"),
+    __param(0, (0, common_1.Query)("routeId")),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "refreshRoute", null);
 __decorate([
-    (0, common_1.Get)('getAssociationRouteZippedFile'),
-    __param(0, (0, common_1.Query)('associationId')),
+    (0, common_1.Get)("getAssociationRouteZippedFile"),
+    __param(0, (0, common_1.Query)("associationId")),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "getAssociationRouteZippedFile", null);
 __decorate([
-    (0, common_1.Get)('getRouteLandmarks'),
-    __param(0, (0, common_1.Query)('routeId')),
+    (0, common_1.Get)("getRouteLandmarks"),
+    __param(0, (0, common_1.Query)("routeId")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "getRoutePointLandmarks", null);
 __decorate([
-    (0, common_1.Get)('fix'),
-    __param(0, (0, common_1.Query)('routeId')),
+    (0, common_1.Get)("fix"),
+    __param(0, (0, common_1.Query)("routeId")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "fix", null);
 __decorate([
-    (0, common_1.Get)('getRoutePoints'),
-    __param(0, (0, common_1.Query)('routeId')),
+    (0, common_1.Get)("getRoutePoints"),
+    __param(0, (0, common_1.Query)("routeId")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "getRoutePoints", null);
 exports.RouteController = RouteController = RouteController_1 = __decorate([
-    (0, common_1.Controller)('routes'),
+    (0, common_1.Controller)("routes"),
     __metadata("design:paramtypes", [route_service_1.RouteService])
 ], RouteController);
 //# sourceMappingURL=route.controller.js.map
