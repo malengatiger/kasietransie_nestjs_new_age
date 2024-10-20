@@ -42,7 +42,7 @@ let CountryService = class CountryService {
         common_1.Logger.log(`${mm} ... getCountryCitiesZippedFile starting, id: ${countryId} ...`);
         const list = await this.getCountryCities(countryId);
         const json = JSON.stringify(list);
-        const file = await this.zipper.zip([{ content: json }]);
+        const file = await this.zipper.zip([{ contentString: json }]);
         common_1.Logger.log(`${mm} ... getCountryCitiesZippedFile found:  🔷🔷 ${list.length} cities 🔷🔷`);
         return file;
     }

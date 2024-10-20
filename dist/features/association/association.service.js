@@ -97,14 +97,14 @@ let AssociationService = class AssociationService {
         common_1.Logger.log(`${mm} ... getAssociationVehicles starting, id: ${associationId} ...`);
         const list = await this.getAssociationVehicles(associationId);
         const json = JSON.stringify(list);
-        const file = await this.archiveService.zip([{ content: json }]);
+        const file = await this.archiveService.zip([{ contentString: json }]);
         common_1.Logger.log(`${mm} ... getAssociationVehicles found: ${list.length} ...`);
         return file;
     }
     async getOwnerVehiclesZippedFile(userId) {
         const list = await this.vehicleModel.find({ ownerId: userId });
         const json = JSON.stringify(list);
-        const file = await this.archiveService.zip([{ content: json }]);
+        const file = await this.archiveService.zip([{ contentString: json }]);
         common_1.Logger.log(`${mm} ... getOwnerVehiclesZippedFile found: ${list.length} ...`);
         return file;
     }

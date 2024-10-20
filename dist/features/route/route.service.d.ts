@@ -13,6 +13,7 @@ import { CityService } from "../city/city.service";
 import { MessagingService } from "../fcm/fcm.service";
 import { CloudStorageUploaderService } from "src/storage/storage.service";
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
+import { AssociationRouteData } from "src/data/models/RouteData";
 export declare class RouteService {
     private storage;
     private readonly archiveService;
@@ -56,6 +57,9 @@ export declare class RouteService {
     findRoutePointsByLocation(latitude: number, longitude: number, radiusInKM: number): Promise<RoutePoint[]>;
     getAssociationRoutePoints(associationId: string): Promise<string>;
     getAssociationRouteZippedFile(associationId: string): Promise<string>;
+    private collectShit;
+    private removeDuplicates;
+    getAssociationRouteData(associationId: string): Promise<AssociationRouteData>;
     getAssociationRouteCities(associationId: string): Promise<RouteCity[]>;
     putRouteLandmarksInOrder(routeId: string): Promise<RouteLandmark[]>;
     getAssociationRoutes(associationId: string): Promise<Route[]>;

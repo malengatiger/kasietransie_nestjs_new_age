@@ -68,7 +68,7 @@ let TimeSeriesService = class TimeSeriesService {
             common_1.Logger.error(e);
         }
         const mString = JSON.stringify(sortedResults);
-        return await this.zipService.zip([{ content: mString }]);
+        return await this.zipService.zip([{ contentString: mString }]);
     }
     parseDate(year, month, day, hour) {
         const formattedYear = year.toString();

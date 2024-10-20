@@ -174,7 +174,7 @@ export class DispatchService {
     bag.commuterRequests = commuterRequests;
     bag.passengerCounts = passengerCounts;
     const mString = JSON.stringify(bag);
-    return await this.zipService.zip([{ content: mString }]);
+    return await this.zipService.zip([{ contentString: mString }]);
   }
   public async generateRouteDispatchRecords(): Promise<void> {
     return null;

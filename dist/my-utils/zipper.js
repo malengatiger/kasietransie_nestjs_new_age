@@ -11,40 +11,42 @@ const common_1 = require("@nestjs/common");
 const archiver = require("archiver");
 const fs = require("fs");
 const path = require("path");
-const mm = '🍎🍎🍎 FileArchiverService: 🍎🍎🍎';
+const mm = "🍎🍎🍎 FileArchiverService: 🍎🍎🍎";
 let FileArchiverService = class FileArchiverService {
     async zip(fileContents) {
+        common_1.Logger.log(`${mm} FileArchiverService: starting to zip ...`);
         const timestamp = Date.now().toString();
         const randomString = Math.random().toString(36).substring(2, 8);
         const key = `${timestamp}_${randomString}`;
         const zipFileName = `file${key}.zip`;
-        const tempZipsDir = path.join(__dirname, '..', 'tempZips');
+        const tempZipsDir = path.join(__dirname, "..", "tempZips");
         if (!fs.existsSync(tempZipsDir)) {
             fs.mkdirSync(tempZipsDir);
         }
         const zipFilePath = path.join(tempZipsDir, zipFileName);
-        const sizeInMB = (fileContents[0].content.length / (1024 * 1024)).toFixed(2);
+        const sizeInMB = (fileContents[0].contentString.length /
+            (1024 * 1024)).toFixed(2);
         common_1.Logger.log(`${mm} string content to be zipped: ${sizeInMB}MB`);
         const resultPath = new Promise((resolve, reject) => {
             const output = fs.createWriteStream(zipFilePath);
-            const archive = archiver('zip', { zlib: { level: 9 } });
-            output.on('data', (chunk) => {
+            const archive = archiver("zip", { zlib: { level: 9 } });
+            output.on("data", (chunk) => {
                 common_1.Logger.log(`${mm} ... on data: chunk length: ${chunk.length} bytes`);
             });
-            output.on('close', () => {
+            output.on("close", () => {
                 const stats = fs.statSync(zipFilePath);
                 const fileSizeInBytes = stats.size;
                 const fileSizeInMB = (fileSizeInBytes / (1024 * 1024)).toFixed(2);
                 common_1.Logger.log(`${mm} ... onClose .. zipped file size: 🔷 ${fileSizeInMB}MB 🔷`);
                 resolve(zipFilePath);
             });
-            archive.on('error', (error) => {
+            archive.on("error", (error) => {
                 common_1.Logger.log(`${mm} ... archive error: ${error}`);
                 reject(error);
             });
             archive.pipe(output);
             for (const file of fileContents) {
-                archive.append(file.content, { name: zipFileName });
+                archive.append(file.contentString, { name: zipFileName });
             }
             common_1.Logger.log(`${mm} ... finalize archive: file zipped??`);
             archive.finalize();

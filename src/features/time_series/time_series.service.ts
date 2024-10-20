@@ -74,7 +74,7 @@ export class TimeSeriesService {
       Logger.error(e);
     }
     const mString: string = JSON.stringify(sortedResults);
-    return await this.zipService.zip([{ content: mString }]);
+    return await this.zipService.zip([{ contentString: mString }]);
   }
   parseDate(year: number, month: number, day: number, hour: number): string {
     const formattedYear = year.toString();

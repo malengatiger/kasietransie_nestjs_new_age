@@ -8,6 +8,7 @@ import { RoutePoint } from "src/data/models/RoutePoint";
 import { RouteUpdateRequest } from "src/data/models/RouteUpdateRequest";
 import { RoutePointList } from "src/data/models/RoutePointList";
 import { RouteService } from "src/features/route/route.service";
+import { AssociationRouteData } from "src/data/models/RouteData";
 export declare class RouteController {
     private readonly routeService;
     private readonly logger;
@@ -35,6 +36,9 @@ export declare class RouteController {
     getAssociationRoutes(query: {
         associationId: string;
     }): Promise<Route[]>;
+    getAssociationRouteData(query: {
+        associationId: string;
+    }): Promise<AssociationRouteData>;
     getAssociationRouteLandmarks(query: {
         associationId: string;
     }): Promise<RouteLandmark[]>;

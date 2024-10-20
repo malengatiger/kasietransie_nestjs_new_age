@@ -1,5 +1,5 @@
 export declare class FileArchiverService {
     zip(fileContents: {
-        content: string;
+        contentString: string;
     }[]): Promise<string>;
 }

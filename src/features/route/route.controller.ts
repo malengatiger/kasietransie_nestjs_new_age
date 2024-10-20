@@ -19,6 +19,7 @@ import { RoutePoint } from "src/data/models/RoutePoint";
 import { RouteUpdateRequest } from "src/data/models/RouteUpdateRequest";
 import { RoutePointList } from "src/data/models/RoutePointList";
 import { RouteService } from "src/features/route/route.service";
+import { AssociationRouteData, RouteData } from "src/data/models/RouteData";
 
 const mm = " 🚼 🚼 🚼 RouteController  🚼";
 
@@ -116,6 +117,18 @@ export class RouteController {
     );
     this.logger.log(`${mm} association routes found: ${list.length}`);
     return list;
+  }
+  @Get("getAssociationRouteData")
+  async getAssociationRouteData(
+    @Query() query: { associationId: string }
+  ): Promise<AssociationRouteData> {
+    
+    const data = await this.routeService.getAssociationRouteData(
+      query.associationId
+    );
+
+    this.logger.debug(`${mm} association route data found, returning RouteData ...`);
+    return data;
   }
   @Get("getAssociationRouteLandmarks")
   async getAssociationRouteLandmarks(
