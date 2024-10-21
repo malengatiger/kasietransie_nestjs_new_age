@@ -308,7 +308,8 @@ let RouteService = class RouteService {
             citiesCount += cityList.length;
             const routeData = new RouteData_1.RouteData();
             routeData.route = route;
-            routeData.cities = cityList.length > 1 ? this.removeDuplicates(cityList) : cityList;
+            routeData.cities =
+                cityList.length > 1 ? this.removeDuplicates(cityList) : cityList;
             routeData.landmarks = marks;
             routeData.routePoints = routePoints;
             routeData.routeId = route.routeId;
@@ -385,14 +386,37 @@ let RouteService = class RouteService {
         const res = await this.routePointModel.deleteMany({
             routeId: point.routeId,
         });
+        common_1.Logger.log(`${mm} Route points deleted: ${JSON.stringify(res)} `);
         const list = await this.routePointModel
             .find({
             routeId: point.routeId,
         })
             .sort({ index: 1 });
-        const json = JSON.stringify(list);
-        common_1.Logger.log(`${mm} Route points deleted:d: ${res.deletedCount} `);
-        return `${mm} Route points deleted:d: ${res.deletedCount} `;
+        common_1.Logger.debug(`${mm} Route points remaining: ${list.length} `);
+        return list;
+    }
+    async deleteRoutePointList(routePointList) {
+        common_1.Logger.log(`\n\n${mm} delete these RoutePoints: ${routePointList.routePoints.length} \n`);
+        if (routePointList.routePoints.length == 0) {
+            throw new common_1.HttpException('No route points', common_1.HttpStatus.BAD_REQUEST);
+        }
+        var resp = [];
+        const routeId = routePointList.routePoints[0].routeId;
+        for (const rp of routePointList.routePoints) {
+            const b = await this.routePointModel.deleteOne({
+                routePointId: rp.routePointId,
+            });
+            common_1.Logger.debug(`${mm} route point delete result: ${JSON.stringify(b)}`);
+            resp.push(b);
+        }
+        common_1.Logger.log(`${mm} Route points deleted, results: ${JSON.stringify(resp)} `);
+        const mList = await this.routePointModel
+            .find({
+            routeId: routeId,
+        })
+            .sort({ index: 1 });
+        common_1.Logger.debug(`${mm} Route points remaining, returning: ${mList.length} points`);
+        return mList;
     }
     async removeAllDuplicateRoutePoints() {
         const list = await this.routeModel.find({});

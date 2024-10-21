@@ -51,6 +51,12 @@ let RouteController = RouteController_1 = class RouteController {
         common_1.Logger.log(`${mm} ... addRoutePoints result: ${res}`);
         return res;
     }
+    async deleteRoutePointList(routePointList) {
+        common_1.Logger.log(`${mm} ... deleteRoutePointList routePoints coming in: ${JSON.stringify(routePointList)}`);
+        const res = await this.routeService.deleteRoutePointList(routePointList);
+        common_1.Logger.log(`${mm} ... deleteRoutePointList result: ${res.length} route points remaining`);
+        return res;
+    }
     async deleteRoutePointsFromIndex(query) {
         const list = await this.routeService.deleteRoutePointsFromIndex(query.routeId, query.index);
         return list;
@@ -210,6 +216,13 @@ __decorate([
     __metadata("design:paramtypes", [RoutePointList_1.RoutePointList]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "addRoutePoints", null);
+__decorate([
+    (0, common_1.Post)("deleteRoutePointList"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [RoutePointList_1.RoutePointList]),
+    __metadata("design:returntype", Promise)
+], RouteController.prototype, "deleteRoutePointList", null);
 __decorate([
     (0, common_1.Get)("deleteRoutePointsFromIndex"),
     __param(0, (0, common_1.Query)()),

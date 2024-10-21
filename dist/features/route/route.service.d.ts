@@ -66,7 +66,8 @@ export declare class RouteService {
     getRoutePoints(routeId: string): Promise<RoutePoint[]>;
     getRoutePointsZipped(routeId: string): Promise<string>;
     getRoute(routeId: string): Promise<Route>;
-    deleteRoutePoints(routeId: string): Promise<string>;
+    deleteRoutePoints(routeId: string): Promise<any>;
+    deleteRoutePointList(routePointList: RoutePointList): Promise<RoutePoint[]>;
     removeAllDuplicateRoutePoints(): Promise<any>;
     removeDuplicateRoutePoints(routeId: string): Promise<any>;
 }

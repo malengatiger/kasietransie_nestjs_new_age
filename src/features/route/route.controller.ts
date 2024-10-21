@@ -67,6 +67,14 @@ export class RouteController {
     Logger.log(`${mm} ... addRoutePoints result: ${res}`);
     return res;
   }
+  @Post("deleteRoutePointList")
+  async deleteRoutePointList(@Body() routePointList: RoutePointList): Promise<RoutePoint[]> {
+    Logger.log(`${mm} ... deleteRoutePointList routePoints coming in: ${JSON.stringify(routePointList)}`);
+
+    const res = await this.routeService.deleteRoutePointList(routePointList);
+    Logger.log(`${mm} ... deleteRoutePointList result: ${res.length} route points remaining`);
+    return res;
+  }
   @Get("deleteRoutePointsFromIndex")
   async deleteRoutePointsFromIndex(
     @Query() query: { routeId: string; index: number }

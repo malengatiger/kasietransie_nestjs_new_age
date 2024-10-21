@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable, Logger } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose from "mongoose";
 import { RouteUpdateRequest } from "src/data/models/RouteUpdateRequest";
@@ -417,47 +417,51 @@ export class RouteService {
 
         const routeData = new RouteData();
         routeData.route = route;
-        routeData.cities = cityList.length > 1? this.removeDuplicates(cityList) : cityList;
+        routeData.cities =
+          cityList.length > 1 ? this.removeDuplicates(cityList) : cityList;
         routeData.landmarks = marks;
         routeData.routePoints = routePoints;
         routeData.routeId = route.routeId;
-        
+
         assocData.routeDataList.push(routeData);
 
         Logger.log(`${mm} route processed: 🍐🍐🍐 ${route.name}`);
         Logger.log(`${mm} route cities: 🍐🍐🍐 ${routeData.cities.length}`);
-        Logger.log(`${mm} route landmarks: 🍐🍐🍐 ${routeData.landmarks.length}`);
-        Logger.log(`${mm} route routePoints: 🍐🍐🍐 ${routeData.routePoints.length}\n\n`);
-
+        Logger.log(
+          `${mm} route landmarks: 🍐🍐🍐 ${routeData.landmarks.length}`
+        );
+        Logger.log(
+          `${mm} route routePoints: 🍐🍐🍐 ${routeData.routePoints.length}\n\n`
+        );
       })
-
     );
     //
     Logger.log(`${mm} Association route data collected 🔷🔷🔷🔷🔷🔷🔷🔷`);
     Logger.log(`${mm} to be packed:   🔷🔷 ${routes.length} routes`);
     Logger.log(`${mm} to be packed::  🔷🔷 ${landmarkCount} landmarks`);
     Logger.log(`${mm} to be packed::  🔷🔷 ${citiesCount} cities`);
-    Logger.log(`${mm} to be packed::  🔷🔷 ${routePointsCount} route points\n\n`);
-
+    Logger.log(
+      `${mm} to be packed::  🔷🔷 ${routePointsCount} route points\n\n`
+    );
   }
 
   private removeDuplicates(cities: RouteCity[]): RouteCity[] {
-  
     const uniqueCities = new Map<string, RouteCity>();
     cities.forEach((city) => {
       if (!uniqueCities.has(city.cityId)) {
         uniqueCities.set(city.cityId, city);
       }
     });
-  
+
     Logger.debug(
       `${mm} deDuplicated cities: ${cities.length} to 🌼 ${Array.from(uniqueCities.values()).length}`
     );
     return Array.from(uniqueCities.values());
   }
-  
 
-  public async getAssociationRouteData(associationId: string): Promise<AssociationRouteData> {
+  public async getAssociationRouteData(
+    associationId: string
+  ): Promise<AssociationRouteData> {
     const routes = await this.routeModel.find({
       associationId: associationId,
     });
@@ -479,7 +483,9 @@ export class RouteService {
 
     const mLength = JSON.stringify(assocData).length;
     // Logger.debug(`\n\n${JSON.stringify(data)}\n\n`)
-    Logger.log(`\n\n ${mm} The size of the RouteData object is approximately ${mLength/1024/1024} MB`);
+    Logger.log(
+      `\n\n ${mm} The size of the RouteData object is approximately ${mLength / 1024 / 1024} MB`
+    );
 
     return assocData;
   }
@@ -515,7 +521,7 @@ export class RouteService {
    * @param routeId
    * @returns string
    */
-  public async deleteRoutePoints(routeId: string): Promise<string> {
+  public async deleteRoutePoints(routeId: string): Promise<any> {
     Logger.log(`${mm} delete routePoints for route: ${routeId}`);
     const query = {
       routeId: routeId,
@@ -531,16 +537,47 @@ export class RouteService {
     const res = await this.routePointModel.deleteMany({
       routeId: point.routeId,
     });
+    Logger.log(`${mm} Route points deleted: ${JSON.stringify(res)} `);
+
     //get remaining points
     const list = await this.routePointModel
       .find({
         routeId: point.routeId,
       })
       .sort({ index: 1 });
-    const json = JSON.stringify(list);
-    Logger.log(`${mm} Route points deleted:d: ${res.deletedCount} `);
 
-    return `${mm} Route points deleted:d: ${res.deletedCount} `;
+    Logger.debug(`${mm} Route points remaining: ${list.length} `);
+
+    return list;
+  }
+
+  public async deleteRoutePointList(routePointList: RoutePointList): Promise<RoutePoint[]> {
+    Logger.log(`\n\n${mm} delete these RoutePoints: ${routePointList.routePoints.length} \n`);
+
+    if (routePointList.routePoints.length == 0) {
+      throw new HttpException('No route points', HttpStatus.BAD_REQUEST);
+    }
+    var resp = [];
+
+    const routeId = routePointList.routePoints[0].routeId;
+    for (const rp of routePointList.routePoints) {
+      const b = await this.routePointModel.deleteOne({
+        routePointId: rp.routePointId,
+      });
+      Logger.debug(`${mm} route point delete result: ${JSON.stringify(b)}`);
+      resp.push(b);
+    }
+    Logger.log(`${mm} Route points deleted, results: ${JSON.stringify(resp)} `);
+    //get remaining points
+    const mList = await this.routePointModel
+      .find({
+        routeId: routeId,
+      })
+      .sort({ index: 1 });
+
+      Logger.debug(`${mm} Route points remaining, returning: ${mList.length} points`);
+
+    return mList;
   }
   async removeAllDuplicateRoutePoints(): Promise<any> {
     const list = await this.routeModel.find({});

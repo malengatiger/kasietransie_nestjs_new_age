@@ -20,6 +20,7 @@ export declare class RouteController {
     addRouteCities(routeCities: RouteCity[]): Promise<RouteCity[]>;
     addCalculatedDistances(distanceList: CalculatedDistanceList): Promise<CalculatedDistance[]>;
     addRoutePoints(routePoints: RoutePointList): Promise<number>;
+    deleteRoutePointList(routePointList: RoutePointList): Promise<RoutePoint[]>;
     deleteRoutePointsFromIndex(query: {
         routeId: string;
         index: number;
