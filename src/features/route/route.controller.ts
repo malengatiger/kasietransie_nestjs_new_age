@@ -102,6 +102,7 @@ export class RouteController {
     );
     return route;
   }
+  
   @Get("deleteRouteLandmark")
   async deleteRouteLandmark(
     @Query() query: { routeLandmarkId: string }

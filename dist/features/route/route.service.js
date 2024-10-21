@@ -205,17 +205,19 @@ let RouteService = class RouteService {
         });
         common_1.Logger.log(`${mm} Route Cities to delete: ${list.length}`);
         if (list.length > 0) {
-            await this.routeCityModel.deleteMany({
+            const res = await this.routeCityModel.deleteMany({
                 routeLandmarkId: routeLandmarkId,
             });
+            common_1.Logger.debug(`${mm} route city delete: ${JSON.stringify(res)}`);
         }
-        await this.routeLandmarkModel.deleteOne({
+        const res2 = await this.routeLandmarkModel.deleteOne({
             landmarkId: routeLandmarkId,
         });
+        common_1.Logger.debug(`${mm} route landmark delete: ${JSON.stringify(res2)}`);
         const res = await this.routeLandmarkModel
             .find({ routeId: mark.routeId })
             .sort({ index: 1 });
-        common_1.Logger.log(`${mm} routeLandmark deleted successfully, returning ${res.length}`);
+        common_1.Logger.log(`${mm} routeLandmark deleted successfully, returning remaining landmarks: ${res.length}`);
         return res;
     }
     async deleteRoutePoint(routePointId) {
@@ -293,6 +295,7 @@ let RouteService = class RouteService {
         let landmarkCount = 0;
         let citiesCount = 0;
         let routePointsCount = 0;
+        assocData.routeDataList = [];
         await Promise.all(routes.map(async (route) => {
             const routePoints = await this.routePointModel.find({
                 routeId: route.routeId,
@@ -348,9 +351,10 @@ let RouteService = class RouteService {
         }
         common_1.Logger.log(`${mm} getting all route data for 🔷🔷 ${routes.length} routes`);
         const assocData = new RouteData_1.AssociationRouteData();
+        assocData.associationId = associationId;
         await this.collectShit(routes, assocData);
         const mLength = JSON.stringify(assocData).length;
-        common_1.Logger.log(`\n\n ${mm} The size of the RouteData object is approximately ${mLength / 1024 / 1024} MB`);
+        common_1.Logger.log(`\n\n ${mm} The size of the AssociationRouteData object is approximately ${mLength / 1024 / 1024} MB`);
         return assocData;
     }
     async getAssociationRouteCities(associationId) {

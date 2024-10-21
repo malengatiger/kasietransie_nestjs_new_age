@@ -279,18 +279,22 @@ export class RouteService {
     });
     Logger.log(`${mm} Route Cities to delete: ${list.length}`);
     if (list.length > 0) {
-      await this.routeCityModel.deleteMany({
+      const res = await this.routeCityModel.deleteMany({
         routeLandmarkId: routeLandmarkId,
       });
+      Logger.debug(`${mm} route city delete: ${JSON.stringify(res)}`);
     }
-    await this.routeLandmarkModel.deleteOne({
+    const res2 = await this.routeLandmarkModel.deleteOne({
       landmarkId: routeLandmarkId,
     });
+    Logger.debug(`${mm} route landmark delete: ${JSON.stringify(res2)}`);
+
     const res = await this.routeLandmarkModel
       .find({ routeId: mark.routeId })
       .sort({ index: 1 });
+      
     Logger.log(
-      `${mm} routeLandmark deleted successfully, returning ${res.length}`
+      `${mm} routeLandmark deleted successfully, returning remaining landmarks: ${res.length}`
     );
 
     return res;
@@ -399,6 +403,7 @@ export class RouteService {
     let landmarkCount = 0;
     let citiesCount = 0;
     let routePointsCount = 0;
+    assocData.routeDataList = [];
     await Promise.all(
       routes.map(async (route) => {
         const routePoints = await this.routePointModel.find({
@@ -479,12 +484,13 @@ export class RouteService {
     Logger.log(`${mm} getting all route data for 🔷🔷 ${routes.length} routes`);
 
     const assocData = new AssociationRouteData();
+    assocData.associationId = associationId;
+
     await this.collectShit(routes, assocData);
 
     const mLength = JSON.stringify(assocData).length;
-    // Logger.debug(`\n\n${JSON.stringify(data)}\n\n`)
     Logger.log(
-      `\n\n ${mm} The size of the RouteData object is approximately ${mLength / 1024 / 1024} MB`
+      `\n\n ${mm} The size of the AssociationRouteData object is approximately ${mLength / 1024 / 1024} MB`
     );
 
     return assocData;
