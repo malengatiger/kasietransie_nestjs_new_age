@@ -25,6 +25,7 @@ import { VehicleSchema } from 'src/data/models/Vehicle';
 import { KasieErrorHandler } from 'src/middleware/errors.interceptor';
 import { UserSchema } from 'src/data/models/User';
 import { UserPhotoSchema } from 'src/data/models/UserPhoto';
+import { AssociationSchema } from 'src/data/models/Association';
 
 @Module({
   imports: [
@@ -49,6 +50,8 @@ import { UserPhotoSchema } from 'src/data/models/UserPhoto';
       { name: 'ExampleFile', schema: ExampleFileSchema },
       { name: "User", schema: UserSchema },
       { name: "UserPhoto", schema: UserPhotoSchema },
+      { name: "Association", schema: AssociationSchema },
+
 
     ]),
   ],

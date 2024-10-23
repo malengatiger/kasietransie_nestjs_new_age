@@ -62,6 +62,14 @@ let StorageController = class StorageController {
         const user = await this.storageService.uploadUserProfilePicture(userId, imageTempFile, thumbTempFile);
         return user;
     }
+    async uploadQrCodeFile(files, associationId) {
+        common_1.Logger.log(`${tag} uploadQrCodeFile: imageFile: ${files.imageFile[0].originalname} 🥦 `);
+        const imageTempFile = path.join(os.tmpdir(), files.imageFile[0].originalname);
+        await fs.promises.writeFile(imageTempFile, files.imageFile[0].buffer);
+        common_1.Logger.log(`${tag}  uploadQrCodeFile: : qrcode ${files.imageFile[0].originalname} 🥦 saved to ${imageTempFile}`);
+        const url = await this.storageService.uploadQRCodeFile(associationId, imageTempFile);
+        return url;
+    }
     async uploadVehicleVideo(file, data) {
         const { vehicleId, latitude, longitude } = data;
         const vehicleImageFile = file;
@@ -117,6 +125,17 @@ __decorate([
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], StorageController.prototype, "uploadUserProfilePicture", null);
+__decorate([
+    (0, common_1.Post)("uploadQrCodeFile"),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileFieldsInterceptor)([
+        { name: "imageFile", maxCount: 1 },
+    ])),
+    __param(0, (0, common_1.UploadedFiles)()),
+    __param(1, (0, common_1.Query)("associationId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
+], StorageController.prototype, "uploadQrCodeFile", null);
 __decorate([
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)("file")),
     (0, common_1.Post)("uploadVehicleVideo"),

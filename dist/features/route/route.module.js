@@ -34,6 +34,7 @@ const Vehicle_1 = require("../../data/models/Vehicle");
 const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 const User_1 = require("../../data/models/User");
 const UserPhoto_1 = require("../../data/models/UserPhoto");
+const Association_1 = require("../../data/models/Association");
 let RouteModule = class RouteModule {
 };
 exports.RouteModule = RouteModule;
@@ -59,6 +60,7 @@ exports.RouteModule = RouteModule = __decorate([
                 { name: 'ExampleFile', schema: ExampleFile_1.ExampleFileSchema },
                 { name: "User", schema: User_1.UserSchema },
                 { name: "UserPhoto", schema: UserPhoto_1.UserPhotoSchema },
+                { name: "Association", schema: Association_1.AssociationSchema },
             ]),
         ],
         controllers: [route_controller_1.RouteController],

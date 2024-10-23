@@ -155,7 +155,40 @@ export class StorageController {
 
     return user;
   }
+  //
+  @Post("uploadQrCodeFile")
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: "imageFile", maxCount: 1 },
+    ])
+  )
+  async uploadQrCodeFile(
+    @UploadedFiles()
+    files: {
+      imageFile: Express.Multer.File[];
+    },
+    @Query("associationId") associationId: string
+  ): Promise<User> {
+    Logger.log(`${tag} uploadQrCodeFile: imageFile: ${files.imageFile[0].originalname} 🥦 `);
 
+    const imageTempFile = path.join(
+      os.tmpdir(),
+      files.imageFile[0].originalname
+    );
+   
+    await fs.promises.writeFile(imageTempFile, files.imageFile[0].buffer);
+    Logger.log(
+      `${tag}  uploadQrCodeFile: : qrcode ${files.imageFile[0].originalname} 🥦 saved to ${imageTempFile}`
+    );
+
+    const url = await this.storageService.uploadQRCodeFile(
+      associationId,
+      imageTempFile,
+    );
+
+    return url;
+  }
+ //
   @UseInterceptors(FileInterceptor("file"))
   @Post("uploadVehicleVideo")
   async uploadVehicleVideo(

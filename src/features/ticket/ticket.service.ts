@@ -33,7 +33,7 @@ export class TicketService {
       const url = await this.storage.createQRCode({
         data: JSON.stringify(ticket),
         prefix: "ticket",
-        size: 2,
+        size: 1,
         associationId: ticket.associationId,
       });
 

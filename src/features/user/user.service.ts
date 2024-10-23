@@ -71,15 +71,18 @@ export class UserService {
       );
       const uid = userRecord.uid;
       user.userId = uid;
-      const url = await this.storage.createQRCode({
-        data: JSON.stringify(user),
-        prefix: Constants.qrcode_user,
-        size: 1,
-        associationId: user.associationName ?? "ADMIN",
-      });
-      Logger.debug(`${mm} createUser: ... qrCode url: ${url}`);
-      user.password = null;
-      user.qrCodeUrl = url;
+      user.dateRegistered = new Date().toISOString();
+      if (user.qrCodeUrl == null) {
+        const url = await this.storage.createQRCode({
+          data: JSON.stringify(user),
+          prefix: Constants.qrcode_user,
+          size: 1,
+          associationId: user.associationName ?? "ADMIN",
+        });
+        Logger.debug(`${mm} createUser: ... qrCode url: ${url}`);
+        user.password = null;
+        user.qrCodeUrl = url;
+      }
       //
       Logger.debug(
         `${mm} ... adding user to Mongo, userId: ${user.userId} - ${user.firstName}`
@@ -91,9 +94,11 @@ export class UserService {
       );
     } catch (e) {
       Logger.error(`${mm} User creation failed: ${e}`);
-      this.errorHandler.handleError(`User creation failed: ${e}`, user.associationId);
-      throw new HttpException(e, HttpStatus.BAD_REQUEST);
-
+      this.errorHandler.handleError(
+        `User creation failed: ${e}`,
+        user.associationId
+      );
+      throw new HttpException(`${mm} User creation failed: ${e}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     return user;
@@ -113,7 +118,6 @@ export class UserService {
     } catch (e) {
       this.errorHandler.handleError(e, user.associationId);
       throw new HttpException(e, HttpStatus.BAD_REQUEST);
-
     }
   }
   public async updateUser(user: User): Promise<User> {
@@ -213,8 +217,8 @@ export class UserService {
       Logger.debug(`${mm} getting user found: ${JSON.stringify(user)}`);
     } else {
       Logger.error(`${mm} user not found`);
-      this.errorHandler.handleError('User not found', 'N/A');
-      throw new HttpException('User fucked!', HttpStatus.BAD_REQUEST);
+      this.errorHandler.handleError("User not found", "N/A");
+      throw new HttpException("User fucked!", HttpStatus.BAD_REQUEST);
     }
     return user;
   }

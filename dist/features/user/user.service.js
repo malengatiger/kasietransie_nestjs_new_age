@@ -68,15 +68,18 @@ let UserService = class UserService {
             common_1.Logger.log(`${mm} createUser: Firebase auth user created. userRecord from Firebase : 🎽 ${JSON.stringify(userRecord, null, 2)}`);
             const uid = userRecord.uid;
             user.userId = uid;
-            const url = await this.storage.createQRCode({
-                data: JSON.stringify(user),
-                prefix: constants_1.Constants.qrcode_user,
-                size: 1,
-                associationId: user.associationName ?? "ADMIN",
-            });
-            common_1.Logger.debug(`${mm} createUser: ... qrCode url: ${url}`);
-            user.password = null;
-            user.qrCodeUrl = url;
+            user.dateRegistered = new Date().toISOString();
+            if (user.qrCodeUrl == null) {
+                const url = await this.storage.createQRCode({
+                    data: JSON.stringify(user),
+                    prefix: constants_1.Constants.qrcode_user,
+                    size: 1,
+                    associationId: user.associationName ?? "ADMIN",
+                });
+                common_1.Logger.debug(`${mm} createUser: ... qrCode url: ${url}`);
+                user.password = null;
+                user.qrCodeUrl = url;
+            }
             common_1.Logger.debug(`${mm} ... adding user to Mongo, userId: ${user.userId} - ${user.firstName}`);
             const mUser = await this.userModel.create(user);
             user.password = storedPassword;
@@ -85,7 +88,7 @@ let UserService = class UserService {
         catch (e) {
             common_1.Logger.error(`${mm} User creation failed: ${e}`);
             this.errorHandler.handleError(`User creation failed: ${e}`, user.associationId);
-            throw new common_1.HttpException(e, common_1.HttpStatus.BAD_REQUEST);
+            throw new common_1.HttpException(`${mm} User creation failed: ${e}`, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return user;
     }
@@ -184,8 +187,8 @@ let UserService = class UserService {
         }
         else {
             common_1.Logger.error(`${mm} user not found`);
-            this.errorHandler.handleError('User not found', 'N/A');
-            throw new common_1.HttpException('User fucked!', common_1.HttpStatus.BAD_REQUEST);
+            this.errorHandler.handleError("User not found", "N/A");
+            throw new common_1.HttpException("User fucked!", common_1.HttpStatus.BAD_REQUEST);
         }
         return user;
     }

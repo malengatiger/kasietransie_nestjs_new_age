@@ -16,6 +16,7 @@ import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
 import { KasieErrorSchema } from 'src/data/models/kasie.error';
 import { UserSchema } from 'src/data/models/User';
 import { UserPhotoSchema } from 'src/data/models/UserPhoto';
+import { AssociationSchema } from 'src/data/models/Association';
 
 @Module({
   imports: [
@@ -32,6 +33,8 @@ import { UserPhotoSchema } from 'src/data/models/UserPhoto';
       { name: "AssociationToken", schema: AssociationTokenSchema },
       { name: "User", schema: UserSchema },
       { name: "UserPhoto", schema: UserPhotoSchema },
+      { name: "Association", schema: AssociationSchema },
+
 
 
     ]),

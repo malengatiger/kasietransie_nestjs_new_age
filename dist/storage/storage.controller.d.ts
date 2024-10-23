@@ -18,6 +18,9 @@ export declare class StorageController {
         imageFile: Express.Multer.File[];
         thumbFile: Express.Multer.File[];
     }, userId: string): Promise<User>;
+    uploadQrCodeFile(files: {
+        imageFile: Express.Multer.File[];
+    }, associationId: string): Promise<User>;
     uploadVehicleVideo(file: Express.Multer.File, data: {
         vehicleId: string;
         latitude: number;

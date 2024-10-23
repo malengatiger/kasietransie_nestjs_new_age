@@ -26,6 +26,7 @@ import { User } from "src/data/models/User";
 import { UserPhoto } from "src/data/models/UserPhoto";
 import { randomUUID } from "crypto";
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
+import { Association } from "src/data/models/Association";
 
 console.log(`${typeof sharp} - Should output "function"`); //
 const mm = "🔶🔶🔶 StorageService 🔶 ";
@@ -56,7 +57,10 @@ export class CloudStorageUploaderService {
     private vehiclePhotoModel: mongoose.Model<VehiclePhoto>,
 
     @InjectModel(VehicleVideo.name)
-    private vehicleVideoModel: mongoose.Model<VehicleVideo>
+    private vehicleVideoModel: mongoose.Model<VehicleVideo>,
+
+    @InjectModel(Association.name)
+    private associationModel: mongoose.Model<Association>
   ) {
     this.bucketName = this.configService.get<string>("BUCKET_NAME");
     this.projectId = this.configService.get<string>("PROJECT_ID");
@@ -94,7 +98,7 @@ export class CloudStorageUploaderService {
       p.thumbNailUrl = "tbd";
       p.vehicleId = car.vehicleId;
       p.vehicleReg = car.vehicleReg;
-      const pos = new Position('Point', [longitude, latitude]);
+      const pos = new Position("Point", [longitude, latitude]);
       p.position = pos;
       p.created = new Date().toISOString();
       const resp = await this.vehicleVideoModel.create(p);
@@ -127,7 +131,9 @@ export class CloudStorageUploaderService {
     const dt = new Date().getTime();
     if (cars.length > 0) {
       const car = cars[0];
-      Logger.debug(`${mm} ...... uploading vehicle photo, 🔵 car: ${car.vehicleReg}`);
+      Logger.debug(
+        `${mm} ...... uploading vehicle photo, 🔵 car: ${car.vehicleReg}`
+      );
       const url = await this.uploadFile(
         `photo_${vehicleId}_${dt}`,
         filePath,
@@ -147,11 +153,13 @@ export class CloudStorageUploaderService {
       photo.vehicleId = car.vehicleId;
       photo.vehicleReg = car.vehicleReg;
 
-      const pos = new Position('Point', [longitudeNum, latitudeNum]);  
+      const pos = new Position("Point", [longitudeNum, latitudeNum]);
       photo.position = pos;
       photo.created = new Date().toISOString();
 
-      Logger.debug(`${mm} vehicle photo about to be added: 🔵${JSON.stringify(photo, null, 2)}🔵`);
+      Logger.debug(
+        `${mm} vehicle photo about to be added: 🔵${JSON.stringify(photo, null, 2)}🔵`
+      );
       const resp = await this.vehiclePhotoModel.create(photo);
       Logger.log(
         `\n${mm} 🍎 🍎 vehicle photo uploaded and added to Atlas:🍎 🍎 🍎 🍎 \n\n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`
@@ -165,7 +173,9 @@ export class CloudStorageUploaderService {
   public async createUserPhoto(userPhoto: UserPhoto): Promise<User> {
     userPhoto.userPhotoId = randomUUID();
     userPhoto.created = new Date().toISOString();
-    const users = await this.userModel.find({ userId: userPhoto.userId }).limit(1);
+    const users = await this.userModel
+      .find({ userId: userPhoto.userId })
+      .limit(1);
     console.log(users);
     const dt = new Date().getTime();
     if (users.length > 0) {
@@ -249,6 +259,46 @@ export class CloudStorageUploaderService {
     }
   }
 
+  public async uploadQRCodeFile(
+    associationId: string,
+    filePath: string
+  ): Promise<any> {
+    Logger.log(
+      `${mm} uploadQRCodeFile: creating qrcode 🔵 associationId: ${associationId}`
+    );
+
+    const objectName = `qrCode_${randomUUID()}.png`;
+
+    try {
+      const ass = await this.associationModel
+        .findOne({ associationId: associationId })
+        .limit(1);
+      Logger.debug(
+        `${mm} uploadQRCodeFile: association from Atlas 🔵 name: ${ass.associationName}`
+      );
+
+      if (ass == null) {
+        throw new HttpException(
+          "Association not found",
+          HttpStatus.BAD_REQUEST
+        );
+      }
+      const url = await this.uploadFile(
+        `${objectName}`,
+        filePath,
+        `${ass.associationName}`
+      );
+      Logger.log(`${mm} uploadQRCodeFile: returning url 🔵  ${url}`);
+
+      return url;
+    } catch (e) {
+      const msg = `QRCode file upload failed: ${e}`;
+      Logger.error(`${mm} ${msg}: ${e}`);
+      this.errorHandler.handleError(msg, associationId);
+      throw new HttpException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
   public async uploadExampleFiles(
     userFilePath: string,
     vehicleFilePath: string
@@ -275,6 +325,7 @@ export class CloudStorageUploaderService {
     await this.exampleFileModel.create(v);
     Logger.log(`${mm} Example files uploaded and written to Atlas ✅ `);
   }
+
   private async getSignedUrl(file: File): Promise<string> {
     // Logger.log(`${mm} getSignedUrl for cloud storage: ${file.name}`);
 
@@ -307,11 +358,11 @@ export class CloudStorageUploaderService {
     const file: File = bucket.file(bucketFileName);
     await storage.bucket(this.bucketName).setCorsConfiguration([
       {
-        method: ['*'],
-        origin: ['*'],
+        method: ["*"],
+        origin: ["*"],
       },
     ]);
-  
+
     Logger.log(`Bucket ${this.bucketName} was updated with a CORS config
         to allow all requests from any origin`);
     try {
@@ -360,6 +411,7 @@ export class CloudStorageUploaderService {
         fs.mkdirSync(tempDir, { recursive: true });
       }
       let version = 15;
+
       if (data.size == 1) {
         version = 20;
       }

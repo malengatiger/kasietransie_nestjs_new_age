@@ -12,6 +12,7 @@ import { KasieErrorHandler } from 'src/middleware/errors.interceptor';
 import { MessagingService } from 'src/features/fcm/fcm.service';
 import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
 import { KasieErrorSchema } from 'src/data/models/kasie.error';
+import { AssociationSchema } from 'src/data/models/Association';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { KasieErrorSchema } from 'src/data/models/kasie.error';
       { name: "UserPhoto", schema: UserPhotoSchema },
       { name: "User", schema: UserSchema },
       { name: "AssociationToken", schema: AssociationTokenSchema },
+      { name: "Association", schema: AssociationSchema },
 
       { name: "KasieError", schema: KasieErrorSchema },
 

@@ -175,19 +175,21 @@ export class VehicleService {
           },
           vehicle
         );
-        Logger.debug(`$mm car updated, result: ${JSON.stringify(res)}`)
+        Logger.debug(`$mm car updated, result: ${JSON.stringify(res)}`);
         return vehicle;
       } else {
         Logger.debug(`${mm} creating new vehicle ...`);
         vehicle.vehicleId = randomUUID();
         vehicle.created = new Date().toISOString();
-        const url = await this.storage.createQRCode({
-          data: JSON.stringify(vehicle),
-          prefix: vehicle.vehicleReg.replaceAll(" ", ""),
-          size: 2,
-          associationId: vehicle.associationId,
-        });
-        vehicle.qrCodeUrl = url;
+        if (vehicle.qrCodeUrl == null) {
+          const url = await this.storage.createQRCode({
+            data: JSON.stringify(vehicle),
+            prefix: vehicle.vehicleReg.replaceAll(" ", ""),
+            size: 2,
+            associationId: vehicle.associationId,
+          });
+          vehicle.qrCodeUrl = url;
+        }
         return await this.vehicleModel.create(vehicle);
       }
     } catch (e) {

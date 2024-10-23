@@ -32,10 +32,11 @@ const User_1 = require("../data/models/User");
 const UserPhoto_1 = require("../data/models/UserPhoto");
 const crypto_1 = require("crypto");
 const errors_interceptor_1 = require("../middleware/errors.interceptor");
+const Association_1 = require("../data/models/Association");
 console.log(`${typeof sharp_1.default} - Should output "function"`);
 const mm = "🔶🔶🔶 StorageService 🔶 ";
 let CloudStorageUploaderService = class CloudStorageUploaderService {
-    constructor(configService, errorHandler, exampleFileModel, vehicleModel, userModel, userPhotoModel, vehiclePhotoModel, vehicleVideoModel) {
+    constructor(configService, errorHandler, exampleFileModel, vehicleModel, userModel, userPhotoModel, vehiclePhotoModel, vehicleVideoModel, associationModel) {
         this.configService = configService;
         this.errorHandler = errorHandler;
         this.exampleFileModel = exampleFileModel;
@@ -44,6 +45,7 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
         this.userPhotoModel = userPhotoModel;
         this.vehiclePhotoModel = vehiclePhotoModel;
         this.vehicleVideoModel = vehicleVideoModel;
+        this.associationModel = associationModel;
         this.bucketName = this.configService.get("BUCKET_NAME");
         this.projectId = this.configService.get("PROJECT_ID");
         this.cloudStorageDirectory = this.configService.get("CLOUD_STORAGE_DIRECTORY");
@@ -66,7 +68,7 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             p.thumbNailUrl = "tbd";
             p.vehicleId = car.vehicleId;
             p.vehicleReg = car.vehicleReg;
-            const pos = new position_1.Position('Point', [longitude, latitude]);
+            const pos = new position_1.Position("Point", [longitude, latitude]);
             p.position = pos;
             p.created = new Date().toISOString();
             const resp = await this.vehicleVideoModel.create(p);
@@ -98,7 +100,7 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             photo.thumbNailUrl = thumbUrl;
             photo.vehicleId = car.vehicleId;
             photo.vehicleReg = car.vehicleReg;
-            const pos = new position_1.Position('Point', [longitudeNum, latitudeNum]);
+            const pos = new position_1.Position("Point", [longitudeNum, latitudeNum]);
             photo.position = pos;
             photo.created = new Date().toISOString();
             common_1.Logger.debug(`${mm} vehicle photo about to be added: 🔵${JSON.stringify(photo, null, 2)}🔵`);
@@ -113,7 +115,9 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
     async createUserPhoto(userPhoto) {
         userPhoto.userPhotoId = (0, crypto_1.randomUUID)();
         userPhoto.created = new Date().toISOString();
-        const users = await this.userModel.find({ userId: userPhoto.userId }).limit(1);
+        const users = await this.userModel
+            .find({ userId: userPhoto.userId })
+            .limit(1);
         console.log(users);
         const dt = new Date().getTime();
         if (users.length > 0) {
@@ -166,6 +170,28 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             throw new Error("User not found");
         }
     }
+    async uploadQRCodeFile(associationId, filePath) {
+        common_1.Logger.log(`${mm} uploadQRCodeFile: creating qrcode 🔵 associationId: ${associationId}`);
+        const objectName = `qrCode_${(0, crypto_1.randomUUID)()}.png`;
+        try {
+            const ass = await this.associationModel
+                .findOne({ associationId: associationId })
+                .limit(1);
+            common_1.Logger.debug(`${mm} uploadQRCodeFile: association from Atlas 🔵 name: ${ass.associationName}`);
+            if (ass == null) {
+                throw new common_1.HttpException("Association not found", common_1.HttpStatus.BAD_REQUEST);
+            }
+            const url = await this.uploadFile(`${objectName}`, filePath, `${ass.associationName}`);
+            common_1.Logger.log(`${mm} uploadQRCodeFile: returning url 🔵  ${url}`);
+            return url;
+        }
+        catch (e) {
+            const msg = `QRCode file upload failed: ${e}`;
+            common_1.Logger.error(`${mm} ${msg}: ${e}`);
+            this.errorHandler.handleError(msg, associationId);
+            throw new common_1.HttpException(msg, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     async uploadExampleFiles(userFilePath, vehicleFilePath) {
         common_1.Logger.log(`${mm} ... upload example files ... 🍐 users: ${userFilePath} 🍐 cars: ${vehicleFilePath}`);
         const userUrl = await this.uploadFile("users.csv", userFilePath, "admin");
@@ -203,8 +229,8 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
         const file = bucket.file(bucketFileName);
         await storage.bucket(this.bucketName).setCorsConfiguration([
             {
-                method: ['*'],
-                origin: ['*'],
+                method: ["*"],
+                origin: ["*"],
             },
         ]);
         common_1.Logger.log(`Bucket ${this.bucketName} was updated with a CORS config
@@ -274,7 +300,8 @@ exports.CloudStorageUploaderService = CloudStorageUploaderService = __decorate([
     __param(5, (0, mongoose_2.InjectModel)(UserPhoto_1.UserPhoto.name)),
     __param(6, (0, mongoose_2.InjectModel)(VehiclePhoto_1.VehiclePhoto.name)),
     __param(7, (0, mongoose_2.InjectModel)(VehicleVideo_1.VehicleVideo.name)),
+    __param(8, (0, mongoose_2.InjectModel)(Association_1.Association.name)),
     __metadata("design:paramtypes", [config_1.ConfigService,
-        errors_interceptor_1.KasieErrorHandler, mongoose_1.default.Model, mongoose_1.default.Model, mongoose_1.default.Model, mongoose_1.default.Model, mongoose_1.default.Model, mongoose_1.default.Model])
+        errors_interceptor_1.KasieErrorHandler, mongoose_1.default.Model, mongoose_1.default.Model, mongoose_1.default.Model, mongoose_1.default.Model, mongoose_1.default.Model, mongoose_1.default.Model, mongoose_1.default.Model])
 ], CloudStorageUploaderService);
 //# sourceMappingURL=storage.service.js.map

@@ -21,6 +21,7 @@ const errors_interceptor_1 = require("../middleware/errors.interceptor");
 const fcm_service_1 = require("../features/fcm/fcm.service");
 const AssociationToken_1 = require("../data/models/AssociationToken");
 const kasie_error_1 = require("../data/models/kasie.error");
+const Association_1 = require("../data/models/Association");
 let StorageModule = class StorageModule {
 };
 exports.StorageModule = StorageModule;
@@ -35,6 +36,7 @@ exports.StorageModule = StorageModule = __decorate([
                 { name: "UserPhoto", schema: UserPhoto_1.UserPhotoSchema },
                 { name: "User", schema: User_1.UserSchema },
                 { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
+                { name: "Association", schema: Association_1.AssociationSchema },
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
             ])
         ],
