@@ -3,12 +3,8 @@ import { ApiProperty } from "@nestjs/swagger";
 
 
 export class TicketRoute {
-  _partitionKey: string;
+  
 
-  _id: string;
-  @Prop()
-  @ApiProperty()
-  routeId: string;
   @Prop()
   @ApiProperty()
   routeName: string;

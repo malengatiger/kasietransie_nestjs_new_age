@@ -9,7 +9,7 @@ export class TicketController {
   constructor(private readonly ticketService: TicketService) {}
 
   @Post('addTicket')
-  async addTicket(@Body() ticket: Ticket): Promise<any> {    
+  async addTicket(@Body() ticket: Ticket): Promise<Ticket> {    
     return this.ticketService.createTicket(ticket);
   }
   @Post('addCommuterTicketPunched')
@@ -22,8 +22,8 @@ export class TicketController {
   }
 
   @Get('getAssociationTickets')
-  async getAssociationTickets(@Query('associationId') associationId: string): Promise<any[]> {
-    return this.ticketService.findAssociationTickets(associationId);
+  async getAssociationTickets(@Query('associationId') associationId: string): Promise<Ticket[]> {
+    return this.ticketService.getAssociationTickets(associationId);
   }
   @Get('getCommuterTickets')
   async getCommuterTickets(@Query('commuterId') commuterId: string): Promise<any[]> {

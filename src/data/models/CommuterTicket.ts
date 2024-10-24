@@ -33,10 +33,14 @@ export class CommuterTicket {
  
   @Prop()
   @ApiProperty()
-  validToDate: string;
+  validToDateFrom: string;
+
   @Prop()
   @ApiProperty()
-  value: string;
+  validToDateTo: string;
+  @Prop()
+  @ApiProperty()
+  value: number;
   @Prop()
   @ApiProperty()
   ticketType: number;

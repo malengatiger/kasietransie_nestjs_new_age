@@ -22,25 +22,21 @@ export class TicketService {
     private commuterTicket: mongoose.Model<CommuterTicket>
   ) {}
 
-  async createTicket(ticket: Ticket): Promise<any> {
+  async createTicket(ticket: Ticket): Promise<Ticket> {
+    ticket.ticketId = randomUUID().toString();
+    ticket.created = new Date().toISOString();
+
+   
     Logger.debug(
       `${mm} create ticket template: ${JSON.stringify(ticket, null, 2)}`
     );
-
-    ticket.ticketId = randomUUID().toString();
-    ticket.created = new Date().toISOString();
     try {
-      const url = await this.storage.createQRCode({
-        data: JSON.stringify(ticket),
-        prefix: "ticket",
-        size: 1,
-        associationId: ticket.associationId,
-      });
-
-      ticket.qrCodeUrl = url;
+      if (ticket.ticketRoutes.length == 0) {
+        throw new Error('Ticket has no routes');
+      }
       var res = await this.ticketModel.create(ticket);
-      Logger.debug(
-        `${mm} ticket added to Atlas: ${JSON.stringify(ticket, null, 2)}`
+      Logger.log(
+        `${mm} ticket template added to Atlas: 🍎 ${JSON.stringify(res, null, 2)} 🍎`
       );
       return res;
     } catch (e) {
@@ -114,7 +110,7 @@ export class TicketService {
     }
   }
 
-  async findAssociationTickets(associationId: string): Promise<Ticket[]> {
+  async getAssociationTickets(associationId: string): Promise<Ticket[]> {
     var res = await this.ticketModel.find({
       associationId: associationId,
     });

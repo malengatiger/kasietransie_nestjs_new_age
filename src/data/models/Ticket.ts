@@ -11,9 +11,11 @@ export class Ticket {
   _partitionKey: string;
 
   _id: string;
- 
+
+  @Prop()
   @ApiProperty()
   ticketId: string;
+
   @Prop()
   @ApiProperty()
   userId: string;
@@ -24,14 +26,7 @@ export class Ticket {
   
   @Prop()
   @ApiProperty()
-  validFromDate: string;
-  @Prop()
-  @ApiProperty()
-  validToDate: string;
-
-  @Prop()
-  @ApiProperty()
-  value: string;
+  value: number;
 
   @Prop()
   @ApiProperty()
