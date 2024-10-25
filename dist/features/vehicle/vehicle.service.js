@@ -124,7 +124,6 @@ let VehicleService = class VehicleService {
             }
             else {
                 common_1.Logger.debug(`${mm} creating new vehicle ...`);
-                vehicle.vehicleId = (0, crypto_1.randomUUID)();
                 vehicle.created = new Date().toISOString();
                 if (vehicle.qrCodeUrl == null) {
                     const url = await this.storage.createQRCode({

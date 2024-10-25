@@ -23,10 +23,8 @@ export class TicketService {
   ) {}
 
   async createTicket(ticket: Ticket): Promise<Ticket> {
-    ticket.ticketId = randomUUID().toString();
     ticket.created = new Date().toISOString();
 
-   
     Logger.debug(
       `${mm} create ticket template: ${JSON.stringify(ticket, null, 2)}`
     );

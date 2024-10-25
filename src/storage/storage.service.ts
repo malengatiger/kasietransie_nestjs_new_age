@@ -312,6 +312,7 @@ export class CloudStorageUploaderService {
       vehicleFilePath,
       "admin"
     );
+    //
     const u = new ExampleFile();
     u.downloadUrl = userUrl;
     u.fileName = "users.csv";
@@ -324,6 +325,11 @@ export class CloudStorageUploaderService {
     v.type = "csv";
     await this.exampleFileModel.create(v);
     Logger.log(`${mm} Example files uploaded and written to Atlas ✅ `);
+  }
+
+  public async getExampleFiles(): Promise<ExampleFile[]> {
+    const list = await this.exampleFileModel.find({});
+    return list;
   }
 
   private async getSignedUrl(file: File): Promise<string> {
@@ -348,9 +354,6 @@ export class CloudStorageUploaderService {
     filePath: string,
     folder: string
   ): Promise<string> {
-    // Logger.log(
-    //   `${mm} uploadFile to cloud storage: 🔵 ${objectName} in folder: 🔵 ${folder}}`
-    // );
 
     const storage: Storage = new Storage({ projectId: this.projectId });
     const bucket: Bucket = storage.bucket(this.bucketName);

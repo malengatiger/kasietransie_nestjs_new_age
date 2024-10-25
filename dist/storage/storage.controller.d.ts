@@ -2,9 +2,11 @@ import { CloudStorageUploaderService } from "./storage.service";
 import { UserPhoto } from "src/data/models/UserPhoto";
 import { User } from "src/data/models/User";
 import { VehiclePhoto } from "src/data/models/VehiclePhoto";
+import { ExampleFile } from "src/data/models/ExampleFile";
 export declare class StorageController {
     private readonly storageService;
     constructor(storageService: CloudStorageUploaderService);
+    getExampleFiles(): Promise<ExampleFile[]>;
     addUserPhoto(userPhoto: UserPhoto): Promise<any>;
     uploadExampleFiles(files: {
         userFile: Express.Multer.File[];

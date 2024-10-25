@@ -37,3 +37,5 @@ gcloud projects add-iam-policy-binding kasie-transie-3 \
   --project kasie-transie-3
 
 */
+
+gcloud storage buckets update gs://kasie-transie-3.appspot.com --cors-file cors.json

@@ -4,6 +4,7 @@ import {
   Logger,
   Post,
   Query,
+  Get,
   UploadedFile,
   UploadedFiles,
   UseInterceptors,
@@ -19,11 +20,18 @@ import * as path from "path";
 import { UserPhoto } from "src/data/models/UserPhoto";
 import { User } from "src/data/models/User";
 import { VehiclePhoto } from "src/data/models/VehiclePhoto";
+import { ExampleFile } from "src/data/models/ExampleFile";
 
 const tag = "🔵 🔵 🔵 StorageController 🔵 ";
+
 @Controller("storage")
 export class StorageController {
   constructor(private readonly storageService: CloudStorageUploaderService) {}
+
+  @Get('getExampleFiles')
+  async getExampleFiles(): Promise<ExampleFile[]> {
+    return this.storageService.getExampleFiles();
+  }
 
   @Post("addUserPhoto")
   async addUserPhoto(@Body() userPhoto: UserPhoto): Promise<any> {
@@ -76,9 +84,9 @@ export class StorageController {
       imageFile: Express.Multer.File[];
       thumbFile: Express.Multer.File[];
     },
-    @Query('vehicleId')  vehicleId: string, 
-    @Query('latitude') latitude: string, 
-    @Query('longitude') longitude: string 
+    @Query("vehicleId") vehicleId: string,
+    @Query("latitude") latitude: string,
+    @Query("longitude") longitude: string
   ): Promise<VehiclePhoto> {
     const imageTempFile = path.join(
       os.tmpdir(),
@@ -157,11 +165,7 @@ export class StorageController {
   }
   //
   @Post("uploadQrCodeFile")
-  @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: "imageFile", maxCount: 1 },
-    ])
-  )
+  @UseInterceptors(FileFieldsInterceptor([{ name: "imageFile", maxCount: 1 }]))
   async uploadQrCodeFile(
     @UploadedFiles()
     files: {
@@ -169,13 +173,15 @@ export class StorageController {
     },
     @Query("associationId") associationId: string
   ): Promise<User> {
-    Logger.log(`${tag} uploadQrCodeFile: imageFile: ${files.imageFile[0].originalname} 🥦 `);
+    Logger.log(
+      `${tag} uploadQrCodeFile: imageFile: ${files.imageFile[0].originalname} 🥦 `
+    );
 
     const imageTempFile = path.join(
       os.tmpdir(),
       files.imageFile[0].originalname
     );
-   
+
     await fs.promises.writeFile(imageTempFile, files.imageFile[0].buffer);
     Logger.log(
       `${tag}  uploadQrCodeFile: : qrcode ${files.imageFile[0].originalname} 🥦 saved to ${imageTempFile}`
@@ -183,12 +189,12 @@ export class StorageController {
 
     const url = await this.storageService.uploadQRCodeFile(
       associationId,
-      imageTempFile,
+      imageTempFile
     );
 
     return url;
   }
- //
+  //
   @UseInterceptors(FileInterceptor("file"))
   @Post("uploadVehicleVideo")
   async uploadVehicleVideo(

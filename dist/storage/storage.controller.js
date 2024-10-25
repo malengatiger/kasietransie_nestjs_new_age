@@ -25,6 +25,9 @@ let StorageController = class StorageController {
     constructor(storageService) {
         this.storageService = storageService;
     }
+    async getExampleFiles() {
+        return this.storageService.getExampleFiles();
+    }
     async addUserPhoto(userPhoto) {
         return await this.storageService.createUserPhoto(userPhoto);
     }
@@ -82,6 +85,12 @@ let StorageController = class StorageController {
 };
 exports.StorageController = StorageController;
 __decorate([
+    (0, common_1.Get)('getExampleFiles'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], StorageController.prototype, "getExampleFiles", null);
+__decorate([
     (0, common_1.Post)("addUserPhoto"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -106,9 +115,9 @@ __decorate([
         { name: "thumbFile", maxCount: 1 },
     ])),
     __param(0, (0, common_1.UploadedFiles)()),
-    __param(1, (0, common_1.Query)('vehicleId')),
-    __param(2, (0, common_1.Query)('latitude')),
-    __param(3, (0, common_1.Query)('longitude')),
+    __param(1, (0, common_1.Query)("vehicleId")),
+    __param(2, (0, common_1.Query)("latitude")),
+    __param(3, (0, common_1.Query)("longitude")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String, String, String]),
     __metadata("design:returntype", Promise)
@@ -127,9 +136,7 @@ __decorate([
 ], StorageController.prototype, "uploadUserProfilePicture", null);
 __decorate([
     (0, common_1.Post)("uploadQrCodeFile"),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileFieldsInterceptor)([
-        { name: "imageFile", maxCount: 1 },
-    ])),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileFieldsInterceptor)([{ name: "imageFile", maxCount: 1 }])),
     __param(0, (0, common_1.UploadedFiles)()),
     __param(1, (0, common_1.Query)("associationId")),
     __metadata("design:type", Function),

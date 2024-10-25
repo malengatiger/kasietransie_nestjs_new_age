@@ -179,7 +179,6 @@ export class VehicleService {
         return vehicle;
       } else {
         Logger.debug(`${mm} creating new vehicle ...`);
-        vehicle.vehicleId = randomUUID();
         vehicle.created = new Date().toISOString();
         if (vehicle.qrCodeUrl == null) {
           const url = await this.storage.createQRCode({

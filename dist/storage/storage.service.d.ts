@@ -29,6 +29,7 @@ export declare class CloudStorageUploaderService {
     uploadUserProfilePicture(userId: string, filePath: string, thumbFilePath: string): Promise<any>;
     uploadQRCodeFile(associationId: string, filePath: string): Promise<any>;
     uploadExampleFiles(userFilePath: string, vehicleFilePath: string): Promise<void>;
+    getExampleFiles(): Promise<ExampleFile[]>;
     private getSignedUrl;
     uploadFile(objectName: string, filePath: string, folder: string): Promise<string>;
     private getFileContentType;

@@ -208,6 +208,10 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
         await this.exampleFileModel.create(v);
         common_1.Logger.log(`${mm} Example files uploaded and written to Atlas ✅ `);
     }
+    async getExampleFiles() {
+        const list = await this.exampleFileModel.find({});
+        return list;
+    }
     async getSignedUrl(file) {
         const signedUrlOptions = {
             action: "read",
