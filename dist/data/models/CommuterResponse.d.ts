@@ -13,6 +13,10 @@ export declare class CommuterResponse {
 }
 export declare const CommuterResponseSchema: import("mongoose").Schema<CommuterResponse, import("mongoose").Model<CommuterResponse, any, any, any, import("mongoose").Document<unknown, any, CommuterResponse> & CommuterResponse & {
     _id: import("mongoose").Types.ObjectId;
+} & {
+    __v: number;
 }, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, CommuterResponse, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<CommuterResponse>> & import("mongoose").FlatRecord<CommuterResponse> & {
     _id: import("mongoose").Types.ObjectId;
+} & {
+    __v: number;
 }>;

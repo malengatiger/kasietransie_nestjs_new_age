@@ -8,6 +8,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AppErrorSchema } from 'src/data/models/AppError';
 import { KasieErrorSchema } from 'src/data/models/kasie.error';
 import { VehicleHeartbeatSchema } from 'src/data/models/VehicleHeartbeat';
+import { VehicleTelemetrySchema } from 'src/data/models/VehicleTelemetry';
+
 import { FileArchiverService } from 'src/my-utils/zipper';
 import { VehicleHeartbeatTimeSeriesSchema } from 'src/data/models/VehicleHeartbeatTimeSeries';
 import { PassengerTimeSeriesSchema } from 'src/data/models/PassengerTimeSeries';
@@ -23,6 +25,8 @@ import { FirebaseAdmin } from 'src/services/firebase_util';
       { name: "Vehicle", schema: VehicleSchema },
       { name: "AssociationToken", schema: AssociationTokenSchema },
       { name: "VehicleHeartbeat", schema: VehicleHeartbeatSchema },
+      { name: "VehicleTelemetry", schema: VehicleTelemetrySchema },
+
       { name: "VehicleHeartbeatTimeSeries", schema: VehicleHeartbeatTimeSeriesSchema },
       { name: "PassengerTimeSeries", schema: PassengerTimeSeriesSchema },
 

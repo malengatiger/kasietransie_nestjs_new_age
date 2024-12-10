@@ -39,6 +39,17 @@ export class AssociationController {
     );
   }
 
+  @Get('resetAssociationData')
+  async resetAssociationData(
+    @Query() associationId: string,
+   
+  ): Promise<any> {
+    return this.associationService.resetAssociationData(
+      associationId,
+    );
+  }
+
+
   @Get('downloadExampleUserCSVFile')
   async downloadExampleUserCSVFile(): Promise<string> {
     return this.associationService.downloadExampleUserCSVFile();
@@ -91,13 +102,6 @@ export class AssociationController {
       startDate,
       endDate,
     );
-  }
-  
-  @Get('generateFakeAssociation')
-  async generateFakeAssociation(
-    @Query('name') name: string,
-  ): Promise<RegistrationBag> {
-    return await this.associationService.generateFakeAssociation(name);
   }
   
   async getExampleFiles(): Promise<any[]> {

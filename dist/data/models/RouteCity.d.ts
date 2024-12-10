@@ -14,6 +14,10 @@ export declare class RouteCity {
 }
 export declare const RouteCitySchema: import("mongoose").Schema<RouteCity, import("mongoose").Model<RouteCity, any, any, any, import("mongoose").Document<unknown, any, RouteCity> & RouteCity & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, RouteCity, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<RouteCity>> & import("mongoose").FlatRecord<RouteCity> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, RouteCity, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<RouteCity>> & import("mongoose").FlatRecord<RouteCity> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

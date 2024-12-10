@@ -9,28 +9,28 @@ export class User {
   _partitionKey: string;
 
   _id: string;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   userType: string;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   userId: string;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   firstName: string;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   lastName: string;
   @Prop()
   @ApiProperty()
   gender: string;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   countryId: string;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   associationId: string;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   associationName: string;
   @Prop()
@@ -54,12 +54,18 @@ export class User {
   @Prop()
   @ApiProperty()
   qrCodeUrl: string;
+  @Prop({required: true})
+  @ApiProperty()
+  bucketFileName: string;
   @Prop()
   @ApiProperty()
   profileUrl: string;
   @Prop()
   @ApiProperty()
   profileThumbnail: string;
+  @Prop({required: true})
+  @ApiProperty()
+  qrCodeBytes: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

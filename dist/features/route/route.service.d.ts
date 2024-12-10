@@ -14,6 +14,7 @@ import { MessagingService } from "../fcm/fcm.service";
 import { CloudStorageUploaderService } from "src/storage/storage.service";
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 import { AssociationRouteData } from "src/data/models/RouteData";
+import { Association } from "src/data/models/Association";
 export declare class RouteService {
     private storage;
     private readonly archiveService;
@@ -27,10 +28,12 @@ export declare class RouteService {
     private cityModel;
     private routePointModel;
     private calculatedDistanceModel;
+    private assModel;
     private routeModel;
-    constructor(storage: CloudStorageUploaderService, archiveService: FileArchiverService, messagingService: MessagingService, cityService: CityService, errorHandler: KasieErrorHandler, routeUpdateRequestModel: mongoose.Model<RouteUpdateRequest>, vehicleMediaRequestModel: mongoose.Model<VehicleMediaRequest>, routeLandmarkModel: mongoose.Model<RouteLandmark>, routeCityModel: mongoose.Model<RouteCity>, cityModel: mongoose.Model<City>, routePointModel: mongoose.Model<RoutePoint>, calculatedDistanceModel: mongoose.Model<CalculatedDistance>, routeModel: mongoose.Model<Route>);
+    constructor(storage: CloudStorageUploaderService, archiveService: FileArchiverService, messagingService: MessagingService, cityService: CityService, errorHandler: KasieErrorHandler, routeUpdateRequestModel: mongoose.Model<RouteUpdateRequest>, vehicleMediaRequestModel: mongoose.Model<VehicleMediaRequest>, routeLandmarkModel: mongoose.Model<RouteLandmark>, routeCityModel: mongoose.Model<RouteCity>, cityModel: mongoose.Model<City>, routePointModel: mongoose.Model<RoutePoint>, calculatedDistanceModel: mongoose.Model<CalculatedDistance>, assModel: mongoose.Model<Association>, routeModel: mongoose.Model<Route>);
+    deleteCopiedRoutes(associationId: string): Promise<string>;
+    copyRoutes(assocIdFrom: string, assocIdTo: string): Promise<string>;
     findAssociationRouteLandmarksByLocation(associationId: string, latitude: number, longitude: number, radiusInKM: number): Promise<RouteLandmark[]>;
-    findRouteLandmarksByLocation(latitude: number, longitude: number, radiusInKM: number): Promise<RouteLandmark[]>;
     findAssociationRoutesByLocation(associationId: string, latitude: number, longitude: number, radiusInKM: number): Promise<Route[]>;
     getAssociationRouteLandmarks(associationId: string): Promise<RouteLandmark[]>;
     addRoute(route: Route): Promise<Route>;
@@ -54,6 +57,7 @@ export declare class RouteService {
     getRouteCities(routeId: string): Promise<RouteCity[]>;
     getRouteLandmarks(routeId: string): Promise<RouteLandmark[]>;
     findRoutesByLocation(latitude: number, longitude: number, radiusInKM: number): Promise<Route[]>;
+    findRouteLandmarksByLocation(latitude: number, longitude: number, radiusInKM: number): Promise<RouteLandmark[]>;
     findRoutePointsByLocation(latitude: number, longitude: number, radiusInKM: number): Promise<RoutePoint[]>;
     getAssociationRoutePoints(associationId: string): Promise<string>;
     getAssociationRouteZippedFile(associationId: string): Promise<string>;

@@ -26,62 +26,72 @@ __decorate([
     __metadata("design:type", String)
 ], Vehicle.prototype, "cellphone", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Vehicle.prototype, "vehicleId", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Vehicle.prototype, "associationId", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Vehicle.prototype, "countryId", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Vehicle.prototype, "ownerName", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Vehicle.prototype, "associationName", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], Vehicle.prototype, "bucketFileName", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], Vehicle.prototype, "qrCodeBytes", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true, index: { unique: true } }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Vehicle.prototype, "vehicleReg", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Vehicle.prototype, "model", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Vehicle.prototype, "make", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Vehicle.prototype, "year", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], Vehicle.prototype, "passengerCapacity", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], Vehicle.prototype, "active", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Vehicle.prototype, "created", void 0);

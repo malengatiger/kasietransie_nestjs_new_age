@@ -1,11 +1,12 @@
 import { Logger, Injectable } from "@nestjs/common";
 import { MongoClient } from "mongodb";
+import { MyUtils } from "src/my-utils/my-utils";
 const tag = "🍎🍎🍎 MongoIndexBuilder 🍎🍎🍎 ";
 
 @Injectable()
 export class MongoIndexBuilder {
   public static async createIndexes() {
-    const uri = process.env.REMOTE_DB_URI;
+    const uri = MyUtils.getDatabaseUrl();
     Logger.debug(`${tag} connectToMongoDB: Atlas uri: ${uri}`);
     const client = new MongoClient(uri);
     try {

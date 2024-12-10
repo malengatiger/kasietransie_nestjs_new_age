@@ -12,50 +12,56 @@ import { VehicleVideo } from "./VehicleVideo";
 })
 export class Vehicle {
   _partitionKey: string;
-
   _id: string;
+
   @Prop()
   @ApiProperty()
   ownerId: string;
   @Prop()
   @ApiProperty()
   cellphone: string;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   vehicleId: string;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   associationId: string;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   countryId: string;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   ownerName: string;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   associationName: string;
+  @Prop({required: true})
+  @ApiProperty()
+  bucketFileName: string;
+
+  @Prop({required: true})
+  @ApiProperty()
+  qrCodeBytes: string;
 
   @Prop({required: true, index: { unique: true}})
   @ApiProperty()
   vehicleReg: string;
-  
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   model: string;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   make: string;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   year: string;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   passengerCapacity: number;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   active: number;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   created: string;
   @Prop()

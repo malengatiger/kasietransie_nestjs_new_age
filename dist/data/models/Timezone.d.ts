@@ -9,6 +9,10 @@ export declare class Timezone {
 }
 export declare const TimezoneSchema: import("mongoose").Schema<Timezone, import("mongoose").Model<Timezone, any, any, any, import("mongoose").Document<unknown, any, Timezone> & Timezone & {
     _id: import("mongoose").Types.ObjectId;
+} & {
+    __v: number;
 }, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Timezone, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<Timezone>> & import("mongoose").FlatRecord<Timezone> & {
     _id: import("mongoose").Types.ObjectId;
+} & {
+    __v: number;
 }>;

@@ -17,6 +17,7 @@ const mongoose_1 = require("@nestjs/mongoose");
 const AppError_1 = require("../../data/models/AppError");
 const kasie_error_1 = require("../../data/models/kasie.error");
 const VehicleHeartbeat_1 = require("../../data/models/VehicleHeartbeat");
+const VehicleTelemetry_1 = require("../../data/models/VehicleTelemetry");
 const zipper_1 = require("../../my-utils/zipper");
 const VehicleHeartbeatTimeSeries_1 = require("../../data/models/VehicleHeartbeatTimeSeries");
 const PassengerTimeSeries_1 = require("../../data/models/PassengerTimeSeries");
@@ -32,6 +33,7 @@ exports.HeartbeatModule = HeartbeatModule = __decorate([
                 { name: "Vehicle", schema: Vehicle_1.VehicleSchema },
                 { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
                 { name: "VehicleHeartbeat", schema: VehicleHeartbeat_1.VehicleHeartbeatSchema },
+                { name: "VehicleTelemetry", schema: VehicleTelemetry_1.VehicleTelemetrySchema },
                 { name: "VehicleHeartbeatTimeSeries", schema: VehicleHeartbeatTimeSeries_1.VehicleHeartbeatTimeSeriesSchema },
                 { name: "PassengerTimeSeries", schema: PassengerTimeSeries_1.PassengerTimeSeriesSchema },
                 { name: "RouteUpdateRequest", schema: RouteUpdateRequest_1.RouteUpdateRequestSchema },

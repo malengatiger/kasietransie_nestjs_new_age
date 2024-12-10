@@ -18,6 +18,10 @@ export declare class UserGeofenceEvent {
 }
 export declare const UserGeofenceEventSchema: import("mongoose").Schema<UserGeofenceEvent, import("mongoose").Model<UserGeofenceEvent, any, any, any, import("mongoose").Document<unknown, any, UserGeofenceEvent> & UserGeofenceEvent & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, UserGeofenceEvent, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<UserGeofenceEvent>> & import("mongoose").FlatRecord<UserGeofenceEvent> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, UserGeofenceEvent, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<UserGeofenceEvent>> & import("mongoose").FlatRecord<UserGeofenceEvent> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

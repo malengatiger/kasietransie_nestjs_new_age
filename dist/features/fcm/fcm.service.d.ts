@@ -14,6 +14,7 @@ import { VehicleDeparture } from 'src/data/models/VehicleDeparture';
 import { KasieError } from 'src/data/models/kasie.error';
 import { Association } from 'src/data/models/Association';
 import { AssociationToken } from 'src/data/models/AssociationToken';
+import { VehicleTelemetry } from 'src/data/models/VehicleTelemetry';
 export declare class MessagingService {
     private associationTokenModel;
     private kasieModel;
@@ -27,6 +28,7 @@ export declare class MessagingService {
     sendVehicleDepartureMessage(departure: VehicleDeparture): Promise<void>;
     sendDispatchMessage(dispatch: DispatchRecord): Promise<void>;
     sendHeartbeatMessage(heartbeat: VehicleHeartbeat): Promise<void>;
+    sendTelemetryMessage(telemetry: VehicleTelemetry): Promise<void>;
     sendPassengerCountMessage(count: AmbassadorPassengerCount): Promise<void>;
     sendRouteUpdateMessage(req: RouteUpdateRequest): Promise<void>;
     sendCommuterRequestMessage(req: CommuterRequest): Promise<void>;

@@ -7,7 +7,6 @@ import { MyUtils } from "./my-utils/my-utils";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 import { MongoIndexBuilder } from "./services/index_util";
 import { MessagingService } from "./features/fcm/fcm.service";
-import { KasieErrorHandler } from "./middleware/errors.interceptor";
 const mm = "🔵 🔵 🔵 🔵 🔵 🔵 Kasie Transie Bootstrap 🔵 🔵";
 const env = process.env.NODE_ENV;
 Logger.log(`${mm} Kasie NODE_ENV : ${env}`);
@@ -15,7 +14,9 @@ Logger.log(`${mm} Kasie NODE_ENV : ${env}`);
 async function bootstrap() {
   Logger.log(`${mm} ... Kasie NestJS Backend bootstrapping .....`);
 
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: ["fatal", "log", "error", "warn", "debug"],
+  });
 
   const port = MyUtils.getPort();
   app.setGlobalPrefix("api/v1");
@@ -35,10 +36,6 @@ async function bootstrap() {
   Logger.log(`${mm} ... Kasie Swagger set up .....`);
   // app.use(helmet());
   app.enableCors();
-  Logger.log(`${mm} ... CORS set up .....`);
-
-  const messageService = app.get(MessagingService); // Inject the service
-
 
   Logger.log(`${mm} ... GlobalInterceptors set up .....`);
 
@@ -50,14 +47,18 @@ async function bootstrap() {
     `${mm} ...🔆 Kasie Backend running on: http://${serverIP}:${port}`
   );
 }
-bootstrap().then((r) =>
-  Logger.debug(
-    `${mm} Kasie Backend Bootstrapping is complete. 💖💖💖 ... Lets do this!! \n\n`
-  )
-);
 
-/*
-cloud projects add-iam-policy-binding kasie-transie-3 \
-  --member="serviceAccount:firebase-adminsdk-efvna@kasie-transie-3.iam.gserviceaccount.com" \
-  --role="roles/firebasemessaging.admin"
-*/
+// bootstrap().then((r) =>
+//   Logger.debug(
+//     `${mm} Kasie Backend Bootstrapping is complete. \n💖💖💖💖💖💖💖💖💖 ... Lets do this!! 💖💖💖💖💖💖\n\n`
+//   )
+// );
+async function startBoot() {
+  Logger.debug(
+    `${mm} 🌼 🌼 🌼 Kasie Backend Bootstrapping is starting ... `);
+  await bootstrap();
+  Logger.debug(
+    `${mm} 🌼 🌼 🌼 Kasie Backend Bootstrapping is complete. \n💖💖💖💖💖💖💖💖💖 ... Lets do this!! 💖💖💖💖💖💖\n\n`
+  )
+}
+startBoot();

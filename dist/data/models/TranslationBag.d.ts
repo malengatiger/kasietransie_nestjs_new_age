@@ -12,6 +12,10 @@ export declare class TranslationBag {
 }
 export declare const TranslationBagSchema: import("mongoose").Schema<TranslationBag, import("mongoose").Model<TranslationBag, any, any, any, import("mongoose").Document<unknown, any, TranslationBag> & TranslationBag & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, TranslationBag, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<TranslationBag>> & import("mongoose").FlatRecord<TranslationBag> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, TranslationBag, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<TranslationBag>> & import("mongoose").FlatRecord<TranslationBag> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

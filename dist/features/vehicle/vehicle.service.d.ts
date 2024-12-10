@@ -57,14 +57,10 @@ export declare class VehicleService {
     getRouteAssignments(routeId: string): Promise<RouteAssignment[]>;
     generateHeartbeats(associationId: string, numberOfCars: number, intervalInSeconds: number): Promise<VehicleHeartbeat[]>;
     generateRouteHeartbeats(routeId: string, numberOfCars: number, intervalInSeconds: number): Promise<VehicleHeartbeat[]>;
-    updateVehicle(vehicle: Vehicle): Promise<Vehicle>;
+    updateVehicle(vehicle: Vehicle): Promise<number>;
     getOwnerVehicles(userId: string, page: number): Promise<Vehicle[]>;
     updateVehicleQRCode(vehicle: Vehicle): Promise<number>;
-    private addCarsToDatabase;
-    importVehiclesFromCSV(file: Express.Multer.File, associationId: string): Promise<AddCarsResponse>;
-    private handleExtractedCars;
-    private buildCar;
-    createOwnerIfNotExists(car: Vehicle): Promise<number>;
+    uploadQRFile(file: Express.Multer.File, associationId: string): Promise<string>;
 }
 export interface AddCarsResponse {
     cars: Vehicle[];

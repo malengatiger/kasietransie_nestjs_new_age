@@ -4,7 +4,9 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class TicketRoute {
   
-
+  @Prop()
+  @ApiProperty()
+  routeId: string;
   @Prop()
   @ApiProperty()
   routeName: string;

@@ -35,6 +35,7 @@ export declare class AssociationService {
     private commuterModel;
     constructor(archiveService: FileArchiverService, userService: UserService, cityService: CityService, messagingService: MessagingService, errorHandler: KasieErrorHandler, associationModel: mongoose.Model<Association>, vehicleModel: mongoose.Model<Vehicle>, settingsModel: mongoose.Model<SettingsModel>, userModel: mongoose.Model<User>, countryModel: mongoose.Model<Country>, associationTokenModel: mongoose.Model<AssociationToken>, appErrorModel: mongoose.Model<AppError>, vehiclePhotoModel: mongoose.Model<VehiclePhoto>, vehicleVideoModel: mongoose.Model<VehicleVideo>, exampleFileModel: mongoose.Model<ExampleFile>, commuterModel: mongoose.Model<Commuter>);
     getAssociationById(associationId: string): Promise<any>;
+    resetAssociationData(associationId: string): Promise<any>;
     getAssociations(): Promise<any[]>;
     getAssociationUsers(associationId: string): Promise<any[]>;
     getAssociationVehicles(associationId: string): Promise<Vehicle[]>;
@@ -55,7 +56,6 @@ export declare class AssociationService {
     getAssociationAppErrors(associationId: string, startDate: string, endDate: string): Promise<AppError[]>;
     getRandomCommuters(limit: number): Promise<any[]>;
     getAppErrors(startDate: string): Promise<any[]>;
-    generateFakeAssociation(name: string): Promise<RegistrationBag>;
     getExampleFiles(): Promise<any[]>;
     upLoadExampleFiles(): Promise<ExampleFile[]>;
     getFakeEmail(): string;

@@ -23,7 +23,6 @@ const Route_1 = require("../../data/models/Route");
 const RouteAssignment_1 = require("../../data/models/RouteAssignment");
 const VehicleHeartbeat_1 = require("../../data/models/VehicleHeartbeat");
 const fs = require("fs");
-const crypto_1 = require("crypto");
 const VehicleBag_1 = require("../../data/helpers/VehicleBag");
 const AmbassadorPassengerCount_1 = require("../../data/models/AmbassadorPassengerCount");
 const DispatchRecord_1 = require("../../data/models/DispatchRecord");
@@ -36,7 +35,6 @@ const VehiclePhoto_1 = require("../../data/models/VehiclePhoto");
 const VehicleVideo_1 = require("../../data/models/VehicleVideo");
 const os = require("os");
 const path = require("path");
-const csv_1 = require("csv");
 const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 const user_service_1 = require("../user/user.service");
 const mm = "💚 💚 💚 VehicleService  💚 ";
@@ -61,9 +59,9 @@ let VehicleService = class VehicleService {
         this.vehicleVideoModel = vehicleVideoModel;
     }
     async getAssociationVehicleMediaRequests(associationId, startDate) {
-        return await this.vehicleMediaRequestModel.find({
+        return this.vehicleMediaRequestModel.find({
             associationId: associationId,
-            startDate: startDate,
+            created: { $gte: startDate },
         });
     }
     async addVehiclePhoto(vehiclePhoto) {
@@ -105,11 +103,7 @@ let VehicleService = class VehicleService {
     }
     async addVehicle(vehicle) {
         try {
-            if (vehicle.ownerName != null) {
-                common_1.Logger.debug(`${mm} ... checking owner ... create if none.`);
-                const userCount = await this.createOwnerIfNotExists(vehicle);
-                common_1.Logger.debug(`${mm} fresh new owner created: ${userCount} `);
-            }
+            common_1.Logger.debug(`${mm} ... addVehicle; car ... ${JSON.stringify(vehicle)}`);
             const existingCar = await this.vehicleModel.findOne({
                 vehicleId: vehicle.vehicleId,
             });
@@ -119,28 +113,20 @@ let VehicleService = class VehicleService {
                 const res = await this.vehicleModel.updateOne({
                     vehicleId: vehicle.vehicleId,
                 }, vehicle);
-                common_1.Logger.debug(`$mm car updated, result: ${JSON.stringify(res)}`);
+                common_1.Logger.debug(`${mm} car updated, result: ${JSON.stringify(res, null, 2)}`);
                 return vehicle;
             }
             else {
-                common_1.Logger.debug(`${mm} creating new vehicle ...`);
+                common_1.Logger.debug(`${mm} ... creating new car ... ${JSON.stringify(vehicle)}`);
                 vehicle.created = new Date().toISOString();
-                if (vehicle.qrCodeUrl == null) {
-                    const url = await this.storage.createQRCode({
-                        data: JSON.stringify(vehicle),
-                        prefix: vehicle.vehicleReg.replaceAll(" ", ""),
-                        size: 2,
-                        associationId: vehicle.associationId,
-                    });
-                    vehicle.qrCodeUrl = url;
-                }
-                return await this.vehicleModel.create(vehicle);
+                await this.vehicleModel.create(vehicle);
+                return vehicle;
             }
         }
         catch (e) {
             common_1.Logger.debug(`${mm} add car failed: ${e}`);
-            this.errorHandler.handleError(`Vehicle add failed: ${e}`, vehicle.associationId);
-            throw new common_1.HttpException(`🔴🔴 ${e} 🔴🔴`, common_1.HttpStatus.BAD_REQUEST);
+            this.errorHandler.handleError(`Vehicle add failed: ${e}`, vehicle.associationId, vehicle.associationName);
+            throw new common_1.HttpException(`🔴🔴 addVehicle failed ${e} 🔴🔴`, common_1.HttpStatus.BAD_REQUEST);
         }
     }
     async getVehicleBag(vehicleId, startDate) {
@@ -191,7 +177,14 @@ let VehicleService = class VehicleService {
         return [];
     }
     async updateVehicle(vehicle) {
-        return await this.vehicleModel.create(vehicle);
+        common_1.Logger.debug(`${mm} Update vehicle: ${JSON.stringify(vehicle)}`);
+        const del = await this.vehicleModel.deleteOne({
+            vehicleId: vehicle.vehicleId,
+        });
+        common_1.Logger.debug(`${mm} delete result: ${del}`);
+        const updateResult = await this.vehicleModel.updateOne(vehicle);
+        common_1.Logger.debug(`${mm} Update result: ${updateResult}`);
+        return updateResult.matchedCount;
     }
     async getOwnerVehicles(userId, page) {
         return this.vehicleModel.find({ ownerId: userId }).sort({ vehicleReg: 1 });
@@ -207,139 +200,30 @@ let VehicleService = class VehicleService {
         await this.vehicleModel.create(vehicle);
         return 0;
     }
-    async addCarsToDatabase(cars) {
-        common_1.Logger.log(`${mm} ... addCarsToDatabase: ${cars.length}`);
-        const errors = [];
-        const uList = [];
-        for (const mCar of cars) {
-            try {
-                const c = await this.vehicleModel.create(mCar);
-                uList.push(c);
-                common_1.Logger.log(`${mm} car added to Atlas: 🍎 ${JSON.stringify(c, null, 2)}\n`);
-            }
-            catch (e) {
-                errors.push(mCar);
-                common_1.Logger.error(`${mm} 😈 👿 error adding car: ${mCar.vehicleReg} to Atlas: ${e} 😈 👿\n`);
-            }
-        }
-        common_1.Logger.log(`${mm}  🍎🍎🍎🍎 ${uList.length} cars added to Atlas 🍎🍎 🥬 🥬\n`);
-        common_1.Logger.log(`${mm} 😈 👿 errors encountered adding cars to Atlas: ${errors.length} 😈 👿`);
-        return { cars: uList, errors: errors };
-    }
-    async importVehiclesFromCSV(file, associationId) {
-        common_1.Logger.log(`\n\n${mm} importVehiclesFromCSV: ... 🍎🍎 associationId: ${associationId} 🍎🍎 ... find association ...`);
-        common_1.Logger.debug(`${mm} importVehiclesFromCSV:... file size: ${file.buffer.length} bytes`);
-        const list = await this.associationModel.find({
-            associationId: associationId,
-        });
-        if (list.length == 0) {
-            throw new Error("Association not found");
-        }
-        const ass = list[0];
-        common_1.Logger.log(`${mm} importVehiclesFromCSV:... association: 🔵 ${JSON.stringify(ass, null, 2)} 🔵\n\n`);
-        const cars = [];
-        common_1.Logger.log(`${mm} importVehiclesFromCSV:... 🔵 read csv file: ${file.originalname}`);
-        let response;
-        const tempFilePath = path.join(os.tmpdir(), file.originalname);
-        common_1.Logger.log(`${mm} importVehiclesFromCSV:... 🔵 tempFilePath: ${tempFilePath}`);
-        const carList = [];
+    async uploadQRFile(file, associationId) {
+        common_1.Logger.log(`\n\n${mm} uploadQRFile: ... 🍎🍎 associationId: ${associationId} 🍎🍎 ... find association ...`);
+        common_1.Logger.debug(`${mm} uploadQRFile:... file size: ${file.buffer.length} bytes`);
+        let url = null;
         try {
-            let index = 0;
+            const tempFilePath = path.join(os.tmpdir(), file.originalname);
             await fs.promises.writeFile(tempFilePath, file.buffer);
-            response = await new Promise((resolve, reject) => {
-                fs.createReadStream(tempFilePath)
-                    .pipe((0, csv_1.parse)())
-                    .on("data", async (data) => {
-                    if (index > 0) {
-                        carList.push(data);
-                    }
-                    index++;
-                })
-                    .on("error", (err) => {
-                    reject(new Error(`Error processing vehicles CSV file: ${err}`));
-                })
-                    .on("end", async () => {
-                    common_1.Logger.debug(`${mm} CSV parsing completed ......`);
-                    common_1.Logger.log(`${mm} Save the parsed cars to the database`);
-                    const result = await this.handleExtractedCars(carList, cars, ass);
-                    await fs.promises.unlink(tempFilePath);
-                    resolve(result);
-                });
-            });
+            common_1.Logger.log(`${mm} uploadQRFile: ... 🔵 tempFilePath: ${tempFilePath}`);
+            url = await this.storage.uploadQRCodeFile(associationId, tempFilePath);
         }
         catch (err) {
-            common_1.Logger.error(`${mm} 😈😈 Error processing vehicles CSV file: 😈😈 ${err}`);
-            this.errorHandler.handleError(err, ass.associationId);
+            common_1.Logger.error(`${mm} 😈😈 Error uploadQRFile: 😈😈 ${err}`);
+            this.errorHandler.handleError(err, associationId, 'nay');
+            throw new common_1.HttpException(`🔴🔴 Error uploadQRFile failed ${err} 🔴🔴`, common_1.HttpStatus.BAD_REQUEST);
         }
-        if (response) {
-            common_1.Logger.log(`${mm} return response: ${JSON.stringify(response, null, 2)}`);
-            return response;
+        if (url) {
+            common_1.Logger.log(`${mm} return qrcode url: ${url}`);
+            return url;
         }
         else {
-            common_1.Logger.error(`${mm} Unexpected error: response is undefined`);
-            this.errorHandler.handleError("Unexpected Error", ass.associationId);
+            common_1.Logger.error(`${mm} Unexpected error: url is undefined`);
+            this.errorHandler.handleError("Unexpected Error: url is undefine", associationId, 'nay');
+            throw new common_1.HttpException(`🔴🔴 Error uploadQRFile failed 🔴🔴`, common_1.HttpStatus.BAD_REQUEST);
         }
-    }
-    async handleExtractedCars(carList, cars, ass) {
-        common_1.Logger.debug(`${mm} handleExtractedCars: 🔷 ${carList.length} cars`);
-        let userCount = 0;
-        for (const mCar of carList) {
-            const car = await this.buildCar(mCar, ass);
-            userCount += await this.createOwnerIfNotExists(car);
-            cars.push(car);
-        }
-        common_1.Logger.debug(`\n\n${mm} handleExtractedCars: 🔷 ${userCount} 🔷 owners have been added to Atlas`);
-        common_1.Logger.debug(`${mm} handleExtractedCars: 🔷 ${cars.length} 🔷 cars to be added to Atlas`);
-        const response = await this.addCarsToDatabase(cars);
-        return response;
-    }
-    async buildCar(data, ass) {
-        common_1.Logger.debug(`\n${mm} buildCar, data: check for vehicleReg in csv data:\n ${JSON.stringify(data)}\n`);
-        common_1.Logger.debug(`${mm} buildCar, association: ${JSON.stringify(ass.associationName)}`);
-        const myCar = new Vehicle_1.Vehicle();
-        myCar.vehicleId = (0, crypto_1.randomUUID)().trim();
-        myCar.ownerName = data[0];
-        myCar.vehicleReg = data[1];
-        myCar.model = data[2];
-        myCar.make = data[3];
-        myCar.year = data[4];
-        myCar.passengerCapacity = parseInt(data[5]);
-        myCar.associationId = ass.associationId;
-        myCar.associationName = ass.associationName;
-        myCar.active = 0;
-        myCar.created = new Date().toISOString();
-        const url = await this.storage.createQRCode({
-            data: JSON.stringify(myCar),
-            prefix: "car",
-            size: 2,
-            associationId: ass.associationName,
-        });
-        myCar.qrCodeUrl = url;
-        common_1.Logger.debug(`\n${mm} buildCar:... 🔵 vehicle built: ${JSON.stringify(myCar, null, 2)} 🔵\n\n`);
-        return myCar;
-    }
-    async createOwnerIfNotExists(car) {
-        common_1.Logger.debug(`\n${mm} handleOwner: for car: 🔵 ${car.vehicleReg}`);
-        const nameParts = car.ownerName.split(" ");
-        const firstName = nameParts.slice(0, -1).join(" ");
-        const lastName = nameParts[nameParts.length - 1];
-        common_1.Logger.debug(`\n${mm} handleOwner: firstName: ${firstName} lastName: ${lastName}`);
-        const user = await this.userService.getUserByName(firstName, lastName);
-        try {
-            if (user == null) {
-                const mUser = await this.userService.createOwner(car);
-                car.ownerId = mUser.userId;
-                car.ownerName = mUser.firstName + " " + mUser.lastName;
-                common_1.Logger.debug(`\n\n${mm} new owner created! 🍎 🍎 ${JSON.stringify(mUser, null, 2)} 🍎 🍎\n\n`);
-                return 1;
-            }
-        }
-        catch (e) {
-            return 0;
-        }
-        common_1.Logger.debug(`${mm} owner exists already!  🔵 🔵 ${user.firstName} ${user.lastName}`);
-        car.ownerId = user.userId;
-        return 0;
     }
 };
 exports.VehicleService = VehicleService;

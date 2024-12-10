@@ -25,11 +25,28 @@ export declare class RouteController {
         routeId: string;
         index: number;
     }): Promise<RoutePoint[]>;
+    copyRoutes(query: {
+        assocIdFrom: string;
+        assocIdTo: string;
+    }): Promise<string>;
+    deleteCopiedRoutes(query: {
+        associationId: string;
+    }): Promise<string>;
     deleteRoutePoint(routePointId: string): Promise<any>;
     updateRouteColor(query: {
         routeId: string;
         color: string;
     }): Promise<Route>;
+    findRouteLandmarksByLocation(query: {
+        latitude: number;
+        longitude: number;
+        radiusInKM: number;
+    }): Promise<RouteLandmark[]>;
+    findRoutePointsByLocation(query: {
+        latitude: number;
+        longitude: number;
+        radiusInKM: number;
+    }): Promise<RoutePoint[]>;
     deleteRouteLandmark(query: {
         routeLandmarkId: string;
     }): Promise<RouteLandmark[]>;

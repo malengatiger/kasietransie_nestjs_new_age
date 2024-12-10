@@ -17,6 +17,10 @@ export declare class VehiclePhoto {
 }
 export declare const VehiclePhotoSchema: import("mongoose").Schema<VehiclePhoto, import("mongoose").Model<VehiclePhoto, any, any, any, import("mongoose").Document<unknown, any, VehiclePhoto> & VehiclePhoto & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, VehiclePhoto, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<VehiclePhoto>> & import("mongoose").FlatRecord<VehiclePhoto> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, VehiclePhoto, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<VehiclePhoto>> & import("mongoose").FlatRecord<VehiclePhoto> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

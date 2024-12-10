@@ -15,6 +15,10 @@ export declare class Commuter {
 }
 export declare const CommuterSchema: import("mongoose").Schema<Commuter, import("mongoose").Model<Commuter, any, any, any, import("mongoose").Document<unknown, any, Commuter> & Commuter & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Commuter, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<Commuter>> & import("mongoose").FlatRecord<Commuter> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Commuter, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<Commuter>> & import("mongoose").FlatRecord<Commuter> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

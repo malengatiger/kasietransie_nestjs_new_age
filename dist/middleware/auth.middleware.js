@@ -68,7 +68,6 @@ let AuthMiddleware = class AuthMiddleware {
                     .auth()
                     .verifyIdToken(token);
                 req.user = decodedToken;
-                common_1.Logger.log(`\n\n${mm} authentication seems OK; ✅ ✅ ✅ request user email: ${req.user.email} ✅ \n`);
                 next();
             }
             else {

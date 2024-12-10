@@ -8,6 +8,7 @@ export declare class Constants {
     static readonly ROUTE_BUILDER = "ROUTE_BUILDER";
     static readonly ADMINISTRATOR_AFTAROBOT = "ADMINISTRATOR_AFTAROBOT";
     static readonly ADMINISTRATOR_ASSOCIATION = "ADMINISTRATOR_ASSOCIATION";
+    static readonly ASSOCIATION_CAR = "ASSOCIATION_CAR";
     static readonly vehicleChanges = "vehicleChanges";
     static readonly vehicleArrival = "vehicleArrival";
     static readonly vehicleDeparture = "vehicleDeparture";
@@ -28,4 +29,6 @@ export declare class Constants {
     static readonly qrcode_user = "user";
     static readonly qrcode_vehicle = "vehicle";
     static readonly qrcode_route = "route";
+    static readonly associationEmailSuffix = "@kasie.com";
+    static readonly associationPasswordPrefix = "pass";
 }

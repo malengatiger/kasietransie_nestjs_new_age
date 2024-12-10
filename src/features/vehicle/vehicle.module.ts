@@ -48,6 +48,8 @@ import { CloudStorageUploaderService } from "src/storage/storage.service";
 import { FirebaseAdmin } from "src/services/firebase_util";
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 import { UserPhotoSchema } from "src/data/models/UserPhoto";
+import { HeartbeatService } from "../heartbeat/heartbeat.service";
+import { VehicleTelemetrySchema } from "src/data/models/VehicleTelemetry";
 
 @Module({
   imports: [
@@ -59,6 +61,8 @@ import { UserPhotoSchema } from "src/data/models/UserPhoto";
       { name: "VehicleArrival", schema: VehicleArrivalSchema },
       { name: "VehicleDeparture", schema: VehicleDepartureSchema },
       { name: "VehicleHeartbeat", schema: VehicleHeartbeatSchema },
+      { name: "VehicleTelemetry", schema: VehicleTelemetrySchema },
+
       { name: "Association", schema: AssociationSchema },
       { name: "RouteAssignment", schema: RouteAssignmentSchema },
       { name: "User", schema: UserSchema },
@@ -100,6 +104,7 @@ import { UserPhotoSchema } from "src/data/models/UserPhoto";
   ],
   controllers: [VehicleController],
   providers: [
+    HeartbeatService,
     VehicleService,
     UserService,
     CityService,

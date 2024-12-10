@@ -76,9 +76,9 @@ export class AuthMiddleware implements NestMiddleware {
           .auth()
           .verifyIdToken(token);
         req.user = decodedToken; // Set the authenticated user in the request object
-        Logger.log(
-          `\n\n${mm} authentication seems OK; ✅ ✅ ✅ request user email: ${req.user.email} ✅ \n`
-        );
+        // Logger.log(
+        //   `\n\n${mm} authentication seems OK; ✅ ✅ ✅ request user email: ${req.user.email} ✅ \n`
+        // );
 
         next();
       } else {

@@ -70,8 +70,8 @@ let StorageController = class StorageController {
         const imageTempFile = path.join(os.tmpdir(), files.imageFile[0].originalname);
         await fs.promises.writeFile(imageTempFile, files.imageFile[0].buffer);
         common_1.Logger.log(`${tag}  uploadQrCodeFile: : qrcode ${files.imageFile[0].originalname} 🥦 saved to ${imageTempFile}`);
-        const url = await this.storageService.uploadQRCodeFile(associationId, imageTempFile);
-        return url;
+        const fileName = await this.storageService.uploadQRCodeFile(associationId, imageTempFile);
+        return fileName;
     }
     async uploadVehicleVideo(file, data) {
         const { vehicleId, latitude, longitude } = data;

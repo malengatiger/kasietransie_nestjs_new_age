@@ -61,6 +61,14 @@ let RouteController = RouteController_1 = class RouteController {
         const list = await this.routeService.deleteRoutePointsFromIndex(query.routeId, query.index);
         return list;
     }
+    async copyRoutes(query) {
+        const result = await this.routeService.copyRoutes(query.assocIdFrom, query.assocIdTo);
+        return result;
+    }
+    async deleteCopiedRoutes(query) {
+        const result = await this.routeService.deleteCopiedRoutes(query.associationId);
+        return result;
+    }
     async deleteRoutePoint(routePointId) {
         const list = await this.routeService.deleteRoutePoint(routePointId);
         return list;
@@ -68,6 +76,14 @@ let RouteController = RouteController_1 = class RouteController {
     async updateRouteColor(query) {
         const route = await this.routeService.updateRouteColor(query.routeId, query.color);
         return route;
+    }
+    async findRouteLandmarksByLocation(query) {
+        common_1.Logger.debug(`${mm} findRouteLandmarksByLocation: latitude: ${query.latitude} longitude: ${query.longitude} max: ${query.radiusInKM} limit: 5`);
+        return await this.routeService.findRouteLandmarksByLocation(query.latitude, query.longitude, query.radiusInKM);
+    }
+    async findRoutePointsByLocation(query) {
+        common_1.Logger.debug(`${mm} findRoutePointsByLocation: latitude: ${query.latitude} longitude: ${query.longitude} max: ${query.radiusInKM} limit: 5`);
+        return await this.routeService.findRoutePointsByLocation(query.latitude, query.longitude, query.radiusInKM);
     }
     async deleteRouteLandmark(query) {
         const result = await this.routeService.deleteRouteLandmark(query.routeLandmarkId);
@@ -231,6 +247,20 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "deleteRoutePointsFromIndex", null);
 __decorate([
+    (0, common_1.Get)("copyRoutes"),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], RouteController.prototype, "copyRoutes", null);
+__decorate([
+    (0, common_1.Get)("deleteCopiedRoutes"),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], RouteController.prototype, "deleteCopiedRoutes", null);
+__decorate([
     (0, common_1.Get)("deleteRoutePoint"),
     __param(0, (0, common_1.Query)("routePointId")),
     __metadata("design:type", Function),
@@ -244,6 +274,20 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "updateRouteColor", null);
+__decorate([
+    (0, common_1.Get)("findRouteLandmarksByLocation"),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], RouteController.prototype, "findRouteLandmarksByLocation", null);
+__decorate([
+    (0, common_1.Get)("findRoutePointsByLocation"),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], RouteController.prototype, "findRoutePointsByLocation", null);
 __decorate([
     (0, common_1.Get)("deleteRouteLandmark"),
     __param(0, (0, common_1.Query)()),

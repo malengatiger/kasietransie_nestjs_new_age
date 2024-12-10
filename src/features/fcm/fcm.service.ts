@@ -21,6 +21,7 @@ import { VehicleDeparture } from 'src/data/models/VehicleDeparture';
 import { KasieError } from 'src/data/models/kasie.error';
 import { Association } from 'src/data/models/Association';
 import { AssociationToken } from 'src/data/models/AssociationToken';
+import { VehicleTelemetry } from 'src/data/models/VehicleTelemetry';
 
 const mm = '🎽 🎽 🎽 MessagingService';
 
@@ -147,6 +148,19 @@ export class MessagingService {
       Constants.heartbeat,
       JSON.stringify(heartbeat, null, 2),
       heartbeat.associationId,
+    );
+    
+  }
+  async sendTelemetryMessage(telemetry: VehicleTelemetry) {
+    const fmtDate = MyUtils.formatISOStringDate(telemetry.created, null);
+
+    await this.send(
+      `${Constants.heartbeat}${telemetry.associationId}`,
+      `${telemetry.vehicleReg},`,
+      `Telemetry at ${fmtDate}`,
+      Constants.heartbeat,
+      JSON.stringify(telemetry, null, 2),
+      telemetry.associationId,
     );
     
   }

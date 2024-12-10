@@ -30,11 +30,15 @@ export class CommuterTicket {
   @Prop()
   @ApiProperty()
   commuterCellphone: string;
- 
+  @Prop({required: true})
+  @ApiProperty()
+  bucketFileName: string;
   @Prop()
   @ApiProperty()
   validToDateFrom: string;
-
+  @Prop({required: true})
+  @ApiProperty()
+  qrCodeBytes: string;
   @Prop()
   @ApiProperty()
   validToDateTo: string;

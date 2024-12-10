@@ -14,6 +14,10 @@ export declare class AmbassadorCheckIn {
 }
 export declare const AmbassadorCheckInSchema: import("mongoose").Schema<AmbassadorCheckIn, import("mongoose").Model<AmbassadorCheckIn, any, any, any, import("mongoose").Document<unknown, any, AmbassadorCheckIn> & AmbassadorCheckIn & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, AmbassadorCheckIn, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<AmbassadorCheckIn>> & import("mongoose").FlatRecord<AmbassadorCheckIn> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, AmbassadorCheckIn, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<AmbassadorCheckIn>> & import("mongoose").FlatRecord<AmbassadorCheckIn> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

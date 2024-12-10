@@ -30,6 +30,11 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], ExampleFile.prototype, "downloadUrl", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], ExampleFile.prototype, "bucketFileName", void 0);
 exports.ExampleFile = ExampleFile = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

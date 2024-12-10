@@ -19,6 +19,10 @@ export declare class SettingsModel {
 }
 export declare const SettingsModelSchema: import("mongoose").Schema<SettingsModel, import("mongoose").Model<SettingsModel, any, any, any, import("mongoose").Document<unknown, any, SettingsModel> & SettingsModel & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, SettingsModel, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<SettingsModel>> & import("mongoose").FlatRecord<SettingsModel> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, SettingsModel, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<SettingsModel>> & import("mongoose").FlatRecord<SettingsModel> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

@@ -8,6 +8,7 @@ export class Constants {
   public static readonly ROUTE_BUILDER = 'ROUTE_BUILDER';
   public static readonly ADMINISTRATOR_AFTAROBOT = 'ADMINISTRATOR_AFTAROBOT';
   public static readonly ADMINISTRATOR_ASSOCIATION = 'ADMINISTRATOR_ASSOCIATION';
+  public static readonly ASSOCIATION_CAR = 'ASSOCIATION_CAR';
 
   //
   public static readonly vehicleChanges = 'vehicleChanges';
@@ -35,5 +36,7 @@ export class Constants {
   public static readonly qrcode_vehicle = 'vehicle';
   public static readonly qrcode_route = 'route';
 
+  public static readonly associationEmailSuffix = '@kasie.com';
+  public static readonly associationPasswordPrefix = 'pass';
 
 }

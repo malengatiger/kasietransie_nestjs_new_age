@@ -14,6 +14,7 @@ export declare class AssociationController {
     registerAssociation(association: Association): Promise<RegistrationBag>;
     addSettingsModel(model: SettingsModel): Promise<any>;
     addAssociationToken(associationId: string, userId: string, token: string): Promise<any>;
+    resetAssociationData(associationId: string): Promise<any>;
     downloadExampleUserCSVFile(): Promise<string>;
     getAssociations(): Promise<any[]>;
     getAssociationById(associationId: string): Promise<any>;
@@ -22,7 +23,6 @@ export declare class AssociationController {
     getAssociationSettingsModels(associationId: string): Promise<any[]>;
     downloadExampleVehicleCSVFile(): Promise<string>;
     getAssociationAppErrors(associationId: string, startDate: string, endDate: string): Promise<AppError[]>;
-    generateFakeAssociation(name: string): Promise<RegistrationBag>;
     getExampleFiles(): Promise<any[]>;
     createQRCode(data: KasieQRCode): Promise<string>;
 }

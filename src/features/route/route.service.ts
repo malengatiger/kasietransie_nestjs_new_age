@@ -18,6 +18,8 @@ import { MessagingService } from "../fcm/fcm.service";
 import { CloudStorageUploaderService } from "src/storage/storage.service";
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 import { AssociationRouteData, RouteData } from "src/data/models/RouteData";
+import { Association } from "src/data/models/Association";
+import { randomUUID } from "crypto";
 
 const mm = "🌿🌿🌿 RouteService 🌿";
 
@@ -52,9 +54,161 @@ export class RouteService {
     @InjectModel(CalculatedDistance.name)
     private calculatedDistanceModel: mongoose.Model<CalculatedDistance>,
 
+    @InjectModel(Association.name)
+    private assModel: mongoose.Model<Association>,
+
     @InjectModel(Route.name)
     private routeModel: mongoose.Model<Route>
   ) {}
+
+  public async deleteCopiedRoutes(associationId: string): Promise<string> {
+    try {
+      const res1 = await this.routePointModel.deleteMany({
+        associationId: associationId,
+      });
+      Logger.debug(`${mm} routePoints result: ${JSON.stringify(res1)}`);
+      var res2 = await this.routeLandmarkModel.deleteMany({
+        associationId: associationId,
+      });
+      Logger.debug(`${mm} routeLandmarks result: ${JSON.stringify(res2)}`);
+      var res3 = await this.routeCityModel.deleteMany({
+        associationId: associationId,
+      });
+      Logger.debug(`${mm} routeCities result: ${JSON.stringify(res3)}`);
+      var res4 = await this.routeModel.deleteMany({
+        associationId: associationId,
+      });
+      Logger.debug(`${mm} routes result: ${JSON.stringify(res4)}`);
+      return `Copied routes deleted`;
+    } catch (e) {
+      Logger.error(`${mm} Failed: ${e}`);
+    }
+  }
+
+  public async copyRoutes(
+    assocIdFrom: string,
+    assocIdTo: string
+  ): Promise<string> {
+    let routeCount = 0;
+    Logger.log(`\n\n\n${mm} copyRoutes starting ...`);
+
+    try {
+      const routes: Route[] = await this.routeModel.find({
+        associationId: assocIdFrom,
+      });
+      const ass = await this.assModel.findOne({ associationId: assocIdTo });
+      routes.forEach(async (rt) => {
+        if (ass) {
+          const newRoute = new Route();
+          Logger.log(
+            `\n${mm} ${routes.length} routes to be added to ${ass.associationName} ...`
+          );
+          newRoute.associationId = assocIdTo;
+          newRoute.associationName = ass.associationName;
+          newRoute.routeId = randomUUID();
+          newRoute.name = rt.name;
+          newRoute.color = rt.color;
+          newRoute.countryId = rt.countryId;
+          newRoute.countryName = rt.countryName;
+          newRoute.calculatedDistances = null;
+          newRoute.created = new Date().toISOString();
+          newRoute.routeStartEnd = rt.routeStartEnd;
+
+          await this.routeModel.create(newRoute);
+          routeCount++;
+          Logger.log(
+            `\n${mm} route added to ${ass.associationName} - ${newRoute.name}`
+          );
+
+          const landmarks = await this.routeLandmarkModel.find({
+            routeId: rt.routeId,
+          });
+          Logger.log(`${mm} ${landmarks.length} routeLandmarks to be created ...`);
+          let landmarksCount = 0;
+          landmarks.forEach(async (lm) => {
+            const landmark = new RouteLandmark();
+            landmark.landmarkId = randomUUID();
+            landmark.landmarkName = lm.landmarkName;
+            landmark.position = lm.position;
+            landmark.routeId = newRoute.routeId;
+            landmark.routeName = newRoute.name;
+            landmark.routePointIndex = lm.routePointIndex;
+            landmark.routePointId = lm.routePointId;
+            landmark.created = new Date().toISOString();
+            landmark.index = lm.index;
+            landmark.associationId = ass.associationId;
+
+            await this.routeLandmarkModel.create(landmark);
+            landmarksCount++;
+          });
+          Logger.debug(
+            `\n${mm} ${landmarksCount} routeLandmarks added to ${newRoute.name}`
+          );
+
+          const cities = await this.routeCityModel.find({
+            routeId: rt.routeId,
+          });
+          Logger.log(
+            `${mm} ${cities.length} routeCities to be created ...`
+          );
+          let cityCount = 0;
+          cities.forEach(async (c) => {
+            const routeCity = new RouteCity();
+            routeCity.routeId = newRoute.routeId;
+            routeCity.routeName = rt.name;
+            routeCity.cityId = c.cityId;
+            routeCity.cityName = c.cityId;
+            routeCity.position = c.position;
+            routeCity.created = new Date().toISOString();
+            routeCity.associationId = newRoute.associationId;
+            await this.routeCityModel.create(routeCity);
+            cityCount++;
+          });
+          Logger.debug(
+            `\n${mm} ${cityCount} routeCities added to ${newRoute.name} `
+          );
+
+          const points = await this.routePointModel.find({
+            routeId: rt.routeId,
+          });
+          Logger.log(
+            `${mm} ${points.length} routePoints to be created for route: ${newRoute.name}`
+          );
+          let pointsCount = 0;
+          points.forEach(async (c) => {
+            const routePoint = new RoutePoint();
+            routePoint.routeId = newRoute.routeId;
+            routePoint.routeName = newRoute.name;
+            routePoint.position = c.position;
+            routePoint.index = c.index;
+            routePoint.latitude = c.latitude;
+            routePoint.longitude = c.longitude;
+            routePoint.routePointId = randomUUID();
+            routePoint.associationId = newRoute.associationId;
+            routePoint.heading = c.heading;
+            routePoint.created = new Date().toISOString();
+            await this.routePointModel.create(routePoint);
+            pointsCount++;
+          });
+          Logger.debug(
+            `\n${mm}  ${pointsCount} routePoints added to ${newRoute.name} `
+          );
+        }
+      });
+      Logger.log(
+        `\n\n${mm} ${routeCount} routes added to ${ass.associationName} `
+      );
+      const msg = "🥬🥬🥬🥬 route copy complete! 🥬🥬🥬🥬";
+      Logger.log(`\n\n ${mm} ${msg} \n\n`);
+      return msg;
+    } catch (e) {
+      Logger.error(`${mm} Routes copy failed: ${e}`);
+      throw new HttpException(
+        `Routes copy failed: ${e}`,
+        HttpStatus.BAD_REQUEST
+      );
+    }
+  }
 
   public async findAssociationRouteLandmarksByLocation(
     associationId: string,
@@ -64,13 +218,7 @@ export class RouteService {
   ): Promise<RouteLandmark[]> {
     return [];
   }
-  public async findRouteLandmarksByLocation(
-    latitude: number,
-    longitude: number,
-    radiusInKM: number
-  ): Promise<RouteLandmark[]> {
-    return [];
-  }
+
   public async findAssociationRoutesByLocation(
     associationId: string,
     latitude: number,
@@ -90,31 +238,36 @@ export class RouteService {
 
   public async addRoute(route: Route): Promise<Route> {
     try {
-      const url = await this.storage.createQRCode({
-        data: JSON.stringify(route),
-        prefix: "route",
-        size: 2,
-        associationId: route.associationId,
-      });
-      route.qrCodeUrl = url;
+      // const url = await this.storage.createQRCode({
+      //   data: JSON.stringify(route),
+      //   prefix: "route",
+      //   size: 2,
+      //   associationId: route.associationId,
+      // });
+      // route.qrCodeUrl = url;
       const res = await this.routeModel.create(route);
       Logger.log(
         `\n\n${mm} route ${route.name} has been added to Atlas\n ${JSON.stringify(res, null, 2)}`
       );
       return res; // Return the result from the database
     } catch (e) {
-      this.errorHandler.handleError(e, route.associationId);
+      this.errorHandler.handleError(
+        e,
+        route.associationId,
+        route.associationName
+      );
+      throw new HttpException(`addRoute failed: ${e}`, HttpStatus.BAD_REQUEST);
     }
   }
 
   public async createRouteQRCode(route: Route): Promise<Route> {
-    const url = await this.storage.createQRCode({
-      data: JSON.stringify(route),
-      prefix: "route",
-      size: 1,
-      associationId: route.associationId,
-    });
-    route.qrCodeUrl = url;
+    // const url = await this.storage.createQRCode({
+    //   data: JSON.stringify(route),
+    //   prefix: "route",
+    //   size: 1,
+    //   associationId: route.associationId,
+    // });
+    // route.qrCodeUrl = url;
     await this.routeModel.updateOne(route);
     return route;
   }
@@ -264,7 +417,15 @@ export class RouteService {
         .sort({ index: 1 });
       return rem;
     } catch (e) {
-      this.errorHandler.handleError(e, routeLandmark.associationId);
+      this.errorHandler.handleError(
+        e,
+        routeLandmark.associationId,
+        routeLandmark.landmarkName
+      );
+      throw new HttpException(
+        `addRouteLandmark failed: ${e}`,
+        HttpStatus.BAD_REQUEST
+      );
     }
   }
   public async deleteRouteLandmark(
@@ -292,7 +453,7 @@ export class RouteService {
     const res = await this.routeLandmarkModel
       .find({ routeId: mark.routeId })
       .sort({ index: 1 });
-      
+
     Logger.log(
       `${mm} routeLandmark deleted successfully, returning remaining landmarks: ${res.length}`
     );
@@ -344,12 +505,57 @@ export class RouteService {
   ): Promise<Route[]> {
     return [];
   }
+  public async findRouteLandmarksByLocation(
+    latitude: number,
+    longitude: number,
+    radiusInKM: number
+  ): Promise<RouteLandmark[]> {
+    Logger.debug(
+      `${mm} findRouteLandmarksByLocation: latitude: ${latitude} longitude: ${longitude} max: ${radiusInKM} limit: 5`
+    );
+
+    const query = {
+      position: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [Number(longitude), Number(latitude)],
+          },
+          $maxDistance: radiusInKM * 1000,
+        },
+      },
+    };
+    // Find documents based on our query
+    const routeLandmarks = await this.routeLandmarkModel.find(query).limit(1);
+    Logger.log(
+      `${mm} route landmarks found by location: ${routeLandmarks.length}`
+    );
+    return routeLandmarks;
+  }
   public async findRoutePointsByLocation(
     latitude: number,
     longitude: number,
     radiusInKM: number
   ): Promise<RoutePoint[]> {
-    return [];
+    Logger.debug(
+      `${mm} findRoutePointsByLocation: latitude: ${latitude} longitude: ${longitude} max: ${radiusInKM} limit: 5`
+    );
+
+    const query = {
+      position: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [Number(longitude), Number(latitude)],
+          },
+          $maxDistance: radiusInKM * 1000,
+        },
+      },
+    };
+    // Find documents based on our query
+    const routePoints = await this.routePointModel.find(query).limit(1);
+    Logger.log(`${mm} route points found by location: ${routePoints.length}`);
+    return routePoints;
   }
   public async getAssociationRoutePoints(
     associationId: string
@@ -557,11 +763,15 @@ export class RouteService {
     return list;
   }
 
-  public async deleteRoutePointList(routePointList: RoutePointList): Promise<RoutePoint[]> {
-    Logger.log(`\n\n${mm} delete these RoutePoints: ${routePointList.routePoints.length} \n`);
+  public async deleteRoutePointList(
+    routePointList: RoutePointList
+  ): Promise<RoutePoint[]> {
+    Logger.log(
+      `\n\n${mm} delete these RoutePoints: ${routePointList.routePoints.length} \n`
+    );
 
     if (routePointList.routePoints.length == 0) {
-      throw new HttpException('No route points', HttpStatus.BAD_REQUEST);
+      throw new HttpException("No route points", HttpStatus.BAD_REQUEST);
     }
     var resp = [];
 
@@ -581,7 +791,9 @@ export class RouteService {
       })
       .sort({ index: 1 });
 
-      Logger.debug(`${mm} Route points remaining, returning: ${mList.length} points`);
+    Logger.debug(
+      `${mm} Route points remaining, returning: ${mList.length} points`
+    );
 
     return mList;
   }
@@ -641,4 +853,7 @@ export class RouteService {
       count: cnt,
     };
   }
+}
+function rt(value: Route, index: number, array: Route[]): void {
+  throw new Error("Function not implemented.");
 }

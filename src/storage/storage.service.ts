@@ -6,6 +6,8 @@ import {
   StorageOptions,
   GetSignedUrlConfig,
   UploadResponse,
+  GetSignedUrlResponse,
+  UploadOptions,
 } from "@google-cloud/storage";
 import { ConfigService } from "@nestjs/config";
 import * as fs from "fs";
@@ -36,7 +38,7 @@ export class CloudStorageUploaderService {
   private bucketName: string;
   private projectId: string;
   private cloudStorageDirectory: string;
-
+  private storage: Storage;
   constructor(
     private configService: ConfigService,
     private readonly errorHandler: KasieErrorHandler,
@@ -62,11 +64,10 @@ export class CloudStorageUploaderService {
     @InjectModel(Association.name)
     private associationModel: mongoose.Model<Association>
   ) {
-    this.bucketName = this.configService.get<string>("BUCKET_NAME");
-    this.projectId = this.configService.get<string>("PROJECT_ID");
-    this.cloudStorageDirectory = this.configService.get<string>(
-      "CLOUD_STORAGE_DIRECTORY"
-    );
+    this.bucketName = "kasie-transie-3.appspot.com";
+    this.projectId = "kasie-transie-3";
+    this.cloudStorageDirectory = "kasie-transie-3_data";
+    this.storage = new Storage({ projectId: "kasie-transie-3" });
   }
 
   public async uploadVehicleVideo(
@@ -199,7 +200,8 @@ export class CloudStorageUploaderService {
     }
     Logger.error(`${mm} .. user photo upload failed`);
     const msg = `Failed to upload user photo`;
-    await this.errorHandler.handleError(msg, userPhoto.associationId);
+    await this.errorHandler.handleError(msg, 
+      userPhoto.associationId, userPhoto.associationName);
     throw new HttpException(msg, HttpStatus.BAD_REQUEST);
   }
   public async uploadUserProfilePicture(
@@ -262,7 +264,7 @@ export class CloudStorageUploaderService {
   public async uploadQRCodeFile(
     associationId: string,
     filePath: string
-  ): Promise<any> {
+  ): Promise<string> {
     Logger.log(
       `${mm} uploadQRCodeFile: creating qrcode 🔵 associationId: ${associationId}`
     );
@@ -283,18 +285,24 @@ export class CloudStorageUploaderService {
           HttpStatus.BAD_REQUEST
         );
       }
-      const url = await this.uploadFile(
+      const mFileName = await this.uploadFile(
         `${objectName}`,
         filePath,
         `${ass.associationName}`
       );
-      Logger.log(`${mm} uploadQRCodeFile: returning url 🔵  ${url}`);
-
-      return url;
+      Logger.log(`${mm} uploadQRCodeFile: returning fileName: 🔵  ${mFileName}`);
+      if (!mFileName) {
+        this.errorHandler.handleError("url is blank", associationId, 'nay');
+        throw new HttpException(
+          "url is blank",
+          HttpStatus.INTERNAL_SERVER_ERROR
+        );
+      }
+      return mFileName;
     } catch (e) {
       const msg = `QRCode file upload failed: ${e}`;
       Logger.error(`${mm} ${msg}: ${e}`);
-      this.errorHandler.handleError(msg, associationId);
+      this.errorHandler.handleError(msg, associationId, 'nay');
       throw new HttpException(msg, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -314,13 +322,13 @@ export class CloudStorageUploaderService {
     );
     //
     const u = new ExampleFile();
-    u.downloadUrl = userUrl;
+    u.bucketFileName = userUrl;
     u.fileName = "users.csv";
     u.type = "csv";
     await this.exampleFileModel.create(u);
 
     const v = new ExampleFile();
-    v.downloadUrl = vehicleUrl;
+    v.bucketFileName = vehicleUrl;
     v.fileName = "vehicles.csv";
     v.type = "csv";
     await this.exampleFileModel.create(v);
@@ -332,21 +340,25 @@ export class CloudStorageUploaderService {
     return list;
   }
 
-  private async getSignedUrl(file: File): Promise<string> {
-    // Logger.log(`${mm} getSignedUrl for cloud storage: ${file.name}`);
-
-    const signedUrlOptions: GetSignedUrlConfig = {
+  async generateV4ReadSignedUrl(fileName: string) {
+    Logger.log(`${mm} generateV4ReadSignedUrl, file: ${fileName}`);
+    const options: GetSignedUrlConfig = {
+      version: "v4",
       action: "read",
       expires: Date.now() + 365 * 24 * 60 * 60 * 1000 * 30, // 30 years
     };
 
-    try {
-      const [url] = await file.getSignedUrl(signedUrlOptions);
-      return url;
-    } catch (error) {
-      Logger.error(`${mm} Error getting signed URL: ${error}`);
-      throw error;
-    }
+    Logger.log(
+      `${mm} generateV4ReadSignedUrl Get a v4 signed URL for reading the file`
+    );
+    const resp: GetSignedUrlResponse = await this.storage
+      .bucket(this.bucketName)
+      .file(fileName)
+      .getSignedUrl(options);
+
+    console.log(`${mm} Generated GET signed URL:`);
+    console.log(resp[0]);
+    return resp[0];
   }
 
   public async uploadFile(
@@ -354,23 +366,26 @@ export class CloudStorageUploaderService {
     filePath: string,
     folder: string
   ): Promise<string> {
+    Logger.log(`uploadFile : ${filePath} bucket: ${this.bucketName} `);
 
-    const storage: Storage = new Storage({ projectId: this.projectId });
-    const bucket: Bucket = storage.bucket(this.bucketName);
     const bucketFileName = `${this.cloudStorageDirectory}/${folder}/${objectName}`;
-    const file: File = bucket.file(bucketFileName);
-    await storage.bucket(this.bucketName).setCorsConfiguration([
+
+    Logger.log(
+      `${mm} uploadFile : ${filePath} bucketFileName: ${bucketFileName} to ${this.bucketName}`
+    );
+
+    await this.storage.bucket(this.bucketName).setCorsConfiguration([
       {
         method: ["*"],
         origin: ["*"],
       },
     ]);
 
-    Logger.log(`Bucket ${this.bucketName} was updated with a CORS config
+    Logger.log(`${mm} Bucket ${this.bucketName} was updated with a CORS config
         to allow all requests from any origin`);
     try {
       const contentType = this.getFileContentType(filePath);
-      const options = {
+      const options: UploadOptions = {
         destination: bucketFileName,
         preconditionOpts: {},
         metadata: {
@@ -378,17 +393,25 @@ export class CloudStorageUploaderService {
           predefinedAcl: "publicRead",
         },
       };
-      const response = await storage
+      Logger.log(
+        `${mm} upload ${filePath} to cloud: await storage.bucket ${this.bucketName}...`
+      );
+      const response: UploadResponse = await this.storage
         .bucket(this.bucketName)
         .upload(filePath, options);
+      Logger.log(`${mm} UploadResponse: ${response[0].name} ...`);
 
-      const signedUrl = await this.getSignedUrl(file);
+      var mFile = response[0];
+      var prop = response[1];
       Logger.log(
-        `${mm} ${bucketFileName} uploaded to cloud storage and signed url obtained ✅✅✅\n`
+        `${mm} UploadResponse mFile: ${mFile.name} \nprop: ${prop}...`
       );
-      return signedUrl;
+
+      if (mFile) {
+        return mFile.name;
+      }
     } catch (error) {
-      Logger.error(`${mm} Error uploading file to cloud storage: ${error}`);
+      Logger.error(`\n\n${mm} Error uploading file to cloud storage: ${error}`);
       throw error;
     }
   }

@@ -28,28 +28,35 @@ export class UserController {
 
   @Post("addUser")
   async addUser(@Body() user: User): Promise<any> {
+    Logger.log(
+      `${mm} addUser; check bucketFileName: ${JSON.stringify(user, null, 2)}`
+    );
     return await this.userService.createUser(user);
   }
-
+  @Post("createOwner")
+  async createOwner(@Body() user: User): Promise<any> {
+    return await this.userService.createOwner(user);
+  }
   @Post("addAdminUser")
   async addAdminUser(@Body() user: User): Promise<any> {
-    return await this.userService.createAdminUser(user);
+    return await this.userService.createInternalAdminUser(user);
   }
   @Get("getUserById")
   async getUserById(@Query("userId") userId: string): Promise<User> {
     return await this.userService.getUserById(userId);
   }
 
-  @Post("importUsersFromCSV")
-  @UseInterceptors(FileInterceptor("file"))
-  async importUsersFromCSV(
-    @UploadedFile() file: Express.Multer.File,
+@Get("getUserById")
+async deleteFirebaseUser(@Query("uid") uid: string): Promise<number> {
+  return await this.userService.deleteUser(uid);
+}
+  @Get("createAssociationAuthUser")
+  async createAssociationAuthUser(
     @Query("associationId") associationId: string
-  ): Promise<AddUsersResponse> {
-    const res = await this.userService.importUsersFromCSV(file, associationId);
-
-    return res;
+  ): Promise<any> {
+    return await this.userService.createAssociationAuthUser(associationId);
   }
+
   @Get("getUserByName")
   async getUserByName(
     @Query("firstName") firstName: string,
@@ -57,20 +64,8 @@ export class UserController {
   ): Promise<User> {
     const res = await this.userService.getUserByName(firstName, lastName);
     if (res == null) {
-      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+      throw new HttpException("User not found", HttpStatus.BAD_REQUEST);
     }
     return res;
-  }
-  @Get('fix')
-  async fix(): Promise<any> {
-    return await this.userService.fix();
-  }
-
-  private sendFile(fileName: string, res: Response) {
-    this.logger.log("Sending file: " + fileName);
-    res.setHeader("Content-Type", "application/octet-stream");
-    res.setHeader("Content-Disposition", `attachment; filename=route.zip`);
-    MyUtils.deleteOldFiles();
-    res.sendFile(fileName);
   }
 }

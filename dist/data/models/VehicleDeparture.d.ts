@@ -18,6 +18,10 @@ export declare class VehicleDeparture {
 }
 export declare const VehicleDepartureSchema: import("mongoose").Schema<VehicleDeparture, import("mongoose").Model<VehicleDeparture, any, any, any, import("mongoose").Document<unknown, any, VehicleDeparture> & VehicleDeparture & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, VehicleDeparture, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<VehicleDeparture>> & import("mongoose").FlatRecord<VehicleDeparture> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, VehicleDeparture, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<VehicleDeparture>> & import("mongoose").FlatRecord<VehicleDeparture> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

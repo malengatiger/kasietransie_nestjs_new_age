@@ -29,8 +29,8 @@ export class TicketService {
       `${mm} create ticket template: ${JSON.stringify(ticket, null, 2)}`
     );
     try {
-      if (ticket.ticketRoutes.length == 0) {
-        throw new Error('Ticket has no routes');
+      if (ticket.ticketRoutes.length == 0 && !ticket.validOnAllRoutes) {
+        throw new Error('Ticket has no routes and is not valid on all routes');
       }
       var res = await this.ticketModel.create(ticket);
       Logger.log(
@@ -41,7 +41,7 @@ export class TicketService {
       Logger.debug(`${mm} create ticket failed: ${e}`);
       this.errorHandler.handleError(
         `create ticket template failed: ${e}`,
-        ticket.associationId
+        ticket.associationId, ticket.associationName
       );
       throw new HttpException(
         `error creating ticket template: ${e}`,
@@ -57,13 +57,13 @@ export class TicketService {
     commuterTicket.commuterTicketId = randomUUID().toString();
     commuterTicket.created = new Date().toISOString();
     try {
-      const url = await this.storage.createQRCode({
-        data: JSON.stringify(commuterTicket),
-        prefix: "commuterTicket",
-        size: 1,
-        associationId: commuterTicket.associationId,
-      });
-      commuterTicket.qrCodeUrl = url;
+      // const url = await this.storage.createQRCode({
+      //   data: JSON.stringify(commuterTicket),
+      //   prefix: "commuterTicket",
+      //   size: 1,
+      //   associationId: commuterTicket.associationId,
+      // });
+      // commuterTicket.qrCodeUrl = url;
       var res = await this.commuterTicket.create(commuterTicket);
       Logger.debug(
         `${mm} ticketPunched added to Atlas: ${JSON.stringify(commuterTicket, null, 2)}`
@@ -73,7 +73,8 @@ export class TicketService {
       Logger.debug(`${mm} create ticket failed: ${e}`);
       this.errorHandler.handleError(
         `create ticket template failed: ${e}`,
-        commuterTicket.associationId
+        commuterTicket.associationId,
+        commuterTicket.associationName
       );
       throw new HttpException(
         `error creating commuterTicket: ${e}`,
@@ -99,7 +100,8 @@ export class TicketService {
       Logger.debug(`${mm} create ticket failed: ${e}`);
       this.errorHandler.handleError(
         `create ticket template failed: ${e}`,
-        commuterTicketPunched.associationId
+        commuterTicketPunched.associationId,
+        commuterTicketPunched.associationName
       );
       throw new HttpException(
         `error creating commuterTicket: ${e}`,

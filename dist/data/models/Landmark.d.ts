@@ -14,6 +14,10 @@ export declare class Landmark {
 }
 export declare const LandmarkSchema: import("mongoose").Schema<Landmark, import("mongoose").Model<Landmark, any, any, any, import("mongoose").Document<unknown, any, Landmark> & Landmark & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Landmark, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<Landmark>> & import("mongoose").FlatRecord<Landmark> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Landmark, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<Landmark>> & import("mongoose").FlatRecord<Landmark> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

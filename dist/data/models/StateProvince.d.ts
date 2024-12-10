@@ -11,6 +11,10 @@ export declare class StateProvince {
 }
 export declare const StateProvinceSchema: import("mongoose").Schema<StateProvince, import("mongoose").Model<StateProvince, any, any, any, import("mongoose").Document<unknown, any, StateProvince> & StateProvince & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, StateProvince, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<StateProvince>> & import("mongoose").FlatRecord<StateProvince> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, StateProvince, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<StateProvince>> & import("mongoose").FlatRecord<StateProvince> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

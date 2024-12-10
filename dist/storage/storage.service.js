@@ -46,9 +46,10 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
         this.vehiclePhotoModel = vehiclePhotoModel;
         this.vehicleVideoModel = vehicleVideoModel;
         this.associationModel = associationModel;
-        this.bucketName = this.configService.get("BUCKET_NAME");
-        this.projectId = this.configService.get("PROJECT_ID");
-        this.cloudStorageDirectory = this.configService.get("CLOUD_STORAGE_DIRECTORY");
+        this.bucketName = "kasie-transie-3.appspot.com";
+        this.projectId = "kasie-transie-3";
+        this.cloudStorageDirectory = "kasie-transie-3_data";
+        this.storage = new storage_1.Storage({ projectId: "kasie-transie-3" });
     }
     async uploadVehicleVideo(vehicleId, filePath, latitude, longitude) {
         common_1.Logger.log(`${mm} getting vehicle from Atlas, car: ${vehicleId}`);
@@ -134,7 +135,7 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
         }
         common_1.Logger.error(`${mm} .. user photo upload failed`);
         const msg = `Failed to upload user photo`;
-        await this.errorHandler.handleError(msg, userPhoto.associationId);
+        await this.errorHandler.handleError(msg, userPhoto.associationId, userPhoto.associationName);
         throw new common_1.HttpException(msg, common_1.HttpStatus.BAD_REQUEST);
     }
     async uploadUserProfilePicture(userId, filePath, thumbFilePath) {
@@ -181,14 +182,18 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             if (ass == null) {
                 throw new common_1.HttpException("Association not found", common_1.HttpStatus.BAD_REQUEST);
             }
-            const url = await this.uploadFile(`${objectName}`, filePath, `${ass.associationName}`);
-            common_1.Logger.log(`${mm} uploadQRCodeFile: returning url 🔵  ${url}`);
-            return url;
+            const mFileName = await this.uploadFile(`${objectName}`, filePath, `${ass.associationName}`);
+            common_1.Logger.log(`${mm} uploadQRCodeFile: returning fileName: 🔵  ${mFileName}`);
+            if (!mFileName) {
+                this.errorHandler.handleError("url is blank", associationId, 'nay');
+                throw new common_1.HttpException("url is blank", common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            return mFileName;
         }
         catch (e) {
             const msg = `QRCode file upload failed: ${e}`;
             common_1.Logger.error(`${mm} ${msg}: ${e}`);
-            this.errorHandler.handleError(msg, associationId);
+            this.errorHandler.handleError(msg, associationId, 'nay');
             throw new common_1.HttpException(msg, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -197,12 +202,12 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
         const userUrl = await this.uploadFile("users.csv", userFilePath, "admin");
         const vehicleUrl = await this.uploadFile("vehicles.csv", vehicleFilePath, "admin");
         const u = new ExampleFile_1.ExampleFile();
-        u.downloadUrl = userUrl;
+        u.bucketFileName = userUrl;
         u.fileName = "users.csv";
         u.type = "csv";
         await this.exampleFileModel.create(u);
         const v = new ExampleFile_1.ExampleFile();
-        v.downloadUrl = vehicleUrl;
+        v.bucketFileName = vehicleUrl;
         v.fileName = "vehicles.csv";
         v.type = "csv";
         await this.exampleFileModel.create(v);
@@ -212,32 +217,33 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
         const list = await this.exampleFileModel.find({});
         return list;
     }
-    async getSignedUrl(file) {
-        const signedUrlOptions = {
+    async generateV4ReadSignedUrl(fileName) {
+        common_1.Logger.log(`${mm} generateV4ReadSignedUrl, file: ${fileName}`);
+        const options = {
+            version: "v4",
             action: "read",
             expires: Date.now() + 365 * 24 * 60 * 60 * 1000 * 30,
         };
-        try {
-            const [url] = await file.getSignedUrl(signedUrlOptions);
-            return url;
-        }
-        catch (error) {
-            common_1.Logger.error(`${mm} Error getting signed URL: ${error}`);
-            throw error;
-        }
+        common_1.Logger.log(`${mm} generateV4ReadSignedUrl Get a v4 signed URL for reading the file`);
+        const resp = await this.storage
+            .bucket(this.bucketName)
+            .file(fileName)
+            .getSignedUrl(options);
+        console.log(`${mm} Generated GET signed URL:`);
+        console.log(resp[0]);
+        return resp[0];
     }
     async uploadFile(objectName, filePath, folder) {
-        const storage = new storage_1.Storage({ projectId: this.projectId });
-        const bucket = storage.bucket(this.bucketName);
+        common_1.Logger.log(`uploadFile : ${filePath} bucket: ${this.bucketName} `);
         const bucketFileName = `${this.cloudStorageDirectory}/${folder}/${objectName}`;
-        const file = bucket.file(bucketFileName);
-        await storage.bucket(this.bucketName).setCorsConfiguration([
+        common_1.Logger.log(`${mm} uploadFile : ${filePath} bucketFileName: ${bucketFileName} to ${this.bucketName}`);
+        await this.storage.bucket(this.bucketName).setCorsConfiguration([
             {
                 method: ["*"],
                 origin: ["*"],
             },
         ]);
-        common_1.Logger.log(`Bucket ${this.bucketName} was updated with a CORS config
+        common_1.Logger.log(`${mm} Bucket ${this.bucketName} was updated with a CORS config
         to allow all requests from any origin`);
         try {
             const contentType = this.getFileContentType(filePath);
@@ -249,15 +255,20 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
                     predefinedAcl: "publicRead",
                 },
             };
-            const response = await storage
+            common_1.Logger.log(`${mm} upload ${filePath} to cloud: await storage.bucket ${this.bucketName}...`);
+            const response = await this.storage
                 .bucket(this.bucketName)
                 .upload(filePath, options);
-            const signedUrl = await this.getSignedUrl(file);
-            common_1.Logger.log(`${mm} ${bucketFileName} uploaded to cloud storage and signed url obtained ✅✅✅\n`);
-            return signedUrl;
+            common_1.Logger.log(`${mm} UploadResponse: ${response[0].name} ...`);
+            var mFile = response[0];
+            var prop = response[1];
+            common_1.Logger.log(`${mm} UploadResponse mFile: ${mFile.name} \nprop: ${prop}...`);
+            if (mFile) {
+                return mFile.name;
+            }
         }
         catch (error) {
-            common_1.Logger.error(`${mm} Error uploading file to cloud storage: ${error}`);
+            common_1.Logger.error(`\n\n${mm} Error uploading file to cloud storage: ${error}`);
             throw error;
         }
     }

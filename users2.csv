@@ -1,0 +1,19 @@
+userType,firstName,lastName,email,cellphone,password
+ASSOCIATION_OFFICIAL,Charlie,Nkuna,charlienk@awesometaxi.com,+27659680008,pass123
+ASSOCIATION_OFFICIAL,David,Thompson,davthom@awesometaxi.com,+27659680048,pass123
+MARSHAL,Mary,van der Merwe,maryvdw@awesometaxi.com,+27659680007,pass123
+OWNER,Samuel,Chauke,sammychau@awesometaxi.com,+27659680006,pass123
+DRIVER,Peter,Nkosi,peternk@awesometaxi.com,+27659680005,pass123
+DRIVER,Zoe,Franks,zoe_frk@awesometaxi.com,+27659680011,pass123
+AMBASSADOR,Piet,Hanyani,petehan@awesometaxi.com,+27659680004,pass123
+AMBASSADOR,Samuel,Moleo,sammol@awesometaxi.com,+27659680014,pass123
+ROUTE_BUILDER,John,Maluleke,johnmal@awesometaxi.com,+27659680003,pass123
+ROUTE_BUILDER,Frankie,Bester,frankiebb@awesometaxi.com,+27659680013,pass123
+MARSHAL,Vivienne,van der Walt,vivianyvd@awesometaxi.com,+27659680009,pass123
+MARSHAL,Fulani,Nkuna,fulkuna@awesometaxi.com,+27659680017,pass123
+AMBASSADOR,Johnny,Baker,johnnybak@awesometaxi.com,+27659680034,pass123
+OWNER,Thomas,Smith,tomsmith@awesometaxi.com,+27659680036,pass123
+ROUTE_BUILDER,Donny,Bester,donniebest@awesometaxi.com,+27659680033,pass123
+MARSHAL,Franny,Maringa,frannyom@awesometaxi.com,+27659680077,pass123
+MARSHAL,Andrew,Chauke,chauhandr@awesometaxi.com,+27659680037,pass123
+AMBASSADOR,Roberta,Smith,robertasmith@awesometaxi.com,+27659680054,pass123

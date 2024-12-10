@@ -70,6 +70,10 @@ let MessagingService = class MessagingService {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(heartbeat.created, null);
         await this.send(`${constants_1.Constants.heartbeat}${heartbeat.associationId}`, `${heartbeat.vehicleReg},`, `Heartbeat at ${fmtDate}`, constants_1.Constants.heartbeat, JSON.stringify(heartbeat, null, 2), heartbeat.associationId);
     }
+    async sendTelemetryMessage(telemetry) {
+        const fmtDate = my_utils_1.MyUtils.formatISOStringDate(telemetry.created, null);
+        await this.send(`${constants_1.Constants.heartbeat}${telemetry.associationId}`, `${telemetry.vehicleReg},`, `Telemetry at ${fmtDate}`, constants_1.Constants.heartbeat, JSON.stringify(telemetry, null, 2), telemetry.associationId);
+    }
     async sendPassengerCountMessage(count) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(count.created, null);
         await this.send(`${constants_1.Constants.passengerCount}${count.associationId}`, `${count.vehicleReg},`, `PassengerCount on ${fmtDate}`, constants_1.Constants.passengerCount, JSON.stringify(count, null, 2), count.associationId);

@@ -22,7 +22,7 @@ export declare class StorageController {
     }, userId: string): Promise<User>;
     uploadQrCodeFile(files: {
         imageFile: Express.Multer.File[];
-    }, associationId: string): Promise<User>;
+    }, associationId: string): Promise<string>;
     uploadVehicleVideo(file: Express.Multer.File, data: {
         vehicleId: string;
         latitude: number;

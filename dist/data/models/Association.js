@@ -13,6 +13,7 @@ exports.AssociationSchema = exports.Association = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const position_1 = require("./position");
 const swagger_1 = require("@nestjs/swagger");
+const User_1 = require("./User");
 let Association = class Association {
 };
 exports.Association = Association;
@@ -62,30 +63,15 @@ __decorate([
     __metadata("design:type", position_1.Position)
 ], Association.prototype, "position", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", String)
-], Association.prototype, "adminUserFirstName", void 0);
+    __metadata("design:type", User_1.User)
+], Association.prototype, "carUser", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", String)
-], Association.prototype, "adminUserLastName", void 0);
-__decorate([
-    (0, mongoose_1.Prop)(),
-    (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", String)
-], Association.prototype, "userId", void 0);
-__decorate([
-    (0, mongoose_1.Prop)(),
-    (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", String)
-], Association.prototype, "adminCellphone", void 0);
-__decorate([
-    (0, mongoose_1.Prop)(),
-    (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", String)
-], Association.prototype, "adminEmail", void 0);
+    __metadata("design:type", User_1.User)
+], Association.prototype, "adminUser", void 0);
 exports.Association = Association = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

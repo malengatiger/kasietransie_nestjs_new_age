@@ -10,6 +10,10 @@ export declare class LocationRequest {
 }
 export declare const LocationRequestSchema: import("mongoose").Schema<LocationRequest, import("mongoose").Model<LocationRequest, any, any, any, import("mongoose").Document<unknown, any, LocationRequest> & LocationRequest & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, LocationRequest, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<LocationRequest>> & import("mongoose").FlatRecord<LocationRequest> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, LocationRequest, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<LocationRequest>> & import("mongoose").FlatRecord<LocationRequest> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

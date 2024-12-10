@@ -22,6 +22,10 @@ export declare class AmbassadorPassengerCount {
 }
 export declare const AmbassadorPassengerCountSchema: import("mongoose").Schema<AmbassadorPassengerCount, import("mongoose").Model<AmbassadorPassengerCount, any, any, any, import("mongoose").Document<unknown, any, AmbassadorPassengerCount> & AmbassadorPassengerCount & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, AmbassadorPassengerCount, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<AmbassadorPassengerCount>> & import("mongoose").FlatRecord<AmbassadorPassengerCount> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, AmbassadorPassengerCount, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<AmbassadorPassengerCount>> & import("mongoose").FlatRecord<AmbassadorPassengerCount> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

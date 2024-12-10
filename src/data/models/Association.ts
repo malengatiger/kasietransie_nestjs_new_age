@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Position } from "./position";
 import { ApiProperty } from "@nestjs/swagger";
+import { User } from "./User";
 
 @Schema({
   timestamps: true,
@@ -39,22 +40,14 @@ export class Association {
   @Prop()
   @ApiProperty()
   position: Position;
-  @Prop()
+ 
+  @Prop({required: true})
   @ApiProperty()
-  adminUserFirstName: string;
-  @Prop()
+  carUser: User;
+
+  @Prop({required: true})
   @ApiProperty()
-  adminUserLastName: string;
-  @Prop()
-  @ApiProperty()
-  userId: string;
-  @Prop()
-  @ApiProperty()
-  adminCellphone: string;
-  @Prop()
-  @ApiProperty()
-  adminEmail: string;
-  password: string;
+  adminUser: User;
 }
 
 export const AssociationSchema = SchemaFactory.createForClass(Association);

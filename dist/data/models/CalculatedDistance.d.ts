@@ -15,6 +15,10 @@ export declare class CalculatedDistance {
 }
 export declare const CalculatedDistanceSchema: import("mongoose").Schema<CalculatedDistance, import("mongoose").Model<CalculatedDistance, any, any, any, import("mongoose").Document<unknown, any, CalculatedDistance> & CalculatedDistance & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, CalculatedDistance, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<CalculatedDistance>> & import("mongoose").FlatRecord<CalculatedDistance> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, CalculatedDistance, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<CalculatedDistance>> & import("mongoose").FlatRecord<CalculatedDistance> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

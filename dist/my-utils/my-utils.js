@@ -11,18 +11,14 @@ class MyUtils {
         throw new Error("Method not implemented.");
     }
     static getDatabaseUrl() {
-        const env = process.env.NODE_ENV;
         let dbUrl;
-        if (env === "production") {
-            dbUrl = process.env.REMOTE_DB_URI;
-        }
-        else {
-            dbUrl = process.env.LOCAL_DB_URI;
-        }
+        const pre = 'mongodb+srv';
+        const first = '://bryan:kkTiger23';
+        const sec = '@cluster0.njz1rn4.mongodb.net/kasie_transie';
         if (!dbUrl) {
-            dbUrl = process.env.REMOTE_DB_URI;
+            dbUrl = `${pre}${first}${sec}`;
         }
-        common_1.Logger.log(`${mm} getDatabaseUrl: 🍷🍷 MONGODB dbUrl: ${dbUrl}`);
+        common_1.Logger.log(`\n\n${mm} getDatabaseUrl: 🍷🍷🍷🍷 Atlas dbUrl: ${dbUrl} 🍷🍷🍷🍷`);
         return dbUrl;
     }
     static getPort() {
@@ -34,10 +30,10 @@ class MyUtils {
         else {
             port = process.env.LOCAL_PORT;
         }
-        common_1.Logger.log(`${mm} port: ${port} 🍷🍷 `);
         if (!port) {
-            port = process.env.REMOTE_PORT;
+            port = '8080';
         }
+        common_1.Logger.log(`${mm} port: ${port} 🍷🍷 `);
         return port;
     }
     static getStartDate(numberOfHours) {

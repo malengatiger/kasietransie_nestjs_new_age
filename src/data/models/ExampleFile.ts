@@ -15,6 +15,10 @@ export class ExampleFile {
   @Prop()
   @ApiProperty()
   downloadUrl: string;
+  
+  @Prop({required: true})
+  @ApiProperty()
+  bucketFileName: string;
 }
 
 export const ExampleFileSchema = SchemaFactory.createForClass(ExampleFile);

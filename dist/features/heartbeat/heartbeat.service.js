@@ -20,16 +20,18 @@ const crypto_1 = require("crypto");
 const mongoose_2 = require("mongoose");
 const Vehicle_1 = require("../../data/models/Vehicle");
 const VehicleHeartbeat_1 = require("../../data/models/VehicleHeartbeat");
+const VehicleTelemetry_1 = require("../../data/models/VehicleTelemetry");
 const my_utils_1 = require("../../my-utils/my-utils");
 const fcm_service_1 = require("../fcm/fcm.service");
 const time_series_service_1 = require("../time_series/time_series.service");
 const mm = '🌶🌶🌶 HeartbeatService 🌶 ';
 let HeartbeatService = class HeartbeatService {
-    constructor(configService, timeSeriesService, messagingService, vehicleModel, vehicleHeartbeatModel) {
+    constructor(configService, timeSeriesService, messagingService, vehicleModel, vehicleTelemetryModel, vehicleHeartbeatModel) {
         this.configService = configService;
         this.timeSeriesService = timeSeriesService;
         this.messagingService = messagingService;
         this.vehicleModel = vehicleModel;
+        this.vehicleTelemetryModel = vehicleTelemetryModel;
         this.vehicleHeartbeatModel = vehicleHeartbeatModel;
     }
     async generateVehicleRouteHeartbeats(vehicleId, routeId, startDate, intervalInSeconds) {
@@ -49,6 +51,11 @@ let HeartbeatService = class HeartbeatService {
         await this.messagingService.sendHeartbeatMessage(m);
         return m;
     }
+    async addVehicleTelemetry(telemetry) {
+        const m = await this.vehicleTelemetryModel.create(telemetry);
+        await this.messagingService.sendTelemetryMessage(m);
+        return m;
+    }
     async generateRouteHeartbeats(request) {
         return null;
     }
@@ -61,7 +68,8 @@ let HeartbeatService = class HeartbeatService {
         return list;
     }
     async countVehicleHeartbeats(vehicleId) {
-        return this.vehicleHeartbeatModel.find({ vehicleId: vehicleId }).count();
+        const m = this.vehicleHeartbeatModel.find({ vehicleId: vehicleId });
+        return m.countDocuments();
     }
     async getOwnerVehicleHeartbeats(userId, cutoffHours) {
         const startDate = my_utils_1.MyUtils.getStartDate(cutoffHours);
@@ -103,9 +111,10 @@ exports.HeartbeatService = HeartbeatService;
 exports.HeartbeatService = HeartbeatService = __decorate([
     (0, common_1.Injectable)(),
     __param(3, (0, mongoose_1.InjectModel)(Vehicle_1.Vehicle.name)),
-    __param(4, (0, mongoose_1.InjectModel)(VehicleHeartbeat_1.VehicleHeartbeat.name)),
+    __param(4, (0, mongoose_1.InjectModel)(VehicleTelemetry_1.VehicleTelemetry.name)),
+    __param(5, (0, mongoose_1.InjectModel)(VehicleHeartbeat_1.VehicleHeartbeat.name)),
     __metadata("design:paramtypes", [config_1.ConfigService,
         time_series_service_1.TimeSeriesService,
-        fcm_service_1.MessagingService, mongoose_2.default.Model, mongoose_2.default.Model])
+        fcm_service_1.MessagingService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], HeartbeatService);
 //# sourceMappingURL=heartbeat.service.js.map

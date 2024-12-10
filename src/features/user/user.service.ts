@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import { User } from "src/data/models/User";
 import * as fs from "fs";
 import { parse } from "csv";
+import admin from "firebase-admin";
 
 import { randomUUID } from "crypto";
 import { Association } from "src/data/models/Association";
@@ -40,74 +41,134 @@ export class UserService {
     return fileString;
   }
 
+  public async createAssociationAuthUser(associationId: string): Promise<any> {
+    Logger.log(
+      `${mm} createAssociationAuthUser  .... 🎽 associationId: ${associationId}`
+    );
+    const email = `${associationId}@kasie.com`;
+    const password = `pass${associationId}`;
+    const app = this.firebaseAdmin.getFirebaseApp();
+    const ass = await this.associationModel.findOne({
+      associationId: associationId,
+    });
+    if (ass) {
+      const userRecord = await app.auth().createUser({
+        email: email,
+        password: password,
+        displayName: `${ass.associationName}`,
+        uid: associationId,
+      });
+      if (userRecord) {
+        if (userRecord.uid == associationId) {
+          Logger.log(
+            `${mm} createAssociationAuthUser  is Good!! 🎽 name: ${ass.associationName}`
+          );
+          return {
+            email: email,
+            password: password,
+          };
+        }
+      }
+    }
+    Logger.error(
+      `${mm} createAssociationAuthUser failed 😈😈😈 associationId: ${associationId} 😈😈😈`
+    );
+    throw new HttpException(
+      "Unable to authenticate Association",
+      HttpStatus.INTERNAL_SERVER_ERROR
+    );
+  }
   public async createUser(user: User): Promise<User> {
     const storedPassword = user.password;
     const app = this.firebaseAdmin.getFirebaseApp();
     Logger.log(
-      `\n\n${mm} ........ create user: ${JSON.stringify(user, null, 2)} \n`
+      `\n\n${mm} ........ create user on Firebase Authentication: ${JSON.stringify(user, null, 2)} \n`
     );
 
-    try {
-      let email = "";
-      if (!user.email) {
-        const name = `${user.firstName} ${user.lastName}`;
-        const mName = name.replace(" ", "").toLowerCase();
-        email = `${mName}_${new Date().getTime()}@kasietransie.com`;
-        user.email = email;
-      } else {
-        email = user.email;
-      }
-      Logger.log(`${mm} createUser  .... 🎽 email: ${email}`);
+    let mUser: User = await this.userModel.findOne({
+      email: user.email,
+    });
 
-      const userRecord = await app.auth().createUser({
-        email,
-        password: user.password,
-        phoneNumber: user.cellphone,
-        displayName: `${user.firstName} ${user.lastName}`,
+    if (!mUser && user.cellphone) {
+      mUser = await this.userModel.findOne({
+        cellphone: user.cellphone,
       });
+    }
+    if (mUser) {
+      Logger.log(
+        `${mm} ........ User exists on Atlas: ${JSON.stringify(mUser, null, 2)} \n`
+      );
+      return mUser;
+    }
+
+    try {
+      Logger.log(`${mm} createUser  .... 🎽 email: ${user.email}`);
+
+      const uid = randomUUID();
+      let userRecord = null;
+      if (user.cellphone) {
+        userRecord = await app.auth().createUser({
+          email: user.email,
+          password: user.password,
+          phoneNumber: user.cellphone,
+          displayName: `${user.firstName} ${user.lastName}`,
+          uid: uid,
+        });
+      } else {
+        user.bucketFileName = "NAY";
+        user.qrCodeBytes = "NAY";
+        user.qrCodeBytes = "NAY";
+
+        userRecord = await app.auth().createUser({
+          email: user.email,
+          password: user.password,
+          displayName: `${user.firstName} ${user.lastName}`,
+          uid: uid,
+        });
+      }
 
       Logger.log(
         `${mm} createUser: Firebase auth user created. userRecord from Firebase : 🎽 ${JSON.stringify(userRecord, null, 2)}`
       );
-      const uid = userRecord.uid;
-      user.userId = uid;
       user.dateRegistered = new Date().toISOString();
-      if (user.qrCodeUrl == null) {
-        const url = await this.storage.createQRCode({
-          data: JSON.stringify(user),
-          prefix: Constants.qrcode_user,
-          size: 1,
-          associationId: user.associationName ?? "ADMIN",
-        });
-        Logger.debug(`${mm} createUser: ... qrCode url: ${url}`);
-        user.password = null;
-        user.qrCodeUrl = url;
-      }
-      //
+      user.password = null;
+      user.userId = uid;
       Logger.debug(
-        `${mm} ... adding user to Mongo, userId: ${user.userId} - ${user.firstName}`
+        `${mm} createUser: ... bucketFileName: ${user.bucketFileName}`
       );
-      const mUser = await this.userModel.create(user);
+      Logger.debug(
+        `${mm} ... adding user to Mongo, user; check bucketFileName: ${JSON.stringify(user)}`
+      );
+      await this.userModel.create(user);
       user.password = storedPassword;
       Logger.log(
-        `\n\n${mm} createUser: 🔵 user created on Mongo Atlas: 🥬🥬🥬 \n🔵 🔵 ${JSON.stringify(mUser, null, 2)} 🥬\n\n`
+        `\n\n${mm} createUser: 🔵 🔵 🔵 🔵 🔵 user created on Mongo Atlas: 🥬🥬🥬 \n🔵 🔵 ${JSON.stringify(user, null, 2)} 🥬\n\n`
       );
+
     } catch (e) {
       Logger.error(`${mm} User creation failed: ${e}`);
       this.errorHandler.handleError(
         `User creation failed: ${e}`,
-        user.associationId
+        user.associationId,
+        user.associationName
       );
-      throw new HttpException(`${mm} User creation failed: ${e}`, HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new HttpException(
+        `${mm} User creation failed: ${e}`,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
     }
 
     return user;
   }
-  public async createAdminUser(user: User): Promise<User> {
+
+  public async createInternalAdminUser(user: User): Promise<User> {
     Logger.log(`\n\n${mm} createAdminUser: user: ${JSON.stringify(user)} \n`);
     user.userType = Constants.ADMINISTRATOR_AFTAROBOT;
     user.associationId = "ADMIN";
     user.dateRegistered = new Date().toISOString();
+    if (user.password == null) {
+      user.password = "pass123";
+    }
 
     try {
       const res = await this.createUser(user);
@@ -116,98 +177,13 @@ export class UserService {
       );
       return res;
     } catch (e) {
-      this.errorHandler.handleError(e, user.associationId);
+      this.errorHandler.handleError(e, user.associationId, user.associationName);
       throw new HttpException(e, HttpStatus.BAD_REQUEST);
     }
   }
   public async updateUser(user: User): Promise<User> {
-    return null;
-  }
-
-  public async importUsersFromCSV(
-    file: Express.Multer.File,
-    associationId: string
-  ): Promise<AddUsersResponse> {
-    Logger.log(
-      `\n\n${mm} importUsersFromCSV:... 🍎🍎 associationId: ${associationId} 🍎🍎 ... find association ...`
-    );
-    Logger.debug(
-      `${mm} importUsersFromCSV:...  🥦 file size: ${file.buffer.length} bytes;  🥦 originalname: ${file.originalname}`
-    );
-    const list = await this.associationModel.find({
-      associationId: associationId,
-    });
-    if (list.length == 0) {
-      throw new Error("Association not found");
-    }
-    const ass = list[0];
-    Logger.log(
-      `${mm} importUsersFromCSV:... association: 🔵 ${JSON.stringify(ass, null, 2)} 🔵\n\n`
-    );
-
-    const users: User[] = [];
-    const mUsers: User[] = [];
-    const errors: any[] = [];
-    let response: AddUsersResponse;
-
-    let index = 0;
-    const tempFilePath = path.join(os.tmpdir(), file.originalname);
-    Logger.log(`${mm} importUsersFromCSV:... 🔵 tempFilePath: ${tempFilePath}`);
-    Logger.log(
-      `${mm} importUsersFromCSV:... 🔵 read csv file: ${file.originalname}`
-    );
-
-    await fs.promises.writeFile(tempFilePath, file.buffer);
-    response = await new Promise<AddUsersResponse>((resolve, reject) => {
-      fs.createReadStream(tempFilePath)
-        .pipe(parse())
-        .on("data", async (data: any) => {
-          if (index > 0) {
-            const user: User = await this.buildUser(data, ass);
-            users.push(user);
-          }
-          index++;
-        })
-        .on("error", (err) => {
-          reject(new Error(`Error processing user CSV file: ${err}`));
-        })
-        .on("end", async () => {
-          Logger.debug(`${mm} CSV parsing completed ......`);
-          Logger.log(`${mm} Save the parsed users to the database`);
-          for (const user of users) {
-            try {
-              const u = await this.createUser(user);
-              mUsers.push(u);
-            } catch (e) {
-              errors.push(user);
-              Logger.debug(`${mm} ${e} - errors: ${errors.length}`);
-            }
-          }
-
-          await fs.promises.unlink(tempFilePath);
-          resolve({
-            users: mUsers,
-            errors: errors,
-          });
-        });
-    });
-    Logger.log(`${mm} return response: ${JSON.stringify(response, null, 2)}`);
-    Logger.log(
-      `\n\n${mm} 😎 😎 😎 😎 😎 😎 Work completed! Users from csv file, 🍎 users: ${response.users.length} 🍎 errors: ${response.errors.length}\n\n`
-    );
-    return response;
-  }
-  private async buildUser(data: string[], ass: Association): Promise<User> {
-    const uu = new User();
-    uu.userType = data[0];
-    uu.firstName = data[1];
-    uu.lastName = data[2];
-    uu.email = data[3];
-    uu.cellphone = data[4];
-    uu.associationId = ass.associationId;
-    uu.associationName = ass.associationName;
-    uu.password = randomUUID().trim();
-    return uu;
+    await this.userModel.updateOne({ userId: user.userId }, user);
+    return user;
   }
 
   public async getUserById(userId: string): Promise<User> {
@@ -217,8 +193,8 @@ export class UserService {
       Logger.debug(`${mm} getting user found: ${JSON.stringify(user)}`);
     } else {
       Logger.error(`${mm} user not found`);
-      this.errorHandler.handleError("User not found", "N/A");
-      throw new HttpException("User fucked!", HttpStatus.BAD_REQUEST);
+      this.errorHandler.handleError("getUserById:User not found", "N/A",'nay');
+      throw new HttpException("getUserById User fucked!", HttpStatus.BAD_REQUEST);
     }
     return user;
   }
@@ -244,50 +220,71 @@ export class UserService {
     return user;
   }
 
-  public async fix() {
-    const list = await this.userModel.find({});
-    Logger.log(`${mm} fix all users ...`);
-    let cnt = 0;
-    for (const u of list) {
-      if (u.firstName) {
-        u.firstName = u.firstName.trim();
-      }
-      if (u.lastName) {
-        u.lastName = u.lastName.trim();
-      }
-      await u.save();
-      cnt++;
-    }
-    Logger.log(`${mm} fixed ${cnt} users`);
-    return cnt;
-  }
+  public async createOwner(user: User): Promise<User> {
+    const storedPassword = user.password;
+    const app = this.firebaseAdmin.getFirebaseApp();
+    Logger.log(
+      `\n\n${mm} ........ create user on Firebase Authentication: ${JSON.stringify(user, null, 2)} \n`
+    );
 
-  public async createOwner(car: Vehicle): Promise<User> {
-    var asses = await this.associationModel
-      .find({ associationId: car.associationId })
-      .limit(1);
-    let ass: Association = null;
-    const nameParts = car.ownerName.split(" ");
-    const firstName = nameParts.slice(0, -1).join(" "); // Join all parts except the last one
-    const lastName = nameParts[nameParts.length - 1];
-
-    if (asses.length > 0) {
-      ass = asses[0];
-      const user = new User();
-      user.associationId = car.associationId;
-      user.associationName = car.associationName;
-      user.firstName = firstName;
-      user.lastName = lastName;
-      user.userType = Constants.OWNER;
-
-      const emailSuffix = ass.adminEmail.split("@")[1];
-      const emailPrefix = car.ownerName.replaceAll(" ", "_").toLowerCase();
-      user.email = emailPrefix + "@" + emailSuffix;
-
-      var mUser = await this.createUser(user);
+    const mUser: User = await this.userModel.findOne({
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
+    if (mUser) {
+      Logger.log(
+        `${mm} ........  createOwner: User exists on Atlas: ${JSON.stringify(mUser, null, 2)} \n`
+      );
       return mUser;
     }
-    return null;
+
+    try {
+      Logger.log(
+        `${mm} createOwner  .... 🎽 email: ${user.email} ${user.cellphone}`
+      );
+
+      const uid = randomUUID();
+      const userRecord = await app.auth().createUser({
+        email: user.email,
+        password: user.password,
+        phoneNumber: user.cellphone,
+        displayName: `${user.firstName} ${user.lastName}`,
+        uid: uid,
+      });
+
+      Logger.log(
+        `${mm} createOwner: Firebase auth user created. userRecord from Firebase : 🎽 ${JSON.stringify(userRecord, null, 2)}`
+      );
+      user.dateRegistered = new Date().toISOString();
+      user.password = null;
+      user.userId = uid;
+      let url = null;
+
+      Logger.debug(
+        `${mm} createOwner: ... bucketFileName: ${user.bucketFileName}`
+      );
+      Logger.debug(
+        `${mm} ... adding owner to Mongo, userId: ${user.userId} - ${user.firstName}`
+      );
+      const mUser = await this.userModel.create(user);
+      user.password = storedPassword;
+      Logger.log(
+        `\n\n${mm} createOwner: 🔵🔵🔵🔵🔵 user created on Mongo Atlas: 🥬🥬🥬 \n🔵 🔵 ${JSON.stringify(mUser, null, 2)} 🥬\n\n`
+      );
+    } catch (e) {
+      Logger.error(`${mm} owner creation failed: ${e}`);
+      this.errorHandler.handleError(
+        `owner creation failed: ${e}`,
+        user.associationId,
+        user.associationName
+      );
+      throw new HttpException(
+        `${mm} Owner creation failed: ${e}`,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+
+    return user;
   }
 
   public async addUserGeofenceEvent(
@@ -295,7 +292,23 @@ export class UserService {
   ): Promise<UserGeofenceEvent> {
     return await this.userGeofenceModel.create(userGeofenceEvent);
   }
+  public async deleteUser(uid: string) : Promise<number> {
+    const app = this.firebaseAdmin.getFirebaseApp();
+
+    const user = await app.auth().getUser(uid);
+    if (user) {
+      Logger.debug(`${user.displayName} - ${user.email} - to be deleted`)
+     await app.auth().deleteUser(uid);
+     Logger.debug(`Firebase user deleted`);
+     return 0;
+    }
+    return 9;
+  }
 }
+/**
+ * name
+ */
+
 
 export interface AddUsersResponse {
   users: User[];

@@ -9,10 +9,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.MongoIndexBuilder = void 0;
 const common_1 = require("@nestjs/common");
 const mongodb_1 = require("mongodb");
+const my_utils_1 = require("../my-utils/my-utils");
 const tag = "🍎🍎🍎 MongoIndexBuilder 🍎🍎🍎 ";
 let MongoIndexBuilder = class MongoIndexBuilder {
     static async createIndexes() {
-        const uri = process.env.REMOTE_DB_URI;
+        const uri = my_utils_1.MyUtils.getDatabaseUrl();
         common_1.Logger.debug(`${tag} connectToMongoDB: Atlas uri: ${uri}`);
         const client = new mongodb_1.MongoClient(uri);
         try {

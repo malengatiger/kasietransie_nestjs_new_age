@@ -25,7 +25,11 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", User_1.User)
-], RegistrationBag.prototype, "user", void 0);
+], RegistrationBag.prototype, "adminUser", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", User_1.User)
+], RegistrationBag.prototype, "carUser", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", SettingsModel_1.SettingsModel)

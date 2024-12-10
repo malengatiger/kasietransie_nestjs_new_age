@@ -16,22 +16,22 @@ let User = class User {
 };
 exports.User = User;
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], User.prototype, "userType", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], User.prototype, "userId", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], User.prototype, "firstName", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], User.prototype, "lastName", void 0);
@@ -41,17 +41,17 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "gender", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], User.prototype, "countryId", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], User.prototype, "associationId", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], User.prototype, "associationName", void 0);
@@ -91,6 +91,11 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "qrCodeUrl", void 0);
 __decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], User.prototype, "bucketFileName", void 0);
+__decorate([
     (0, mongoose_1.Prop)(),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
@@ -100,6 +105,11 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], User.prototype, "profileThumbnail", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], User.prototype, "qrCodeBytes", void 0);
 exports.User = User = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

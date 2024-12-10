@@ -18,13 +18,12 @@ export class FirebaseAdmin implements OnApplicationBootstrap {
       app = admin.initializeApp({
         credential: applicationDefault(),
       });
-      Logger.log(`${tag} ... Firebase initialized: 🥬 name: ${JSON.stringify(app.options)}   🥬`);
+      Logger.log(`${tag} ... Firebase initialized: 🥬 🥬 `);
       this.sendInitializationMessage(app);
     }
   }
 
   getFirebaseApp() {
-    // Logger.log(`${tag} getFirebaseApp: returning Firebase app: ${app.name}`);
     return app;
   }
   async sendInitializationMessage(app: admin.app.App) {

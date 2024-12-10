@@ -15,9 +15,7 @@ var UserController_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
 const common_1 = require("@nestjs/common");
-const platform_express_1 = require("@nestjs/platform-express");
 const User_1 = require("../../data/models/User");
-const my_utils_1 = require("../../my-utils/my-utils");
 const user_service_1 = require("./user.service");
 const mm = " 🚼 🚼 🚼 UserController  🚼";
 let UserController = UserController_1 = class UserController {
@@ -26,34 +24,30 @@ let UserController = UserController_1 = class UserController {
         this.logger = new common_1.Logger(UserController_1.name);
     }
     async addUser(user) {
+        common_1.Logger.log(`${mm} addUser; check bucketFileName: ${JSON.stringify(user, null, 2)}`);
         return await this.userService.createUser(user);
     }
+    async createOwner(user) {
+        return await this.userService.createOwner(user);
+    }
     async addAdminUser(user) {
-        return await this.userService.createAdminUser(user);
+        return await this.userService.createInternalAdminUser(user);
     }
     async getUserById(userId) {
         return await this.userService.getUserById(userId);
     }
-    async importUsersFromCSV(file, associationId) {
-        const res = await this.userService.importUsersFromCSV(file, associationId);
-        return res;
+    async deleteFirebaseUser(uid) {
+        return await this.userService.deleteUser(uid);
+    }
+    async createAssociationAuthUser(associationId) {
+        return await this.userService.createAssociationAuthUser(associationId);
     }
     async getUserByName(firstName, lastName) {
         const res = await this.userService.getUserByName(firstName, lastName);
         if (res == null) {
-            throw new common_1.HttpException('User not found', common_1.HttpStatus.BAD_REQUEST);
+            throw new common_1.HttpException("User not found", common_1.HttpStatus.BAD_REQUEST);
         }
         return res;
-    }
-    async fix() {
-        return await this.userService.fix();
-    }
-    sendFile(fileName, res) {
-        this.logger.log("Sending file: " + fileName);
-        res.setHeader("Content-Type", "application/octet-stream");
-        res.setHeader("Content-Disposition", `attachment; filename=route.zip`);
-        my_utils_1.MyUtils.deleteOldFiles();
-        res.sendFile(fileName);
     }
 };
 exports.UserController = UserController;
@@ -64,6 +58,13 @@ __decorate([
     __metadata("design:paramtypes", [User_1.User]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "addUser", null);
+__decorate([
+    (0, common_1.Post)("createOwner"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [User_1.User]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "createOwner", null);
 __decorate([
     (0, common_1.Post)("addAdminUser"),
     __param(0, (0, common_1.Body)()),
@@ -79,14 +80,19 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getUserById", null);
 __decorate([
-    (0, common_1.Post)("importUsersFromCSV"),
-    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)("file")),
-    __param(0, (0, common_1.UploadedFile)()),
-    __param(1, (0, common_1.Query)("associationId")),
+    (0, common_1.Get)("getUserById"),
+    __param(0, (0, common_1.Query)("uid")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], UserController.prototype, "importUsersFromCSV", null);
+], UserController.prototype, "deleteFirebaseUser", null);
+__decorate([
+    (0, common_1.Get)("createAssociationAuthUser"),
+    __param(0, (0, common_1.Query)("associationId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "createAssociationAuthUser", null);
 __decorate([
     (0, common_1.Get)("getUserByName"),
     __param(0, (0, common_1.Query)("firstName")),
@@ -95,12 +101,6 @@ __decorate([
     __metadata("design:paramtypes", [String, String]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getUserByName", null);
-__decorate([
-    (0, common_1.Get)('fix'),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], UserController.prototype, "fix", null);
 exports.UserController = UserController = UserController_1 = __decorate([
     (0, common_1.Controller)("user"),
     __metadata("design:paramtypes", [user_service_1.UserService])

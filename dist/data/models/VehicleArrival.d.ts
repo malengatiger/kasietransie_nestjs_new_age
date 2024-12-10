@@ -19,6 +19,10 @@ export declare class VehicleArrival {
 }
 export declare const VehicleArrivalSchema: import("mongoose").Schema<VehicleArrival, import("mongoose").Model<VehicleArrival, any, any, any, import("mongoose").Document<unknown, any, VehicleArrival> & VehicleArrival & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, VehicleArrival, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<VehicleArrival>> & import("mongoose").FlatRecord<VehicleArrival> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, VehicleArrival, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<VehicleArrival>> & import("mongoose").FlatRecord<VehicleArrival> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

@@ -12,6 +12,10 @@ export declare class RouteAssignment {
 }
 export declare const RouteAssignmentSchema: import("mongoose").Schema<RouteAssignment, import("mongoose").Model<RouteAssignment, any, any, any, import("mongoose").Document<unknown, any, RouteAssignment> & RouteAssignment & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, RouteAssignment, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<RouteAssignment>> & import("mongoose").FlatRecord<RouteAssignment> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, RouteAssignment, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<RouteAssignment>> & import("mongoose").FlatRecord<RouteAssignment> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

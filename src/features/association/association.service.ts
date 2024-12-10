@@ -26,6 +26,7 @@ import { Constants } from "src/my-utils/constants";
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 import { VehiclePhoto } from "src/data/models/VehiclePhoto";
 import { VehicleVideo } from "src/data/models/VehicleVideo";
+import { randomUUID } from "crypto";
 
 const mm = "🍎🍎🍎 AssociationService: 🍎🍎🍎";
 
@@ -87,6 +88,17 @@ export class AssociationService {
     throw new Error(`Association not found; associationId: ${associationId}`);
   }
 
+  async resetAssociationData(associationId: string): Promise<any> {
+    const res1 = await this.userModel.deleteMany({});
+    const res2 = await this.vehicleModel.deleteMany({});
+
+    Logger.log(`${mm} delete users: ${JSON.stringify(res1)}`);
+    Logger.log(`${mm} delete vehicles: ${JSON.stringify(res2)}`);
+    return {
+      users: res1,
+      vehicles: res2,
+    };
+  }
   //----------------------------------------------------------------
   public async getAssociations(): Promise<any[]> {
     Logger.log(`${mm} ... getAssociations starting ...`);
@@ -237,41 +249,78 @@ export class AssociationService {
   ): Promise<RegistrationBag> {
     const associationId = this.generateUniqueId();
 
-    Logger.log(`${mm} registerAssociation ... id: ${associationId}`);
+    Logger.log(`\n\n${mm} registerAssociation ... id: ${associationId}`);
+    const existingAss = await this.associationModel.findOne({
+      associationName: association.associationName,
+    });
+    if (existingAss) {
+      Logger.debug(`${mm} existingAss Association: ${JSON.stringify(existingAss, null, 2)}`);
+      this.errorHandler.handleError('Association exists', association.associationId, association.associationName);
+      throw new HttpException('This association exists, so fuck you!', HttpStatus.BAD_REQUEST);
 
+    }
+    let mAdminUser: User;
+    let mCarUser: User;
+    let myAss: Association;
+    let mSettings: SettingsModel;
     try {
-      const u = new User();
-      u.firstName = association.adminUserFirstName;
-      u.lastName = association.adminUserLastName;
-      u.email = association.adminEmail;
-      u.cellphone = association.adminCellphone;
-      u.countryId = association.countryId;
-      u.countryName = association.countryName;
-      u.associationId = associationId;
-      u.associationName = association.associationName;
-      u.dateRegistered = new Date().toISOString();
-      u.password = association.password;
-      u.userType = Constants.ADMINISTRATOR_ASSOCIATION;
-      association.password = null;
+      const date = new Date().toISOString();
+      const adminUser = new User();
+      adminUser.firstName = `admin`;
+      adminUser.lastName = `admin${associationId}`;
+      adminUser.countryId = association.countryId;
+      adminUser.countryName = association.countryName;
+      adminUser.associationId = associationId;
+      adminUser.associationName = association.associationName;
+      adminUser.email = `admin${associationId}${Constants.associationEmailSuffix}`;
+      adminUser.dateRegistered = date;
+      adminUser.password = `${Constants.associationPasswordPrefix}${associationId}`;
+      adminUser.userType = Constants.ADMINISTRATOR_ASSOCIATION;
 
-      const user = await this.userService.createUser(u);
-      association.userId = user.userId;
+      mAdminUser = await this.userService.createUser(adminUser);
+
+      const carUser = new User();
+      carUser.firstName = `vehicle`;
+      carUser.lastName = `vehicle${associationId}`;
+      carUser.email = `car${associationId}${Constants.associationEmailSuffix}`;
+      carUser.countryId = association.countryId;
+      carUser.countryName = association.countryName;
+      carUser.associationId = associationId;
+      carUser.associationName = association.associationName;
+      carUser.dateRegistered = date;
+      carUser.password = `${Constants.associationPasswordPrefix}${associationId}`;
+      carUser.userType = Constants.ASSOCIATION_CAR;
+
+      mCarUser = await this.userService.createUser(carUser);
 
       const ass = new Association();
-      ass.userId = user.userId;
       ass.associationName = association.associationName;
       ass.associationId = associationId;
-      ass.adminUserFirstName = association.adminUserFirstName;
-      ass.adminUserLastName = association.adminUserLastName;
-      ass.adminEmail = association.adminEmail;
-      ass.adminCellphone = association.adminCellphone;
       ass.countryId = association.countryId;
       ass.countryName = association.countryName;
-      ass.dateRegistered = new Date().toISOString();
-      ass.userId = user.userId;
+      ass.dateRegistered = date;
+      ass.adminUser = mAdminUser;
+      ass.carUser = mCarUser;
+      if (ass.countryId) {
+        const country = await this.countryModel.find({
+          countryId: ass.countryId,
+        });
+        if (country.length > 0) {
+          ass.countryId = country[0].countryId;
+          ass.countryName = country[0].name;
+        }
+      }
+      Logger.log(`\n${mm} send association to Atlas ...`);
+      const existingAss = await this.associationModel.findOne({
+        associationName: ass.associationName,
+      });
+      if (existingAss) {
+        throw new Error("Association already here");
+      }
+      myAss = await this.associationModel.create(ass);
 
       const settings = new SettingsModel();
-      settings.created = new Date().toISOString();
+      settings.created = date;
       settings.associationId = associationId;
       settings.commuterGeoQueryRadius = 50;
       settings.commuterGeofenceRadius = 200;
@@ -286,40 +335,57 @@ export class AssociationService {
       settings.vehicleGeoQueryRadius = 100;
       settings.vehicleSearchMinutes = 30;
 
-      const files = await this.getExampleFiles();
+      const files: any[] = await this.getExampleFiles();
+
+      Logger.log(`\n${mm} send settings to Atlas ...`);
+
+      mSettings = await this.settingsModel.create(settings);
 
       const bag = new RegistrationBag();
-      bag.association = ass;
-      bag.settings = settings;
-      bag.user = user;
+      bag.association = myAss;
+      bag.settings = mSettings;
+      bag.adminUser = mAdminUser;
       bag.exampleFiles = files;
-
-      if (ass.countryId) {
-        const country = await this.countryModel.find({
-          countryId: ass.countryId,
-        });
-        if (country.length > 0) {
-          bag.country = country[0];
-        }
-      }
-      Logger.log(`\n${mm} send association and settings to Atlas ...`);
-
-      const resp1 = await this.settingsModel.create(settings);
-      const resp2 = await this.associationModel.create(ass);
-
-      Logger.log(
-        `${mm} 🥬 association and settings added to Atlas ...` +
-          `\n${JSON.stringify(resp1, null, 2)}\n\n${JSON.stringify(resp2, null, 2)}}\n`
-      );
+      bag.carUser = mCarUser;
 
       await this.messagingService.sendAssociationRegisteredMessage(ass);
-
       Logger.log(
-        `\n${mm} 🥬 association registered: 🥬 🥬 🥬 ${JSON.stringify(bag, null, 2)} 🥬 \n\n`
+        `\n${mm} 🥬 association registered successfully!! : 🥬 🥬 🥬 ${JSON.stringify(bag, null, 2)} 🥬 \n\n`
       );
       return bag;
     } catch (e) {
-      this.errorHandler.handleError(e, association.associationId);
+      if (mAdminUser) {
+        await this.userService.deleteUser(mAdminUser.userId);
+        await this.userModel.deleteOne({ userId: mAdminUser.userId });
+        Logger.debug(
+          `${mm} 😈😈😈 admin user deleted: ${JSON.stringify(mAdminUser, null, 2)}`
+        );
+      }
+      if (mCarUser) {
+        await this.userService.deleteUser(mCarUser.userId);
+        await this.userModel.deleteOne({ userId: mCarUser.userId });
+        Logger.debug(
+          `${mm} 😈😈😈 car user deleted: ${JSON.stringify(mCarUser, null, 2)}`
+        );
+      }
+     
+      if (myAss) {
+        await this.associationModel.deleteOne({
+          associationId: myAss.associationId,
+        });
+        Logger.debug(
+          `${mm} 😈😈😈 ass deleted: ${JSON.stringify(myAss, null, 2)}`
+        );
+      }
+      this.errorHandler.handleError(
+        e,
+        association.associationId,
+        association.associationName
+      );
+      throw new HttpException(
+        `Registration failed: ${JSON.stringify(e)}`,
+        HttpStatus.BAD_REQUEST
+      );
     }
   }
 
@@ -359,22 +425,6 @@ export class AssociationService {
     return this.appErrorModel.find({
       created: { $gte: startDate },
     });
-  }
-
-  public async generateFakeAssociation(name: string): Promise<RegistrationBag> {
-    Logger.log(`${mm} generateFakeAssociation ...${name}`);
-
-    const ass = new Association();
-    ass.associationName = name;
-    ass.adminEmail = this.getFakeEmail();
-    ass.adminCellphone = this.getFakeCellphoneNumber();
-    ass.adminUserFirstName = "James Earl";
-    ass.adminUserLastName = `Jones_${Math.random() * 1000}`;
-    ass.dateRegistered = new Date().toISOString();
-    ass.countryId = "7a2328bf-915f-4194-82ae-6c220c046cac";
-
-    const bag = await this.registerAssociation(ass);
-    return bag;
   }
 
   public async getExampleFiles(): Promise<any[]> {

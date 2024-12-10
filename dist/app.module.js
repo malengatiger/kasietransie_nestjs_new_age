@@ -78,6 +78,7 @@ const errors_interceptor_1 = require("./middleware/errors.interceptor");
 const ticket_module_1 = require("./features/ticket/ticket.module");
 const payfast_module_1 = require("./features/payfast/payfast.module");
 const UserPhoto_1 = require("./data/models/UserPhoto");
+const internal_module_1 = require("./internal/internal.module");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
@@ -155,6 +156,7 @@ exports.AppModule = AppModule = __decorate([
             storage_module_1.StorageModule,
             ticket_module_1.TicketModule,
             payfast_module_1.PayfastModule,
+            internal_module_1.InternalModule,
         ],
         controllers: [app_controller_1.AppController, dispatch_controller_1.DispatchController, user_controller_1.UserController],
         providers: [app_service_1.AppService, dispatch_service_1.DispatchService, fcm_service_1.MessagingService, time_series_service_1.TimeSeriesService,

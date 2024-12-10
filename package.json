@@ -1,7 +1,7 @@
 {
-  "name": "kt-nest-2",
+  "name": "kt-nest-2025",
   "version": "0.0.1",
-  "description": "",
+  "description": "Kasie Transie Backend",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@google-cloud/logging": "^11.2.0",
     "@google-cloud/storage": "^7.1.0",
     "@google-cloud/storage-control": "^0.2.0",
     "@google-cloud/translate": "^8.0.2",
@@ -39,7 +40,7 @@
     "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
     "express-rate-limit": "^7.0.0",
-    "firebase-admin": "^12.5.0",
+    "firebase-admin": "^12.7.0",
     "google-auth-library": "^9.0.0",
     "helmet": "^7.0.0",
     "i": "^0.3.7",
@@ -47,7 +48,7 @@
     "mime-types": "^2.1.35",
     "moment": "^2.29.4",
     "mongodb": "^6.7.0",
-    "mongoose": "^7.5.0",
+    "mongoose": "^8.8.3",
     "mongoose-paginate-v2": "^1.7.4",
     "multer": "^1.4.5-lts.1",
     "nestjs-real-ip": "^3.0.1",

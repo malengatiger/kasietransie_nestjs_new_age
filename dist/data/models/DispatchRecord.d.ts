@@ -22,6 +22,10 @@ export declare class DispatchRecord {
 }
 export declare const DispatchRecordSchema: import("mongoose").Schema<DispatchRecord, import("mongoose").Model<DispatchRecord, any, any, any, import("mongoose").Document<unknown, any, DispatchRecord> & DispatchRecord & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, DispatchRecord, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<DispatchRecord>> & import("mongoose").FlatRecord<DispatchRecord> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, DispatchRecord, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<DispatchRecord>> & import("mongoose").FlatRecord<DispatchRecord> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

@@ -17,6 +17,10 @@ export declare class VehicleVideo {
 }
 export declare const VehicleVideoSchema: import("mongoose").Schema<VehicleVideo, import("mongoose").Model<VehicleVideo, any, any, any, import("mongoose").Document<unknown, any, VehicleVideo> & VehicleVideo & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, VehicleVideo, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<VehicleVideo>> & import("mongoose").FlatRecord<VehicleVideo> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, VehicleVideo, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<VehicleVideo>> & import("mongoose").FlatRecord<VehicleVideo> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

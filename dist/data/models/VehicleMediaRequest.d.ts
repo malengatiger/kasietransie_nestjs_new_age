@@ -12,6 +12,10 @@ export declare class VehicleMediaRequest {
 }
 export declare const VehicleMediaRequestSchema: import("mongoose").Schema<VehicleMediaRequest, import("mongoose").Model<VehicleMediaRequest, any, any, any, import("mongoose").Document<unknown, any, VehicleMediaRequest> & VehicleMediaRequest & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, VehicleMediaRequest, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<VehicleMediaRequest>> & import("mongoose").FlatRecord<VehicleMediaRequest> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, VehicleMediaRequest, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<VehicleMediaRequest>> & import("mongoose").FlatRecord<VehicleMediaRequest> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

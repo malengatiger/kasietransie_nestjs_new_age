@@ -32,10 +32,46 @@ gcloud projects add-iam-policy-binding kasie-transie-3 \
   --role="roles/cloudkms.cryptoKeySigner"
 
   gcloud iam service-accounts add-iam-policy-binding \
-  --service-account serviceAccount:firebase-adminsdk-efvna@kasie-transie-3.iam.gserviceaccount.com \
+  --service-account serviceAccount:firebase-adminsdk-4fhzh@kt-2025-mlb.iam.gserviceaccount.com \
   --role roles/storage.objectViewer \
-  --project kasie-transie-3
+  --project kt-2025-mlb
 
 */
 
-gcloud storage buckets update gs://kasie-transie-3.appspot.com --cors-file cors.json
+gcloud storage buckets update gs://kt-2025-mlb.firebasestorage.app --cors-file cors.json
+
+curl --request POST \
+  'https://firebase.googleapis.com/v1beta1/projects/kt-2025-3/defaultLocation:finalize' \
+  --header 'Authorization: Bearer ya29.c.c0ASRK0Gaas_dsAh_6hbd7g9_DC8VBGCmakQNPL0sWaiMD7dPqY4NUQdAYPR1HKnqzK_bhW-W7NfARfwK6wHXg4eqXewxBS8GO4zERqkupE3ess2JfJ5EVjSbBraJJCEwYZk6mUlKmA0hCvCzcYkDZozhVV4THT5fSYkNCwQCJL7VL0r69eRKaW2_QR-y1jE4yucaCnTzcK4l_mRDN9cKL1vYul5_mx2LERhicSx3bA7Ljl2xbVdWtzNuX49gDi3ekh0kytE-Rh92UrgBd73jJU1cYxGi6tOvyJODpMyg1-fTfQlnV2NYRJxHlsyw5HdAq_KFc0aYURjusk68xDyrPx-bbPV2ZfCqbCW5Jy_5qFTQM6Tz3KqTAoCezG385PU2ol0YgbntM_-v3-bdOyBzS_WXdjryZzMZs9_7kOcloJJ5wn_kW84wWBjqsJQX0dVYZuIYaqOjjsfxyfgnqW90414g1yQ3vrl4wh-5IZgfunFzJbzZlmtbtp3Rdr2-xMWwdzU8eRWXBucVVOYyuh0xzy7BOrSrgmlhBjJmiegO3irnyzc0tw-hMpVfu4ybqowfrji2SmYb8JW3fySWmcdeQ1g8BMrhulskwpva2MfaJ_z-w26xFt59W4oejehoofmbu8MWqwqaBioJYkOiIgW4q-Q2h77VBQ0IiOydYFV-W3bRoS_8B_1FqYF6jjpyrov6UBxs_Jh_yQpsgYYSs3cXBObF_RvRr3Q1JSxsqmkZ2Qw93vvIr71r7IX0q85pziO04tJMIZamk869MeceV2fei1v1xh_gcXfmhM_aSB_JgdoSywbMRXF1dFf01suIMeB6ShU_nygnptwzxc170ymytFY_uIep0xQUrhRWu2vyUplIrgMhbbfarQMRVq_BSO82WB4lIUq9cM0v3dV3ofUcwl6gqgZs3uIRqV1xQ7znxrFOXm-1wg2igJqRWsVJgfefQuSkxJwB80Isneust7m6tgQWZxtfwSztfusMdU8M76xchdfuWv-v2UWW' \
+  --header 'Accept: application/json' \
+  --header 'Content-Type: application/json' \
+  --data '{"locationId":"europe-west1"}' \
+  --compressed
+
+  gcloud auth activate-service-account --key-file=/Users/aubreymalabie/Work/service-accts/kasie-transie-3b.json
+
+  gcloud projects add-iam-policy-binding kasie-transie-3 \
+--member="serviceAccount:firebase-adminsdk-efvna@kasie-transie-3.iam.gserviceaccount.com" \
+--role="roles/cloudbuild.editor"
+
+gcloud auth activate-service-account  <SERVICE_ACCOUNT_EMAIL> --key-file=<PATH_TO_KEY_FILE>
+
+gcloud run deploy --source . kasie-transie-backend-4 \
+  --platform managed \
+  --region europe-west1 \
+  --allow-unauthenticated
+
+gcloud beta iam service-accounts add-iam-policy-binding firebase-adminsdk-efvna@kasie-transie-3.iam.gserviceaccount.com --member='allAuthenticatedUsers' --role='roles/iam.serviceAccountTokenCreator'
+gcloud beta iam service-accounts add-iam-policy-binding firebase-adminsdk-efvna@kasie-transie-3.iam.gserviceaccount.com --member='allAuthenticatedUsers' --role='roles/iam.serviceAccounts.signBlob'
+
+gcloud storage buckets add-iam-policy-binding gs://kasie-transie-3.appspot.com --member=allUsers --role=roles/storage.objectViewer
+
+gcloud storage buckets add-iam-policy-binding gs://kasie-transie-3.appspot.com --member=allUsers --role=roles/CustomCloudKMSCryptoKeySigner
+
+gcloud iam service-accounts add-iam-policy-binding \
+  firebase-adminsdk-efvna@kasie-transie-3.iam.gserviceaccount.com \
+  --member="serviceAccount:firebase-adminsdk-efvna@kasie-transie-3.iam.gserviceaccount.com" \
+  --role="roles/iam.serviceAccounts.signBlob" \
+  --project kasie-transie-3
+
+

@@ -57,6 +57,8 @@ const storage_service_1 = require("../../storage/storage.service");
 const firebase_util_1 = require("../../services/firebase_util");
 const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 const UserPhoto_1 = require("../../data/models/UserPhoto");
+const heartbeat_service_1 = require("../heartbeat/heartbeat.service");
+const VehicleTelemetry_1 = require("../../data/models/VehicleTelemetry");
 let VehicleModule = class VehicleModule {
 };
 exports.VehicleModule = VehicleModule;
@@ -69,6 +71,7 @@ exports.VehicleModule = VehicleModule = __decorate([
                 { name: "VehicleArrival", schema: VehicleArrival_1.VehicleArrivalSchema },
                 { name: "VehicleDeparture", schema: VehicleDeparture_1.VehicleDepartureSchema },
                 { name: "VehicleHeartbeat", schema: VehicleHeartbeat_1.VehicleHeartbeatSchema },
+                { name: "VehicleTelemetry", schema: VehicleTelemetry_1.VehicleTelemetrySchema },
                 { name: "Association", schema: Association_1.AssociationSchema },
                 { name: "RouteAssignment", schema: RouteAssignment_1.RouteAssignmentSchema },
                 { name: "User", schema: User_1.UserSchema },
@@ -108,6 +111,7 @@ exports.VehicleModule = VehicleModule = __decorate([
         ],
         controllers: [vehicle_controller_1.VehicleController],
         providers: [
+            heartbeat_service_1.HeartbeatService,
             vehicle_service_1.VehicleService,
             user_service_1.UserService,
             city_service_1.CityService,

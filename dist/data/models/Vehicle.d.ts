@@ -10,6 +10,8 @@ export declare class Vehicle {
     countryId: string;
     ownerName: string;
     associationName: string;
+    bucketFileName: string;
+    qrCodeBytes: string;
     vehicleReg: string;
     model: string;
     make: string;
@@ -25,6 +27,10 @@ export declare class Vehicle {
 }
 export declare const VehicleSchema: import("mongoose").Schema<Vehicle, import("mongoose").Model<Vehicle, any, any, any, import("mongoose").Document<unknown, any, Vehicle> & Vehicle & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Vehicle, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<Vehicle>> & import("mongoose").FlatRecord<Vehicle> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, Vehicle, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<Vehicle>> & import("mongoose").FlatRecord<Vehicle> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

@@ -21,7 +21,7 @@ let FirebaseAdmin = class FirebaseAdmin {
             app = admin.initializeApp({
                 credential: (0, app_1.applicationDefault)(),
             });
-            common_1.Logger.log(`${tag} ... Firebase initialized: 🥬 name: ${JSON.stringify(app.options)}   🥬`);
+            common_1.Logger.log(`${tag} ... Firebase initialized: 🥬 🥬 `);
             this.sendInitializationMessage(app);
         }
     }

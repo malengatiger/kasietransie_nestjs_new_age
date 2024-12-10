@@ -14,12 +14,12 @@ const common_1 = require("@nestjs/common");
 const mongodb_1 = require("mongodb");
 const kasie_error_1 = require("../data/models/kasie.error");
 const fcm_service_1 = require("../features/fcm/fcm.service");
-const mm = '🔴 🔴 🔴 🔴 🔴 🔴 KasieErrorHandler 🔴 ';
+const mm = "🔴 🔴 🔴 🔴 🔴 🔴 KasieErrorHandler 🔴 ";
 let KasieErrorHandler = class KasieErrorHandler {
     constructor(messageService) {
         this.messageService = messageService;
     }
-    async handleError(error, associationId) {
+    async handleError(error, associationId, associationName) {
         common_1.Logger.error(`\n\n${mm} ... 😈😈 handling error: \n${error} `);
         try {
             const uri = process.env.REMOTE_DB_URI;
@@ -28,13 +28,25 @@ let KasieErrorHandler = class KasieErrorHandler {
             const db = client.db("kasie_transie");
             const errorData = {
                 associationId: associationId,
+                associationName: associationName,
                 date: new Date().getTime(),
                 dateString: new Date().toISOString(),
-                message: error.message,
+                message: JSON.stringify(error),
                 statusCode: error.statusCode || common_1.HttpStatus.INTERNAL_SERVER_ERROR,
             };
-            await db.collection('KasieError').insertOne(errorData);
-            common_1.Logger.debug(`${mm} KasieError added to database; 😈 sending error to FCM topic ... `);
+            try {
+                db.collection("KasieError")
+                    .insertOne(errorData)
+                    .catch((reason) => {
+                    common_1.Logger.debug(`${mm} KasieError add to database failed: ${JSON.stringify(reason)}`);
+                })
+                    .then((result) => {
+                    common_1.Logger.debug(`${mm} KasieError added to database: ${JSON.stringify(result)}`);
+                });
+            }
+            catch (e) {
+                common_1.Logger.debug(`${mm} KasieError add to database failed: ${JSON.stringify(e)}`);
+            }
             await this.sendCloudMessage(errorData);
         }
         catch (e) {
@@ -43,11 +55,11 @@ let KasieErrorHandler = class KasieErrorHandler {
     }
     async sendCloudMessage(err) {
         try {
-            const errorMessage = err.message || 'An unexpected error occurred.';
+            const errorMessage = err.message || "An unexpected error occurred.";
             await this.messageService.sendKasieErrorMessage(new kasie_error_1.KasieError(errorMessage, err.statusCode || common_1.HttpStatus.INTERNAL_SERVER_ERROR));
         }
         catch (e) {
-            common_1.Logger.error(`${mm} ${e}`);
+            common_1.Logger.error(`${mm} sendCloudMessage failed: ${e}`);
         }
     }
 };

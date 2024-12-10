@@ -22,6 +22,10 @@ export declare class AppError {
 }
 export declare const AppErrorSchema: import("mongoose").Schema<AppError, import("mongoose").Model<AppError, any, any, any, import("mongoose").Document<unknown, any, AppError> & AppError & {
     _id: import("mongoose").Types.ObjectId;
+} & {
+    __v: number;
 }, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, AppError, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<AppError>> & import("mongoose").FlatRecord<AppError> & {
     _id: import("mongoose").Types.ObjectId;
+} & {
+    __v: number;
 }>;

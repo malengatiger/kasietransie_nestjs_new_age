@@ -17,6 +17,10 @@ export declare class City {
 }
 export declare const CitySchema: import("mongoose").Schema<City, import("mongoose").Model<City, any, any, any, import("mongoose").Document<unknown, any, City> & City & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, City, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<City>> & import("mongoose").FlatRecord<City> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, City, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<City>> & import("mongoose").FlatRecord<City> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

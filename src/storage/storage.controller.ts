@@ -172,7 +172,7 @@ export class StorageController {
       imageFile: Express.Multer.File[];
     },
     @Query("associationId") associationId: string
-  ): Promise<User> {
+  ): Promise<string> {
     Logger.log(
       `${tag} uploadQrCodeFile: imageFile: ${files.imageFile[0].originalname} 🥦 `
     );
@@ -187,12 +187,12 @@ export class StorageController {
       `${tag}  uploadQrCodeFile: : qrcode ${files.imageFile[0].originalname} 🥦 saved to ${imageTempFile}`
     );
 
-    const url = await this.storageService.uploadQRCodeFile(
+    const fileName = await this.storageService.uploadQRCodeFile(
       associationId,
       imageTempFile
     );
 
-    return url;
+    return fileName;
   }
   //
   @UseInterceptors(FileInterceptor("file"))

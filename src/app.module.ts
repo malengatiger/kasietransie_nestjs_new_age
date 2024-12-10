@@ -71,6 +71,7 @@ import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 import { TicketModule } from './features/ticket/ticket.module';
 import { PayfastModule } from './features/payfast/payfast.module';
 import { UserPhotoSchema } from './data/models/UserPhoto';
+import { InternalModule } from './internal/internal.module';
 
 @Module({
   imports: [
@@ -146,6 +147,7 @@ import { UserPhotoSchema } from './data/models/UserPhoto';
     StorageModule,
     TicketModule,
     PayfastModule,
+    InternalModule,
   ],
   controllers: [AppController, DispatchController, UserController],
   providers: [AppService, DispatchService, MessagingService, TimeSeriesService,

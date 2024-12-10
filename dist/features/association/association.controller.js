@@ -32,6 +32,9 @@ let AssociationController = class AssociationController {
     async addAssociationToken(associationId, userId, token) {
         return this.associationService.addAssociationToken(associationId, userId, token);
     }
+    async resetAssociationData(associationId) {
+        return this.associationService.resetAssociationData(associationId);
+    }
     async downloadExampleUserCSVFile() {
         return this.associationService.downloadExampleUserCSVFile();
     }
@@ -55,9 +58,6 @@ let AssociationController = class AssociationController {
     }
     async getAssociationAppErrors(associationId, startDate, endDate) {
         return this.associationService.getAssociationAppErrors(associationId, startDate, endDate);
-    }
-    async generateFakeAssociation(name) {
-        return await this.associationService.generateFakeAssociation(name);
     }
     async getExampleFiles() {
         return this.associationService.getExampleFiles();
@@ -90,6 +90,13 @@ __decorate([
     __metadata("design:paramtypes", [String, String, String]),
     __metadata("design:returntype", Promise)
 ], AssociationController.prototype, "addAssociationToken", null);
+__decorate([
+    (0, common_1.Get)('resetAssociationData'),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AssociationController.prototype, "resetAssociationData", null);
 __decorate([
     (0, common_1.Get)('downloadExampleUserCSVFile'),
     __metadata("design:type", Function),
@@ -142,13 +149,6 @@ __decorate([
     __metadata("design:paramtypes", [String, String, String]),
     __metadata("design:returntype", Promise)
 ], AssociationController.prototype, "getAssociationAppErrors", null);
-__decorate([
-    (0, common_1.Get)('generateFakeAssociation'),
-    __param(0, (0, common_1.Query)('name')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Promise)
-], AssociationController.prototype, "generateFakeAssociation", null);
 __decorate([
     (0, common_1.Post)('createQRCode'),
     __param(0, (0, common_1.Body)()),

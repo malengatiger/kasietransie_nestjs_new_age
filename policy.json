@@ -1,0 +1,19 @@
+bindings:
+- members:
+  - allAuthenticatedUsers
+  role: roles/editor
+- members:
+  - serviceAccount:firebase-adminsdk-efvna@kasie-transie-3.iam.gserviceaccount.com
+  role: roles/iam.serviceAccountAdmin
+- members:
+  - allAuthenticatedUsers
+  - serviceAccount:firebase-adminsdk-efvna@kasie-transie-3.iam.gserviceaccount.com
+  role: roles/iam.serviceAccountTokenCreator
+- members:
+  - serviceAccount:firebase-adminsdk-efvna@kasie-transie-3.iam.gserviceaccount.com
+  role: roles/iam.serviceAccountUser
+- members:
+  - serviceAccount:firebase-adminsdk-efvna@kasie-transie-3.iam.gserviceaccount.com
+  role: roles/owner
+etag: BwYockD1tAA=
+version: 1

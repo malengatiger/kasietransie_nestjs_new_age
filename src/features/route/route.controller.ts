@@ -68,11 +68,17 @@ export class RouteController {
     return res;
   }
   @Post("deleteRoutePointList")
-  async deleteRoutePointList(@Body() routePointList: RoutePointList): Promise<RoutePoint[]> {
-    Logger.log(`${mm} ... deleteRoutePointList routePoints coming in: ${JSON.stringify(routePointList)}`);
+  async deleteRoutePointList(
+    @Body() routePointList: RoutePointList
+  ): Promise<RoutePoint[]> {
+    Logger.log(
+      `${mm} ... deleteRoutePointList routePoints coming in: ${JSON.stringify(routePointList)}`
+    );
 
     const res = await this.routeService.deleteRoutePointList(routePointList);
-    Logger.log(`${mm} ... deleteRoutePointList result: ${res.length} route points remaining`);
+    Logger.log(
+      `${mm} ... deleteRoutePointList result: ${res.length} route points remaining`
+    );
     return res;
   }
   @Get("deleteRoutePointsFromIndex")
@@ -84,6 +90,25 @@ export class RouteController {
       query.index
     );
     return list;
+  }
+  @Get("copyRoutes")
+  async copyRoutes(
+    @Query() query: { assocIdFrom: string; assocIdTo: string }
+  ): Promise<string> {
+    const result = await this.routeService.copyRoutes(
+      query.assocIdFrom,
+      query.assocIdTo
+    );
+    return result;
+  }
+  @Get("deleteCopiedRoutes")
+  async deleteCopiedRoutes(
+    @Query() query: { associationId: string; }
+  ): Promise<string> {
+    const result = await this.routeService.deleteCopiedRoutes(
+      query.associationId,
+    );
+    return result;
   }
   @Get("deleteRoutePoint")
   async deleteRoutePoint(
@@ -102,7 +127,37 @@ export class RouteController {
     );
     return route;
   }
-  
+
+  @Get("findRouteLandmarksByLocation")
+  public async findRouteLandmarksByLocation(
+    @Query() query: { latitude: number; longitude: number; radiusInKM: number }
+  ): Promise<RouteLandmark[]> {
+    Logger.debug(
+      `${mm} findRouteLandmarksByLocation: latitude: ${query.latitude} longitude: ${query.longitude} max: ${query.radiusInKM} limit: 5`
+    );
+
+    return await this.routeService.findRouteLandmarksByLocation(
+      query.latitude,
+      query.longitude,
+      query.radiusInKM
+    );
+  }
+
+  @Get("findRoutePointsByLocation")
+  public async findRoutePointsByLocation(
+    @Query() query: { latitude: number; longitude: number; radiusInKM: number }
+  ): Promise<RoutePoint[]> {
+    Logger.debug(
+      `${mm} findRoutePointsByLocation: latitude: ${query.latitude} longitude: ${query.longitude} max: ${query.radiusInKM} limit: 5`
+    );
+
+    return await this.routeService.findRoutePointsByLocation(
+      query.latitude,
+      query.longitude,
+      query.radiusInKM
+    );
+  }
+
   @Get("deleteRouteLandmark")
   async deleteRouteLandmark(
     @Query() query: { routeLandmarkId: string }
@@ -131,12 +186,13 @@ export class RouteController {
   async getAssociationRouteData(
     @Query() query: { associationId: string }
   ): Promise<AssociationRouteData> {
-    
     const data = await this.routeService.getAssociationRouteData(
       query.associationId
     );
 
-    this.logger.debug(`${mm} association route data found, returning RouteData ...`);
+    this.logger.debug(
+      `${mm} association route data found, returning RouteData ...`
+    );
     return data;
   }
   @Get("getAssociationRouteLandmarks")

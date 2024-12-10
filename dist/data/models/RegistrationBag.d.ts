@@ -5,7 +5,8 @@ import { SettingsModel } from './SettingsModel';
 import { User } from './User';
 export declare class RegistrationBag {
     association: Association;
-    user: User;
+    adminUser: User;
+    carUser: User;
     settings: SettingsModel;
     country: Country;
     exampleFiles: ExampleFile[];

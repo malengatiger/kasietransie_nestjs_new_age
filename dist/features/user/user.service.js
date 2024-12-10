@@ -18,15 +18,12 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const User_1 = require("../../data/models/User");
 const fs = require("fs");
-const csv_1 = require("csv");
 const crypto_1 = require("crypto");
 const Association_1 = require("../../data/models/Association");
 const UserGeofenceEvent_1 = require("../../data/models/UserGeofenceEvent");
 const storage_service_1 = require("../../storage/storage.service");
 const constants_1 = require("../../my-utils/constants");
 const firebase_util_1 = require("../../services/firebase_util");
-const os = require("os");
-const path = require("path");
 const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 const mm = "🏈 🏈 🏈 UserService 🏈 🏈";
 let UserService = class UserService {
@@ -43,141 +40,112 @@ let UserService = class UserService {
         const fileString = buffer.toString("utf-8");
         return fileString;
     }
+    async createAssociationAuthUser(associationId) {
+        common_1.Logger.log(`${mm} createAssociationAuthUser  .... 🎽 associationId: ${associationId}`);
+        const email = `${associationId}@kasie.com`;
+        const password = `pass${associationId}`;
+        const app = this.firebaseAdmin.getFirebaseApp();
+        const ass = await this.associationModel.findOne({
+            associationId: associationId,
+        });
+        if (ass) {
+            const userRecord = await app.auth().createUser({
+                email: email,
+                password: password,
+                displayName: `${ass.associationName}`,
+                uid: associationId,
+            });
+            if (userRecord) {
+                if (userRecord.uid == associationId) {
+                    common_1.Logger.log(`${mm} createAssociationAuthUser  is Good!! 🎽 name: ${ass.associationName}`);
+                    return {
+                        email: email,
+                        password: password,
+                    };
+                }
+            }
+        }
+        common_1.Logger.error(`${mm} createAssociationAuthUser failed 😈😈😈 associationId: ${associationId} 😈😈😈`);
+        throw new common_1.HttpException("Unable to authenticate Association", common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+    }
     async createUser(user) {
         const storedPassword = user.password;
         const app = this.firebaseAdmin.getFirebaseApp();
-        common_1.Logger.log(`\n\n${mm} ........ create user: ${JSON.stringify(user, null, 2)} \n`);
+        common_1.Logger.log(`\n\n${mm} ........ create user on Firebase Authentication: ${JSON.stringify(user, null, 2)} \n`);
+        let mUser = await this.userModel.findOne({
+            email: user.email,
+        });
+        if (!mUser && user.cellphone) {
+            mUser = await this.userModel.findOne({
+                cellphone: user.cellphone,
+            });
+        }
+        if (mUser) {
+            common_1.Logger.log(`${mm} ........ User exists on Atlas: ${JSON.stringify(mUser, null, 2)} \n`);
+            return mUser;
+        }
         try {
-            let email = "";
-            if (!user.email) {
-                const name = `${user.firstName} ${user.lastName}`;
-                const mName = name.replace(" ", "").toLowerCase();
-                email = `${mName}_${new Date().getTime()}@kasietransie.com`;
-                user.email = email;
+            common_1.Logger.log(`${mm} createUser  .... 🎽 email: ${user.email}`);
+            const uid = (0, crypto_1.randomUUID)();
+            let userRecord = null;
+            if (user.cellphone) {
+                userRecord = await app.auth().createUser({
+                    email: user.email,
+                    password: user.password,
+                    phoneNumber: user.cellphone,
+                    displayName: `${user.firstName} ${user.lastName}`,
+                    uid: uid,
+                });
             }
             else {
-                email = user.email;
-            }
-            common_1.Logger.log(`${mm} createUser  .... 🎽 email: ${email}`);
-            const userRecord = await app.auth().createUser({
-                email,
-                password: user.password,
-                phoneNumber: user.cellphone,
-                displayName: `${user.firstName} ${user.lastName}`,
-            });
-            common_1.Logger.log(`${mm} createUser: Firebase auth user created. userRecord from Firebase : 🎽 ${JSON.stringify(userRecord, null, 2)}`);
-            const uid = userRecord.uid;
-            user.userId = uid;
-            user.dateRegistered = new Date().toISOString();
-            if (user.qrCodeUrl == null) {
-                const url = await this.storage.createQRCode({
-                    data: JSON.stringify(user),
-                    prefix: constants_1.Constants.qrcode_user,
-                    size: 1,
-                    associationId: user.associationName ?? "ADMIN",
+                user.bucketFileName = "NAY";
+                user.qrCodeBytes = "NAY";
+                user.qrCodeBytes = "NAY";
+                userRecord = await app.auth().createUser({
+                    email: user.email,
+                    password: user.password,
+                    displayName: `${user.firstName} ${user.lastName}`,
+                    uid: uid,
                 });
-                common_1.Logger.debug(`${mm} createUser: ... qrCode url: ${url}`);
-                user.password = null;
-                user.qrCodeUrl = url;
             }
-            common_1.Logger.debug(`${mm} ... adding user to Mongo, userId: ${user.userId} - ${user.firstName}`);
-            const mUser = await this.userModel.create(user);
+            common_1.Logger.log(`${mm} createUser: Firebase auth user created. userRecord from Firebase : 🎽 ${JSON.stringify(userRecord, null, 2)}`);
+            user.dateRegistered = new Date().toISOString();
+            user.password = null;
+            user.userId = uid;
+            common_1.Logger.debug(`${mm} createUser: ... bucketFileName: ${user.bucketFileName}`);
+            common_1.Logger.debug(`${mm} ... adding user to Mongo, user; check bucketFileName: ${JSON.stringify(user)}`);
+            await this.userModel.create(user);
             user.password = storedPassword;
-            common_1.Logger.log(`\n\n${mm} createUser: 🔵 user created on Mongo Atlas: 🥬🥬🥬 \n🔵 🔵 ${JSON.stringify(mUser, null, 2)} 🥬\n\n`);
+            common_1.Logger.log(`\n\n${mm} createUser: 🔵 🔵 🔵 🔵 🔵 user created on Mongo Atlas: 🥬🥬🥬 \n🔵 🔵 ${JSON.stringify(user, null, 2)} 🥬\n\n`);
         }
         catch (e) {
             common_1.Logger.error(`${mm} User creation failed: ${e}`);
-            this.errorHandler.handleError(`User creation failed: ${e}`, user.associationId);
+            this.errorHandler.handleError(`User creation failed: ${e}`, user.associationId, user.associationName);
             throw new common_1.HttpException(`${mm} User creation failed: ${e}`, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return user;
     }
-    async createAdminUser(user) {
+    async createInternalAdminUser(user) {
         common_1.Logger.log(`\n\n${mm} createAdminUser: user: ${JSON.stringify(user)} \n`);
         user.userType = constants_1.Constants.ADMINISTRATOR_AFTAROBOT;
         user.associationId = "ADMIN";
         user.dateRegistered = new Date().toISOString();
+        if (user.password == null) {
+            user.password = "pass123";
+        }
         try {
             const res = await this.createUser(user);
             common_1.Logger.log(`${mm} createAdminUser: seems pretty cool,  🔵 🔵 internal admin user has been created\n\n`);
             return res;
         }
         catch (e) {
-            this.errorHandler.handleError(e, user.associationId);
+            this.errorHandler.handleError(e, user.associationId, user.associationName);
             throw new common_1.HttpException(e, common_1.HttpStatus.BAD_REQUEST);
         }
     }
     async updateUser(user) {
-        return null;
-    }
-    async importUsersFromCSV(file, associationId) {
-        common_1.Logger.log(`\n\n${mm} importUsersFromCSV:... 🍎🍎 associationId: ${associationId} 🍎🍎 ... find association ...`);
-        common_1.Logger.debug(`${mm} importUsersFromCSV:...  🥦 file size: ${file.buffer.length} bytes;  🥦 originalname: ${file.originalname}`);
-        const list = await this.associationModel.find({
-            associationId: associationId,
-        });
-        if (list.length == 0) {
-            throw new Error("Association not found");
-        }
-        const ass = list[0];
-        common_1.Logger.log(`${mm} importUsersFromCSV:... association: 🔵 ${JSON.stringify(ass, null, 2)} 🔵\n\n`);
-        const users = [];
-        const mUsers = [];
-        const errors = [];
-        let response;
-        let index = 0;
-        const tempFilePath = path.join(os.tmpdir(), file.originalname);
-        common_1.Logger.log(`${mm} importUsersFromCSV:... 🔵 tempFilePath: ${tempFilePath}`);
-        common_1.Logger.log(`${mm} importUsersFromCSV:... 🔵 read csv file: ${file.originalname}`);
-        await fs.promises.writeFile(tempFilePath, file.buffer);
-        response = await new Promise((resolve, reject) => {
-            fs.createReadStream(tempFilePath)
-                .pipe((0, csv_1.parse)())
-                .on("data", async (data) => {
-                if (index > 0) {
-                    const user = await this.buildUser(data, ass);
-                    users.push(user);
-                }
-                index++;
-            })
-                .on("error", (err) => {
-                reject(new Error(`Error processing user CSV file: ${err}`));
-            })
-                .on("end", async () => {
-                common_1.Logger.debug(`${mm} CSV parsing completed ......`);
-                common_1.Logger.log(`${mm} Save the parsed users to the database`);
-                for (const user of users) {
-                    try {
-                        const u = await this.createUser(user);
-                        mUsers.push(u);
-                    }
-                    catch (e) {
-                        errors.push(user);
-                        common_1.Logger.debug(`${mm} ${e} - errors: ${errors.length}`);
-                    }
-                }
-                await fs.promises.unlink(tempFilePath);
-                resolve({
-                    users: mUsers,
-                    errors: errors,
-                });
-            });
-        });
-        common_1.Logger.log(`${mm} return response: ${JSON.stringify(response, null, 2)}`);
-        common_1.Logger.log(`\n\n${mm} 😎 😎 😎 😎 😎 😎 Work completed! Users from csv file, 🍎 users: ${response.users.length} 🍎 errors: ${response.errors.length}\n\n`);
-        return response;
-    }
-    async buildUser(data, ass) {
-        const uu = new User_1.User();
-        uu.userType = data[0];
-        uu.firstName = data[1];
-        uu.lastName = data[2];
-        uu.email = data[3];
-        uu.cellphone = data[4];
-        uu.associationId = ass.associationId;
-        uu.associationName = ass.associationName;
-        uu.password = (0, crypto_1.randomUUID)().trim();
-        return uu;
+        await this.userModel.updateOne({ userId: user.userId }, user);
+        return user;
     }
     async getUserById(userId) {
         common_1.Logger.debug(`${mm} getting user by id: ${userId}`);
@@ -187,8 +155,8 @@ let UserService = class UserService {
         }
         else {
             common_1.Logger.error(`${mm} user not found`);
-            this.errorHandler.handleError("User not found", "N/A");
-            throw new common_1.HttpException("User fucked!", common_1.HttpStatus.BAD_REQUEST);
+            this.errorHandler.handleError("getUserById:User not found", "N/A", 'nay');
+            throw new common_1.HttpException("getUserById User fucked!", common_1.HttpStatus.BAD_REQUEST);
         }
         return user;
     }
@@ -209,49 +177,59 @@ let UserService = class UserService {
         }
         return user;
     }
-    async fix() {
-        const list = await this.userModel.find({});
-        common_1.Logger.log(`${mm} fix all users ...`);
-        let cnt = 0;
-        for (const u of list) {
-            if (u.firstName) {
-                u.firstName = u.firstName.trim();
-            }
-            if (u.lastName) {
-                u.lastName = u.lastName.trim();
-            }
-            await u.save();
-            cnt++;
-        }
-        common_1.Logger.log(`${mm} fixed ${cnt} users`);
-        return cnt;
-    }
-    async createOwner(car) {
-        var asses = await this.associationModel
-            .find({ associationId: car.associationId })
-            .limit(1);
-        let ass = null;
-        const nameParts = car.ownerName.split(" ");
-        const firstName = nameParts.slice(0, -1).join(" ");
-        const lastName = nameParts[nameParts.length - 1];
-        if (asses.length > 0) {
-            ass = asses[0];
-            const user = new User_1.User();
-            user.associationId = car.associationId;
-            user.associationName = car.associationName;
-            user.firstName = firstName;
-            user.lastName = lastName;
-            user.userType = constants_1.Constants.OWNER;
-            const emailSuffix = ass.adminEmail.split("@")[1];
-            const emailPrefix = car.ownerName.replaceAll(" ", "_").toLowerCase();
-            user.email = emailPrefix + "@" + emailSuffix;
-            var mUser = await this.createUser(user);
+    async createOwner(user) {
+        const storedPassword = user.password;
+        const app = this.firebaseAdmin.getFirebaseApp();
+        common_1.Logger.log(`\n\n${mm} ........ create user on Firebase Authentication: ${JSON.stringify(user, null, 2)} \n`);
+        const mUser = await this.userModel.findOne({
+            firstName: user.firstName,
+            lastName: user.lastName,
+        });
+        if (mUser) {
+            common_1.Logger.log(`${mm} ........  createOwner: User exists on Atlas: ${JSON.stringify(mUser, null, 2)} \n`);
             return mUser;
         }
-        return null;
+        try {
+            common_1.Logger.log(`${mm} createOwner  .... 🎽 email: ${user.email} ${user.cellphone}`);
+            const uid = (0, crypto_1.randomUUID)();
+            const userRecord = await app.auth().createUser({
+                email: user.email,
+                password: user.password,
+                phoneNumber: user.cellphone,
+                displayName: `${user.firstName} ${user.lastName}`,
+                uid: uid,
+            });
+            common_1.Logger.log(`${mm} createOwner: Firebase auth user created. userRecord from Firebase : 🎽 ${JSON.stringify(userRecord, null, 2)}`);
+            user.dateRegistered = new Date().toISOString();
+            user.password = null;
+            user.userId = uid;
+            let url = null;
+            common_1.Logger.debug(`${mm} createOwner: ... bucketFileName: ${user.bucketFileName}`);
+            common_1.Logger.debug(`${mm} ... adding owner to Mongo, userId: ${user.userId} - ${user.firstName}`);
+            const mUser = await this.userModel.create(user);
+            user.password = storedPassword;
+            common_1.Logger.log(`\n\n${mm} createOwner: 🔵🔵🔵🔵🔵 user created on Mongo Atlas: 🥬🥬🥬 \n🔵 🔵 ${JSON.stringify(mUser, null, 2)} 🥬\n\n`);
+        }
+        catch (e) {
+            common_1.Logger.error(`${mm} owner creation failed: ${e}`);
+            this.errorHandler.handleError(`owner creation failed: ${e}`, user.associationId, user.associationName);
+            throw new common_1.HttpException(`${mm} Owner creation failed: ${e}`, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return user;
     }
     async addUserGeofenceEvent(userGeofenceEvent) {
         return await this.userGeofenceModel.create(userGeofenceEvent);
+    }
+    async deleteUser(uid) {
+        const app = this.firebaseAdmin.getFirebaseApp();
+        const user = await app.auth().getUser(uid);
+        if (user) {
+            common_1.Logger.debug(`${user.displayName} - ${user.email} - to be deleted`);
+            await app.auth().deleteUser(uid);
+            common_1.Logger.debug(`Firebase user deleted`);
+            return 0;
+        }
+        return 9;
     }
 };
 exports.UserService = UserService;

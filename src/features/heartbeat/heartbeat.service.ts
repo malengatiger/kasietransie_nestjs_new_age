@@ -8,6 +8,8 @@ import { GenerationRequest } from 'src/data/helpers/GenerationRequest';
 import { RoutePoint } from 'src/data/models/RoutePoint';
 import { Vehicle } from 'src/data/models/Vehicle';
 import { VehicleHeartbeat } from 'src/data/models/VehicleHeartbeat';
+import { VehicleTelemetry } from 'src/data/models/VehicleTelemetry';
+
 import { MyUtils } from 'src/my-utils/my-utils';
 import { MessagingService } from '../fcm/fcm.service';
 import { TimeSeriesService } from '../time_series/time_series.service';
@@ -22,6 +24,9 @@ export class HeartbeatService {
     private messagingService: MessagingService,
     @InjectModel(Vehicle.name)
     private vehicleModel: mongoose.Model<Vehicle>,
+
+    @InjectModel(VehicleTelemetry.name)
+    private vehicleTelemetryModel: mongoose.Model<VehicleTelemetry>,
 
     @InjectModel(VehicleHeartbeat.name)
     private vehicleHeartbeatModel: mongoose.Model<VehicleHeartbeat>,
@@ -59,6 +64,13 @@ export class HeartbeatService {
     await this.messagingService.sendHeartbeatMessage(m);
     return m;
   }
+  public async addVehicleTelemetry(
+    telemetry: VehicleTelemetry,
+  ): Promise<VehicleTelemetry> {
+    const m = await this.vehicleTelemetryModel.create(telemetry);
+    await this.messagingService.sendTelemetryMessage(m);
+    return m;
+  }
   public async generateRouteHeartbeats(
     request: GenerationRequest,
   ): Promise<void> {
@@ -77,7 +89,8 @@ export class HeartbeatService {
     return list;
   }
   public async countVehicleHeartbeats(vehicleId: string): Promise<number> {
-    return this.vehicleHeartbeatModel.find({ vehicleId: vehicleId }).count();
+    const m = this.vehicleHeartbeatModel.find({ vehicleId: vehicleId });
+    return m.countDocuments();
   }
   public async getOwnerVehicleHeartbeats(
     userId: string,

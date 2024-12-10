@@ -17,6 +17,10 @@ export declare class VehicleHeartbeat {
 }
 export declare const VehicleHeartbeatSchema: import("mongoose").Schema<VehicleHeartbeat, import("mongoose").Model<VehicleHeartbeat, any, any, any, import("mongoose").Document<unknown, any, VehicleHeartbeat> & VehicleHeartbeat & Required<{
     _id: string;
-}>, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, VehicleHeartbeat, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<VehicleHeartbeat>> & import("mongoose").FlatRecord<VehicleHeartbeat> & Required<{
+}> & {
+    __v: number;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, VehicleHeartbeat, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<VehicleHeartbeat>> & import("mongoose").FlatRecord<VehicleHeartbeat> & Required<{
     _id: string;
-}>>;
+}> & {
+    __v: number;
+}>;

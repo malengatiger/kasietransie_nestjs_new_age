@@ -9,9 +9,14 @@ export class RegistrationBag {
   @ApiProperty()
   association: Association;
   @ApiProperty()
-  user: User;
+  adminUser: User;
+
+  @ApiProperty()
+  carUser: User;
+
   @ApiProperty()
   settings: SettingsModel;
+  
   @ApiProperty()
   country: Country;
 
