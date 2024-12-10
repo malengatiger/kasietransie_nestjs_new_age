@@ -45,7 +45,6 @@ export declare class RouteService {
     addRoutePoints(list: RoutePointList): Promise<number>;
     deleteRoutePointsFromIndex(routeId: string, index: number): Promise<RoutePoint[]>;
     addCalculatedDistances(list: CalculatedDistance[]): Promise<CalculatedDistance[]>;
-    fix(routeId: string): Promise<any>;
     addRouteLandmark(routeLandmark: RouteLandmark): Promise<RouteLandmark[]>;
     deleteRouteLandmark(routeLandmarkId: string): Promise<RouteLandmark[]>;
     deleteRoutePoint(routePointId: string): Promise<any>;

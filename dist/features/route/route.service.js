@@ -263,17 +263,6 @@ let RouteService = class RouteService {
         });
         return await this.calculatedDistanceModel.insertMany(list);
     }
-    async fix(routeId) {
-        const points = await this.routePointModel.find({ routeId: routeId });
-        common_1.Logger.log(`${mm} fixing ${points.length} route points ...`);
-        let count = 0;
-        points.forEach(async (p) => {
-            p.position.type = "Point";
-            await this.routePointModel.updateOne({ _id: p._id }, p);
-            count++;
-        });
-        return `${mm} RoutePoints fixed: ${count}`;
-    }
     async addRouteLandmark(routeLandmark) {
         try {
             const cities = await this.cityService.findCitiesByLocation(routeLandmark.position.coordinates.at(1), routeLandmark.position.coordinates.at(0), 5 * 1000, 200);

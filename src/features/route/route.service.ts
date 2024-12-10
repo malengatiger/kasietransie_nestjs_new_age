@@ -238,13 +238,6 @@ export class RouteService {
 
   public async addRoute(route: Route): Promise<Route> {
     try {
-      // const url = await this.storage.createQRCode({
-      //   data: JSON.stringify(route),
-      //   prefix: "route",
-      //   size: 2,
-      //   associationId: route.associationId,
-      // });
-      // route.qrCodeUrl = url;
       const res = await this.routeModel.create(route);
       Logger.log(
         `\n\n${mm} route ${route.name} has been added to Atlas\n ${JSON.stringify(res, null, 2)}`
@@ -261,13 +254,6 @@ export class RouteService {
   }
 
   public async createRouteQRCode(route: Route): Promise<Route> {
-    // const url = await this.storage.createQRCode({
-    //   data: JSON.stringify(route),
-    //   prefix: "route",
-    //   size: 1,
-    //   associationId: route.associationId,
-    // });
-    // route.qrCodeUrl = url;
     await this.routeModel.updateOne(route);
     return route;
   }
@@ -303,15 +289,7 @@ export class RouteService {
     ]);
     return fileName;
   }
-  // public async updateRouteColor(
-  //   routeId: string,
-  //   color: string,
-  // ): Promise<Route> {
-  //   const r = await this.routeModel.findOne({ routeId: routeId });
-  //   r.color = color;
-  //   await this.routeModel.updateOne(r);
-  //   return r;
-  // }
+ 
   async updateRouteColor(routeId: string, color: string): Promise<Route> {
     const filter = { routeId: routeId };
     const update = { color: color };
@@ -367,18 +345,6 @@ export class RouteService {
       routeId: routeId,
     });
     return await this.calculatedDistanceModel.insertMany(list);
-  }
-
-  public async fix(routeId: string): Promise<any> {
-    const points = await this.routePointModel.find({ routeId: routeId });
-    Logger.log(`${mm} fixing ${points.length} route points ...`);
-    let count = 0;
-    points.forEach(async (p) => {
-      p.position.type = "Point";
-      await this.routePointModel.updateOne({ _id: p._id }, p);
-      count++;
-    });
-    return `${mm} RoutePoints fixed: ${count}`;
   }
 
   public async addRouteLandmark(
