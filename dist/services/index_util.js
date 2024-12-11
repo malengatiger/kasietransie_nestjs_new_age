@@ -35,6 +35,27 @@ let MongoIndexBuilder = class MongoIndexBuilder {
             const collectionH = db.collection("VehicleVideo");
             const resH = await collectionH.createIndex({ position: "2dsphere" });
             common_1.Logger.debug(`${tag} VehicleVideo spatial index created: ${resH}`);
+            const collectionH1 = db.collection("CommuterCashPayment");
+            const resH1 = await collectionH1.createIndex({ position: "2dsphere" });
+            common_1.Logger.debug(`${tag} CommuterCashPayment spatial index created: ${resH1}`);
+            const collectionH2 = db.collection("CommuterProviderPayment");
+            const resH2 = await collectionH2.createIndex({ position: "2dsphere" });
+            common_1.Logger.debug(`${tag} CommuterProviderPayment spatial index created: ${resH2}`);
+            const collectionH3 = db.collection("RankFeeProviderPayment");
+            const resH3 = await collectionH3.createIndex({ position: "2dsphere" });
+            common_1.Logger.debug(`${tag} RankFeeProviderPayment spatial index created: ${resH3}`);
+            const collectionH4 = db.collection("RankFeeCashPayment");
+            const resH4 = await collectionH4.createIndex({ position: "2dsphere" });
+            common_1.Logger.debug(`${tag} RankFeeCashPayment spatial index created: ${resH4}`);
+            const collectionH5 = db.collection("CommuterCashCheckIn");
+            const resH5 = await collectionH5.createIndex({ position: "2dsphere" });
+            common_1.Logger.debug(`${tag} CommuterCashCheckIn spatial index created: ${resH5}`);
+            const collectionH6 = db.collection("RankFeeCashCheckIn");
+            const resH6 = await collectionH6.createIndex({ position: "2dsphere" });
+            common_1.Logger.debug(`${tag} RankFeeCashCheckIn spatial index created: ${resH6}`);
+            const collectionH7 = db.collection("VehicleTelemetry");
+            const resH7 = await collectionH7.createIndex({ position: "2dsphere" });
+            common_1.Logger.debug(`${tag} VehicleTelemetry spatial index created: ${resH7}`);
             const collectionG = db.collection("VehiclePhoto");
             const resG = await collectionG.createIndex({ position: "2dsphere" });
             common_1.Logger.debug(`${tag} VehiclePhoto spatial index created: ${resG}`);
@@ -71,6 +92,9 @@ let MongoIndexBuilder = class MongoIndexBuilder {
             const collection6 = db.collection("Association");
             const res6 = await collection6.createIndex({ countryId: 1, associationName: 1 }, { unique: true });
             common_1.Logger.debug(`${tag} Association country/associationName unique index created: ${res6}`);
+            const collection6a = db.collection("PaymentProvider");
+            const res6a = await collection6a.createIndex({ countryId: 1, paymentProviderName: 1 }, { unique: true });
+            common_1.Logger.debug(`${tag} PaymentProvider country/paymentProviderName unique index created: ${res6a}`);
             const collection7 = db.collection("Vehicle");
             const res7 = await collection7.createIndex({ associationId: 1, vehicleReg: 1 }, { unique: true });
             common_1.Logger.debug(`${tag} Vehicle association/vehicleReg unique index created: ${res7}`);
@@ -80,7 +104,7 @@ let MongoIndexBuilder = class MongoIndexBuilder {
             const collection9 = db.collection("User");
             const res9 = await collection9.createIndex({ associationId: 1, email: 1 }, { unique: true });
             common_1.Logger.debug(`${tag} User association/email unique index created: ${res9}`);
-            common_1.Logger.log(`${tag} 🌼 🌼 🌼 17 MongoDB Atlas indexes created successfully!  🌼\n\n`);
+            common_1.Logger.log(`${tag} 🌼 🌼 🌼 18 MongoDB Atlas indexes created successfully!  🌼\n\n`);
         }
         catch (error) {
             console.error(`${tag} Error creating indexes:`, error);

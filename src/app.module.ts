@@ -72,6 +72,7 @@ import { TicketModule } from './features/ticket/ticket.module';
 import { PayfastModule } from './features/payfast/payfast.module';
 import { UserPhotoSchema } from './data/models/UserPhoto';
 import { InternalModule } from './internal/internal.module';
+import { PaymentModule } from './features/payment/payment.module';
 
 @Module({
   imports: [
@@ -148,6 +149,7 @@ import { InternalModule } from './internal/internal.module';
     TicketModule,
     PayfastModule,
     InternalModule,
+    PaymentModule,
   ],
   controllers: [AppController, DispatchController, UserController],
   providers: [AppService, DispatchService, MessagingService, TimeSeriesService,

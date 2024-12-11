@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Position } from "./position";
 import { ApiProperty } from '@nestjs/swagger';
+import { PaymentProvider } from "./PaymentProvider";
 
 @Schema({
   timestamps: true,
@@ -61,11 +62,9 @@ export class CommuterProviderPayment {
 
   @Prop()
   @ApiProperty()
-  paymentProviderId: string;
+  paymentProvider: PaymentProvider;
 
-  @Prop()
-  @ApiProperty()
-  paymentProviderName: string;
+  
  
  
 }
