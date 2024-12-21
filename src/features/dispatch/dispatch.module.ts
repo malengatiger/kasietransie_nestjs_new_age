@@ -17,6 +17,7 @@ import { CommuterResponseSchema } from "src/data/models/CommuterResponse";
 import { UserGeofenceEventSchema } from "src/data/models/UserGeofenceEvent";
 import { AssociationTokenSchema } from "src/data/models/AssociationToken";
 import { FirebaseAdmin } from "src/services/firebase_util";
+import { TripSchema } from "src/data/models/Trip";
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { FirebaseAdmin } from "src/services/firebase_util";
       { name: "VehicleHeartbeat", schema: VehicleHeartbeatSchema },
       { name: "AppError", schema: AppErrorSchema },
       { name: "KasieError", schema: KasieErrorSchema },
+      { name: "Trip", schema: TripSchema },
 
       { name: "DispatchRecord", schema: DispatchRecordSchema },
 

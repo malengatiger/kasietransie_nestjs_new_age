@@ -1,5 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import mongoose from 'mongoose';
+import mongoose, { UpdateResult } from 'mongoose';
 import { Commuter } from 'src/data/models/Commuter';
 import { CommuterResponse } from 'src/data/models/CommuterResponse';
 import { CommuterRequest } from 'src/data/models/CommuterRequest';
@@ -25,6 +25,7 @@ export declare class CommuterService {
     createCommuter(commuter: Commuter): Promise<Commuter>;
     createCommuterQRCode(commuter: Commuter): Promise<void>;
     addCommuter(commuter: Commuter): Promise<Commuter>;
+    updateCommuter(commuter: Commuter): Promise<UpdateResult>;
     addCommuterRequest(commuterRequest: CommuterRequest): Promise<CommuterRequest>;
     getCommuterRequests(associationId: string, startDate: string): Promise<CommuterRequest[]>;
     addCommuterResponse(commuterResponse: CommuterResponse): Promise<CommuterResponse>;

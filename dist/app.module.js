@@ -80,6 +80,12 @@ const payfast_module_1 = require("./features/payfast/payfast.module");
 const UserPhoto_1 = require("./data/models/UserPhoto");
 const internal_module_1 = require("./internal/internal.module");
 const payment_module_1 = require("./features/payment/payment.module");
+const Trip_1 = require("./data/models/Trip");
+const commuter_service_1 = require("./features/commuter/commuter.service");
+const commuter_controller_1 = require("./features/commuter/commuter.controller");
+const CommuterResponse_1 = require("./data/models/CommuterResponse");
+const RouteLandmark_1 = require("./data/models/RouteLandmark");
+const Route_1 = require("./data/models/Route");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
@@ -134,6 +140,11 @@ exports.AppModule = AppModule = __decorate([
                 { name: "AmbassadorCheckIn", schema: AmbassadorCheckIn_1.AmbassadorCheckInSchema },
                 { name: "QueryElapsedTime", schema: QueryElapsedTime_1.QueryElapsedTimeSchema },
                 { name: "UserPhoto", schema: UserPhoto_1.UserPhotoSchema },
+                { name: "Trip", schema: Trip_1.TripSchema },
+                { name: "CommuterResponse", schema: CommuterResponse_1.CommuterResponseSchema },
+                { name: "RouteLandmark", schema: RouteLandmark_1.RouteLandmarkSchema },
+                { name: "Route", schema: Route_1.RouteSchema },
+                { name: "Trip", schema: Trip_1.TripSchema },
                 { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCount_1.AmbassadorPassengerCountSchema },
             ]),
             dispatch_module_1.DispatchModule,
@@ -158,13 +169,14 @@ exports.AppModule = AppModule = __decorate([
             ticket_module_1.TicketModule,
             payfast_module_1.PayfastModule,
             internal_module_1.InternalModule,
+            commuter_module_1.CommuterModule,
             payment_module_1.PaymentModule,
         ],
-        controllers: [app_controller_1.AppController, dispatch_controller_1.DispatchController, user_controller_1.UserController],
+        controllers: [app_controller_1.AppController, dispatch_controller_1.DispatchController, user_controller_1.UserController, commuter_controller_1.CommuterController],
         providers: [app_service_1.AppService, dispatch_service_1.DispatchService, fcm_service_1.MessagingService, time_series_service_1.TimeSeriesService,
             user_service_1.UserService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService, errors_interceptor_1.KasieErrorHandler,
             ambassador_service_1.AmbassadorService, association_service_1.AssociationService, location_request_service_1.LocationRequestService,
-            zipper_1.FileArchiverService, firebase_util_1.FirebaseAdmin,
+            zipper_1.FileArchiverService, firebase_util_1.FirebaseAdmin, commuter_service_1.CommuterService,
         ],
     })
 ], AppModule);

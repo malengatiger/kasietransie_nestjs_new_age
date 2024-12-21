@@ -14,7 +14,8 @@ import { AmbassadorPassengerCount } from "src/data/models/AmbassadorPassengerCou
 import { CommuterRequest } from "src/data/models/CommuterRequest";
 import { VehicleHeartbeat } from "src/data/models/VehicleHeartbeat";
 import { InjectModel } from "@nestjs/mongoose";
-import mongoose from "mongoose";
+import mongoose, { UpdateResult } from "mongoose";
+import { Trip } from "src/data/models/Trip";
 
 const mm = "DispatchService";
 
@@ -34,8 +35,23 @@ export class DispatchService {
     @InjectModel(AmbassadorPassengerCount.name)
     private ambassadorPassengerCountModel: mongoose.Model<AmbassadorPassengerCount>,
     @InjectModel(CommuterRequest.name)
-    private commuterRequestModel: mongoose.Model<CommuterRequest>
+    private commuterRequestModel: mongoose.Model<CommuterRequest>,
+
+    @InjectModel(Trip.name)
+    private tripModel: mongoose.Model<Trip>
+   
   ) {}
+
+  public async addTrip(trip: Trip) : Promise<Trip>{
+    const res = await this.tripModel.create(trip);
+    Logger.debug(`${mm} added Trip to Atlas ${JSON.stringify(res, null, 2)}`);
+    return res;
+  }
+  public async updateTrip(trip: Trip) : Promise<UpdateResult>{
+    const res = await this.tripModel.updateOne({tripId: trip.tripId}, trip);
+    Logger.debug(`${mm} updateTrip ${JSON.stringify(res, null, 2)}`);
+    return res;
+  }
   public async getAmbassadorPassengerCounts(
     userId: string,
     startDate: string,

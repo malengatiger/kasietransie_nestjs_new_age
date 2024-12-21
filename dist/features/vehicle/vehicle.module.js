@@ -59,6 +59,7 @@ const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 const UserPhoto_1 = require("../../data/models/UserPhoto");
 const heartbeat_service_1 = require("../heartbeat/heartbeat.service");
 const VehicleTelemetry_1 = require("../../data/models/VehicleTelemetry");
+const Trip_1 = require("../../data/models/Trip");
 let VehicleModule = class VehicleModule {
 };
 exports.VehicleModule = VehicleModule;
@@ -106,6 +107,7 @@ exports.VehicleModule = VehicleModule = __decorate([
                 { name: "PassengerTimeSeries", schema: PassengerTimeSeries_1.PassengerTimeSeriesSchema },
                 { name: "City", schema: City_1.CitySchema },
                 { name: "City", schema: City_1.CitySchema },
+                { name: "Trip", schema: Trip_1.TripSchema },
                 { name: "UserPhoto", schema: UserPhoto_1.UserPhotoSchema },
             ]),
         ],

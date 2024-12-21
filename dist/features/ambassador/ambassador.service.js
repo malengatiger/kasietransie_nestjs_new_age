@@ -21,10 +21,12 @@ const AmbassadorCheckIn_1 = require("../../data/models/AmbassadorCheckIn");
 const Vehicle_1 = require("../../data/models/Vehicle");
 const fcm_service_1 = require("../fcm/fcm.service");
 const time_series_service_1 = require("../time_series/time_series.service");
+const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 let AmbassadorService = class AmbassadorService {
-    constructor(messagingService, timeSeriesService, ambassadorPassengerCountModel, ambassadorCheckInModel, vehicleModel) {
+    constructor(messagingService, timeSeriesService, errorHandler, ambassadorPassengerCountModel, ambassadorCheckInModel, vehicleModel) {
         this.messagingService = messagingService;
         this.timeSeriesService = timeSeriesService;
+        this.errorHandler = errorHandler;
         this.ambassadorPassengerCountModel = ambassadorPassengerCountModel;
         this.ambassadorCheckInModel = ambassadorCheckInModel;
         this.vehicleModel = vehicleModel;
@@ -64,10 +66,17 @@ let AmbassadorService = class AmbassadorService {
         return res;
     }
     async addAmbassadorPassengerCount(count) {
-        const res = await this.ambassadorPassengerCountModel.create(count);
-        await this.timeSeriesService.addPassengerTimeSeries(count.associationId, count.vehicleId, count.vehicleReg, count.routeId, count.passengersIn);
-        await this.messagingService.sendPassengerCountMessage(res);
-        return res;
+        common_1.Logger.debug(`AmbassadorService adding count: ${JSON.stringify(count)}`);
+        try {
+            const res = await this.ambassadorPassengerCountModel.create(count);
+            await this.timeSeriesService.addPassengerTimeSeries(count.associationId, count.vehicleId, count.vehicleReg, count.routeId, count.passengersIn);
+            await this.messagingService.sendPassengerCountMessage(res);
+            return res;
+        }
+        catch (e) {
+            this.errorHandler.handleError(e, count.associationId, count.associationId);
+            throw new common_1.HttpException(`Error adding Passenger Counts: ${e}`, common_1.HttpStatus.BAD_REQUEST);
+        }
     }
     async generateRoutePassengerCounts() {
         return [];
@@ -100,10 +109,11 @@ let AmbassadorService = class AmbassadorService {
 exports.AmbassadorService = AmbassadorService;
 exports.AmbassadorService = AmbassadorService = __decorate([
     (0, common_1.Injectable)(),
-    __param(2, (0, mongoose_1.InjectModel)(AmbassadorPassengerCount_1.AmbassadorPassengerCount.name)),
-    __param(3, (0, mongoose_1.InjectModel)(AmbassadorCheckIn_1.AmbassadorCheckIn.name)),
-    __param(4, (0, mongoose_1.InjectModel)(Vehicle_1.Vehicle.name)),
+    __param(3, (0, mongoose_1.InjectModel)(AmbassadorPassengerCount_1.AmbassadorPassengerCount.name)),
+    __param(4, (0, mongoose_1.InjectModel)(AmbassadorCheckIn_1.AmbassadorCheckIn.name)),
+    __param(5, (0, mongoose_1.InjectModel)(Vehicle_1.Vehicle.name)),
     __metadata("design:paramtypes", [fcm_service_1.MessagingService,
-        time_series_service_1.TimeSeriesService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        time_series_service_1.TimeSeriesService,
+        errors_interceptor_1.KasieErrorHandler, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], AmbassadorService);
 //# sourceMappingURL=ambassador.service.js.map

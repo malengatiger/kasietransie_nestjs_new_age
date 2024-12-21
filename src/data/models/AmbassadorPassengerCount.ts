@@ -7,12 +7,10 @@ import { ApiProperty } from "@nestjs/swagger";
   collection: "AmbassadorPassengerCount",
 })
 export class AmbassadorPassengerCount {
-  @Prop()
-  @ApiProperty()
+ 
   _partitionKey: string;
-  @Prop()
-  @ApiProperty()
   _id: string;
+
   @Prop()
   @ApiProperty()
   associationId: string;
@@ -28,6 +26,9 @@ export class AmbassadorPassengerCount {
   @Prop()
   @ApiProperty()
   userId: string;
+  @Prop()
+  @ApiProperty()
+  tripId: string;
   @Prop()
   @ApiProperty()
   userName: string;

@@ -45,7 +45,7 @@ let VehicleController = VehicleController_1 = class VehicleController {
         this.logger = new common_1.Logger(VehicleController_1.name);
     }
     async addVehicle(vehicle) {
-        common_1.Logger.log(`${mm} addVehicle; check bucketFileName: ${JSON.stringify(vehicle, null, 2)}`);
+        common_1.Logger.log(`${mm} addVehicle; check bucketFileName: ${vehicle.bucketFileName}`);
         return await this.carService.addVehicle(vehicle);
     }
     async updateVehicle(vehicle) {

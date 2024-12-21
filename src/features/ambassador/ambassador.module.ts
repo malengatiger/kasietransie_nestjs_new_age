@@ -15,6 +15,7 @@ import { AssociationTokenSchema } from "src/data/models/AssociationToken";
 import { FirebaseAdmin } from "src/services/firebase_util";
 import { AmbassadorCheckInSchema } from "src/data/models/AmbassadorCheckIn";
 import { VehicleSchema } from "src/data/models/Vehicle";
+import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 
 @Module({
   imports: [
@@ -43,7 +44,7 @@ import { VehicleSchema } from "src/data/models/Vehicle";
     AmbassadorService,
     MessagingService,
     TimeSeriesService,
-    //
+    KasieErrorHandler,
     FileArchiverService,
   ],
 })

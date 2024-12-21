@@ -5,6 +5,8 @@ export declare class VehicleArrival {
     vehicleArrivalId: string;
     landmarkId: string;
     landmarkName: string;
+    routeId: string;
+    routeName: string;
     position: Position;
     created: string;
     vehicleId: string;

@@ -19,6 +19,14 @@ export class VehicleArrival {
   @Prop()
   @ApiProperty()
   landmarkName: string;
+
+  @Prop()
+  @ApiProperty()
+  routeId: string;
+  @Prop()
+  @ApiProperty()
+  routeName: string;
+
   @Prop()
   @ApiProperty()
   position: Position;

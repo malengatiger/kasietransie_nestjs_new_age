@@ -54,33 +54,8 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)(),
     (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", String)
-], CommuterRequest.prototype, "routeLandmarkId", void 0);
-__decorate([
-    (0, mongoose_1.Prop)(),
-    (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", String)
-], CommuterRequest.prototype, "routeLandmarkName", void 0);
-__decorate([
-    (0, mongoose_1.Prop)(),
-    (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", Number)
-], CommuterRequest.prototype, "routePointIndex", void 0);
-__decorate([
-    (0, mongoose_1.Prop)(),
-    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Number)
 ], CommuterRequest.prototype, "numberOfPassengers", void 0);
-__decorate([
-    (0, mongoose_1.Prop)(),
-    (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", Number)
-], CommuterRequest.prototype, "distanceToRouteLandmarkInMetres", void 0);
-__decorate([
-    (0, mongoose_1.Prop)(),
-    (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", Number)
-], CommuterRequest.prototype, "distanceToRoutePointInMetres", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
     (0, swagger_1.ApiProperty)(),
@@ -92,25 +67,10 @@ __decorate([
     __metadata("design:type", Boolean)
 ], CommuterRequest.prototype, "scanned", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
-], CommuterRequest.prototype, "destinationCityId", void 0);
-__decorate([
-    (0, mongoose_1.Prop)(),
-    (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", String)
-], CommuterRequest.prototype, "destinationCityName", void 0);
-__decorate([
-    (0, mongoose_1.Prop)(),
-    (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", String)
-], CommuterRequest.prototype, "originCityId", void 0);
-__decorate([
-    (0, mongoose_1.Prop)(),
-    (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", String)
-], CommuterRequest.prototype, "originCityName", void 0);
+], CommuterRequest.prototype, "fcmToken", void 0);
 exports.CommuterRequest = CommuterRequest = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

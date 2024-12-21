@@ -54,6 +54,7 @@ let HeartbeatService = class HeartbeatService {
     async addVehicleTelemetry(telemetry) {
         const m = await this.vehicleTelemetryModel.create(telemetry);
         await this.messagingService.sendTelemetryMessage(m);
+        common_1.Logger.debug(`${mm} Vehicle telemetry added to db, and sent to FCM`);
         return m;
     }
     async generateRouteHeartbeats(request) {

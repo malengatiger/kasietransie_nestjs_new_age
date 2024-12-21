@@ -31,42 +31,21 @@ export class CommuterRequest {
   @Prop()
   @ApiProperty()
   routeName: string;
-  @Prop()
-  @ApiProperty()
-  routeLandmarkId: string;
-  @Prop()
-  @ApiProperty()
-  routeLandmarkName: string;
-  @Prop()
-  @ApiProperty()
-  routePointIndex: number;
+  
   @Prop()
   @ApiProperty()
   numberOfPassengers: number;
-  @Prop()
-  @ApiProperty()
-  distanceToRouteLandmarkInMetres: number;
-  @Prop()
-  @ApiProperty()
-  distanceToRoutePointInMetres: number;
+  
   @Prop()
   @ApiProperty()
   associationId: string;
   @Prop()
   @ApiProperty()
   scanned: boolean;
-  @Prop()
+ 
+  @Prop({required: true})
   @ApiProperty()
-  destinationCityId: string;
-  @Prop()
-  @ApiProperty()
-  destinationCityName: string;
-  @Prop()
-  @ApiProperty()
-  originCityId: string;
-  @Prop()
-  @ApiProperty()
-  originCityName: string;
+  fcmToken: string;
 }
 
 export const CommuterRequestSchema =

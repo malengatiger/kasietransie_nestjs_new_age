@@ -31,7 +31,9 @@ export class CommuterCashPayment {
   @Prop()
   @ApiProperty()
   routeId: string;
-  
+  @Prop()
+  @ApiProperty()
+  tripId: string;
   @Prop()
   @ApiProperty()
   userId: string;

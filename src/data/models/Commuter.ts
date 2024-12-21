@@ -42,6 +42,9 @@ export class Commuter {
   @Prop()
   @ApiProperty()
   gender: string;
+  @Prop()
+  @ApiProperty()
+  fcmToken: string;
 }
 
 export const CommuterSchema = SchemaFactory.createForClass(Commuter);

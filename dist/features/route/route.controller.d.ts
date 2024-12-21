@@ -42,6 +42,14 @@ export declare class RouteController {
         longitude: number;
         radiusInKM: number;
     }): Promise<RouteLandmark[]>;
+    getRouteById(query: {
+        routeId: string;
+    }): Promise<Route>;
+    findRoutesByLocation(query: {
+        latitude: number;
+        longitude: number;
+        radiusInKM: number;
+    }): Promise<Route[]>;
     findRoutePointsByLocation(query: {
         latitude: number;
         longitude: number;
@@ -69,7 +77,7 @@ export declare class RouteController {
     }, res: Response): Promise<void>;
     refreshRoute(routeId: string, res: Response): Promise<void>;
     getAssociationRouteZippedFile(associationId: string, res: Response): Promise<void>;
-    getRoutePointLandmarks(routeId: string): Promise<RouteLandmark[]>;
+    getRouteLandmarks(routeId: string): Promise<RouteLandmark[]>;
     getRoutePoints(routeId: string): Promise<RoutePoint[]>;
     private sendFile;
 }

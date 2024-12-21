@@ -20,16 +20,6 @@ __decorate([
     (0, mongoose_1.Prop)(),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
-], AmbassadorPassengerCount.prototype, "_partitionKey", void 0);
-__decorate([
-    (0, mongoose_1.Prop)(),
-    (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", String)
-], AmbassadorPassengerCount.prototype, "_id", void 0);
-__decorate([
-    (0, mongoose_1.Prop)(),
-    (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", String)
 ], AmbassadorPassengerCount.prototype, "associationId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
@@ -51,6 +41,11 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], AmbassadorPassengerCount.prototype, "userId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], AmbassadorPassengerCount.prototype, "tripId", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
     (0, swagger_1.ApiProperty)(),

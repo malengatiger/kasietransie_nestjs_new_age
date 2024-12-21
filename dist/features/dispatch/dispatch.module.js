@@ -25,6 +25,7 @@ const CommuterRequest_1 = require("../../data/models/CommuterRequest");
 const CommuterResponse_1 = require("../../data/models/CommuterResponse");
 const UserGeofenceEvent_1 = require("../../data/models/UserGeofenceEvent");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
+const Trip_1 = require("../../data/models/Trip");
 let DispatchModule = class DispatchModule {
 };
 exports.DispatchModule = DispatchModule;
@@ -42,6 +43,7 @@ exports.DispatchModule = DispatchModule = __decorate([
                 { name: "VehicleHeartbeat", schema: VehicleHeartbeat_1.VehicleHeartbeatSchema },
                 { name: "AppError", schema: AppError_1.AppErrorSchema },
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
+                { name: "Trip", schema: Trip_1.TripSchema },
                 { name: "DispatchRecord", schema: DispatchRecord_1.DispatchRecordSchema },
                 {
                     name: "AmbassadorPassengerCount",

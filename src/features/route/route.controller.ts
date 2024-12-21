@@ -103,10 +103,10 @@ export class RouteController {
   }
   @Get("deleteCopiedRoutes")
   async deleteCopiedRoutes(
-    @Query() query: { associationId: string; }
+    @Query() query: { associationId: string }
   ): Promise<string> {
     const result = await this.routeService.deleteCopiedRoutes(
-      query.associationId,
+      query.associationId
     );
     return result;
   }
@@ -142,7 +142,29 @@ export class RouteController {
       query.radiusInKM
     );
   }
+  @Get("getRouteById")
+  public async getRouteById(
+    @Query() query: { routeId: string; }
+  ): Promise<Route> {
+    return await this.routeService.getRoute(query.routeId);
+    
+  }
 
+
+  @Get("findRoutesByLocation")
+  public async findRoutesByLocation(
+    @Query() query: { latitude: number; longitude: number; radiusInKM: number }
+  ): Promise<Route[]> {
+    Logger.debug(
+      `${mm} findRoutesByLocation: latitude: ${query.latitude} longitude: ${query.longitude} max: ${query.radiusInKM} limit: 5`
+    );
+
+    return await this.routeService.findRoutesByLocation(
+      query.latitude,
+      query.longitude,
+      query.radiusInKM
+    );
+  }
   @Get("findRoutePointsByLocation")
   public async findRoutePointsByLocation(
     @Query() query: { latitude: number; longitude: number; radiusInKM: number }
@@ -266,7 +288,7 @@ export class RouteController {
     }
   }
   @Get("getRouteLandmarks")
-  public async getRoutePointLandmarks(
+  public async getRouteLandmarks(
     @Query("routeId") routeId: string
   ): Promise<RouteLandmark[]> {
     try {

@@ -32,7 +32,9 @@ export declare class MessagingService {
     sendPassengerCountMessage(count: AmbassadorPassengerCount): Promise<void>;
     sendRouteUpdateMessage(req: RouteUpdateRequest): Promise<void>;
     sendCommuterRequestMessage(req: CommuterRequest): Promise<void>;
+    sendInitialCommuterRequestResponseMessage(response: CommuterResponse): Promise<void>;
     sendCommuterResponseMessage(response: CommuterResponse): Promise<void>;
     sendAssociationRegisteredMessage(assoc: Association): Promise<void>;
-    private send;
+    private sendToTopic;
+    private sendToDevice;
 }

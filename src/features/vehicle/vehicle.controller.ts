@@ -60,7 +60,7 @@ export class VehicleController {
   @Post("addVehicle")
   async addVehicle(@Body() vehicle: Vehicle): Promise<Vehicle> {
     Logger.log(
-      `${mm} addVehicle; check bucketFileName: ${JSON.stringify(vehicle, null, 2)}`
+      `${mm} addVehicle; check bucketFileName: ${vehicle.bucketFileName}`
     );
     return await this.carService.addVehicle(vehicle);
   }

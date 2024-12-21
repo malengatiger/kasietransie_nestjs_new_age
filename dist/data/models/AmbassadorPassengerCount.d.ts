@@ -7,6 +7,7 @@ export declare class AmbassadorPassengerCount {
     vehicleReg: string;
     created: string;
     userId: string;
+    tripId: string;
     userName: string;
     routeId: string;
     routeName: string;

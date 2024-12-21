@@ -81,6 +81,13 @@ let RouteController = RouteController_1 = class RouteController {
         common_1.Logger.debug(`${mm} findRouteLandmarksByLocation: latitude: ${query.latitude} longitude: ${query.longitude} max: ${query.radiusInKM} limit: 5`);
         return await this.routeService.findRouteLandmarksByLocation(query.latitude, query.longitude, query.radiusInKM);
     }
+    async getRouteById(query) {
+        return await this.routeService.getRoute(query.routeId);
+    }
+    async findRoutesByLocation(query) {
+        common_1.Logger.debug(`${mm} findRoutesByLocation: latitude: ${query.latitude} longitude: ${query.longitude} max: ${query.radiusInKM} limit: 5`);
+        return await this.routeService.findRoutesByLocation(query.latitude, query.longitude, query.radiusInKM);
+    }
     async findRoutePointsByLocation(query) {
         common_1.Logger.debug(`${mm} findRoutePointsByLocation: latitude: ${query.latitude} longitude: ${query.longitude} max: ${query.radiusInKM} limit: 5`);
         return await this.routeService.findRoutePointsByLocation(query.latitude, query.longitude, query.radiusInKM);
@@ -152,7 +159,7 @@ let RouteController = RouteController_1 = class RouteController {
             res.status(500).send("Error downloading file: " + error.message);
         }
     }
-    async getRoutePointLandmarks(routeId) {
+    async getRouteLandmarks(routeId) {
         try {
             const list = await this.routeService.getRouteLandmarks(routeId);
             return list;
@@ -279,6 +286,20 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "findRouteLandmarksByLocation", null);
 __decorate([
+    (0, common_1.Get)("getRouteById"),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], RouteController.prototype, "getRouteById", null);
+__decorate([
+    (0, common_1.Get)("findRoutesByLocation"),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], RouteController.prototype, "findRoutesByLocation", null);
+__decorate([
     (0, common_1.Get)("findRoutePointsByLocation"),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
@@ -364,7 +385,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], RouteController.prototype, "getRoutePointLandmarks", null);
+], RouteController.prototype, "getRouteLandmarks", null);
 __decorate([
     (0, common_1.Get)("getRoutePoints"),
     __param(0, (0, common_1.Query)("routeId")),

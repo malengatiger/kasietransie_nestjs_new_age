@@ -12,6 +12,10 @@ export class CommuterResponse {
   @Prop()
   @ApiProperty()
   commuterRequestId: string;
+
+  @Prop()
+  @ApiProperty()
+  commuterId: string;
   @Prop()
   @ApiProperty()
   responseDate: string;
@@ -39,6 +43,9 @@ export class CommuterResponse {
   @Prop()
   @ApiProperty()
   vehicleDispatched: boolean;
+  @Prop()
+  @ApiProperty()
+  fcmToken: string;
 }
 
 export const CommuterResponseSchema =

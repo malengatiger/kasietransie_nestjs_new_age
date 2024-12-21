@@ -50,6 +50,7 @@ import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 import { UserPhotoSchema } from "src/data/models/UserPhoto";
 import { HeartbeatService } from "../heartbeat/heartbeat.service";
 import { VehicleTelemetrySchema } from "src/data/models/VehicleTelemetry";
+import { TripSchema } from "src/data/models/Trip";
 
 @Module({
   imports: [
@@ -97,6 +98,8 @@ import { VehicleTelemetrySchema } from "src/data/models/VehicleTelemetry";
       { name: "PassengerTimeSeries", schema: PassengerTimeSeriesSchema },
       { name: "City", schema: CitySchema },
       { name: "City", schema: CitySchema },
+            { name: "Trip", schema: TripSchema },
+      
       { name: "UserPhoto", schema: UserPhotoSchema },
 
 

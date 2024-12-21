@@ -19,9 +19,16 @@ const DispatchRecord_1 = require("../../data/models/DispatchRecord");
 const VehicleDeparture_1 = require("../../data/models/VehicleDeparture");
 const VehicleArrival_1 = require("../../data/models/VehicleArrival");
 const VehicleHeartbeat_1 = require("../../data/models/VehicleHeartbeat");
+const Trip_1 = require("../../data/models/Trip");
 let DispatchController = class DispatchController {
     constructor(dispatchService) {
         this.dispatchService = dispatchService;
+    }
+    async addTrip(trip) {
+        return this.dispatchService.addTrip(trip);
+    }
+    async updateTrip(trip) {
+        return this.dispatchService.updateTrip(trip);
     }
     async addDispatchRecord(dispatchRecord) {
         return this.dispatchService.addDispatchRecord(dispatchRecord);
@@ -61,6 +68,20 @@ let DispatchController = class DispatchController {
     }
 };
 exports.DispatchController = DispatchController;
+__decorate([
+    (0, common_1.Post)("addTrip"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Trip_1.Trip]),
+    __metadata("design:returntype", Promise)
+], DispatchController.prototype, "addTrip", null);
+__decorate([
+    (0, common_1.Post)("updateTrip"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Trip_1.Trip]),
+    __metadata("design:returntype", Promise)
+], DispatchController.prototype, "updateTrip", null);
 __decorate([
     (0, common_1.Post)("addDispatchRecord"),
     __param(0, (0, common_1.Body)()),

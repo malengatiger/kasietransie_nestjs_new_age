@@ -5,6 +5,8 @@ export declare class VehicleDeparture {
     vehicleDepartureId: string;
     landmarkId: string;
     landmarkName: string;
+    routeId: string;
+    routeName: string;
     ownerId: string;
     ownerName: string;
     vehicleId: string;

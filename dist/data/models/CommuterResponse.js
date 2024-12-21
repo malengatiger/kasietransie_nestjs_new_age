@@ -29,6 +29,11 @@ __decorate([
     (0, mongoose_1.Prop)(),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
+], CommuterResponse.prototype, "commuterId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
 ], CommuterResponse.prototype, "responseDate", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),
@@ -70,6 +75,11 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Boolean)
 ], CommuterResponse.prototype, "vehicleDispatched", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], CommuterResponse.prototype, "fcmToken", void 0);
 exports.CommuterResponse = CommuterResponse = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

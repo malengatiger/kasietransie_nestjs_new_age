@@ -12,6 +12,7 @@ export declare class Commuter {
     countryId: string;
     password: string;
     gender: string;
+    fcmToken: string;
 }
 export declare const CommuterSchema: import("mongoose").Schema<Commuter, import("mongoose").Model<Commuter, any, any, any, import("mongoose").Document<unknown, any, Commuter> & Commuter & Required<{
     _id: string;

@@ -48,7 +48,7 @@ export class MessagingService {
 
   async sendAppErrorMessage(appError: AppError) {
     const fmtDate = MyUtils.formatISOStringDate(appError.created, null);
-    await this.send(
+    await this.sendToTopic(
       `${Constants.appError}`,
       `Kasie Mobile App Error`,
       `${appError.errorMessage} at ${fmtDate}`,
@@ -61,7 +61,7 @@ export class MessagingService {
 
   async sendKasieErrorMessage(kasieError: KasieError) {
     const fmtDate = MyUtils.formatISOStringDate(kasieError.date, null);
-    await this.send(
+    await this.sendToTopic(
       `${Constants.kasieError}`,
       `Kasie Server Error`,
       `${kasieError.message} at: ${fmtDate}`,
@@ -74,7 +74,7 @@ export class MessagingService {
 
   async sendLocationRequestMessage(locationRequest: LocationRequest) {
     const fmtDate = MyUtils.formatISOStringDate(locationRequest.created, null);
-    await this.send(
+    await this.sendToTopic(
       `${Constants.locationRequest}${locationRequest.associationId}`,
       `Vehicle Location Request`,
       `Requested at ${fmtDate}`,
@@ -88,7 +88,7 @@ export class MessagingService {
   //http://192.168.86.242:8080/api/v1/getAssociationCounts?associationId=2f3faebd-6159-4b03-9857-9dad6d9a82ac&startDate=2023-09-14T06:52:32.929Z
   async sendLocationResponseMessage(locationResponse: LocationResponse) {
     const fmtDate = MyUtils.formatISOStringDate(locationResponse.created, null);
-    await this.send(
+    await this.sendToTopic(
       `${Constants.locationResponse}${locationResponse.associationId}`,
       `Vehicle Location Response`,
       `Responded at ${fmtDate}`,
@@ -101,7 +101,7 @@ export class MessagingService {
 
   async sendVehicleArrivalMessage(arrival: VehicleArrival) {
     const fmtDate = MyUtils.formatISOStringDate(arrival.created, null);
-    await this.send(
+    await this.sendToTopic(
       `${Constants.vehicleArrival}${arrival.associationId}`,
       `${arrival.vehicleReg},`,
       `Arrived at ${fmtDate}`,
@@ -113,7 +113,7 @@ export class MessagingService {
   }
   async sendVehicleDepartureMessage(departure: VehicleDeparture) {
     const fmtDate = MyUtils.formatISOStringDate(departure.created, null);
-    await this.send(
+    await this.sendToTopic(
       `${Constants.vehicleDeparture}${departure.associationId}`,
       `${departure.vehicleReg},`,
       `Departed at ${fmtDate}`,
@@ -127,7 +127,7 @@ export class MessagingService {
   async sendDispatchMessage(dispatch: DispatchRecord) {
     const fmtDate = MyUtils.formatISOStringDate(dispatch.created, null);
 
-    await this.send(
+    await this.sendToTopic(
       `${Constants.dispatchRecord}${dispatch.associationId}`,
       `${dispatch.vehicleReg},`,
       `Dispatched at ${fmtDate}`,
@@ -141,7 +141,7 @@ export class MessagingService {
   async sendHeartbeatMessage(heartbeat: VehicleHeartbeat) {
     const fmtDate = MyUtils.formatISOStringDate(heartbeat.created, null);
 
-    await this.send(
+    await this.sendToTopic(
       `${Constants.heartbeat}${heartbeat.associationId}`,
       `${heartbeat.vehicleReg},`,
       `Heartbeat at ${fmtDate}`,
@@ -154,7 +154,7 @@ export class MessagingService {
   async sendTelemetryMessage(telemetry: VehicleTelemetry) {
     const fmtDate = MyUtils.formatISOStringDate(telemetry.created, null);
 
-    await this.send(
+    await this.sendToTopic(
       `${Constants.heartbeat}${telemetry.associationId}`,
       `${telemetry.vehicleReg},`,
       `Telemetry at ${fmtDate}`,
@@ -168,7 +168,7 @@ export class MessagingService {
   async sendPassengerCountMessage(count: AmbassadorPassengerCount) {
     const fmtDate = MyUtils.formatISOStringDate(count.created, null);
 
-    await this.send(
+    await this.sendToTopic(
       `${Constants.passengerCount}${count.associationId}`,
       `${count.vehicleReg},`,
       `PassengerCount on ${fmtDate}`,
@@ -181,7 +181,7 @@ export class MessagingService {
 
   async sendRouteUpdateMessage(req: RouteUpdateRequest) {
     const fmtDate = MyUtils.formatISOStringDate(Date.now().toString(), null);
-    await this.send(
+    await this.sendToTopic(
       `${Constants.routeUpdateRequest}${req.associationId}`,
       `${req.routeName},`,
       `Route Updated on ${Date.now().toString()}`,
@@ -193,7 +193,7 @@ export class MessagingService {
   }
   async sendCommuterRequestMessage(req: CommuterRequest) {
     const fmtDate = MyUtils.formatISOStringDate(Date.now().toString(), null);
-    await this.send(
+    await this.sendToTopic(
       `${Constants.commuterRequest}${req.associationId}`,
       `${req.routeName},`,
       `Commuter Request on ${Date.now().toString()}`,
@@ -203,9 +203,20 @@ export class MessagingService {
     );
     
   }
+  async sendInitialCommuterRequestResponseMessage(response: CommuterResponse) {
+    
+    await this.sendToDevice(
+      `${response.fcmToken}`,
+      `Acknowledgement of your Taxi Request,`,
+      `Commuter Request on route: ${response.routeName}`,
+      Constants.commuterResponse,
+      JSON.stringify(response, null, 2)
+    );
+    
+  }
   async sendCommuterResponseMessage(response: CommuterResponse) {
     const fmtDate = MyUtils.formatISOStringDate(Date.now().toString(), null);
-    await this.send(
+    await this.sendToTopic(
       `${Constants.commuterResponse}${response.associationId}`,
       `${response.routeName},`,
       `Commuter Response on ${Date.now().toString()}`,
@@ -216,7 +227,7 @@ export class MessagingService {
   }
   async sendAssociationRegisteredMessage(assoc: Association) {
     const fmtDate = MyUtils.formatISOStringDate(Date.now().toString(), null);
-    await this.send(
+    await this.sendToTopic(
       `${Constants.association}${assoc.associationId}`,
       `${assoc.associationName},`,
       ` Registered on ${fmtDate}`,
@@ -225,7 +236,7 @@ export class MessagingService {
       assoc.associationId,
     );
   }
-  private async send(
+  private async sendToTopic(
     topic: string,
     title: string,
     body: string,
@@ -285,4 +296,40 @@ export class MessagingService {
       await this.kasieModel.create(err);
     }
   }
+  private async sendToDevice(
+    fcmToken: string,
+    title: string,
+    body: string,
+    type: string,
+    data: string,
+  ) {
+    const message: admin.messaging.Message = {
+      token: fcmToken,
+      data: {
+        type: type,
+        data: data,
+      },
+      notification: {
+        title: title,
+        body: body,
+      },
+
+    };
+
+    try {
+      await admin.messaging().send(message);
+      Logger.debug(
+        `${mm} 🅿️ 🅿️ 🅿️ Successfully sent FCM message to single device `
+        + `🚺 🚺 🚺 message type: ${type} 🚺 title: ${JSON.stringify(title)} \n ${fcmToken}`,
+      );
+    } catch (error) {
+      Logger.error('Error sending message:', error);
+      const err = new KasieError(
+        `${type} Message Send Failed: ${error}`,
+        HttpStatus.BAD_REQUEST,
+      );
+      await this.kasieModel.create(err);
+    }
+  }
+  
 }

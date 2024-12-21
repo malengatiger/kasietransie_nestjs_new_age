@@ -69,6 +69,7 @@ export class HeartbeatService {
   ): Promise<VehicleTelemetry> {
     const m = await this.vehicleTelemetryModel.create(telemetry);
     await this.messagingService.sendTelemetryMessage(m);
+    Logger.debug(`${mm} Vehicle telemetry added to db, and sent to FCM`)
     return m;
   }
   public async generateRouteHeartbeats(

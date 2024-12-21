@@ -73,6 +73,12 @@ import { PayfastModule } from './features/payfast/payfast.module';
 import { UserPhotoSchema } from './data/models/UserPhoto';
 import { InternalModule } from './internal/internal.module';
 import { PaymentModule } from './features/payment/payment.module';
+import { TripSchema } from './data/models/Trip';
+import { CommuterService } from './features/commuter/commuter.service';
+import { CommuterController } from './features/commuter/commuter.controller';
+import { CommuterResponseSchema } from './data/models/CommuterResponse';
+import { RouteLandmarkSchema } from './data/models/RouteLandmark';
+import { RouteSchema } from './data/models/Route';
 
 @Module({
   imports: [
@@ -120,7 +126,11 @@ import { PaymentModule } from './features/payment/payment.module';
       { name: "AmbassadorCheckIn", schema: AmbassadorCheckInSchema },
       { name: "QueryElapsedTime", schema: QueryElapsedTimeSchema },
       { name: "UserPhoto", schema: UserPhotoSchema },
-
+      { name: "Trip", schema: TripSchema },
+      { name: "CommuterResponse", schema: CommuterResponseSchema },
+      { name: "RouteLandmark", schema: RouteLandmarkSchema },
+      { name: "Route", schema: RouteSchema },
+      { name: "Trip", schema: TripSchema },
 
       { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCountSchema },
 
@@ -149,13 +159,14 @@ import { PaymentModule } from './features/payment/payment.module';
     TicketModule,
     PayfastModule,
     InternalModule,
+    CommuterModule,
     PaymentModule,
   ],
-  controllers: [AppController, DispatchController, UserController],
+  controllers: [AppController, DispatchController, UserController, CommuterController],
   providers: [AppService, DispatchService, MessagingService, TimeSeriesService,
     UserService, CityService, CloudStorageUploaderService, KasieErrorHandler,
     AmbassadorService, AssociationService, LocationRequestService, 
-    FileArchiverService, FirebaseAdmin,
+    FileArchiverService, FirebaseAdmin, CommuterService,
 
   ],
 })

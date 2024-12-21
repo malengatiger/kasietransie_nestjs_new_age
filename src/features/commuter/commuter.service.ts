@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose from 'mongoose';
+import mongoose, { UpdateResult } from 'mongoose';
 import { Commuter } from 'src/data/models/Commuter';
 import { CommuterResponse } from 'src/data/models/CommuterResponse';
 import { CommuterRequest } from 'src/data/models/CommuterRequest';
@@ -10,6 +10,7 @@ import { RouteLandmark } from 'src/data/models/RouteLandmark';
 import { Route } from 'src/data/models/Route';
 import { Position } from 'src/data/models/position';
 import { MessagingService } from '../fcm/fcm.service';
+import { randomUUID } from 'crypto';
 
 const mm = 'CommuterService';
 
@@ -71,13 +72,33 @@ export class CommuterService {
     return null;
   }
   public async addCommuter(commuter: Commuter): Promise<Commuter> {
-    return this.commuterModel.create(commuter);
+    const res = this.commuterModel.create(commuter);
+    Logger.debug(`CommuterService: added commuter to Atlas: ${JSON.stringify(res, null, 2)}`);
+    return res;
+  }
+  public async updateCommuter(commuter: Commuter): Promise<UpdateResult> {
+    const res = this.commuterModel.updateOne({commuterId: commuter.cellphone},commuter);
+    Logger.debug(`CommuterService: updated commuter to Atlas: ${JSON.stringify(res, null, 2)}`);
+    return res;
   }
   public async addCommuterRequest(
     commuterRequest: CommuterRequest,
   ): Promise<CommuterRequest> {
     const req = await this.commuterRequestModel.create(commuterRequest);
     await this.messagingService.sendCommuterRequestMessage(req);
+    const resp = new CommuterResponse();
+    resp.associationId = req.associationId;
+    resp.commuterRequestId = req.commuterRequestId;
+    resp.fcmToken = req.fcmToken;
+    resp.message = 'Acknowledgement of Taxi Request';
+    resp.routeId = req.routeId;
+    resp.routeName = req.routeName;
+    resp.commuterId = req.commuterId;
+    resp.commuterResponseId = randomUUID();
+    resp.responseDate = new Date().toISOString();
+    
+    await this.messagingService.sendInitialCommuterRequestResponseMessage(resp);
+    Logger.debug(`${mm} commuter request added and fcm messages sent`);
     return req;
   }
   public async getCommuterRequests(

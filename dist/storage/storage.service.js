@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CloudStorageUploaderService = void 0;
 const common_1 = require("@nestjs/common");
 const storage_1 = require("@google-cloud/storage");
+const storage_2 = require("firebase-admin/storage");
 const config_1 = require("@nestjs/config");
 const fs = require("fs");
 const path = require("path");
@@ -94,23 +95,26 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             common_1.Logger.debug(`${mm} ...... uploading vehicle photo, 🔵 car: ${car.vehicleReg}`);
             const url = await this.uploadFile(`photo_${vehicleId}_${dt}`, filePath, car.associationName);
             const thumbUrl = await this.uploadFile(`thumbnail_${vehicleId}_${dt}`, thumbFilePath, car.associationName);
-            const photo = new VehiclePhoto_1.VehiclePhoto();
-            photo.associationId = car.associationId;
-            photo.vehiclePhotoId = `${vehicleId}_${dt}`;
-            photo.url = url;
-            photo.thumbNailUrl = thumbUrl;
-            photo.vehicleId = car.vehicleId;
-            photo.vehicleReg = car.vehicleReg;
-            const pos = new position_1.Position("Point", [longitudeNum, latitudeNum]);
-            photo.position = pos;
-            photo.created = new Date().toISOString();
-            common_1.Logger.debug(`${mm} vehicle photo about to be added: 🔵${JSON.stringify(photo, null, 2)}🔵`);
-            const resp = await this.vehiclePhotoModel.create(photo);
-            common_1.Logger.log(`\n${mm} 🍎 🍎 vehicle photo uploaded and added to Atlas:🍎 🍎 🍎 🍎 \n\n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`);
-            return resp;
-        }
-        else {
-            throw new Error("Vehicle not found");
+            try {
+                const photo = new VehiclePhoto_1.VehiclePhoto();
+                photo.associationId = car.associationId;
+                photo.vehiclePhotoId = `${vehicleId}_${dt}`;
+                photo.url = url["url"];
+                photo.thumbNailUrl = thumbUrl["url"];
+                photo.vehicleId = car.vehicleId;
+                photo.vehicleReg = car.vehicleReg;
+                const pos = new position_1.Position("Point", [longitudeNum, latitudeNum]);
+                photo.position = pos;
+                photo.created = new Date().toISOString();
+                common_1.Logger.debug(`${mm} vehicle photo about to be added: 🔵 ${JSON.stringify(photo, null, 2)}🔵`);
+                const resp = await this.vehiclePhotoModel.create(photo);
+                common_1.Logger.log(`\n${mm} 🍎 🍎 vehicle photo uploaded and added to Atlas:🍎 🍎 🍎 🍎 \n\n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`);
+                return resp;
+            }
+            catch (e) {
+                this.errorHandler.handleError(e, car.associationId, car.associationName);
+                throw new common_1.HttpException(e, common_1.HttpStatus.BAD_REQUEST);
+            }
         }
     }
     async createUserPhoto(userPhoto) {
@@ -174,26 +178,30 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
     async uploadQRCodeFile(associationId, filePath) {
         common_1.Logger.log(`${mm} uploadQRCodeFile: creating qrcode 🔵 associationId: ${associationId}`);
         const objectName = `qrCode_${(0, crypto_1.randomUUID)()}.png`;
+        let name = 'General';
         try {
-            const ass = await this.associationModel
-                .findOne({ associationId: associationId })
-                .limit(1);
-            common_1.Logger.debug(`${mm} uploadQRCodeFile: association from Atlas 🔵 name: ${ass.associationName}`);
-            if (ass == null) {
-                throw new common_1.HttpException("Association not found", common_1.HttpStatus.BAD_REQUEST);
+            if (associationId) {
+                const ass = await this.associationModel
+                    .findOne({ associationId: associationId })
+                    .limit(1);
+                common_1.Logger.debug(`${mm} uploadQRCodeFile: association from Atlas 🔵 name: ${ass.associationName}`);
+                if (ass == null) {
+                    throw new common_1.HttpException("Association not found", common_1.HttpStatus.BAD_REQUEST);
+                }
+                name = ass.associationName;
             }
-            const mFileName = await this.uploadFile(`${objectName}`, filePath, `${ass.associationName}`);
-            common_1.Logger.log(`${mm} uploadQRCodeFile: returning fileName: 🔵  ${mFileName}`);
-            if (!mFileName) {
-                this.errorHandler.handleError("url is blank", associationId, 'nay');
+            const uploadResult = await this.uploadFile(`${objectName}`, filePath, name);
+            common_1.Logger.log(`${mm} uploadQRCodeFile: returning fileName: 🔵  ${JSON.stringify(uploadResult)}`);
+            if (!uploadResult) {
+                this.errorHandler.handleError("url is blank", associationId, "nay");
                 throw new common_1.HttpException("url is blank", common_1.HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            return mFileName;
+            return uploadResult;
         }
         catch (e) {
             const msg = `QRCode file upload failed: ${e}`;
             common_1.Logger.error(`${mm} ${msg}: ${e}`);
-            this.errorHandler.handleError(msg, associationId, 'nay');
+            this.errorHandler.handleError(msg, associationId, "nay");
             throw new common_1.HttpException(msg, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -216,22 +224,6 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
     async getExampleFiles() {
         const list = await this.exampleFileModel.find({});
         return list;
-    }
-    async generateV4ReadSignedUrl(fileName) {
-        common_1.Logger.log(`${mm} generateV4ReadSignedUrl, file: ${fileName}`);
-        const options = {
-            version: "v4",
-            action: "read",
-            expires: Date.now() + 365 * 24 * 60 * 60 * 1000 * 30,
-        };
-        common_1.Logger.log(`${mm} generateV4ReadSignedUrl Get a v4 signed URL for reading the file`);
-        const resp = await this.storage
-            .bucket(this.bucketName)
-            .file(fileName)
-            .getSignedUrl(options);
-        console.log(`${mm} Generated GET signed URL:`);
-        console.log(resp[0]);
-        return resp[0];
     }
     async uploadFile(objectName, filePath, folder) {
         common_1.Logger.log(`uploadFile : ${filePath} bucket: ${this.bucketName} `);
@@ -259,12 +251,19 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             const response = await this.storage
                 .bucket(this.bucketName)
                 .upload(filePath, options);
-            common_1.Logger.log(`${mm} UploadResponse: ${response[0].name} ...`);
+            common_1.Logger.log(`${mm} UploadResponse: ${response[0].name}  ${response[0].baseUrl}  ${response[0].cloudStorageURI} ...`);
+            const fileRef = this.storage.bucket(this.bucketName).file(bucketFileName);
+            const downloadURL = await (0, storage_2.getDownloadURL)(fileRef);
             var mFile = response[0];
             var prop = response[1];
-            common_1.Logger.log(`${mm} UploadResponse mFile: ${mFile.name} \nprop: ${prop}...`);
+            common_1.Logger.log(`\n\n${mm} UploadResponse mFile: ${mFile.name} ✅ downloadURL: \n ✅  ${downloadURL} ✅ ...\n\n`);
             if (mFile) {
-                return mFile.name;
+                const resp = {
+                    fileName: mFile.name,
+                    url: downloadURL,
+                };
+                common_1.Logger.debug(`${mm} upload response ${JSON.stringify(resp, null, 2)}}`);
+                return resp;
             }
         }
         catch (error) {

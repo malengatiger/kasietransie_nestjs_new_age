@@ -137,12 +137,12 @@ export class UserService {
         `${mm} createUser: ... bucketFileName: ${user.bucketFileName}`
       );
       Logger.debug(
-        `${mm} ... adding user to Mongo, user; check bucketFileName: ${JSON.stringify(user)}`
+        `${mm} ... adding user to Mongo, user; check bucketFileName: ${user.email}`
       );
       await this.userModel.create(user);
       user.password = storedPassword;
       Logger.log(
-        `\n\n${mm} createUser: 🔵 🔵 🔵 🔵 🔵 user created on Mongo Atlas: 🥬🥬🥬 \n🔵 🔵 ${JSON.stringify(user, null, 2)} 🥬\n\n`
+        `\n\n${mm} createUser: 🔵 🔵 🔵 🔵 🔵 user created on Mongo Atlas: 🥬🥬🥬 ${user.email} 🥬\n\n`
       );
 
     } catch (e) {

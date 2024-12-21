@@ -40,61 +40,64 @@ let MessagingService = class MessagingService {
     }
     async sendAppErrorMessage(appError) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(appError.created, null);
-        await this.send(`${constants_1.Constants.appError}`, `Kasie Mobile App Error`, `${appError.errorMessage} at ${fmtDate}`, constants_1.Constants.appError, JSON.stringify(appError, null, 2), appError.associationId);
+        await this.sendToTopic(`${constants_1.Constants.appError}`, `Kasie Mobile App Error`, `${appError.errorMessage} at ${fmtDate}`, constants_1.Constants.appError, JSON.stringify(appError, null, 2), appError.associationId);
     }
     async sendKasieErrorMessage(kasieError) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(kasieError.date, null);
-        await this.send(`${constants_1.Constants.kasieError}`, `Kasie Server Error`, `${kasieError.message} at: ${fmtDate}`, constants_1.Constants.kasieError, JSON.stringify(kasieError, null, 2), '');
+        await this.sendToTopic(`${constants_1.Constants.kasieError}`, `Kasie Server Error`, `${kasieError.message} at: ${fmtDate}`, constants_1.Constants.kasieError, JSON.stringify(kasieError, null, 2), '');
     }
     async sendLocationRequestMessage(locationRequest) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(locationRequest.created, null);
-        await this.send(`${constants_1.Constants.locationRequest}${locationRequest.associationId}`, `Vehicle Location Request`, `Requested at ${fmtDate}`, constants_1.Constants.locationRequest, JSON.stringify(locationRequest, null, 2), locationRequest.associationId);
+        await this.sendToTopic(`${constants_1.Constants.locationRequest}${locationRequest.associationId}`, `Vehicle Location Request`, `Requested at ${fmtDate}`, constants_1.Constants.locationRequest, JSON.stringify(locationRequest, null, 2), locationRequest.associationId);
     }
     async sendLocationResponseMessage(locationResponse) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(locationResponse.created, null);
-        await this.send(`${constants_1.Constants.locationResponse}${locationResponse.associationId}`, `Vehicle Location Response`, `Responded at ${fmtDate}`, constants_1.Constants.locationResponse, JSON.stringify(locationResponse, null, 2), locationResponse.associationId);
+        await this.sendToTopic(`${constants_1.Constants.locationResponse}${locationResponse.associationId}`, `Vehicle Location Response`, `Responded at ${fmtDate}`, constants_1.Constants.locationResponse, JSON.stringify(locationResponse, null, 2), locationResponse.associationId);
     }
     async sendVehicleArrivalMessage(arrival) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(arrival.created, null);
-        await this.send(`${constants_1.Constants.vehicleArrival}${arrival.associationId}`, `${arrival.vehicleReg},`, `Arrived at ${fmtDate}`, constants_1.Constants.vehicleArrival, JSON.stringify(arrival, null, 2), arrival.associationId);
+        await this.sendToTopic(`${constants_1.Constants.vehicleArrival}${arrival.associationId}`, `${arrival.vehicleReg},`, `Arrived at ${fmtDate}`, constants_1.Constants.vehicleArrival, JSON.stringify(arrival, null, 2), arrival.associationId);
     }
     async sendVehicleDepartureMessage(departure) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(departure.created, null);
-        await this.send(`${constants_1.Constants.vehicleDeparture}${departure.associationId}`, `${departure.vehicleReg},`, `Departed at ${fmtDate}`, constants_1.Constants.vehicleDeparture, JSON.stringify(departure, null, 2), departure.associationId);
+        await this.sendToTopic(`${constants_1.Constants.vehicleDeparture}${departure.associationId}`, `${departure.vehicleReg},`, `Departed at ${fmtDate}`, constants_1.Constants.vehicleDeparture, JSON.stringify(departure, null, 2), departure.associationId);
     }
     async sendDispatchMessage(dispatch) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(dispatch.created, null);
-        await this.send(`${constants_1.Constants.dispatchRecord}${dispatch.associationId}`, `${dispatch.vehicleReg},`, `Dispatched at ${fmtDate}`, constants_1.Constants.dispatchRecord, JSON.stringify(dispatch), dispatch.associationId);
+        await this.sendToTopic(`${constants_1.Constants.dispatchRecord}${dispatch.associationId}`, `${dispatch.vehicleReg},`, `Dispatched at ${fmtDate}`, constants_1.Constants.dispatchRecord, JSON.stringify(dispatch), dispatch.associationId);
     }
     async sendHeartbeatMessage(heartbeat) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(heartbeat.created, null);
-        await this.send(`${constants_1.Constants.heartbeat}${heartbeat.associationId}`, `${heartbeat.vehicleReg},`, `Heartbeat at ${fmtDate}`, constants_1.Constants.heartbeat, JSON.stringify(heartbeat, null, 2), heartbeat.associationId);
+        await this.sendToTopic(`${constants_1.Constants.heartbeat}${heartbeat.associationId}`, `${heartbeat.vehicleReg},`, `Heartbeat at ${fmtDate}`, constants_1.Constants.heartbeat, JSON.stringify(heartbeat, null, 2), heartbeat.associationId);
     }
     async sendTelemetryMessage(telemetry) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(telemetry.created, null);
-        await this.send(`${constants_1.Constants.heartbeat}${telemetry.associationId}`, `${telemetry.vehicleReg},`, `Telemetry at ${fmtDate}`, constants_1.Constants.heartbeat, JSON.stringify(telemetry, null, 2), telemetry.associationId);
+        await this.sendToTopic(`${constants_1.Constants.heartbeat}${telemetry.associationId}`, `${telemetry.vehicleReg},`, `Telemetry at ${fmtDate}`, constants_1.Constants.heartbeat, JSON.stringify(telemetry, null, 2), telemetry.associationId);
     }
     async sendPassengerCountMessage(count) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(count.created, null);
-        await this.send(`${constants_1.Constants.passengerCount}${count.associationId}`, `${count.vehicleReg},`, `PassengerCount on ${fmtDate}`, constants_1.Constants.passengerCount, JSON.stringify(count, null, 2), count.associationId);
+        await this.sendToTopic(`${constants_1.Constants.passengerCount}${count.associationId}`, `${count.vehicleReg},`, `PassengerCount on ${fmtDate}`, constants_1.Constants.passengerCount, JSON.stringify(count, null, 2), count.associationId);
     }
     async sendRouteUpdateMessage(req) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(Date.now().toString(), null);
-        await this.send(`${constants_1.Constants.routeUpdateRequest}${req.associationId}`, `${req.routeName},`, `Route Updated on ${Date.now().toString()}`, constants_1.Constants.routeUpdateRequest, JSON.stringify(req, null, 2), req.associationId);
+        await this.sendToTopic(`${constants_1.Constants.routeUpdateRequest}${req.associationId}`, `${req.routeName},`, `Route Updated on ${Date.now().toString()}`, constants_1.Constants.routeUpdateRequest, JSON.stringify(req, null, 2), req.associationId);
     }
     async sendCommuterRequestMessage(req) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(Date.now().toString(), null);
-        await this.send(`${constants_1.Constants.commuterRequest}${req.associationId}`, `${req.routeName},`, `Commuter Request on ${Date.now().toString()}`, constants_1.Constants.commuterRequest, JSON.stringify(req, null, 2), req.associationId);
+        await this.sendToTopic(`${constants_1.Constants.commuterRequest}${req.associationId}`, `${req.routeName},`, `Commuter Request on ${Date.now().toString()}`, constants_1.Constants.commuterRequest, JSON.stringify(req, null, 2), req.associationId);
+    }
+    async sendInitialCommuterRequestResponseMessage(response) {
+        await this.sendToDevice(`${response.fcmToken}`, `Acknowledgement of your Taxi Request,`, `Commuter Request on route: ${response.routeName}`, constants_1.Constants.commuterResponse, JSON.stringify(response, null, 2));
     }
     async sendCommuterResponseMessage(response) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(Date.now().toString(), null);
-        await this.send(`${constants_1.Constants.commuterResponse}${response.associationId}`, `${response.routeName},`, `Commuter Response on ${Date.now().toString()}`, constants_1.Constants.commuterResponse, JSON.stringify(response, null, 2), response.associationId);
+        await this.sendToTopic(`${constants_1.Constants.commuterResponse}${response.associationId}`, `${response.routeName},`, `Commuter Response on ${Date.now().toString()}`, constants_1.Constants.commuterResponse, JSON.stringify(response, null, 2), response.associationId);
     }
     async sendAssociationRegisteredMessage(assoc) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(Date.now().toString(), null);
-        await this.send(`${constants_1.Constants.association}${assoc.associationId}`, `${assoc.associationName},`, ` Registered on ${fmtDate}`, constants_1.Constants.association, JSON.stringify(assoc, null, 2), assoc.associationId);
+        await this.sendToTopic(`${constants_1.Constants.association}${assoc.associationId}`, `${assoc.associationName},`, ` Registered on ${fmtDate}`, constants_1.Constants.association, JSON.stringify(assoc, null, 2), assoc.associationId);
     }
-    async send(topic, title, body, type, data, associationId) {
+    async sendToTopic(topic, title, body, type, data, associationId) {
         const message = {
             topic: topic,
             data: {
@@ -132,6 +135,29 @@ let MessagingService = class MessagingService {
             }
             common_1.Logger.debug(`${mm} 🅿️🅿️🅿️ Successfully sent FCM message to topic and association (if appropriate) `
                 + `\n🚺 🚺 🚺 topic: ${topic} message type: ${type} 🚺 title: ${JSON.stringify(title)}`);
+        }
+        catch (error) {
+            common_1.Logger.error('Error sending message:', error);
+            const err = new kasie_error_1.KasieError(`${type} Message Send Failed: ${error}`, common_1.HttpStatus.BAD_REQUEST);
+            await this.kasieModel.create(err);
+        }
+    }
+    async sendToDevice(fcmToken, title, body, type, data) {
+        const message = {
+            token: fcmToken,
+            data: {
+                type: type,
+                data: data,
+            },
+            notification: {
+                title: title,
+                body: body,
+            },
+        };
+        try {
+            await admin.messaging().send(message);
+            common_1.Logger.debug(`${mm} 🅿️ 🅿️ 🅿️ Successfully sent FCM message to single device `
+                + `🚺 🚺 🚺 message type: ${type} 🚺 title: ${JSON.stringify(title)} \n ${fcmToken}`);
         }
         catch (error) {
             common_1.Logger.error('Error sending message:', error);

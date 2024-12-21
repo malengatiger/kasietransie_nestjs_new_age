@@ -34,6 +34,16 @@ __decorate([
 __decorate([
     (0, mongoose_1.Prop)(),
     (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], VehicleArrival.prototype, "routeId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], VehicleArrival.prototype, "routeName", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
     __metadata("design:type", position_1.Position)
 ], VehicleArrival.prototype, "position", void 0);
 __decorate([

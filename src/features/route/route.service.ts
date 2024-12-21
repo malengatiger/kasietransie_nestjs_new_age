@@ -123,7 +123,9 @@ export class RouteService {
           const landmarks = await this.routeLandmarkModel.find({
             routeId: rt.routeId,
           });
-          Logger.log(`${mm} ${landmarks.length} routeLandmarks to be created ...`);
+          Logger.log(
+            `${mm} ${landmarks.length} routeLandmarks to be created ...`
+          );
           let landmarksCount = 0;
           landmarks.forEach(async (lm) => {
             const landmark = new RouteLandmark();
@@ -148,9 +150,7 @@ export class RouteService {
           const cities = await this.routeCityModel.find({
             routeId: rt.routeId,
           });
-          Logger.log(
-            `${mm} ${cities.length} routeCities to be created ...`
-          );
+          Logger.log(`${mm} ${cities.length} routeCities to be created ...`);
           let cityCount = 0;
           cities.forEach(async (c) => {
             const routeCity = new RouteCity();
@@ -190,9 +190,6 @@ export class RouteService {
             await this.routePointModel.create(routePoint);
             pointsCount++;
           });
-          Logger.debug(
-            `\n${mm}  ${pointsCount} routePoints added to ${newRoute.name} `
-          );
         }
       });
       Logger.log(
@@ -289,7 +286,7 @@ export class RouteService {
     ]);
     return fileName;
   }
- 
+
   async updateRouteColor(routeId: string, color: string): Promise<Route> {
     const filter = { routeId: routeId };
     const update = { color: color };
@@ -469,7 +466,36 @@ export class RouteService {
     longitude: number,
     radiusInKM: number
   ): Promise<Route[]> {
-    return [];
+    const res = await this.findRoutePointsByLocation(
+      latitude,
+      longitude,
+      radiusInKM
+    );
+
+    const list: Route[] = [];
+    res.forEach(async (r) => {
+      const route = await this.routeModel.findOne({ routeId: r.routeId });
+      list.push(route);
+    });
+    Logger.debug(
+      `${mm} findRoutesByLocation: latitude: ${latitude} longitude: ${longitude} max: ${radiusInKM} found: ${list.length}`
+    );
+    const hash = new Map();
+    const resList: Route[] = [];
+    list.forEach((r) => {
+      if (!hash.has(r.routeId)) {
+        hash.set(r.routeId, r);
+      }
+    });
+    var values = Array.from(hash.values());
+    values.forEach((v) => {
+      resList.push(v);
+    });
+    Logger.debug(
+      `${mm} findRoutesByLocation: latitude: ${latitude} longitude: ${longitude} max: ${radiusInKM} found after filter: ${resList.length}`
+    );
+
+    return resList;
   }
   public async findRouteLandmarksByLocation(
     latitude: number,
@@ -493,7 +519,7 @@ export class RouteService {
     };
     // Find documents based on our query
     const routeLandmarks = await this.routeLandmarkModel.find(query).limit(1);
-    Logger.log(
+    Logger.debug(
       `${mm} route landmarks found by location: ${routeLandmarks.length}`
     );
     return routeLandmarks;
@@ -504,7 +530,7 @@ export class RouteService {
     radiusInKM: number
   ): Promise<RoutePoint[]> {
     Logger.debug(
-      `${mm} findRoutePointsByLocation: latitude: ${latitude} longitude: ${longitude} max: ${radiusInKM} limit: 5`
+      `${mm} findRoutePointsByLocation: latitude: ${latitude} longitude: ${longitude} max: ${radiusInKM} km`
     );
 
     const query = {
@@ -519,8 +545,8 @@ export class RouteService {
       },
     };
     // Find documents based on our query
-    const routePoints = await this.routePointModel.find(query).limit(1);
-    Logger.log(`${mm} route points found by location: ${routePoints.length}`);
+    const routePoints = await this.routePointModel.find(query);
+    Logger.debug(`${mm} route points found by location: ${routePoints.length}`);
     return routePoints;
   }
   public async getAssociationRoutePoints(

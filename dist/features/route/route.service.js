@@ -159,7 +159,6 @@ let RouteService = class RouteService {
                         await this.routePointModel.create(routePoint);
                         pointsCount++;
                     });
-                    common_1.Logger.debug(`\n${mm}  ${pointsCount} routePoints added to ${newRoute.name} `);
                 }
             });
             common_1.Logger.log(`\n\n${mm} ${routeCount} routes added to ${ass.associationName} `);
@@ -349,7 +348,26 @@ let RouteService = class RouteService {
         return await this.routeLandmarkModel.find({ routeId: routeId });
     }
     async findRoutesByLocation(latitude, longitude, radiusInKM) {
-        return [];
+        const res = await this.findRoutePointsByLocation(latitude, longitude, radiusInKM);
+        const list = [];
+        res.forEach(async (r) => {
+            const route = await this.routeModel.findOne({ routeId: r.routeId });
+            list.push(route);
+        });
+        common_1.Logger.debug(`${mm} findRoutesByLocation: latitude: ${latitude} longitude: ${longitude} max: ${radiusInKM} found: ${list.length}`);
+        const hash = new Map();
+        const resList = [];
+        list.forEach((r) => {
+            if (!hash.has(r.routeId)) {
+                hash.set(r.routeId, r);
+            }
+        });
+        var values = Array.from(hash.values());
+        values.forEach((v) => {
+            resList.push(v);
+        });
+        common_1.Logger.debug(`${mm} findRoutesByLocation: latitude: ${latitude} longitude: ${longitude} max: ${radiusInKM} found after filter: ${resList.length}`);
+        return resList;
     }
     async findRouteLandmarksByLocation(latitude, longitude, radiusInKM) {
         common_1.Logger.debug(`${mm} findRouteLandmarksByLocation: latitude: ${latitude} longitude: ${longitude} max: ${radiusInKM} limit: 5`);
@@ -365,11 +383,11 @@ let RouteService = class RouteService {
             },
         };
         const routeLandmarks = await this.routeLandmarkModel.find(query).limit(1);
-        common_1.Logger.log(`${mm} route landmarks found by location: ${routeLandmarks.length}`);
+        common_1.Logger.debug(`${mm} route landmarks found by location: ${routeLandmarks.length}`);
         return routeLandmarks;
     }
     async findRoutePointsByLocation(latitude, longitude, radiusInKM) {
-        common_1.Logger.debug(`${mm} findRoutePointsByLocation: latitude: ${latitude} longitude: ${longitude} max: ${radiusInKM} limit: 5`);
+        common_1.Logger.debug(`${mm} findRoutePointsByLocation: latitude: ${latitude} longitude: ${longitude} max: ${radiusInKM} km`);
         const query = {
             position: {
                 $near: {
@@ -381,8 +399,8 @@ let RouteService = class RouteService {
                 },
             },
         };
-        const routePoints = await this.routePointModel.find(query).limit(1);
-        common_1.Logger.log(`${mm} route points found by location: ${routePoints.length}`);
+        const routePoints = await this.routePointModel.find(query);
+        common_1.Logger.debug(`${mm} route points found by location: ${routePoints.length}`);
         return routePoints;
     }
     async getAssociationRoutePoints(associationId) {

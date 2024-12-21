@@ -103,7 +103,7 @@ let VehicleService = class VehicleService {
     }
     async addVehicle(vehicle) {
         try {
-            common_1.Logger.debug(`${mm} ... addVehicle; car ... ${JSON.stringify(vehicle)}`);
+            common_1.Logger.debug(`${mm} ... addVehicle; car ... ${vehicle.vehicleReg}`);
             const existingCar = await this.vehicleModel.findOne({
                 vehicleId: vehicle.vehicleId,
             });
@@ -203,21 +203,21 @@ let VehicleService = class VehicleService {
     async uploadQRFile(file, associationId) {
         common_1.Logger.log(`\n\n${mm} uploadQRFile: ... 🍎🍎 associationId: ${associationId} 🍎🍎 ... find association ...`);
         common_1.Logger.debug(`${mm} uploadQRFile:... file size: ${file.buffer.length} bytes`);
-        let url = null;
+        let uploadResult = null;
         try {
             const tempFilePath = path.join(os.tmpdir(), file.originalname);
             await fs.promises.writeFile(tempFilePath, file.buffer);
             common_1.Logger.log(`${mm} uploadQRFile: ... 🔵 tempFilePath: ${tempFilePath}`);
-            url = await this.storage.uploadQRCodeFile(associationId, tempFilePath);
+            uploadResult = await this.storage.uploadQRCodeFile(associationId, tempFilePath);
         }
         catch (err) {
             common_1.Logger.error(`${mm} 😈😈 Error uploadQRFile: 😈😈 ${err}`);
             this.errorHandler.handleError(err, associationId, 'nay');
             throw new common_1.HttpException(`🔴🔴 Error uploadQRFile failed ${err} 🔴🔴`, common_1.HttpStatus.BAD_REQUEST);
         }
-        if (url) {
-            common_1.Logger.log(`${mm} return qrcode url: ${url}`);
-            return url;
+        if (uploadResult) {
+            common_1.Logger.log(`${mm} return qrcode upload result: ${uploadResult}`);
+            return uploadResult;
         }
         else {
             common_1.Logger.error(`${mm} Unexpected error: url is undefined`);

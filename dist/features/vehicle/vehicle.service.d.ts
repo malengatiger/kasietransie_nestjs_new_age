@@ -60,7 +60,7 @@ export declare class VehicleService {
     updateVehicle(vehicle: Vehicle): Promise<number>;
     getOwnerVehicles(userId: string, page: number): Promise<Vehicle[]>;
     updateVehicleQRCode(vehicle: Vehicle): Promise<number>;
-    uploadQRFile(file: Express.Multer.File, associationId: string): Promise<string>;
+    uploadQRFile(file: Express.Multer.File, associationId: string): Promise<any>;
 }
 export interface AddCarsResponse {
     cars: Vehicle[];

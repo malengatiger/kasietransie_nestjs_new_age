@@ -158,7 +158,7 @@ export class VehicleService {
 
   public async addVehicle(vehicle: Vehicle): Promise<Vehicle> {
     try {
-      Logger.debug(`${mm} ... addVehicle; car ... ${JSON.stringify(vehicle)}`);
+      Logger.debug(`${mm} ... addVehicle; car ... ${vehicle.vehicleReg}`);
 
       const existingCar = await this.vehicleModel.findOne({
         vehicleId: vehicle.vehicleId,
@@ -291,7 +291,7 @@ export class VehicleService {
   public async uploadQRFile(
     file: Express.Multer.File,
     associationId: string
-  ): Promise<string> {
+  ): Promise<any> {
     Logger.log(
       `\n\n${mm} uploadQRFile: ... 🍎🍎 associationId: ${associationId} 🍎🍎 ... find association ...`
     );
@@ -299,14 +299,14 @@ export class VehicleService {
       `${mm} uploadQRFile:... file size: ${file.buffer.length} bytes`
     );
    
-    let url = null;
+    let uploadResult = null;
     try {
       // Create a temporary file path
       const tempFilePath = path.join(os.tmpdir(), file.originalname);
       await fs.promises.writeFile(tempFilePath, file.buffer);
 
       Logger.log(`${mm} uploadQRFile: ... 🔵 tempFilePath: ${tempFilePath}`);
-      url = await this.storage.uploadQRCodeFile(
+      uploadResult = await this.storage.uploadQRCodeFile(
         associationId,
         tempFilePath
       );
@@ -319,9 +319,9 @@ export class VehicleService {
 
 
     }
-    if (url) {
-      Logger.log(`${mm} return qrcode url: ${url}`);
-      return url;
+    if (uploadResult) {
+      Logger.log(`${mm} return qrcode upload result: ${uploadResult}`);
+      return uploadResult;
     } else {
       // This should ideally never happen now
       Logger.error(`${mm} Unexpected error: url is undefined`);

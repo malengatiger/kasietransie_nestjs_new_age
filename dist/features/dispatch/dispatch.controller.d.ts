@@ -7,9 +7,13 @@ import { VehicleHeartbeat } from "src/data/models/VehicleHeartbeat";
 import { BigBag } from "src/data/helpers/BigBag";
 import { CounterBag } from "src/data/helpers/CounterBag";
 import { AssociationCounts } from "src/data/helpers/AssociationCounts";
+import { Trip } from "src/data/models/Trip";
+import { UpdateResult } from "mongoose";
 export declare class DispatchController {
     private readonly dispatchService;
     constructor(dispatchService: DispatchService);
+    addTrip(trip: Trip): Promise<Trip>;
+    updateTrip(trip: Trip): Promise<UpdateResult>;
     addDispatchRecord(dispatchRecord: DispatchRecord): Promise<DispatchRecord>;
     addVehicleDeparture(departure: VehicleDeparture): Promise<VehicleDeparture>;
     addVehicleArrival(departure: VehicleArrival): Promise<VehicleArrival>;

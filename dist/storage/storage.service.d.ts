@@ -28,11 +28,10 @@ export declare class CloudStorageUploaderService {
     uploadVehiclePhoto(vehicleId: string, filePath: string, thumbFilePath: string, latitude: string, longitude: string): Promise<VehiclePhoto>;
     createUserPhoto(userPhoto: UserPhoto): Promise<User>;
     uploadUserProfilePicture(userId: string, filePath: string, thumbFilePath: string): Promise<any>;
-    uploadQRCodeFile(associationId: string, filePath: string): Promise<string>;
+    uploadQRCodeFile(associationId: string, filePath: string): Promise<any>;
     uploadExampleFiles(userFilePath: string, vehicleFilePath: string): Promise<void>;
     getExampleFiles(): Promise<ExampleFile[]>;
-    generateV4ReadSignedUrl(fileName: string): Promise<string>;
-    uploadFile(objectName: string, filePath: string, folder: string): Promise<string>;
+    uploadFile(objectName: string, filePath: string, folder: string): Promise<any>;
     private getFileContentType;
     createQRCode(data: KasieQRCode): Promise<string>;
 }

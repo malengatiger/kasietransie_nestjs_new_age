@@ -113,10 +113,10 @@ let UserService = class UserService {
             user.password = null;
             user.userId = uid;
             common_1.Logger.debug(`${mm} createUser: ... bucketFileName: ${user.bucketFileName}`);
-            common_1.Logger.debug(`${mm} ... adding user to Mongo, user; check bucketFileName: ${JSON.stringify(user)}`);
+            common_1.Logger.debug(`${mm} ... adding user to Mongo, user; check bucketFileName: ${user.email}`);
             await this.userModel.create(user);
             user.password = storedPassword;
-            common_1.Logger.log(`\n\n${mm} createUser: 🔵 🔵 🔵 🔵 🔵 user created on Mongo Atlas: 🥬🥬🥬 \n🔵 🔵 ${JSON.stringify(user, null, 2)} 🥬\n\n`);
+            common_1.Logger.log(`\n\n${mm} createUser: 🔵 🔵 🔵 🔵 🔵 user created on Mongo Atlas: 🥬🥬🥬 ${user.email} 🥬\n\n`);
         }
         catch (e) {
             common_1.Logger.error(`${mm} User creation failed: ${e}`);

@@ -23,6 +23,7 @@ const CommuterRequest_1 = require("../../data/models/CommuterRequest");
 const RouteLandmark_1 = require("../../data/models/RouteLandmark");
 const Route_1 = require("../../data/models/Route");
 const fcm_service_1 = require("../fcm/fcm.service");
+const crypto_1 = require("crypto");
 const mm = 'CommuterService';
 let CommuterService = class CommuterService {
     constructor(configService, messagingService, commuterModel, commuterResponseModel, commuterRequestModel, routeLandmarkModel, routeModel) {
@@ -59,11 +60,30 @@ let CommuterService = class CommuterService {
         return null;
     }
     async addCommuter(commuter) {
-        return this.commuterModel.create(commuter);
+        const res = this.commuterModel.create(commuter);
+        common_1.Logger.debug(`CommuterService: added commuter to Atlas: ${JSON.stringify(res, null, 2)}`);
+        return res;
+    }
+    async updateCommuter(commuter) {
+        const res = this.commuterModel.updateOne({ commuterId: commuter.cellphone }, commuter);
+        common_1.Logger.debug(`CommuterService: updated commuter to Atlas: ${JSON.stringify(res, null, 2)}`);
+        return res;
     }
     async addCommuterRequest(commuterRequest) {
         const req = await this.commuterRequestModel.create(commuterRequest);
         await this.messagingService.sendCommuterRequestMessage(req);
+        const resp = new CommuterResponse_1.CommuterResponse();
+        resp.associationId = req.associationId;
+        resp.commuterRequestId = req.commuterRequestId;
+        resp.fcmToken = req.fcmToken;
+        resp.message = 'Acknowledgement of Taxi Request';
+        resp.routeId = req.routeId;
+        resp.routeName = req.routeName;
+        resp.commuterId = req.commuterId;
+        resp.commuterResponseId = (0, crypto_1.randomUUID)();
+        resp.responseDate = new Date().toISOString();
+        await this.messagingService.sendInitialCommuterRequestResponseMessage(resp);
+        common_1.Logger.debug(`${mm} commuter request added and fcm messages sent`);
         return req;
     }
     async getCommuterRequests(associationId, startDate) {

@@ -22,6 +22,7 @@ const PassengerTimeSeries_1 = require("../../data/models/PassengerTimeSeries");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
 const AmbassadorCheckIn_1 = require("../../data/models/AmbassadorCheckIn");
 const Vehicle_1 = require("../../data/models/Vehicle");
+const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 let AmbassadorModule = class AmbassadorModule {
 };
 exports.AmbassadorModule = AmbassadorModule;
@@ -50,6 +51,7 @@ exports.AmbassadorModule = AmbassadorModule = __decorate([
             ambassador_service_1.AmbassadorService,
             fcm_service_1.MessagingService,
             time_series_service_1.TimeSeriesService,
+            errors_interceptor_1.KasieErrorHandler,
             zipper_1.FileArchiverService,
         ],
     })

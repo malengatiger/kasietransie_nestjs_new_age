@@ -28,9 +28,10 @@ const CommuterRequest_1 = require("../../data/models/CommuterRequest");
 const VehicleHeartbeat_1 = require("../../data/models/VehicleHeartbeat");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
+const Trip_1 = require("../../data/models/Trip");
 const mm = "DispatchService";
 let DispatchService = class DispatchService {
-    constructor(messagingService, zipService, vehicleHeartbeatModel, vehicleArrivalModel, vehicleDepartureModel, dispatchRecordModel, ambassadorPassengerCountModel, commuterRequestModel) {
+    constructor(messagingService, zipService, vehicleHeartbeatModel, vehicleArrivalModel, vehicleDepartureModel, dispatchRecordModel, ambassadorPassengerCountModel, commuterRequestModel, tripModel) {
         this.messagingService = messagingService;
         this.zipService = zipService;
         this.vehicleHeartbeatModel = vehicleHeartbeatModel;
@@ -39,6 +40,17 @@ let DispatchService = class DispatchService {
         this.dispatchRecordModel = dispatchRecordModel;
         this.ambassadorPassengerCountModel = ambassadorPassengerCountModel;
         this.commuterRequestModel = commuterRequestModel;
+        this.tripModel = tripModel;
+    }
+    async addTrip(trip) {
+        const res = await this.tripModel.create(trip);
+        common_1.Logger.debug(`${mm} added Trip to Atlas ${JSON.stringify(res, null, 2)}`);
+        return res;
+    }
+    async updateTrip(trip) {
+        const res = await this.tripModel.updateOne({ tripId: trip.tripId }, trip);
+        common_1.Logger.debug(`${mm} updateTrip ${JSON.stringify(res, null, 2)}`);
+        return res;
     }
     async getAmbassadorPassengerCounts(userId, startDate, endDate) {
         return null;
@@ -420,7 +432,8 @@ exports.DispatchService = DispatchService = __decorate([
     __param(5, (0, mongoose_1.InjectModel)(DispatchRecord_1.DispatchRecord.name)),
     __param(6, (0, mongoose_1.InjectModel)(AmbassadorPassengerCount_1.AmbassadorPassengerCount.name)),
     __param(7, (0, mongoose_1.InjectModel)(CommuterRequest_1.CommuterRequest.name)),
+    __param(8, (0, mongoose_1.InjectModel)(Trip_1.Trip.name)),
     __metadata("design:paramtypes", [fcm_service_1.MessagingService,
-        zipper_1.FileArchiverService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        zipper_1.FileArchiverService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], DispatchService);
 //# sourceMappingURL=dispatch.service.js.map

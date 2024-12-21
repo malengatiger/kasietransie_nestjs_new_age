@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Injectable, Logger } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { AmbassadorPassengerCount } from 'src/data/models/AmbassadorPassengerCount';
@@ -7,6 +7,8 @@ import { AmbassadorCheckIn } from 'src/data/models/AmbassadorCheckIn';
 import { Vehicle } from 'src/data/models/Vehicle';
 import { MessagingService } from '../fcm/fcm.service';
 import { TimeSeriesService } from '../time_series/time_series.service';
+import { KasieError } from 'src/data/models/kasie.error';
+import { KasieErrorHandler } from 'src/middleware/errors.interceptor';
 
 
 @Injectable()
@@ -14,7 +16,8 @@ export class AmbassadorService {
   constructor(
     private readonly messagingService: MessagingService,
     private readonly timeSeriesService: TimeSeriesService,
-  
+    private readonly errorHandler: KasieErrorHandler,
+
     @InjectModel(AmbassadorPassengerCount.name)
     private ambassadorPassengerCountModel: mongoose.Model<AmbassadorPassengerCount>,
     @InjectModel(AmbassadorCheckIn.name)
@@ -77,6 +80,8 @@ export class AmbassadorService {
   public async addAmbassadorPassengerCount(
     count: AmbassadorPassengerCount,
   ): Promise<AmbassadorPassengerCount> {
+    Logger.debug(`AmbassadorService adding count: ${JSON.stringify(count)}`);
+    try {
     const res = await this.ambassadorPassengerCountModel.create(
       count,
     );
@@ -89,6 +94,10 @@ export class AmbassadorService {
     );
     await this.messagingService.sendPassengerCountMessage(res);
     return res;
+  } catch (e) {
+    this.errorHandler.handleError(e,count.associationId, count.associationId);
+    throw new HttpException(`Error adding Passenger Counts: ${e}`, HttpStatus.BAD_REQUEST);
+  }
   }
   public async generateRoutePassengerCounts(
     

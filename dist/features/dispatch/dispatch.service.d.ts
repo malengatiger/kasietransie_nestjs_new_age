@@ -11,7 +11,8 @@ import { DispatchRecordList } from "src/data/helpers/DispatchRecordList";
 import { AmbassadorPassengerCount } from "src/data/models/AmbassadorPassengerCount";
 import { CommuterRequest } from "src/data/models/CommuterRequest";
 import { VehicleHeartbeat } from "src/data/models/VehicleHeartbeat";
-import mongoose from "mongoose";
+import mongoose, { UpdateResult } from "mongoose";
+import { Trip } from "src/data/models/Trip";
 export declare class DispatchService {
     private messagingService;
     private zipService;
@@ -21,7 +22,10 @@ export declare class DispatchService {
     private dispatchRecordModel;
     private ambassadorPassengerCountModel;
     private commuterRequestModel;
-    constructor(messagingService: MessagingService, zipService: FileArchiverService, vehicleHeartbeatModel: mongoose.Model<VehicleHeartbeat>, vehicleArrivalModel: mongoose.Model<VehicleArrival>, vehicleDepartureModel: mongoose.Model<VehicleDeparture>, dispatchRecordModel: mongoose.Model<DispatchRecord>, ambassadorPassengerCountModel: mongoose.Model<AmbassadorPassengerCount>, commuterRequestModel: mongoose.Model<CommuterRequest>);
+    private tripModel;
+    constructor(messagingService: MessagingService, zipService: FileArchiverService, vehicleHeartbeatModel: mongoose.Model<VehicleHeartbeat>, vehicleArrivalModel: mongoose.Model<VehicleArrival>, vehicleDepartureModel: mongoose.Model<VehicleDeparture>, dispatchRecordModel: mongoose.Model<DispatchRecord>, ambassadorPassengerCountModel: mongoose.Model<AmbassadorPassengerCount>, commuterRequestModel: mongoose.Model<CommuterRequest>, tripModel: mongoose.Model<Trip>);
+    addTrip(trip: Trip): Promise<Trip>;
+    updateTrip(trip: Trip): Promise<UpdateResult>;
     getAmbassadorPassengerCounts(userId: string, startDate: string, endDate: string): Promise<AmbassadorPassengerCount[]>;
     countVehicleDeparturesByDate(vehicleId: string, startDate: string, endDate: string): Promise<number>;
     countVehicleHeartbeatsByDate(vehicleId: string, startDate: string, endDate: string): Promise<number>;

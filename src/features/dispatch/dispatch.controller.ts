@@ -8,11 +8,25 @@ import { VehicleHeartbeat } from "src/data/models/VehicleHeartbeat";
 import { BigBag } from "src/data/helpers/BigBag";
 import { CounterBag } from "src/data/helpers/CounterBag";
 import { AssociationCounts } from "src/data/helpers/AssociationCounts";
+import { Trip } from "src/data/models/Trip";
+import { UpdateResult } from "mongoose";
 
 @Controller("dispatch")
 export class DispatchController {
   constructor(private readonly dispatchService: DispatchService) {}
 
+  @Post("addTrip")
+  async addTrip(
+    @Body() trip: Trip
+  ): Promise<Trip> {
+    return this.dispatchService.addTrip(trip);
+  }
+  @Post("updateTrip")
+  async updateTrip(
+    @Body() trip: Trip
+  ): Promise<UpdateResult> {
+    return this.dispatchService.updateTrip(trip);
+  }
   @Post("addDispatchRecord")
   async addDispatchRecord(
     @Body() dispatchRecord: DispatchRecord
