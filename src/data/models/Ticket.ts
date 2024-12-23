@@ -61,7 +61,9 @@ export class Ticket {
   @ApiProperty()
   qrCodeBytes: string;
 
-  
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const TicketSchema = SchemaFactory.createForClass(Ticket);

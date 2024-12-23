@@ -1,10 +1,10 @@
-import mongoose from 'mongoose';
-import { AmbassadorPassengerCount } from 'src/data/models/AmbassadorPassengerCount';
-import { AmbassadorCheckIn } from 'src/data/models/AmbassadorCheckIn';
-import { Vehicle } from 'src/data/models/Vehicle';
-import { MessagingService } from '../fcm/fcm.service';
-import { TimeSeriesService } from '../time_series/time_series.service';
-import { KasieErrorHandler } from 'src/middleware/errors.interceptor';
+import mongoose from "mongoose";
+import { AmbassadorPassengerCount } from "src/data/models/AmbassadorPassengerCount";
+import { AmbassadorCheckIn } from "src/data/models/AmbassadorCheckIn";
+import { Vehicle } from "src/data/models/Vehicle";
+import { MessagingService } from "../fcm/fcm.service";
+import { TimeSeriesService } from "../time_series/time_series.service";
+import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 export declare class AmbassadorService {
     private readonly messagingService;
     private readonly timeSeriesService;
@@ -16,7 +16,7 @@ export declare class AmbassadorService {
     getAssociationAmbassadorCheckIn(associationId: string, startDate: string): Promise<any[]>;
     getVehicleAmbassadorCheckIn(vehicleId: string, startDate: string): Promise<AmbassadorCheckIn[]>;
     getUserAmbassadorPassengerCounts(userId: string, startDate: string): Promise<any[]>;
-    getAssociationAmbassadorPassengerCounts(associationId: string, startDate: string): Promise<AmbassadorPassengerCount[]>;
+    getAssociationAmbassadorPassengerCountDates(associationId: string, startDate: string): Promise<AmbassadorPassengerCount[]>;
     getVehicleAmbassadorPassengerCounts(vehicleId: string, startDate: string): Promise<AmbassadorPassengerCount[]>;
     addAmbassadorPassengerCount(count: AmbassadorPassengerCount): Promise<AmbassadorPassengerCount>;
     generateRoutePassengerCounts(): Promise<AmbassadorPassengerCount[]>;

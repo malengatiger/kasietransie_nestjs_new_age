@@ -6,6 +6,7 @@ export declare class KasieError extends HttpException {
     message: string;
     date: string;
     request: string;
+    mDate: Date;
 }
 export declare const KasieErrorSchema: import("mongoose").Schema<KasieError, import("mongoose").Model<KasieError, any, any, any, import("mongoose").Document<unknown, any, KasieError> & KasieError & Required<{
     _id: string;

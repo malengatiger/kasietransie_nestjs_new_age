@@ -66,6 +66,10 @@ export class CommuterTicket {
   @Prop()
   @ApiProperty()
   numberOfTrips: number;
+
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const CommuterTicketSchema = SchemaFactory.createForClass(CommuterTicket);

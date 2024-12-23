@@ -49,6 +49,10 @@ export class UserGeofenceEvent {
   @Prop()
   @ApiProperty()
   position: Position;
+
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const UserGeofenceEventSchema =

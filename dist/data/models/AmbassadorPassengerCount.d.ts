@@ -20,6 +20,7 @@ export declare class AmbassadorPassengerCount {
     passengersOut: number;
     currentPassengers: number;
     position: Position;
+    mDate: Date;
 }
 export declare const AmbassadorPassengerCountSchema: import("mongoose").Schema<AmbassadorPassengerCount, import("mongoose").Model<AmbassadorPassengerCount, any, any, any, import("mongoose").Document<unknown, any, AmbassadorPassengerCount> & AmbassadorPassengerCount & Required<{
     _id: string;

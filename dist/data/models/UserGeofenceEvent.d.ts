@@ -15,6 +15,7 @@ export declare class UserGeofenceEvent {
     moving: boolean;
     associationId: string;
     position: Position;
+    mDate: Date;
 }
 export declare const UserGeofenceEventSchema: import("mongoose").Schema<UserGeofenceEvent, import("mongoose").Model<UserGeofenceEvent, any, any, any, import("mongoose").Document<unknown, any, UserGeofenceEvent> & UserGeofenceEvent & Required<{
     _id: string;

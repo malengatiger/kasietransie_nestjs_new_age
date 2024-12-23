@@ -96,6 +96,11 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Boolean)
 ], VehicleArrival.prototype, "dispatched", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Date)
+], VehicleArrival.prototype, "mDate", void 0);
 exports.VehicleArrival = VehicleArrival = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

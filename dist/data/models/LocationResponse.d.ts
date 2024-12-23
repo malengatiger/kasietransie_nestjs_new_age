@@ -9,6 +9,7 @@ export declare class LocationResponse {
     userId: string;
     userName: string;
     position: Position;
+    mDate: Date;
 }
 export declare const LocationResponseSchema: import("mongoose").Schema<LocationResponse, import("mongoose").Model<LocationResponse, any, any, any, import("mongoose").Document<unknown, any, LocationResponse> & LocationResponse & Required<{
     _id: string;

@@ -60,6 +60,10 @@ export class DispatchRecord {
   @Prop()
   @ApiProperty()
   dispatched: boolean;
+  
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const DispatchRecordSchema =

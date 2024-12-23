@@ -54,6 +54,10 @@ export class SettingsModel {
   @Prop()
   @ApiProperty()
   created: string;
+
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const SettingsModelSchema = SchemaFactory.createForClass(SettingsModel);

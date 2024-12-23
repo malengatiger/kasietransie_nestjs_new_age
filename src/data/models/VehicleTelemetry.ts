@@ -74,6 +74,10 @@ export class VehicleTelemetry {
   @Prop()
   @ApiProperty()
   speedAccuracy: number;
+
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const VehicleTelemetrySchema =

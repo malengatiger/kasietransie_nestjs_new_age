@@ -31,6 +31,10 @@ export class LocationResponse {
   @Prop()
   @ApiProperty()
   position: Position;
+
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const LocationResponseSchema =

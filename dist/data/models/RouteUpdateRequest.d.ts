@@ -7,6 +7,7 @@ export declare class RouteUpdateRequest {
     created: string;
     userId: string;
     userName: string;
+    mDate: Date;
 }
 export declare const RouteUpdateRequestSchema: import("mongoose").Schema<RouteUpdateRequest, import("mongoose").Model<RouteUpdateRequest, any, any, any, import("mongoose").Document<unknown, any, RouteUpdateRequest> & RouteUpdateRequest & Required<{
     _id: string;

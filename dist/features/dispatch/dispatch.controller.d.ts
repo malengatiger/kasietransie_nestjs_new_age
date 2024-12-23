@@ -26,4 +26,8 @@ export declare class DispatchController {
     getAssociationDispatchRecords(associationId: string, startDate: string, endDate: string): Promise<DispatchRecord[]>;
     getAssociationVehicleArrivals(associationId: string, startDate: string, endDate: string): Promise<VehicleArrival[]>;
     getAssociationCounts(associationId: string, startDate: string, endDate: string): Promise<AssociationCounts>;
+    getRouteDispatchRecords(query: {
+        routeId: string;
+        startDate: string;
+    }): Promise<DispatchRecord[]>;
 }

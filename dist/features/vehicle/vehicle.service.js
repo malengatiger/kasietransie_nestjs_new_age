@@ -65,12 +65,16 @@ let VehicleService = class VehicleService {
         });
     }
     async addVehiclePhoto(vehiclePhoto) {
+        const mDate = new Date(vehiclePhoto.created);
+        vehiclePhoto.mDate = mDate;
         return await this.vehiclePhotoModel.create(vehiclePhoto);
     }
     async getVehicleMediaRequests(vehicleId) {
         return [];
     }
     async addVehicleVideo(vehicleVideo) {
+        const mDate = new Date(vehicleVideo.created);
+        vehicleVideo.mDate = mDate;
         return await this.vehicleVideoModel.create(vehicleVideo);
     }
     async getVehiclePhotos(vehicleId) {
@@ -212,7 +216,7 @@ let VehicleService = class VehicleService {
         }
         catch (err) {
             common_1.Logger.error(`${mm} 😈😈 Error uploadQRFile: 😈😈 ${err}`);
-            this.errorHandler.handleError(err, associationId, 'nay');
+            this.errorHandler.handleError(err, associationId, "nay");
             throw new common_1.HttpException(`🔴🔴 Error uploadQRFile failed ${err} 🔴🔴`, common_1.HttpStatus.BAD_REQUEST);
         }
         if (uploadResult) {
@@ -221,7 +225,7 @@ let VehicleService = class VehicleService {
         }
         else {
             common_1.Logger.error(`${mm} Unexpected error: url is undefined`);
-            this.errorHandler.handleError("Unexpected Error: url is undefine", associationId, 'nay');
+            this.errorHandler.handleError("Unexpected Error: url is undefine", associationId, "nay");
             throw new common_1.HttpException(`🔴🔴 Error uploadQRFile failed 🔴🔴`, common_1.HttpStatus.BAD_REQUEST);
         }
     }

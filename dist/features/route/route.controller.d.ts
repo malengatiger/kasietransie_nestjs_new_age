@@ -65,6 +65,9 @@ export declare class RouteController {
     getAssociationRouteData(query: {
         associationId: string;
     }): Promise<AssociationRouteData>;
+    getSingleRouteData(query: {
+        routeId: string;
+    }): Promise<AssociationRouteData>;
     getAssociationRouteLandmarks(query: {
         associationId: string;
     }): Promise<RouteLandmark[]>;

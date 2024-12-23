@@ -14,6 +14,7 @@ export declare class VehiclePhoto {
     thumbNailUrl: string;
     landmarkId: string;
     position: Position;
+    mDate: Date;
 }
 export declare const VehiclePhotoSchema: import("mongoose").Schema<VehiclePhoto, import("mongoose").Model<VehiclePhoto, any, any, any, import("mongoose").Document<unknown, any, VehiclePhoto> & VehiclePhoto & Required<{
     _id: string;

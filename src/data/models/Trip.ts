@@ -59,7 +59,9 @@ export class Trip {
   @ApiProperty()
   position: Position;
 
-  
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
   
 }
 

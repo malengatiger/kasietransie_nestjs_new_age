@@ -29,11 +29,15 @@ let LocationRequestService = class LocationRequestService {
         this.locationResponseModel = locationResponseModel;
     }
     async addLocationRequest(locationRequest) {
+        const mDate = new Date(locationRequest.created);
+        locationRequest.mDate = mDate;
         const req = this.locationRequestModel.create(locationRequest);
         await this.messagingService.sendLocationRequestMessage(locationRequest);
         return req;
     }
     async addLocationResponse(locationResponse) {
+        const mDate = new Date(locationResponse.created);
+        locationResponse.mDate = mDate;
         const res = this.locationResponseModel.create(locationResponse);
         await this.messagingService.sendLocationResponseMessage(locationResponse);
         return res;

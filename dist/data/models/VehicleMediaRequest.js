@@ -55,6 +55,11 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Boolean)
 ], VehicleMediaRequest.prototype, "addVideo", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Date)
+], VehicleMediaRequest.prototype, "mDate", void 0);
 exports.VehicleMediaRequest = VehicleMediaRequest = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

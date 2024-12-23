@@ -9,6 +9,7 @@ export declare class VehicleMediaRequest {
     associationId: string;
     requesterName: string;
     addVideo: boolean;
+    mDate: Date;
 }
 export declare const VehicleMediaRequestSchema: import("mongoose").Schema<VehicleMediaRequest, import("mongoose").Model<VehicleMediaRequest, any, any, any, import("mongoose").Document<unknown, any, VehicleMediaRequest> & VehicleMediaRequest & Required<{
     _id: string;

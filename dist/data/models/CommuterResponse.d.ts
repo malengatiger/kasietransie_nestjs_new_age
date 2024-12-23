@@ -12,6 +12,8 @@ export declare class CommuterResponse {
     associationId: string;
     vehicleDispatched: boolean;
     fcmToken: string;
+    created: string;
+    mDate: Date;
 }
 export declare const CommuterResponseSchema: import("mongoose").Schema<CommuterResponse, import("mongoose").Model<CommuterResponse, any, any, any, import("mongoose").Document<unknown, any, CommuterResponse> & CommuterResponse & {
     _id: import("mongoose").Types.ObjectId;

@@ -60,6 +60,10 @@ export class VehicleArrival {
   @Prop()
   @ApiProperty()
   dispatched: boolean;
+
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const VehicleArrivalSchema =

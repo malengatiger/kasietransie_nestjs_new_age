@@ -17,6 +17,7 @@ export declare class VehicleDeparture {
     make: string;
     model: string;
     position: Position;
+    mDate: Date;
 }
 export declare const VehicleDepartureSchema: import("mongoose").Schema<VehicleDeparture, import("mongoose").Model<VehicleDeparture, any, any, any, import("mongoose").Document<unknown, any, VehicleDeparture> & VehicleDeparture & Required<{
     _id: string;

@@ -46,6 +46,12 @@ export class CommuterResponse {
   @Prop()
   @ApiProperty()
   fcmToken: string;
+  @Prop()
+  @ApiProperty()
+  created: string;
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const CommuterResponseSchema =

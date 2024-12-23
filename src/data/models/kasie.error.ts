@@ -25,6 +25,10 @@ export class KasieError extends HttpException {
   @ApiProperty()
   request: string;
 
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
+
   // constructor(statusCode: number, message: string, request: string) {
   //   super(`${message} - ${request}`, statusCode);
   //   this.statusCode = statusCode;

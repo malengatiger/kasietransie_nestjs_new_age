@@ -16,6 +16,7 @@ export declare class SettingsModel {
     numberOfLandmarksToScan: number;
     distanceFilter: number;
     created: string;
+    mDate: Date;
 }
 export declare const SettingsModelSchema: import("mongoose").Schema<SettingsModel, import("mongoose").Model<SettingsModel, any, any, any, import("mongoose").Document<unknown, any, SettingsModel> & SettingsModel & Required<{
     _id: string;

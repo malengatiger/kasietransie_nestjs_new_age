@@ -46,6 +46,10 @@ export class VehiclePhoto {
   @Prop()
   @ApiProperty()
   position: Position;
+
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const VehiclePhotoSchema = SchemaFactory.createForClass(VehiclePhoto);

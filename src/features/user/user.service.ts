@@ -144,7 +144,6 @@ export class UserService {
       Logger.log(
         `\n\n${mm} createUser: 🔵 🔵 🔵 🔵 🔵 user created on Mongo Atlas: 🥬🥬🥬 ${user.email} 🥬\n\n`
       );
-
     } catch (e) {
       Logger.error(`${mm} User creation failed: ${e}`);
       this.errorHandler.handleError(
@@ -177,7 +176,11 @@ export class UserService {
       );
       return res;
     } catch (e) {
-      this.errorHandler.handleError(e, user.associationId, user.associationName);
+      this.errorHandler.handleError(
+        e,
+        user.associationId,
+        user.associationName
+      );
       throw new HttpException(e, HttpStatus.BAD_REQUEST);
     }
   }
@@ -193,8 +196,11 @@ export class UserService {
       Logger.debug(`${mm} getting user found: ${JSON.stringify(user)}`);
     } else {
       Logger.error(`${mm} user not found`);
-      this.errorHandler.handleError("getUserById:User not found", "N/A",'nay');
-      throw new HttpException("getUserById User fucked!", HttpStatus.BAD_REQUEST);
+      this.errorHandler.handleError("getUserById:User not found", "N/A", "nay");
+      throw new HttpException(
+        "getUserById User fucked!",
+        HttpStatus.BAD_REQUEST
+      );
     }
     return user;
   }
@@ -290,17 +296,19 @@ export class UserService {
   public async addUserGeofenceEvent(
     userGeofenceEvent: UserGeofenceEvent
   ): Promise<UserGeofenceEvent> {
+    const mDate = new Date(userGeofenceEvent.created);
+    userGeofenceEvent.mDate = mDate;
     return await this.userGeofenceModel.create(userGeofenceEvent);
   }
-  public async deleteUser(uid: string) : Promise<number> {
+  public async deleteUser(uid: string): Promise<number> {
     const app = this.firebaseAdmin.getFirebaseApp();
 
     const user = await app.auth().getUser(uid);
     if (user) {
-      Logger.debug(`${user.displayName} - ${user.email} - to be deleted`)
-     await app.auth().deleteUser(uid);
-     Logger.debug(`Firebase user deleted`);
-     return 0;
+      Logger.debug(`${user.displayName} - ${user.email} - to be deleted`);
+      await app.auth().deleteUser(uid);
+      Logger.debug(`Firebase user deleted`);
+      return 0;
     }
     return 9;
   }
@@ -308,7 +316,6 @@ export class UserService {
 /**
  * name
  */
-
 
 export interface AddUsersResponse {
   users: User[];

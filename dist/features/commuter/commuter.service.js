@@ -24,7 +24,7 @@ const RouteLandmark_1 = require("../../data/models/RouteLandmark");
 const Route_1 = require("../../data/models/Route");
 const fcm_service_1 = require("../fcm/fcm.service");
 const crypto_1 = require("crypto");
-const mm = 'CommuterService';
+const mm = "CommuterService";
 let CommuterService = class CommuterService {
     constructor(configService, messagingService, commuterModel, commuterResponseModel, commuterRequestModel, routeLandmarkModel, routeModel) {
         this.configService = configService;
@@ -70,13 +70,17 @@ let CommuterService = class CommuterService {
         return res;
     }
     async addCommuterRequest(commuterRequest) {
+        const mDateNeeded = new Date(commuterRequest.dateNeeded);
+        commuterRequest.mDateNeeded = mDateNeeded;
+        const mDateRequested = new Date(commuterRequest.dateRequested);
+        commuterRequest.mDateRequested = mDateRequested;
         const req = await this.commuterRequestModel.create(commuterRequest);
         await this.messagingService.sendCommuterRequestMessage(req);
         const resp = new CommuterResponse_1.CommuterResponse();
         resp.associationId = req.associationId;
         resp.commuterRequestId = req.commuterRequestId;
         resp.fcmToken = req.fcmToken;
-        resp.message = 'Acknowledgement of Taxi Request';
+        resp.message = "We have received your Taxi Request. Thank you!";
         resp.routeId = req.routeId;
         resp.routeName = req.routeName;
         resp.commuterId = req.commuterId;
@@ -93,6 +97,8 @@ let CommuterService = class CommuterService {
         });
     }
     async addCommuterResponse(commuterResponse) {
+        const mDate = new Date(commuterResponse.created);
+        commuterResponse.mDate = mDate;
         const resp = await this.commuterResponseModel.create(commuterResponse);
         await this.messagingService.sendCommuterResponseMessage(resp);
         return resp;

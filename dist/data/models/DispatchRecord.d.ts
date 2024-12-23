@@ -19,6 +19,7 @@ export declare class DispatchRecord {
     associationId: string;
     associationName: string;
     dispatched: boolean;
+    mDate: Date;
 }
 export declare const DispatchRecordSchema: import("mongoose").Schema<DispatchRecord, import("mongoose").Model<DispatchRecord, any, any, any, import("mongoose").Document<unknown, any, DispatchRecord> & DispatchRecord & Required<{
     _id: string;

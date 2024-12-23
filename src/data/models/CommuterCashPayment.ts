@@ -61,6 +61,9 @@ export class CommuterCashPayment {
   @ApiProperty()
   associationName: string;
  
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const CommuterCashPaymentSchema =

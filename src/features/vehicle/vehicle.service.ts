@@ -91,6 +91,8 @@ export class VehicleService {
   public async addVehiclePhoto(
     vehiclePhoto: VehiclePhoto
   ): Promise<VehiclePhoto> {
+    const mDate = new Date(vehiclePhoto.created);
+    vehiclePhoto.mDate = mDate;
     return await this.vehiclePhotoModel.create(vehiclePhoto);
   }
   public async getVehicleMediaRequests(
@@ -101,6 +103,8 @@ export class VehicleService {
   public async addVehicleVideo(
     vehicleVideo: VehicleVideo
   ): Promise<VehicleVideo> {
+    const mDate = new Date(vehicleVideo.created);
+    vehicleVideo.mDate = mDate;
     return await this.vehicleVideoModel.create(vehicleVideo);
   }
   public async getVehiclePhotos(vehicleId: string): Promise<VehiclePhoto[]> {
@@ -172,10 +176,14 @@ export class VehicleService {
           },
           vehicle
         );
-        Logger.debug(`${mm} car updated, result: ${JSON.stringify(res, null, 2)}`);
+        Logger.debug(
+          `${mm} car updated, result: ${JSON.stringify(res, null, 2)}`
+        );
         return vehicle;
       } else {
-        Logger.debug(`${mm} ... creating new car ... ${JSON.stringify(vehicle)}`);
+        Logger.debug(
+          `${mm} ... creating new car ... ${JSON.stringify(vehicle)}`
+        );
         vehicle.created = new Date().toISOString();
         await this.vehicleModel.create(vehicle);
         return vehicle;
@@ -184,9 +192,13 @@ export class VehicleService {
       Logger.debug(`${mm} add car failed: ${e}`);
       this.errorHandler.handleError(
         `Vehicle add failed: ${e}`,
-        vehicle.associationId, vehicle.associationName
+        vehicle.associationId,
+        vehicle.associationName
       );
-      throw new HttpException(`🔴🔴 addVehicle failed ${e} 🔴🔴`, HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        `🔴🔴 addVehicle failed ${e} 🔴🔴`,
+        HttpStatus.BAD_REQUEST
+      );
     }
   }
 
@@ -286,8 +298,6 @@ export class VehicleService {
     return 0;
   }
 
-
-  
   public async uploadQRFile(
     file: Express.Multer.File,
     associationId: string
@@ -298,7 +308,7 @@ export class VehicleService {
     Logger.debug(
       `${mm} uploadQRFile:... file size: ${file.buffer.length} bytes`
     );
-   
+
     let uploadResult = null;
     try {
       // Create a temporary file path
@@ -311,13 +321,12 @@ export class VehicleService {
         tempFilePath
       );
     } catch (err) {
-      Logger.error(
-        `${mm} 😈😈 Error uploadQRFile: 😈😈 ${err}`
+      Logger.error(`${mm} 😈😈 Error uploadQRFile: 😈😈 ${err}`);
+      this.errorHandler.handleError(err, associationId, "nay");
+      throw new HttpException(
+        `🔴🔴 Error uploadQRFile failed ${err} 🔴🔴`,
+        HttpStatus.BAD_REQUEST
       );
-      this.errorHandler.handleError(err, associationId, 'nay');      
-      throw new HttpException(`🔴🔴 Error uploadQRFile failed ${err} 🔴🔴`, HttpStatus.BAD_REQUEST);
-
-
     }
     if (uploadResult) {
       Logger.log(`${mm} return qrcode upload result: ${uploadResult}`);
@@ -325,9 +334,15 @@ export class VehicleService {
     } else {
       // This should ideally never happen now
       Logger.error(`${mm} Unexpected error: url is undefined`);
-      this.errorHandler.handleError("Unexpected Error: url is undefine", associationId, 'nay');
-      throw new HttpException(`🔴🔴 Error uploadQRFile failed 🔴🔴`, HttpStatus.BAD_REQUEST);
-
+      this.errorHandler.handleError(
+        "Unexpected Error: url is undefine",
+        associationId,
+        "nay"
+      );
+      throw new HttpException(
+        `🔴🔴 Error uploadQRFile failed 🔴🔴`,
+        HttpStatus.BAD_REQUEST
+      );
     }
   }
 }

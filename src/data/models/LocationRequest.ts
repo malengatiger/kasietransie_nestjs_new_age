@@ -27,6 +27,10 @@ export class LocationRequest {
   @Prop()
   @ApiProperty()
   userName: string;
+
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const LocationRequestSchema =

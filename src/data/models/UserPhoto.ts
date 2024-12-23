@@ -33,7 +33,9 @@ export class UserPhoto {
   @Prop()
   @ApiProperty()
   thumbNailUrl: string;
-  
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const UserPhotoSchema = SchemaFactory.createForClass(UserPhoto);

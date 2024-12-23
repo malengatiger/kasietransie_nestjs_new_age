@@ -65,6 +65,10 @@ export class AmbassadorPassengerCount {
   @Prop()
   @ApiProperty()
   position: Position;
+
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const AmbassadorPassengerCountSchema = SchemaFactory.createForClass(

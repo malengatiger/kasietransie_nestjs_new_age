@@ -66,6 +66,9 @@ let DispatchController = class DispatchController {
     async getAssociationCounts(associationId, startDate, endDate) {
         return this.dispatchService.getAssociationCounts(associationId, startDate, endDate);
     }
+    async getRouteDispatchRecords(query) {
+        return this.dispatchService.getRouteDispatchRecords(query.routeId, query.startDate);
+    }
 };
 exports.DispatchController = DispatchController;
 __decorate([
@@ -167,6 +170,13 @@ __decorate([
     __metadata("design:paramtypes", [String, String, String]),
     __metadata("design:returntype", Promise)
 ], DispatchController.prototype, "getAssociationCounts", null);
+__decorate([
+    (0, common_1.Get)("getRouteDispatchRecords"),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], DispatchController.prototype, "getRouteDispatchRecords", null);
 exports.DispatchController = DispatchController = __decorate([
     (0, common_1.Controller)("dispatch"),
     __metadata("design:paramtypes", [dispatch_service_1.DispatchService])

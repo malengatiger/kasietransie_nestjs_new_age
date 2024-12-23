@@ -75,6 +75,11 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Boolean)
 ], VehicleHeartbeat.prototype, "appToBackground", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Date)
+], VehicleHeartbeat.prototype, "mDate", void 0);
 exports.VehicleHeartbeat = VehicleHeartbeat = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

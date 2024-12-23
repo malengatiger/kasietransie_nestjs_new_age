@@ -32,6 +32,10 @@ export class RouteUpdateRequest {
   @ApiProperty()
   @ApiProperty()
   userName: string;
+
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const RouteUpdateRequestSchema =

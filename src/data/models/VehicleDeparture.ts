@@ -55,6 +55,10 @@ export class VehicleDeparture {
   @Prop()
   @ApiProperty()
   position: Position;
+
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const VehicleDepartureSchema =

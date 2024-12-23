@@ -33,6 +33,10 @@ export class AmbassadorCheckIn {
   @Prop()
   @ApiProperty()
   position: Position;
+
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const AmbassadorCheckInSchema =

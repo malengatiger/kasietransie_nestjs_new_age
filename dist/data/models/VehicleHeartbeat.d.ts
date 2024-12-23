@@ -14,6 +14,7 @@ export declare class VehicleHeartbeat {
     make: string;
     model: string;
     appToBackground: boolean;
+    mDate: Date;
 }
 export declare const VehicleHeartbeatSchema: import("mongoose").Schema<VehicleHeartbeat, import("mongoose").Model<VehicleHeartbeat, any, any, any, import("mongoose").Document<unknown, any, VehicleHeartbeat> & VehicleHeartbeat & Required<{
     _id: string;

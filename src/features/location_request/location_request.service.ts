@@ -25,6 +25,9 @@ export class LocationRequestService {
   public async addLocationRequest(
     locationRequest: LocationRequest,
   ): Promise<LocationRequest> {
+    const mDate= new Date(locationRequest.created);
+    locationRequest.mDate = mDate;
+
     const req = this.locationRequestModel.create(locationRequest);
     await this.messagingService.sendLocationRequestMessage(locationRequest);
     return req;
@@ -32,6 +35,8 @@ export class LocationRequestService {
   public async addLocationResponse(
     locationResponse: LocationResponse,
   ): Promise<LocationResponse> {
+    const mDate= new Date(locationResponse.created);
+    locationResponse.mDate = mDate;
     const res = this.locationResponseModel.create(locationResponse);
     await this.messagingService.sendLocationResponseMessage(locationResponse);
     return res;

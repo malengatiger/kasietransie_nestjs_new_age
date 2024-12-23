@@ -51,6 +51,11 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", position_1.Position)
 ], LocationResponse.prototype, "position", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Date)
+], LocationResponse.prototype, "mDate", void 0);
 exports.LocationResponse = LocationResponse = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

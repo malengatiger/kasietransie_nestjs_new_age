@@ -18,6 +18,7 @@ export declare class VehicleArrival {
     ownerId: string;
     ownerName: string;
     dispatched: boolean;
+    mDate: Date;
 }
 export declare const VehicleArrivalSchema: import("mongoose").Schema<VehicleArrival, import("mongoose").Model<VehicleArrival, any, any, any, import("mongoose").Document<unknown, any, VehicleArrival> & VehicleArrival & Required<{
     _id: string;

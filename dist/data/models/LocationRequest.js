@@ -45,6 +45,11 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], LocationRequest.prototype, "userName", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Date)
+], LocationRequest.prototype, "mDate", void 0);
 exports.LocationRequest = LocationRequest = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

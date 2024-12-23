@@ -46,6 +46,14 @@ export class CommuterRequest {
   @Prop({required: true})
   @ApiProperty()
   fcmToken: string;
+
+  @Prop()
+  @ApiProperty()
+  mDateNeeded: Date;
+
+  @Prop()
+  @ApiProperty()
+  mDateRequested: Date;
 }
 
 export const CommuterRequestSchema =

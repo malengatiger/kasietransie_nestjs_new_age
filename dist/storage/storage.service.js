@@ -73,6 +73,8 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             const pos = new position_1.Position("Point", [longitude, latitude]);
             p.position = pos;
             p.created = new Date().toISOString();
+            const mDate = new Date(p.created);
+            p.mDate = mDate;
             const resp = await this.vehicleVideoModel.create(p);
             common_1.Logger.log(`${mm} vehicle video uploaded and added to Atlas: ${JSON.stringify(resp)}}\n\n`);
             return resp;
@@ -107,6 +109,8 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
                 photo.position = pos;
                 photo.created = new Date().toISOString();
                 common_1.Logger.debug(`${mm} vehicle photo about to be added: 🔵 ${JSON.stringify(photo, null, 2)}🔵`);
+                const mDate = new Date(photo.created);
+                photo.mDate = mDate;
                 const resp = await this.vehiclePhotoModel.create(photo);
                 common_1.Logger.log(`\n${mm} 🍎 🍎 vehicle photo uploaded and added to Atlas:🍎 🍎 🍎 🍎 \n\n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`);
                 return resp;
@@ -167,6 +171,8 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
                 userId: userId,
             }, user);
             common_1.Logger.log(`\n${mm} 🍎 🍎 user profile url updated 🍎 🍎 ${JSON.stringify(user)} 🍎 🍎`);
+            const mDate = new Date(p.created);
+            p.mDate = mDate;
             const resp = await this.userPhotoModel.create(p);
             common_1.Logger.log(`\n${mm} 🍎 🍎 user photo uploaded and added to Atlas:🍎 🍎 🍎 🍎 \n\n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`);
             return resp;
@@ -178,7 +184,7 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
     async uploadQRCodeFile(associationId, filePath) {
         common_1.Logger.log(`${mm} uploadQRCodeFile: creating qrcode 🔵 associationId: ${associationId}`);
         const objectName = `qrCode_${(0, crypto_1.randomUUID)()}.png`;
-        let name = 'General';
+        let name = "General";
         try {
             if (associationId) {
                 const ass = await this.associationModel

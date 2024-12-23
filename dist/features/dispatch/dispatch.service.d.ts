@@ -32,6 +32,7 @@ export declare class DispatchService {
     countVehiclePassengerCounts(vehicleId: string, startDate: string, endDate: string): Promise<number>;
     getAssociationVehicleDepartures(associationId: string, startDate: string, endDate: string): Promise<VehicleDeparture[]>;
     getAssociationDispatchRecords(associationId: string, startDate: string, endDate: string): Promise<DispatchRecord[]>;
+    getRouteDispatchRecords(routeId: string, startDate: string): Promise<DispatchRecord[]>;
     getAssociationDispatchRecordsByDate(associationId: string, startDate: string, endDate: string): Promise<DispatchRecord[]>;
     getAssociationVehicleArrivals(associationId: string, startDate: string, endDate: string): Promise<VehicleArrival[]>;
     getAssociationVehicleArrivalsByDate(associationId: string, startDate: string, endDate: string): Promise<VehicleArrival[]>;
@@ -72,7 +73,6 @@ export declare class DispatchService {
     handleArrival(): Promise<void>;
     addVehicleHeartbeat(heartbeat: VehicleHeartbeat): Promise<any>;
     addVehicleArrival(vehicleArrival: VehicleArrival): Promise<VehicleArrival>;
-    getRouteDispatchRecords(): Promise<DispatchRecord[]>;
     getRouteVehicleArrivals(): Promise<VehicleArrival[]>;
     addDispatchRecords(dispatchRecordList: DispatchRecordList): Promise<DispatchRecord[]>;
     getLandmarkDispatchRecords(): Promise<DispatchRecord[]>;

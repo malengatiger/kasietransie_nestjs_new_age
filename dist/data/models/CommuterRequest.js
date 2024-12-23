@@ -71,6 +71,16 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], CommuterRequest.prototype, "fcmToken", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Date)
+], CommuterRequest.prototype, "mDateNeeded", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Date)
+], CommuterRequest.prototype, "mDateRequested", void 0);
 exports.CommuterRequest = CommuterRequest = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

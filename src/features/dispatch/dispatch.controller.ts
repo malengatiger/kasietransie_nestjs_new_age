@@ -144,4 +144,16 @@ export class DispatchController {
       endDate
     );
   }
+
+  @Get("getRouteDispatchRecords")
+  public async getRouteDispatchRecords(
+    @Query() query: { routeId: string, startDate: string }
+   
+  ): Promise<DispatchRecord[]> {
+    return this.dispatchService.getRouteDispatchRecords(
+      query.routeId,
+      query.startDate,
+      
+    );
+  }
 }

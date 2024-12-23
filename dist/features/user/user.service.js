@@ -155,7 +155,7 @@ let UserService = class UserService {
         }
         else {
             common_1.Logger.error(`${mm} user not found`);
-            this.errorHandler.handleError("getUserById:User not found", "N/A", 'nay');
+            this.errorHandler.handleError("getUserById:User not found", "N/A", "nay");
             throw new common_1.HttpException("getUserById User fucked!", common_1.HttpStatus.BAD_REQUEST);
         }
         return user;
@@ -218,6 +218,8 @@ let UserService = class UserService {
         return user;
     }
     async addUserGeofenceEvent(userGeofenceEvent) {
+        const mDate = new Date(userGeofenceEvent.created);
+        userGeofenceEvent.mDate = mDate;
         return await this.userGeofenceModel.create(userGeofenceEvent);
     }
     async deleteUser(uid) {

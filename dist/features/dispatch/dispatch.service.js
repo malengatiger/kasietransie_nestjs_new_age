@@ -43,6 +43,8 @@ let DispatchService = class DispatchService {
         this.tripModel = tripModel;
     }
     async addTrip(trip) {
+        const mDate = new Date(trip.created);
+        trip.mDate = mDate;
         const res = await this.tripModel.create(trip);
         common_1.Logger.debug(`${mm} added Trip to Atlas ${JSON.stringify(res, null, 2)}`);
         return res;
@@ -69,6 +71,13 @@ let DispatchService = class DispatchService {
     }
     async getAssociationDispatchRecords(associationId, startDate, endDate) {
         return [];
+    }
+    async getRouteDispatchRecords(routeId, startDate) {
+        common_1.Logger.debug(`${mm} getRouteDispatchRecords: ... startDate: ${startDate} routeId: ${routeId}`);
+        const aDate = new Date(startDate);
+        const res = await this.dispatchRecordModel.find({ routeId: routeId, created: { $gte: startDate } });
+        common_1.Logger.debug(`getRouteDispatchRecords, result: ${JSON.stringify(res, null, 2)}`);
+        return res;
     }
     async getAssociationDispatchRecordsByDate(associationId, startDate, endDate) {
         return [];
@@ -151,6 +160,8 @@ let DispatchService = class DispatchService {
         return null;
     }
     async addDispatchRecord(dispatchRecord) {
+        const mDate = new Date(dispatchRecord.created);
+        dispatchRecord.mDate = mDate;
         const res = await this.dispatchRecordModel.create(dispatchRecord);
         await this.messagingService.sendDispatchMessage(dispatchRecord);
         common_1.Logger.debug(`${mm} ... add DispatchRecord completed: 🛎🛎`);
@@ -234,6 +245,8 @@ let DispatchService = class DispatchService {
         return null;
     }
     async addVehicleDeparture(vehicleDeparture) {
+        const mDate = new Date(vehicleDeparture.created);
+        vehicleDeparture.mDate = mDate;
         const dep = await this.vehicleDepartureModel.create(vehicleDeparture);
         await this.messagingService.sendVehicleDepartureMessage(dep);
         return dep;
@@ -242,6 +255,8 @@ let DispatchService = class DispatchService {
         return null;
     }
     async addVehicleHeartbeat(heartbeat) {
+        const mDate = new Date(heartbeat.created);
+        heartbeat.mDate = mDate;
         const m = await this.vehicleHeartbeatModel.create(heartbeat);
         return m;
     }
@@ -249,9 +264,6 @@ let DispatchService = class DispatchService {
         const m = await this.vehicleArrivalModel.create(vehicleArrival);
         await this.messagingService.sendVehicleArrivalMessage(vehicleArrival);
         return m;
-    }
-    async getRouteDispatchRecords() {
-        return [];
     }
     async getRouteVehicleArrivals() {
         return [];

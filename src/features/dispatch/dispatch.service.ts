@@ -16,6 +16,7 @@ import { VehicleHeartbeat } from "src/data/models/VehicleHeartbeat";
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { UpdateResult } from "mongoose";
 import { Trip } from "src/data/models/Trip";
+import { de } from 'date-fns/locale';
 
 const mm = "DispatchService";
 
@@ -43,6 +44,9 @@ export class DispatchService {
   ) {}
 
   public async addTrip(trip: Trip) : Promise<Trip>{
+    const mDate= new Date(trip.created);
+    trip.mDate = mDate;
+
     const res = await this.tripModel.create(trip);
     Logger.debug(`${mm} added Trip to Atlas ${JSON.stringify(res, null, 2)}`);
     return res;
@@ -93,6 +97,17 @@ export class DispatchService {
     endDate: string
   ): Promise<DispatchRecord[]> {
     return [];
+  }
+  public async getRouteDispatchRecords(
+    routeId: string,
+    startDate: string,
+  ): Promise<DispatchRecord[]> {
+    Logger.debug(`${mm} getRouteDispatchRecords: ... startDate: ${startDate} routeId: ${routeId}`)
+    const aDate = new Date(startDate);
+    const res = await this.dispatchRecordModel.find(
+      {routeId: routeId, created: {$gte: startDate}});
+      Logger.debug(`getRouteDispatchRecords, result: ${JSON.stringify(res, null, 2)}`);
+    return res;
   }
   public async getAssociationDispatchRecordsByDate(
     associationId: string,
@@ -198,6 +213,8 @@ export class DispatchService {
   public async addDispatchRecord(
     dispatchRecord: DispatchRecord
   ): Promise<DispatchRecord> {
+    const mDate= new Date(dispatchRecord.created);
+    dispatchRecord.mDate = mDate;
     const res = await this.dispatchRecordModel.create(dispatchRecord);
     await this.messagingService.sendDispatchMessage(dispatchRecord);
     Logger.debug(`${mm} ... add DispatchRecord completed: 🛎🛎`);
@@ -363,6 +380,8 @@ export class DispatchService {
   public async addVehicleDeparture(
     vehicleDeparture: VehicleDeparture
   ): Promise<VehicleDeparture> {
+    const mDate= new Date(vehicleDeparture.created);
+    vehicleDeparture.mDate = mDate;
     const dep = await this.vehicleDepartureModel.create(vehicleDeparture);
     await this.messagingService.sendVehicleDepartureMessage(dep);
     return dep;
@@ -371,6 +390,8 @@ export class DispatchService {
     return null;
   }
   public async addVehicleHeartbeat(heartbeat: VehicleHeartbeat): Promise<any> {
+    const mDate= new Date(heartbeat.created);
+    heartbeat.mDate = mDate;
     const m = await this.vehicleHeartbeatModel.create(heartbeat);
     return m;
   }
@@ -381,9 +402,7 @@ export class DispatchService {
     await this.messagingService.sendVehicleArrivalMessage(vehicleArrival);
     return m;
   }
-  public async getRouteDispatchRecords(): Promise<DispatchRecord[]> {
-    return [];
-  }
+ 
   public async getRouteVehicleArrivals(): Promise<VehicleArrival[]> {
     return [];
   }

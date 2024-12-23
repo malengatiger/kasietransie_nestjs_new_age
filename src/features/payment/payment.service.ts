@@ -38,6 +38,7 @@ export class PaymentService {
     payment: PaymentProvider
   ): Promise<PaymentProvider> {
     try {
+      
       const res = await this.paymentProvider.create(payment);
       Logger.debug(`${mm} paymentProvider added to Atlas`);
       return res;
@@ -94,6 +95,8 @@ export class PaymentService {
     payment: CommuterCashPayment
   ): Promise<CommuterCashPayment> {
     try {
+      const mDate= new Date(payment.created);
+      payment.mDate = mDate;
       const res = await this.commuterCashPaymentModel.create(payment);
       Logger.debug(`${mm} CommuterCashPayment to Atlas`);
       return res;
@@ -113,6 +116,8 @@ export class PaymentService {
     payment: CommuterProviderPayment
   ): Promise<CommuterProviderPayment> {
     try {
+      const mDate= new Date(payment.created);
+      payment.mDate = mDate;
       const res = await this.commuterProviderPaymentModel.create(payment);
       Logger.debug(`${mm} CommuterProviderPayment added to Atlas`);
       return res;
@@ -132,6 +137,8 @@ export class PaymentService {
     cashCheckIn: CommuterCashCheckIn
   ): Promise<CommuterCashCheckIn> {
     try {
+      const mDate= new Date(cashCheckIn.created);
+      cashCheckIn.mDate = mDate;
       const res = await this.commuterCashCheckInModel.create(cashCheckIn);
       Logger.debug(`${mm} CommuterCashCheckInt added to Atlas`);
       return res;
@@ -153,6 +160,8 @@ export class PaymentService {
     payment: RankFeeCashPayment
   ): Promise<RankFeeCashPayment> {
     try {
+      const mDate= new Date(payment.created);
+      payment.mDate = mDate;
       const res = await this.rankFeeCashPayment.create(payment);
       Logger.debug(`${mm} RankFeeCashPayment to Atlas`);
       return res;
@@ -172,6 +181,8 @@ export class PaymentService {
     payment: RankFeeProviderPayment
   ): Promise<RankFeeProviderPayment> {
     try {
+      const mDate= new Date(payment.created);
+      payment.mDate = mDate;
       const res = await this.rankFeeProviderPayment.create(payment);
       Logger.debug(`${mm} RankFeeProviderPayment added to Atlas`);
       return res;
@@ -191,6 +202,8 @@ export class PaymentService {
     cashCheckIn: RankFeeCashCheckIn
   ): Promise<RankFeeCashCheckIn> {
     try {
+      const mDate= new Date(cashCheckIn.created);
+      cashCheckIn.mDate = mDate;
       const res = await this.rankFeeCashCheckIn.create(cashCheckIn);
       Logger.debug(`${mm} RankFeeCashCheckIn added to Atlas`);
       return res;

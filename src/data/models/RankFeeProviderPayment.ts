@@ -49,7 +49,9 @@ export class RankFeeProviderPayment {
   @ApiProperty()
   paymentProvider: PaymentProvider;
  
- 
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const RankFeeProviderPaymentSchema =

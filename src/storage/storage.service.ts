@@ -105,6 +105,8 @@ export class CloudStorageUploaderService {
       const pos = new Position("Point", [longitude, latitude]);
       p.position = pos;
       p.created = new Date().toISOString();
+      const mDate = new Date(p.created);
+      p.mDate = mDate;
       const resp = await this.vehicleVideoModel.create(p);
       Logger.log(
         `${mm} vehicle video uploaded and added to Atlas: ${JSON.stringify(resp)}}\n\n`
@@ -165,6 +167,8 @@ export class CloudStorageUploaderService {
         Logger.debug(
           `${mm} vehicle photo about to be added: 🔵 ${JSON.stringify(photo, null, 2)}🔵`
         );
+        const mDate = new Date(photo.created);
+        photo.mDate = mDate;
         const resp = await this.vehiclePhotoModel.create(photo);
         Logger.log(
           `\n${mm} 🍎 🍎 vehicle photo uploaded and added to Atlas:🍎 🍎 🍎 🍎 \n\n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`
@@ -202,6 +206,7 @@ export class CloudStorageUploaderService {
       Logger.log(
         `\n${mm} 🍎 🍎 user profile url updated 🍎 🍎 ${JSON.stringify(user)} 🍎 🍎`
       );
+      
       const resp = await this.userPhotoModel.create(userPhoto);
       Logger.log(
         `\n${mm} 🍎 🍎 user photo uploaded and added to Atlas:🍎 🍎 🍎 🍎 \n\n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`
@@ -264,6 +269,8 @@ export class CloudStorageUploaderService {
       Logger.log(
         `\n${mm} 🍎 🍎 user profile url updated 🍎 🍎 ${JSON.stringify(user)} 🍎 🍎`
       );
+      const mDate = new Date(p.created);
+      p.mDate = mDate;
       const resp = await this.userPhotoModel.create(p);
       Logger.log(
         `\n${mm} 🍎 🍎 user photo uploaded and added to Atlas:🍎 🍎 🍎 🍎 \n\n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`
@@ -284,7 +291,7 @@ export class CloudStorageUploaderService {
 
     const objectName = `qrCode_${randomUUID()}.png`;
 
-    let name = 'General';
+    let name = "General";
     try {
       if (associationId) {
         const ass = await this.associationModel
@@ -301,8 +308,8 @@ export class CloudStorageUploaderService {
           );
         }
         name = ass.associationName;
-      } 
-      
+      }
+
       const uploadResult: any = await this.uploadFile(
         `${objectName}`,
         filePath,

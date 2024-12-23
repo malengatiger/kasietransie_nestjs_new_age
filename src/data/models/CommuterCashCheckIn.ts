@@ -42,6 +42,10 @@ export class CommuterCashCheckIn {
   @Prop()
   @ApiProperty()
   associationName: string;
+
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
  
 }
 

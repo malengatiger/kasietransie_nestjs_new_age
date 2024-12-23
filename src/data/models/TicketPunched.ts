@@ -34,7 +34,9 @@ export class CommuterTicketPunched {
   @Prop()
   @ApiProperty()
   associationName: string;
-  
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
   
 }
 

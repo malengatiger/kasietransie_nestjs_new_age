@@ -64,7 +64,9 @@ export class CommuterProviderPayment {
   @ApiProperty()
   paymentProvider: PaymentProvider;
 
-  
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
  
  
 }

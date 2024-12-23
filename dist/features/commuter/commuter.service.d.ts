@@ -1,12 +1,12 @@
-import { ConfigService } from '@nestjs/config';
-import mongoose, { UpdateResult } from 'mongoose';
-import { Commuter } from 'src/data/models/Commuter';
-import { CommuterResponse } from 'src/data/models/CommuterResponse';
-import { CommuterRequest } from 'src/data/models/CommuterRequest';
-import { RouteLandmark } from 'src/data/models/RouteLandmark';
-import { Route } from 'src/data/models/Route';
-import { Position } from 'src/data/models/position';
-import { MessagingService } from '../fcm/fcm.service';
+import { ConfigService } from "@nestjs/config";
+import mongoose, { UpdateResult } from "mongoose";
+import { Commuter } from "src/data/models/Commuter";
+import { CommuterResponse } from "src/data/models/CommuterResponse";
+import { CommuterRequest } from "src/data/models/CommuterRequest";
+import { RouteLandmark } from "src/data/models/RouteLandmark";
+import { Route } from "src/data/models/Route";
+import { Position } from "src/data/models/position";
+import { MessagingService } from "../fcm/fcm.service";
 export declare class CommuterService {
     private configService;
     private messagingService;

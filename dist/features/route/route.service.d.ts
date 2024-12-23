@@ -60,9 +60,11 @@ export declare class RouteService {
     findRoutePointsByLocation(latitude: number, longitude: number, radiusInKM: number): Promise<RoutePoint[]>;
     getAssociationRoutePoints(associationId: string): Promise<string>;
     getAssociationRouteZippedFile(associationId: string): Promise<string>;
+    private collectShitForRoute;
     private collectShit;
     private removeDuplicates;
     getAssociationRouteData(associationId: string): Promise<AssociationRouteData>;
+    getSingleRouteData(routeId: string): Promise<AssociationRouteData>;
     getAssociationRouteCities(associationId: string): Promise<RouteCity[]>;
     putRouteLandmarksInOrder(routeId: string): Promise<RouteLandmark[]>;
     getAssociationRoutes(associationId: string): Promise<Route[]>;

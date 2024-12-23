@@ -144,12 +144,10 @@ export class RouteController {
   }
   @Get("getRouteById")
   public async getRouteById(
-    @Query() query: { routeId: string; }
+    @Query() query: { routeId: string }
   ): Promise<Route> {
     return await this.routeService.getRoute(query.routeId);
-    
   }
-
 
   @Get("findRoutesByLocation")
   public async findRoutesByLocation(
@@ -215,6 +213,15 @@ export class RouteController {
     this.logger.debug(
       `${mm} association route data found, returning RouteData ...`
     );
+    return data;
+  }
+  @Get("getSingleRouteData")
+  async getSingleRouteData(
+    @Query() query: { routeId: string }
+  ): Promise<AssociationRouteData> {
+    const data = await this.routeService.getSingleRouteData(query.routeId);
+
+    this.logger.debug(`${mm} route data found, returning RouteData ...`);
     return data;
   }
   @Get("getAssociationRouteLandmarks")

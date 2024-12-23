@@ -76,6 +76,11 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", position_1.Position)
 ], VehicleVideo.prototype, "position", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Date)
+], VehicleVideo.prototype, "mDate", void 0);
 exports.VehicleVideo = VehicleVideo = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

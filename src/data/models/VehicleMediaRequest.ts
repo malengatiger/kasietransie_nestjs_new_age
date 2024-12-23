@@ -33,6 +33,10 @@ export class VehicleMediaRequest {
   @Prop()
   @ApiProperty()
   addVideo: boolean;
+
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const VehicleMediaRequestSchema =

@@ -44,6 +44,10 @@ export class VehicleHeartbeat {
   @Prop()
   @ApiProperty()
   appToBackground: boolean;
+
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const VehicleHeartbeatSchema =

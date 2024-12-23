@@ -11,6 +11,7 @@ export declare class AmbassadorCheckIn {
     userId: string;
     userName: string;
     position: Position;
+    mDate: Date;
 }
 export declare const AmbassadorCheckInSchema: import("mongoose").Schema<AmbassadorCheckIn, import("mongoose").Model<AmbassadorCheckIn, any, any, any, import("mongoose").Document<unknown, any, AmbassadorCheckIn> & AmbassadorCheckIn & Required<{
     _id: string;

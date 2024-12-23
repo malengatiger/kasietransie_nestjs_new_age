@@ -35,6 +35,8 @@ export class MediaService {
   public async addVehiclePhoto(
     vehiclePhoto: VehiclePhoto,
   ): Promise<VehiclePhoto> {
+    const mDate= new Date(vehiclePhoto.created);
+      vehiclePhoto.mDate = mDate;
     return await this.vehiclePhotoModel.create(vehiclePhoto);
   }
   public async getVehicleMediaRequests(

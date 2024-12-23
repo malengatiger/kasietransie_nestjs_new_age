@@ -49,9 +49,8 @@ let AmbassadorService = class AmbassadorService {
             created: { $gte: startDate },
         });
     }
-    async getAssociationAmbassadorPassengerCounts(associationId, startDate) {
-        const list = await this.ambassadorPassengerCountModel
-            .find({
+    async getAssociationAmbassadorPassengerCountDates(associationId, startDate) {
+        const list = await this.ambassadorPassengerCountModel.find({
             associationId: associationId,
             created: { $gte: startDate },
         });
@@ -68,6 +67,8 @@ let AmbassadorService = class AmbassadorService {
     async addAmbassadorPassengerCount(count) {
         common_1.Logger.debug(`AmbassadorService adding count: ${JSON.stringify(count)}`);
         try {
+            const mDate = new Date(count.created);
+            count.mDate = mDate;
             const res = await this.ambassadorPassengerCountModel.create(count);
             await this.timeSeriesService.addPassengerTimeSeries(count.associationId, count.vehicleId, count.vehicleReg, count.routeId, count.passengersIn);
             await this.messagingService.sendPassengerCountMessage(res);

@@ -110,6 +110,11 @@ let RouteController = RouteController_1 = class RouteController {
         this.logger.debug(`${mm} association route data found, returning RouteData ...`);
         return data;
     }
+    async getSingleRouteData(query) {
+        const data = await this.routeService.getSingleRouteData(query.routeId);
+        this.logger.debug(`${mm} route data found, returning RouteData ...`);
+        return data;
+    }
     async getAssociationRouteLandmarks(query) {
         const list = await this.routeService.getAssociationRouteLandmarks(query.associationId);
         this.logger.log(`${mm} routeLandmarks found: ${list.length}`);
@@ -333,6 +338,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "getAssociationRouteData", null);
+__decorate([
+    (0, common_1.Get)("getSingleRouteData"),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], RouteController.prototype, "getSingleRouteData", null);
 __decorate([
     (0, common_1.Get)("getAssociationRouteLandmarks"),
     __param(0, (0, common_1.Query)()),

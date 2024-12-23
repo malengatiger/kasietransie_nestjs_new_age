@@ -76,6 +76,11 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", position_1.Position)
 ], VehiclePhoto.prototype, "position", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Date)
+], VehiclePhoto.prototype, "mDate", void 0);
 exports.VehiclePhoto = VehiclePhoto = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

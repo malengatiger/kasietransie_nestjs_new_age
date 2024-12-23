@@ -35,6 +35,8 @@ let MediaService = class MediaService {
         });
     }
     async addVehiclePhoto(vehiclePhoto) {
+        const mDate = new Date(vehiclePhoto.created);
+        vehiclePhoto.mDate = mDate;
         return await this.vehiclePhotoModel.create(vehiclePhoto);
     }
     async getVehicleMediaRequests(vehicleId) {

@@ -435,11 +435,15 @@ export class RouteService {
   public async addVehicleMediaRequest(
     vehicleMediaRequest: VehicleMediaRequest
   ): Promise<VehicleMediaRequest> {
+    const mDate = new Date(vehicleMediaRequest.created);
+    vehicleMediaRequest.mDate = mDate;
     return await this.vehicleMediaRequestModel.create(vehicleMediaRequest);
   }
   public async addRouteUpdateRequest(
     routeUpdateRequest: RouteUpdateRequest
   ): Promise<RouteUpdateRequest> {
+    const mDate = new Date(routeUpdateRequest.created);
+    routeUpdateRequest.mDate = mDate;
     const res = await this.routeUpdateRequestModel.create(routeUpdateRequest);
     await this.messagingService.sendRouteUpdateMessage(routeUpdateRequest);
     return res;
@@ -596,7 +600,54 @@ export class RouteService {
       },
     ]);
   }
+  private async collectShitForRoute(
+    route: Route,
+    assocData: AssociationRouteData
+  ) {
+    let landmarkCount = 0;
+    let citiesCount = 0;
+    let routePointsCount = 0;
+    assocData.routeDataList = [];
+    const routePoints = await this.routePointModel.find({
+      routeId: route.routeId,
+    });
+    routePointsCount += routePoints.length;
+    const marks = await this.routeLandmarkModel.find({
+      routeId: route.routeId,
+    });
 
+    landmarkCount += marks.length;
+    const cityList = await this.routeCityModel.find({
+      routeId: route.routeId,
+    });
+    citiesCount += cityList.length;
+
+    const routeData = new RouteData();
+    routeData.route = route;
+    routeData.cities =
+      cityList.length > 1 ? this.removeDuplicates(cityList) : cityList;
+    routeData.landmarks = marks;
+    routeData.routePoints = routePoints;
+    routeData.routeId = route.routeId;
+
+    assocData.routeDataList.push(routeData);
+
+    Logger.log(`${mm} route processed: 🍐🍐🍐 ${route.name}`);
+    Logger.log(`${mm} route cities: 🍐🍐🍐 ${routeData.cities.length}`);
+    Logger.log(`${mm} route landmarks: 🍐🍐🍐 ${routeData.landmarks.length}`);
+    Logger.log(
+      `${mm} route routePoints: 🍐🍐🍐 ${routeData.routePoints.length}\n\n`
+    );
+    //
+    Logger.log(`${mm} Association route data collected 🔷🔷🔷🔷🔷🔷🔷🔷`);
+    Logger.log(`${mm} to be packed:   🔷🔷 ${route.name} `);
+    Logger.log(`${mm} to be packed::  🔷🔷 ${landmarkCount} landmarks`);
+    Logger.log(`${mm} to be packed::  🔷🔷 ${citiesCount} cities`);
+    Logger.log(
+      `${mm} to be packed::  🔷🔷 ${routePointsCount} route points\n\n`
+    );
+    return assocData;
+  }
   private async collectShit(routes: Route[], assocData: AssociationRouteData) {
     let landmarkCount = 0;
     let citiesCount = 0;
@@ -693,7 +744,31 @@ export class RouteService {
 
     return assocData;
   }
+  public async getSingleRouteData(
+    routeId: string
+  ): Promise<AssociationRouteData> {
+    const route = await this.routeModel.findOne({
+      routeId: routeId,
+    });
+    Logger.log(`${mm} getSingleRouteData: 🍎🍎 🍎🍎 🍎🍎 route: ${routeId} `);
 
+    if (route == null) {
+      throw new HttpException("route does not exist", HttpStatus.BAD_REQUEST);
+    }
+    Logger.log(`${mm} getting all route data for 🔷🔷 ${route.name} `);
+
+    const assocData = new AssociationRouteData();
+    assocData.associationId = route.associationId;
+
+    await this.collectShitForRoute(route, assocData);
+
+    const mLength = JSON.stringify(assocData).length;
+    Logger.log(
+      `\n\n ${mm} The size of the AssociationRouteData object is approximately ${mLength / 1024 / 1024} MB`
+    );
+
+    return assocData;
+  }
   public async getAssociationRouteCities(
     associationId: string
   ): Promise<RouteCity[]> {

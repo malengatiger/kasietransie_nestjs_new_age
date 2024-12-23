@@ -42,6 +42,10 @@ export class RankFeeCashCheckIn {
   @Prop()
   @ApiProperty()
   associationName: string;
+
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
  
 }
 

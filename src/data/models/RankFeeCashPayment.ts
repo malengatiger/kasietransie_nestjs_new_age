@@ -49,6 +49,10 @@ export class RankFeeCashPayment {
   @Prop()
   @ApiProperty()
   associationName: string;
+
+  @Prop()
+  @ApiProperty()
+  mDate: Date;
 }
 
 export const RankFeeCashPaymentSchema =
