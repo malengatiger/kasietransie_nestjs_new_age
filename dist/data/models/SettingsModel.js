@@ -95,6 +95,11 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Date)
 ], SettingsModel.prototype, "mDate", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Number)
+], SettingsModel.prototype, "geofenceRefreshMinutes", void 0);
 exports.SettingsModel = SettingsModel = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

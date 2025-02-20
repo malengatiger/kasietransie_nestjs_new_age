@@ -115,10 +115,6 @@ export class UserService {
           uid: uid,
         });
       } else {
-        user.bucketFileName = "NAY";
-        user.qrCodeBytes = "NAY";
-        user.qrCodeBytes = "NAY";
-
         userRecord = await app.auth().createUser({
           email: user.email,
           password: user.password,
@@ -133,16 +129,22 @@ export class UserService {
       user.dateRegistered = new Date().toISOString();
       user.password = null;
       user.userId = uid;
-      Logger.debug(
-        `${mm} createUser: ... bucketFileName: ${user.bucketFileName}`
-      );
+
       Logger.debug(
         `${mm} ... adding user to Mongo, user; check bucketFileName: ${user.email}`
       );
+      user.dateRegistered = new Date().toISOString();
+      const url = await this.storage.createQRCode({
+        data: JSON.stringify(user),
+        prefix: "user",
+        size: 2,
+        associationId: user.associationId,
+      });
+      user.qrCodeUrl = url;
       await this.userModel.create(user);
       user.password = storedPassword;
       Logger.log(
-        `\n\n${mm} createUser: 🔵 🔵 🔵 🔵 🔵 user created on Mongo Atlas: 🥬🥬🥬 ${user.email} 🥬\n\n`
+        `\n\n${mm} createUser: 🔵 🔵 🔵 🔵 🔵 user ${user.email} created on Mongo Atlas: 🥬🥬🥬 ${user.email} 🥬\n\n`
       );
     } catch (e) {
       Logger.error(`${mm} User creation failed: ${e}`);
@@ -153,6 +155,84 @@ export class UserService {
       );
       throw new HttpException(
         `${mm} User creation failed: ${e}`,
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
+    Logger.error(`${mm} User creation OK!: ${JSON.stringify(user)}`);
+
+    return user;
+  }
+  public async createVehicleUser(user: User): Promise<User> {
+    const storedPassword = user.password;
+    const app = this.firebaseAdmin.getFirebaseApp();
+    Logger.log(
+      `\n\n${mm} ........ createVehicleUser on Firebase Authentication: ${JSON.stringify(user, null, 2)} \n`
+    );
+
+    let mUser: User = await this.userModel.findOne({
+      email: user.email,
+    });
+
+    if (mUser) {
+      Logger.log(
+        `${mm} ........ User exists on Atlas: ${JSON.stringify(mUser, null, 2)} \n`
+      );
+      return mUser;
+    }
+
+    try {
+      Logger.log(`${mm} createVehicleUser  .... 🎽 email: ${user.email}`);
+
+      const uid = randomUUID();
+      let userRecord = null;
+      if (user.cellphone) {
+        userRecord = await app.auth().createUser({
+          email: user.email,
+          password: user.password,
+          displayName: `${user.firstName} ${user.lastName}`,
+          uid: uid,
+        });
+      } else {
+        userRecord = await app.auth().createUser({
+          email: user.email,
+          password: user.password,
+          displayName: `${user.firstName} ${user.lastName}`,
+          uid: uid,
+        });
+      }
+
+      Logger.log(
+        `${mm} createVehicleUser: Firebase auth user created. userRecord from Firebase : 🎽 ${JSON.stringify(userRecord, null, 2)}`
+      );
+      user.dateRegistered = new Date().toISOString();
+      user.password = null;
+      user.userId = uid;
+
+      Logger.debug(
+        `${mm} ... adding user to Mongo, user; check bucketFileName: ${user.email}`
+      );
+      user.dateRegistered = new Date().toISOString();
+      const url = await this.storage.createQRCode({
+        data: JSON.stringify(user),
+        prefix: "user",
+        size: 2,
+        associationId: null,
+      });
+      user.qrCodeUrl = url;
+      await this.userModel.create(user);
+      user.password = storedPassword;
+      Logger.log(
+        `\n\n${mm} createVehicleUser: 🔵 🔵 🔵 🔵 🔵 user created on Mongo Atlas: 🥬🥬🥬 ${user.email} 🥬\n\n`
+      );
+    } catch (e) {
+      Logger.error(`${mm} createVehicleUser creation failed: ${e}`);
+      this.errorHandler.handleError(
+        `User creation failed: ${e}`,
+        user.associationId,
+        user.associationName
+      );
+      throw new HttpException(
+        `${mm} Vehicle User creation failed: ${e}`,
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
@@ -266,9 +346,6 @@ export class UserService {
       user.userId = uid;
       let url = null;
 
-      Logger.debug(
-        `${mm} createOwner: ... bucketFileName: ${user.bucketFileName}`
-      );
       Logger.debug(
         `${mm} ... adding owner to Mongo, userId: ${user.userId} - ${user.firstName}`
       );

@@ -1,0 +1,37 @@
+userType,firstName,lastName,email,cellphone,password
+ASSOCIATION_OFFICIAL,Charlie,Nkuna,charlienk@taxis.com,+27661680008,pass123
+ASSOCIATION_OFFICIAL,David,Thompson,davthom@taxis.com,+27661680048,pass123
+MARSHAL,Mary,van der Merwe,maryvdw@taxis.com,+27661680007,pass123
+OWNER,Donald,Chauke,sammychau@taxis.com,+27661680006,pass123
+DRIVER,Peter,Nkosi,peternk@taxis.com,+27661680005,pass123
+DRIVER,Zoe,Franks,zoe_frk@taxis.com,+27661680011,pass123
+AMBASSADOR,Piet,Hanyani,petehan@taxis.com,+27661680004,pass123
+AMBASSADOR,Samuel,Moleo,sammol@taxis.com,+27661680014,pass123
+ROUTE_BUILDER,John,Maluleke,johnmal@taxis.com,+27661680003,pass123
+ROUTE_BUILDER,Frankie,Bester,frankiebb@taxis.com,+27661680013,pass123
+MARSHAL,Vivienne,van der Walt,vivianyvd@taxis.com,+27661680009,pass123
+MARSHAL,Fulani,Nkuna,fulkuna@taxis.com,+27661680017,pass123
+AMBASSADOR,Johnny,Baker,johnnybak@taxis.com,+27661680034,pass123
+OWNER,Fred,Smith,fredsmith@taxis.com,+27661680036,pass123
+ROUTE_BUILDER,Donny,Bester,donniebest@taxis.com,+27661680033,pass123
+MARSHAL,Franny,Maringa,frannyom@taxis.com,+27661680077,pass123
+MARSHAL,Andrew,Chauke,chauhandr@taxis.com,+27661680037,pass123
+AMBASSADOR,Roberta,Smith,robertasmith@taxis.com,+27661680054,pass123
+ASSOCIATION_OFFICIAL,Charlie S,Thomas,charlies@taxis.com,+27687680008,pass123
+ASSOCIATION_OFFICIAL,Pierre,Dickson,pdic@taxis.com,+27687680048,pass123
+MARSHAL,Mary,van der Walt,maryden@taxis.com,+27687480007,pass123
+OWNER,Jimmy,Mabunda,sammyb@taxis.com,+27687680006,pass123
+DRIVER,Daniel,Nkosi,danieln@taxis.com,+27687680005,pass123
+DRIVER,Zoe,Ginger,zoe_ginger@taxis.com,+27687680011,pass123
+AMBASSADOR,Piet,Booi,pbooi@taxis.com,+27687680004,pass123
+AMBASSADOR,Tommy,Moleo,tommol@taxis.com,+27687680014,pass123
+ROUTE_BUILDER,Perry,Maluleke,perrymal@taxis.com,+27687680003,pass123
+ROUTE_BUILDER,Don,Bester,donbb@taxis.com,+27687680013,pass123
+MARSHAL,Poppy,van der Walt,poppyvd@taxis.com,+27687680009,pass123
+MARSHAL,Nancy,Nkuna,nankuna@taxis.com,+27687680017,pass123
+AMBASSADOR,Johnny,Booi,johnnybooi@taxis.com,+27687680034,pass123
+OWNER,Jonathan,Smith,fredsmith@taxis.com,+27687680036,pass123
+ROUTE_BUILDER,Maria,Bester,mariabest@taxis.com,+27687680033,pass123
+MARSHAL,Robby,Maringa,robeom@taxis.com,+27687680077,pass123
+MARSHAL,Andrew,Smith,smithandr@taxis.com,+27687680037,pass123
+AMBASSADOR,Zelda,Smith,zeldasmith@taxis.com,+27687680054,pass123

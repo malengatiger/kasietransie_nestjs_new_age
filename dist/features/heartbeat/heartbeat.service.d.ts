@@ -7,7 +7,7 @@ import { VehicleHeartbeat } from 'src/data/models/VehicleHeartbeat';
 import { VehicleTelemetry } from 'src/data/models/VehicleTelemetry';
 import { MessagingService } from '../fcm/fcm.service';
 import { TimeSeriesService } from '../time_series/time_series.service';
-export declare class HeartbeatService {
+export declare class TelemetryService {
     private configService;
     private readonly timeSeriesService;
     private messagingService;

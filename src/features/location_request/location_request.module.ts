@@ -10,6 +10,7 @@ import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
 import { KasieErrorSchema } from 'src/data/models/kasie.error';
 import { LocationResponseSchema } from 'src/data/models/LocationResponse';
 import { FirebaseAdmin } from 'src/services/firebase_util';
+import { LocationResponseErrorSchema } from 'src/data/models/LocationResponseError';
 
 @Module({
   imports: [
@@ -20,6 +21,8 @@ import { FirebaseAdmin } from 'src/services/firebase_util';
       { name: "AppError", schema: AppErrorSchema },
       { name: "KasieError", schema: KasieErrorSchema },
       { name: "LocationRequest", schema: LocationRequestSchema },
+      { name: "LocationResponse", schema: LocationResponseSchema },
+      { name: "LocationResponseError", schema: LocationResponseErrorSchema },
       { name: "LocationResponse", schema: LocationResponseSchema },
 
       { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCountSchema },

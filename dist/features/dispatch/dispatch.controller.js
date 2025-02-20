@@ -54,15 +54,6 @@ let DispatchController = class DispatchController {
     async getAssociationBagZippedFile(associationId, startDate, endDate) {
         return this.dispatchService.getAssociationBagZippedFile(associationId, startDate, endDate);
     }
-    async getAssociationVehicleDepartures(associationId, startDate, endDate) {
-        return this.dispatchService.getAssociationVehicleDepartures(associationId, startDate, endDate);
-    }
-    async getAssociationDispatchRecords(associationId, startDate, endDate) {
-        return this.dispatchService.getAssociationDispatchRecords(associationId, startDate, endDate);
-    }
-    async getAssociationVehicleArrivals(associationId, startDate, endDate) {
-        return this.dispatchService.getAssociationVehicleArrivals(associationId, startDate, endDate);
-    }
     async getAssociationCounts(associationId, startDate, endDate) {
         return this.dispatchService.getAssociationCounts(associationId, startDate, endDate);
     }
@@ -146,24 +137,6 @@ __decorate([
     __metadata("design:paramtypes", [String, String, String]),
     __metadata("design:returntype", Promise)
 ], DispatchController.prototype, "getAssociationBagZippedFile", null);
-__decorate([
-    (0, common_1.Get)("getAssociationVehicleDepartures"),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String]),
-    __metadata("design:returntype", Promise)
-], DispatchController.prototype, "getAssociationVehicleDepartures", null);
-__decorate([
-    (0, common_1.Get)("getAssociationDispatchRecords"),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String]),
-    __metadata("design:returntype", Promise)
-], DispatchController.prototype, "getAssociationDispatchRecords", null);
-__decorate([
-    (0, common_1.Get)("getAssociationVehicleArrivals"),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String]),
-    __metadata("design:returntype", Promise)
-], DispatchController.prototype, "getAssociationVehicleArrivals", null);
 __decorate([
     (0, common_1.Get)("getAssociationCounts"),
     __metadata("design:type", Function),

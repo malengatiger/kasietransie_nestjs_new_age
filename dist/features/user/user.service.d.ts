@@ -16,6 +16,7 @@ export declare class UserService {
     convertExpressFileToString(expressFile: Express.Multer.File): string;
     createAssociationAuthUser(associationId: string): Promise<any>;
     createUser(user: User): Promise<User>;
+    createVehicleUser(user: User): Promise<User>;
     createInternalAdminUser(user: User): Promise<User>;
     updateUser(user: User): Promise<User>;
     getUserById(userId: string): Promise<User>;

@@ -29,6 +29,7 @@ const VehicleHeartbeat_1 = require("../../data/models/VehicleHeartbeat");
 const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const Trip_1 = require("../../data/models/Trip");
+const crypto_1 = require("crypto");
 const mm = "DispatchService";
 let DispatchService = class DispatchService {
     constructor(messagingService, zipService, vehicleHeartbeatModel, vehicleArrivalModel, vehicleDepartureModel, dispatchRecordModel, ambassadorPassengerCountModel, commuterRequestModel, tripModel) {
@@ -42,10 +43,20 @@ let DispatchService = class DispatchService {
         this.commuterRequestModel = commuterRequestModel;
         this.tripModel = tripModel;
     }
+    async getRouteDispatchRecords(routeId, startDate) {
+        common_1.Logger.debug(`${mm} getRouteDispatchRecords: ... startDate: ${startDate} routeId: ${routeId}`);
+        const aDate = new Date(startDate);
+        const res = await this.dispatchRecordModel.find({ routeId: routeId, created: { $gte: startDate } });
+        common_1.Logger.debug(`${mm} found ${res.length} dispatch records`);
+        common_1.Logger.debug(`getRouteDispatchRecords, result: ${JSON.stringify(res, null, 2)}`);
+        common_1.Logger.log(`\n${mm} found 🎽 ${res.length} dispatch records 🎽`);
+        return res;
+    }
     async addTrip(trip) {
         const mDate = new Date(trip.created);
         trip.mDate = mDate;
         const res = await this.tripModel.create(trip);
+        const re2 = await this.messagingService.sendTripMessage(trip);
         common_1.Logger.debug(`${mm} added Trip to Atlas ${JSON.stringify(res, null, 2)}`);
         return res;
     }
@@ -65,31 +76,6 @@ let DispatchService = class DispatchService {
     }
     async countVehiclePassengerCounts(vehicleId, startDate, endDate) {
         return null;
-    }
-    async getAssociationVehicleDepartures(associationId, startDate, endDate) {
-        return [];
-    }
-    async getAssociationDispatchRecords(associationId, startDate, endDate) {
-        return [];
-    }
-    async getRouteDispatchRecords(routeId, startDate) {
-        common_1.Logger.debug(`${mm} getRouteDispatchRecords: ... startDate: ${startDate} routeId: ${routeId}`);
-        const aDate = new Date(startDate);
-        const res = await this.dispatchRecordModel.find({ routeId: routeId, created: { $gte: startDate } });
-        common_1.Logger.debug(`getRouteDispatchRecords, result: ${JSON.stringify(res, null, 2)}`);
-        return res;
-    }
-    async getAssociationDispatchRecordsByDate(associationId, startDate, endDate) {
-        return [];
-    }
-    async getAssociationVehicleArrivals(associationId, startDate, endDate) {
-        return [];
-    }
-    async getAssociationVehicleArrivalsByDate(associationId, startDate, endDate) {
-        return [];
-    }
-    async getAssociationCommuterRequests(associationId, startDate, endDate) {
-        return [];
     }
     async generateAmbassadorPassengerCount() {
         return null;
@@ -160,10 +146,14 @@ let DispatchService = class DispatchService {
         return null;
     }
     async addDispatchRecord(dispatchRecord) {
-        const mDate = new Date(dispatchRecord.created);
+        common_1.Logger.debug(`${mm} addDispatchRecord : ${JSON.stringify(dispatchRecord, null, 2)}`);
+        const mDate = new Date();
+        dispatchRecord.created = mDate.toISOString();
         dispatchRecord.mDate = mDate;
+        dispatchRecord.dispatchRecordId = (0, crypto_1.randomUUID)();
         const res = await this.dispatchRecordModel.create(dispatchRecord);
         await this.messagingService.sendDispatchMessage(dispatchRecord);
+        await this.messagingService.sendRouteDispatchMessage(dispatchRecord);
         common_1.Logger.debug(`${mm} ... add DispatchRecord completed: 🛎🛎`);
         return res;
     }

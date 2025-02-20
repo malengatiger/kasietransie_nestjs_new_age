@@ -51,16 +51,6 @@ __decorate([
     __metadata("design:type", String)
 ], Vehicle.prototype, "associationName", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ required: true }),
-    (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", String)
-], Vehicle.prototype, "bucketFileName", void 0);
-__decorate([
-    (0, mongoose_1.Prop)({ required: true }),
-    (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", String)
-], Vehicle.prototype, "qrCodeBytes", void 0);
-__decorate([
     (0, mongoose_1.Prop)({ required: true, index: { unique: true } }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
@@ -110,6 +100,11 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Vehicle.prototype, "qrCodeUrl", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], Vehicle.prototype, "fcmToken", void 0);
 exports.Vehicle = Vehicle = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

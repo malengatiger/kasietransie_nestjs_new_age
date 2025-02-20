@@ -11,12 +11,18 @@ class MyUtils {
         throw new Error("Method not implemented.");
     }
     static getDatabaseUrl() {
+        const env = process.env.NODE_ENV;
         let dbUrl;
+        if (env === "production") {
+            dbUrl = process.env.REMOTE_DB_URI;
+            common_1.Logger.debug(`${mm} db url from env: ${dbUrl}`);
+        }
         const pre = 'mongodb+srv';
         const first = '://bryan:kkTiger23';
-        const sec = '@cluster0.njz1rn4.mongodb.net/kasie_transie';
+        const sec = '@cluster0.njz1rn4.mongodb.net/';
+        const kasie = 'kasie_transie';
         if (!dbUrl) {
-            dbUrl = `${pre}${first}${sec}`;
+            dbUrl = `${pre}${first}${sec}${kasie}`;
         }
         common_1.Logger.log(`\n\n${mm} getDatabaseUrl: 🍷🍷🍷🍷 Atlas dbUrl: ${dbUrl} 🍷🍷🍷🍷`);
         return dbUrl;

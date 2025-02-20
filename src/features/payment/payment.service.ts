@@ -10,12 +10,16 @@ import { RankFeeCashCheckIn } from "src/data/models/RankFeeCashCheckIn";
 import { RankFeeCashPayment } from "src/data/models/RankFeeCashPayment";
 import { RankFeeProviderPayment } from "src/data/models/RankFeeProviderPayment";
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
+import { MessagingService } from "../fcm/fcm.service";
 const mm = "🔷🔷🔷🔷 PaymentService 🔷 ";
 
 @Injectable()
 export class PaymentService {
   constructor(
     private readonly errorHandler: KasieErrorHandler,
+    private readonly messagingService: MessagingService,
+
+
     @InjectModel(CommuterCashPayment.name)
     private commuterCashPaymentModel: mongoose.Model<CommuterCashPayment>,
     @InjectModel(CommuterProviderPayment.name)
@@ -99,6 +103,7 @@ export class PaymentService {
       payment.mDate = mDate;
       const res = await this.commuterCashPaymentModel.create(payment);
       Logger.debug(`${mm} CommuterCashPayment to Atlas`);
+      this.messagingService.sendCommuterCashMessage(payment);
       return res;
     } catch (e) {
       this.errorHandler.handleError(
@@ -141,6 +146,7 @@ export class PaymentService {
       cashCheckIn.mDate = mDate;
       const res = await this.commuterCashCheckInModel.create(cashCheckIn);
       Logger.debug(`${mm} CommuterCashCheckInt added to Atlas`);
+      this.messagingService.sendCommuterCashCheckInMessage(cashCheckIn);
       return res;
     } catch (e) {
       this.errorHandler.handleError(
@@ -164,6 +170,7 @@ export class PaymentService {
       payment.mDate = mDate;
       const res = await this.rankFeeCashPayment.create(payment);
       Logger.debug(`${mm} RankFeeCashPayment to Atlas`);
+      this.messagingService.sendRankFeeCashMessage(payment);
       return res;
     } catch (e) {
       this.errorHandler.handleError(
@@ -206,6 +213,7 @@ export class PaymentService {
       cashCheckIn.mDate = mDate;
       const res = await this.rankFeeCashCheckIn.create(cashCheckIn);
       Logger.debug(`${mm} RankFeeCashCheckIn added to Atlas`);
+      this.messagingService.sendRankFeeCashCheckInMessage(cashCheckIn);
       return res;
     } catch (e) {
       this.errorHandler.handleError(

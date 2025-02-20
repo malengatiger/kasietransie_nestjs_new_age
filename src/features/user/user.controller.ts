@@ -31,8 +31,18 @@ export class UserController {
     Logger.log(
       `${mm} addUser; check bucketFileName: ${JSON.stringify(user, null, 2)}`
     );
+    
     return await this.userService.createUser(user);
+
   }
+
+
+  @Post("createVehicleUser")
+  async createVehicleUser(@Body() user: User): Promise<any> {
+    
+    return await this.userService.createVehicleUser(user);
+  }
+
   @Post("createOwner")
   async createOwner(@Body() user: User): Promise<any> {
     return await this.userService.createOwner(user);

@@ -38,9 +38,20 @@ const constants_1 = require("../../my-utils/constants");
 const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 const VehiclePhoto_1 = require("../../data/models/VehiclePhoto");
 const VehicleVideo_1 = require("../../data/models/VehicleVideo");
+const CommuterRequest_1 = require("../../data/models/CommuterRequest");
+const DispatchRecord_1 = require("../../data/models/DispatchRecord");
+const VehicleArrival_1 = require("../../data/models/VehicleArrival");
+const Trip_1 = require("../../data/models/Trip");
+const CommuterCashPayment_1 = require("../../data/models/CommuterCashPayment");
+const CommuterCashCheckIn_1 = require("../../data/models/CommuterCashCheckIn");
+const RankFeeCashCheckIn_1 = require("../../data/models/RankFeeCashCheckIn");
+const RankFeeCashPayment_1 = require("../../data/models/RankFeeCashPayment");
+const VehicleTelemetry_1 = require("../../data/models/VehicleTelemetry");
+const AmbassadorPassengerCount_1 = require("../../data/models/AmbassadorPassengerCount");
+const Route_1 = require("../../data/models/Route");
 const mm = "🍎🍎🍎 AssociationService: 🍎🍎🍎";
 let AssociationService = class AssociationService {
-    constructor(archiveService, userService, cityService, messagingService, errorHandler, associationModel, vehicleModel, settingsModel, userModel, countryModel, associationTokenModel, appErrorModel, vehiclePhotoModel, vehicleVideoModel, exampleFileModel, commuterModel) {
+    constructor(archiveService, userService, cityService, messagingService, errorHandler, associationModel, vehicleModel, settingsModel, userModel, countryModel, associationTokenModel, appErrorModel, vehiclePhotoModel, vehicleVideoModel, exampleFileModel, commuterModel, dispatchRecordModel, tripModel, commuterCashPaymentModel, commuterCashCheckInModel, rankFeeCashCheckInModel, rankFeeCashPaymentModel, commuterRequestModel, vehicleTelemetryModel, ambassadorPassengerCountModel, routeModel, vehicleArrivalModel) {
         this.archiveService = archiveService;
         this.userService = userService;
         this.cityService = cityService;
@@ -57,6 +68,96 @@ let AssociationService = class AssociationService {
         this.vehicleVideoModel = vehicleVideoModel;
         this.exampleFileModel = exampleFileModel;
         this.commuterModel = commuterModel;
+        this.dispatchRecordModel = dispatchRecordModel;
+        this.tripModel = tripModel;
+        this.commuterCashPaymentModel = commuterCashPaymentModel;
+        this.commuterCashCheckInModel = commuterCashCheckInModel;
+        this.rankFeeCashCheckInModel = rankFeeCashCheckInModel;
+        this.rankFeeCashPaymentModel = rankFeeCashPaymentModel;
+        this.commuterRequestModel = commuterRequestModel;
+        this.vehicleTelemetryModel = vehicleTelemetryModel;
+        this.ambassadorPassengerCountModel = ambassadorPassengerCountModel;
+        this.routeModel = routeModel;
+        this.vehicleArrivalModel = vehicleArrivalModel;
+    }
+    async getAssociationVehicleDepartures(associationId, startDate, endDate) {
+        return [];
+    }
+    async getAssociationDispatchRecords(associationId, startDate, endDate) {
+        const res = await this.dispatchRecordModel.find({
+            associationId: associationId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        return res;
+    }
+    async getAssociationVehicleArrivals(associationId, startDate, endDate) {
+        const res = await this.vehicleArrivalModel.find({
+            associationId: associationId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        return res;
+    }
+    async getAssociationVehicleTelemetry(associationId, startDate, endDate) {
+        const res = await this.vehicleTelemetryModel.find({
+            associationId: associationId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        return res;
+    }
+    async getAssociationCommuterRequests(associationId, startDate, endDate) {
+        const res = await this.commuterRequestModel.find({
+            associationId: associationId,
+            dateRequested: { $gte: startDate, $lte: endDate },
+        });
+        return res;
+    }
+    async getAssociationCommuterCashPayments(associationId, startDate, endDate) {
+        const res = await this.commuterCashPaymentModel.find({
+            associationId: associationId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        return res;
+    }
+    async getAssociationCommuterCashCheckIns(associationId, startDate, endDate) {
+        const res = await this.commuterCashCheckInModel.find({
+            associationId: associationId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        return res;
+    }
+    async getAssociationRankFeeCashPayments(associationId, startDate, endDate) {
+        const res = await this.rankFeeCashPaymentModel.find({
+            associationId: associationId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        return res;
+    }
+    async getAssociationRankFeeCashCheckIns(associationId, startDate, endDate) {
+        const res = await this.rankFeeCashCheckInModel.find({
+            associationId: associationId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        return res;
+    }
+    async getAssociationTrips(associationId, startDate, endDate) {
+        const res = await this.tripModel.find({
+            associationId: associationId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        return res;
+    }
+    async getAssociationPassengerCounts(associationId, startDate, endDate) {
+        const res = await this.ambassadorPassengerCountModel.find({
+            associationId: associationId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        return res;
+    }
+    async getAssociationRoutes(associationId) {
+        const res = await this.routeModel.find({
+            associationId: associationId,
+        });
+        return res;
     }
     async getAssociationById(associationId) {
         common_1.Logger.log(`${mm} ... getAssociationById starting, id: ${associationId} ...`);
@@ -119,6 +220,7 @@ let AssociationService = class AssociationService {
         return file;
     }
     async getAssociationSettingsModels(associationId) {
+        common_1.Logger.debug(`${mm} getAssociationSettingsModels AssociationId: ${JSON.stringify(associationId)}`);
         const list = await this.settingsModel.find({
             associationId: associationId,
         });
@@ -191,8 +293,8 @@ let AssociationService = class AssociationService {
         });
         if (existingAss) {
             common_1.Logger.debug(`${mm} existingAss Association: ${JSON.stringify(existingAss, null, 2)}`);
-            this.errorHandler.handleError('Association exists', association.associationId, association.associationName);
-            throw new common_1.HttpException('This association exists, so fuck you!', common_1.HttpStatus.BAD_REQUEST);
+            this.errorHandler.handleError("Association exists", association.associationId, association.associationName);
+            throw new common_1.HttpException("This association exists, so fuck you!", common_1.HttpStatus.BAD_REQUEST);
         }
         let mAdminUser;
         let mCarUser;
@@ -361,10 +463,21 @@ exports.AssociationService = AssociationService = __decorate([
     __param(13, (0, mongoose_1.InjectModel)(VehicleVideo_1.VehicleVideo.name)),
     __param(14, (0, mongoose_1.InjectModel)(ExampleFile_1.ExampleFile.name)),
     __param(15, (0, mongoose_1.InjectModel)(Commuter_1.Commuter.name)),
+    __param(16, (0, mongoose_1.InjectModel)(DispatchRecord_1.DispatchRecord.name)),
+    __param(17, (0, mongoose_1.InjectModel)(Trip_1.Trip.name)),
+    __param(18, (0, mongoose_1.InjectModel)(CommuterCashPayment_1.CommuterCashPayment.name)),
+    __param(19, (0, mongoose_1.InjectModel)(CommuterCashCheckIn_1.CommuterCashCheckIn.name)),
+    __param(20, (0, mongoose_1.InjectModel)(RankFeeCashCheckIn_1.RankFeeCashCheckIn.name)),
+    __param(21, (0, mongoose_1.InjectModel)(RankFeeCashPayment_1.RankFeeCashPayment.name)),
+    __param(22, (0, mongoose_1.InjectModel)(CommuterRequest_1.CommuterRequest.name)),
+    __param(23, (0, mongoose_1.InjectModel)(VehicleTelemetry_1.VehicleTelemetry.name)),
+    __param(24, (0, mongoose_1.InjectModel)(AmbassadorPassengerCount_1.AmbassadorPassengerCount.name)),
+    __param(25, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
+    __param(26, (0, mongoose_1.InjectModel)(VehicleArrival_1.VehicleArrival.name)),
     __metadata("design:paramtypes", [zipper_1.FileArchiverService,
         user_service_1.UserService,
         city_service_1.CityService,
         fcm_service_1.MessagingService,
-        errors_interceptor_1.KasieErrorHandler, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        errors_interceptor_1.KasieErrorHandler, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], AssociationService);
 //# sourceMappingURL=association.service.js.map

@@ -35,9 +35,7 @@ export class Ticket {
   @Prop()
   @ApiProperty()
   ticketType: string;
-  @Prop({required: true})
-  @ApiProperty()
-  bucketFileName: string;
+  
   @Prop()
   @ApiProperty()
   associationId: string;
@@ -57,9 +55,6 @@ export class Ticket {
   @ApiProperty()
   numberOfTrips: number;
 
-  @Prop({required: true})
-  @ApiProperty()
-  qrCodeBytes: string;
 
   @Prop()
   @ApiProperty()

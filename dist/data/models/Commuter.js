@@ -75,6 +75,11 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], Commuter.prototype, "fcmToken", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], Commuter.prototype, "created", void 0);
 exports.Commuter = Commuter = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

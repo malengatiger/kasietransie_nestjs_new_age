@@ -33,6 +33,15 @@ let CommuterController = class CommuterController {
     async cancelCommuterRequest(commuterRequest) {
         return null;
     }
+    async getRouteCommuterRequests(routeId, startDate) {
+        return await this.commuterService.getRouteCommuterRequests(routeId, startDate);
+    }
+    async getCommuterRequests(commuterId, startDate) {
+        return await this.commuterService.getCommuterRequests(commuterId, startDate);
+    }
+    async getAssociationCommuterRequests(associationId, startDate) {
+        return await this.commuterService.getAssociationCommuterRequests(associationId, startDate);
+    }
 };
 exports.CommuterController = CommuterController;
 __decorate([
@@ -63,6 +72,30 @@ __decorate([
     __metadata("design:paramtypes", [CommuterRequest_1.CommuterRequest]),
     __metadata("design:returntype", Promise)
 ], CommuterController.prototype, "cancelCommuterRequest", null);
+__decorate([
+    (0, common_1.Get)('getRouteCommuterRequests'),
+    __param(0, (0, common_1.Query)('routeId')),
+    __param(1, (0, common_1.Query)('startDate')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], CommuterController.prototype, "getRouteCommuterRequests", null);
+__decorate([
+    (0, common_1.Get)('getCommuterRequests'),
+    __param(0, (0, common_1.Query)('commuterId')),
+    __param(1, (0, common_1.Query)('startDate')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], CommuterController.prototype, "getCommuterRequests", null);
+__decorate([
+    (0, common_1.Get)('getAssociationCommuterRequests'),
+    __param(0, (0, common_1.Query)('associationId')),
+    __param(1, (0, common_1.Query)('startDate')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], CommuterController.prototype, "getAssociationCommuterRequests", null);
 exports.CommuterController = CommuterController = __decorate([
     (0, common_1.Controller)('commuter'),
     __metadata("design:paramtypes", [commuter_service_1.CommuterService])

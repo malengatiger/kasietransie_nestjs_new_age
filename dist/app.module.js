@@ -86,11 +86,20 @@ const commuter_controller_1 = require("./features/commuter/commuter.controller")
 const CommuterResponse_1 = require("./data/models/CommuterResponse");
 const RouteLandmark_1 = require("./data/models/RouteLandmark");
 const Route_1 = require("./data/models/Route");
+const CommuterCashCheckIn_1 = require("./data/models/CommuterCashCheckIn");
+const CommuterCashPayment_1 = require("./data/models/CommuterCashPayment");
+const RankFeeCashCheckIn_1 = require("./data/models/RankFeeCashCheckIn");
+const RankFeeCashPayment_1 = require("./data/models/RankFeeCashPayment");
+const VehicleTelemetry_1 = require("./data/models/VehicleTelemetry");
+const points_module_1 = require("./points/points.module");
+const LocationResponseError_1 = require("./data/models/LocationResponseError");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
-            .apply(elapsed_middleware_1.ElapsedTimeMiddleware).forRoutes('*')
-            .apply(auth_middleware_1.AuthMiddleware).forRoutes('*');
+            .apply(elapsed_middleware_1.ElapsedTimeMiddleware)
+            .forRoutes("*")
+            .apply(auth_middleware_1.AuthMiddleware)
+            .forRoutes("*");
     }
 };
 exports.AppModule = AppModule;
@@ -99,7 +108,7 @@ exports.AppModule = AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({
                 load: [database_config_1.default],
-                envFilePath: '.env',
+                envFilePath: ".env",
                 isGlobal: true,
             }),
             mongoose_1.MongooseModule.forRootAsync({
@@ -117,8 +126,14 @@ exports.AppModule = AppModule = __decorate([
                 { name: "VehicleHeartbeat", schema: VehicleHeartbeat_1.VehicleHeartbeatSchema },
                 { name: "VehicleArrival", schema: VehicleArrival_1.VehicleArrivalSchema },
                 { name: "VehicleDeparture", schema: VehicleDeparture_1.VehicleDepartureSchema },
-                { name: "VehicleHeartbeatTimeSeries", schema: VehicleHeartbeatTimeSeries_1.VehicleHeartbeatTimeSeriesSchema },
-                { name: "VehicleHeartbeatTimeSeries", schema: VehicleHeartbeatTimeSeries_1.VehicleHeartbeatTimeSeriesSchema },
+                {
+                    name: "VehicleHeartbeatTimeSeries",
+                    schema: VehicleHeartbeatTimeSeries_1.VehicleHeartbeatTimeSeriesSchema,
+                },
+                {
+                    name: "VehicleHeartbeatTimeSeries",
+                    schema: VehicleHeartbeatTimeSeries_1.VehicleHeartbeatTimeSeriesSchema,
+                },
                 { name: "PassengerTimeSeries", schema: PassengerTimeSeries_1.PassengerTimeSeriesSchema },
                 { name: "User", schema: User_1.UserSchema },
                 { name: "DispatchRecord", schema: DispatchRecord_1.DispatchRecordSchema },
@@ -145,7 +160,17 @@ exports.AppModule = AppModule = __decorate([
                 { name: "RouteLandmark", schema: RouteLandmark_1.RouteLandmarkSchema },
                 { name: "Route", schema: Route_1.RouteSchema },
                 { name: "Trip", schema: Trip_1.TripSchema },
-                { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCount_1.AmbassadorPassengerCountSchema },
+                { name: "CommuterCashPayment", schema: CommuterCashPayment_1.CommuterCashPaymentSchema },
+                { name: "CommuterCashCheckIn", schema: CommuterCashCheckIn_1.CommuterCashCheckInSchema },
+                { name: "RankFeeCashPayment", schema: RankFeeCashPayment_1.RankFeeCashPaymentSchema },
+                { name: "RankFeeCashCheckIn", schema: RankFeeCashCheckIn_1.RankFeeCashCheckInSchema },
+                { name: "VehicleTelemetry", schema: VehicleTelemetry_1.VehicleTelemetrySchema },
+                { name: "CommuterRequest", schema: CommuterRequest_1.CommuterRequestSchema },
+                { name: "LocationResponseError", schema: LocationResponseError_1.LocationResponseErrorSchema },
+                {
+                    name: "AmbassadorPassengerCount",
+                    schema: AmbassadorPassengerCount_1.AmbassadorPassengerCountSchema,
+                },
             ]),
             dispatch_module_1.DispatchModule,
             ambassador_module_1.AmbassadorModule,
@@ -171,12 +196,29 @@ exports.AppModule = AppModule = __decorate([
             internal_module_1.InternalModule,
             commuter_module_1.CommuterModule,
             payment_module_1.PaymentModule,
+            points_module_1.PointsModule,
         ],
-        controllers: [app_controller_1.AppController, dispatch_controller_1.DispatchController, user_controller_1.UserController, commuter_controller_1.CommuterController],
-        providers: [app_service_1.AppService, dispatch_service_1.DispatchService, fcm_service_1.MessagingService, time_series_service_1.TimeSeriesService,
-            user_service_1.UserService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService, errors_interceptor_1.KasieErrorHandler,
-            ambassador_service_1.AmbassadorService, association_service_1.AssociationService, location_request_service_1.LocationRequestService,
-            zipper_1.FileArchiverService, firebase_util_1.FirebaseAdmin, commuter_service_1.CommuterService,
+        controllers: [
+            app_controller_1.AppController,
+            dispatch_controller_1.DispatchController,
+            user_controller_1.UserController,
+            commuter_controller_1.CommuterController,
+        ],
+        providers: [
+            app_service_1.AppService,
+            dispatch_service_1.DispatchService,
+            fcm_service_1.MessagingService,
+            time_series_service_1.TimeSeriesService,
+            user_service_1.UserService,
+            city_service_1.CityService,
+            storage_service_1.CloudStorageUploaderService,
+            errors_interceptor_1.KasieErrorHandler,
+            ambassador_service_1.AmbassadorService,
+            association_service_1.AssociationService,
+            location_request_service_1.LocationRequestService,
+            zipper_1.FileArchiverService,
+            firebase_util_1.FirebaseAdmin,
+            commuter_service_1.CommuterService,
         ],
     })
 ], AppModule);

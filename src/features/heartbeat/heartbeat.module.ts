@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { HeartbeatService } from './heartbeat.service';
+import { TelemetryService } from './heartbeat.service';
 import { HeartbeatController } from './heartbeat.controller';
 import { TimeSeriesService } from '../time_series/time_series.service';
 import { MessagingService } from '../fcm/fcm.service';
@@ -36,7 +36,7 @@ import { FirebaseAdmin } from 'src/services/firebase_util';
     ]),
   ],
   controllers: [HeartbeatController],
-  providers: [HeartbeatService, 
+  providers: [TelemetryService, 
     TimeSeriesService, MessagingService, FileArchiverService],
 })
 export class HeartbeatModule {}

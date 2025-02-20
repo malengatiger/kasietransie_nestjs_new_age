@@ -11,8 +11,8 @@ gcloud projects add-iam-policy-binding familyarchive-01 \
   --member="serviceAccount:archivebackend-service-account@familyarchive-01.iam.gserviceaccount.com" \
   --role="roles/datastore.owner"
 
-  gcloud projects add-iam-policy-binding kasie2024 \
-  --member="serviceAccount:kt-nest-1@kasie2024.iam.gserviceaccount.com" \
+  gcloud projects add-iam-policy-binding kasie-transie-4 \
+  --member="serviceAccount:kasie4-service-acct@kasie-transie-4.iam.gserviceaccount.com" \
   --role="roles/firebasemessaging.admin"
 
 gcloud projects add-iam-policy-binding kasie-transie-3 \
@@ -74,4 +74,12 @@ gcloud iam service-accounts add-iam-policy-binding \
   --role="roles/iam.serviceAccounts.signBlob" \
   --project kasie-transie-3
 
+
+gcloud projects add-iam-policy-binding kasie-transie-4 \
+  --member="serviceAccount:firebase-adminsdk-s8cpr@kasie-transie-4.iam.gserviceaccount.com" \
+  --role="roles/cloudmessaging.admin"
+
+  gcloud projects add-iam-policy-binding kasie-transie-4 \
+  --member="serviceAccount:firebase-adminsdk-s8cpr@kasie-transie-4.iam.gserviceaccount.com" \
+  --role="roles/artifactregistry.writer"
 

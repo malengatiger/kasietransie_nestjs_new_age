@@ -56,6 +56,16 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Date)
 ], LocationResponse.prototype, "mDate", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], LocationResponse.prototype, "fcmToken", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], LocationResponse.prototype, "vehicleFcmToken", void 0);
 exports.LocationResponse = LocationResponse = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true,

@@ -13,12 +13,18 @@ export declare class Constants {
     static readonly vehicleArrival = "vehicleArrival";
     static readonly vehicleDeparture = "vehicleDeparture";
     static readonly dispatchRecord = "dispatchRecord";
+    static readonly routeDispatchRecord = "routeDispatchRecord";
+    static readonly commuterCashPayment = "commuterCashPayment";
+    static readonly commuterCashCheckIn = "commuterCashCheckIn";
+    static readonly rankFeeCashPayment = "rankFeeCashPayment";
+    static readonly rankFeeCashCheckIn = "rankFeeCashCheckIn";
     static readonly passengerCount = "passengerCount";
     static readonly heartbeat = "heartbeat";
     static readonly commuterRequest = "commuterRequest";
     static readonly commuterResponse = "commuterResponse";
     static readonly locationRequest = "locationRequest";
     static readonly locationResponse = "locationResponse";
+    static readonly locationResponseError = "locationResponseError";
     static readonly userGeofenceEvent = "userGeofenceEvent";
     static readonly vehicleMediaRequest = "vehicleMediaRequest";
     static readonly routeUpdateRequest = "routeUpdateRequest";
@@ -31,4 +37,6 @@ export declare class Constants {
     static readonly qrcode_route = "route";
     static readonly associationEmailSuffix = "@kasie.com";
     static readonly associationPasswordPrefix = "pass";
+    static readonly telemetry = "telemetry";
+    static readonly trips = "trips";
 }

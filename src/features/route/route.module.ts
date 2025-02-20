@@ -26,6 +26,8 @@ import { KasieErrorHandler } from 'src/middleware/errors.interceptor';
 import { UserSchema } from 'src/data/models/User';
 import { UserPhotoSchema } from 'src/data/models/UserPhoto';
 import { AssociationSchema } from 'src/data/models/Association';
+import { DispatchRecordSchema } from 'src/data/models/DispatchRecord';
+import { CommuterRequestSchema } from 'src/data/models/CommuterRequest';
 
 @Module({
   imports: [
@@ -51,6 +53,10 @@ import { AssociationSchema } from 'src/data/models/Association';
       { name: "User", schema: UserSchema },
       { name: "UserPhoto", schema: UserPhotoSchema },
       { name: "Association", schema: AssociationSchema },
+      { name: "DispatchRecord", schema: DispatchRecordSchema },
+      { name: "CommuterRequest", schema: CommuterRequestSchema },
+
+
 
 
     ]),

@@ -3,13 +3,13 @@ set -e # Exit immediately if a command exits with a non-zero status.
 
 echo
 echo
-echo "🔵🐦🔵🐦🔵🐦 Deploying KasieTransie-3 Backend on NestJS to Cloud Run ... 🔵 🔵 🔵 🔵 🔵 🔵"
+echo "🔵🐦🔵🐦🔵🐦 Deploying KasieTransie- Backend on NestJS to Cloud Run ... 🔵 🔵 🔵 🔵 🔵 🔵"
 
 # Define variables
-PROJECT_ID="kasie-transie-3"
-IMAGE_NAME="kasie-transie-backend-3"
+PROJECT_ID="kasie-transie-4"
+IMAGE_NAME="kasie-transie-backend-4"
 REGION="europe-west1"
-SERVICE_NAME="kasie-transie-backend-3"
+SERVICE_NAME="kasie-transie-backend-4"
 echo
 echo
 echo "🐦🐦🐦 Build the backend app ... 🔵 🔵 🔵 🔵 🔵 🔵"
@@ -30,7 +30,7 @@ echo
 echo "🍎 🍎 🍎 🍎 🍎 🍎 🍎 🍎 🍎 start container deployment of app to Cloud Run"
 echo
 # Deploy the app to Cloud Run
-gcloud run deploy --source . kasie-transie-3-backend \
+gcloud run deploy --source . kasie-transie-4-backend \
   --platform managed \
   --region europe-west1 \
   --allow-unauthenticated

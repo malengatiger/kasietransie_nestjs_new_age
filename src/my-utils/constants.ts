@@ -15,6 +15,14 @@ export class Constants {
   public static readonly vehicleArrival = 'vehicleArrival';
   public static readonly vehicleDeparture = 'vehicleDeparture';
   public static readonly dispatchRecord = 'dispatchRecord';
+  public static readonly routeDispatchRecord = 'routeDispatchRecord';
+
+  public static readonly commuterCashPayment = 'commuterCashPayment';
+  public static readonly commuterCashCheckIn = 'commuterCashCheckIn';
+
+  public static readonly rankFeeCashPayment = 'rankFeeCashPayment';
+  public static readonly rankFeeCashCheckIn = 'rankFeeCashCheckIn';
+
 
   public static readonly passengerCount = 'passengerCount';
   public static readonly heartbeat = 'heartbeat';
@@ -24,6 +32,8 @@ export class Constants {
   public static readonly locationRequest = 'locationRequest';
 
   public static readonly locationResponse = 'locationResponse';
+  public static readonly locationResponseError = 'locationResponseError';
+
   public static readonly userGeofenceEvent = 'userGeofenceEvent';
   public static readonly vehicleMediaRequest = 'vehicleMediaRequest';
   public static readonly routeUpdateRequest = 'routeUpdateRequest';
@@ -38,5 +48,9 @@ export class Constants {
 
   public static readonly associationEmailSuffix = '@kasie.com';
   public static readonly associationPasswordPrefix = 'pass';
+
+  public static readonly telemetry = 'telemetry';
+  public static readonly trips = 'trips';
+
 
 }

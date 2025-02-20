@@ -54,18 +54,14 @@ export class User {
   @Prop()
   @ApiProperty()
   qrCodeUrl: string;
-  @Prop({required: true})
-  @ApiProperty()
-  bucketFileName: string;
+  
   @Prop()
   @ApiProperty()
   profileUrl: string;
   @Prop()
   @ApiProperty()
   profileThumbnail: string;
-  @Prop({required: true})
-  @ApiProperty()
-  qrCodeBytes: string;
+  
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

@@ -27,35 +27,28 @@ const location_request_service_1 = require("../location_request/location_request
 const route_service_1 = require("../route/route.service");
 const time_series_service_1 = require("../time_series/time_series.service");
 const vehicle_service_1 = require("./vehicle.service");
-const LocationRequest_1 = require("../../data/models/LocationRequest");
-const LocationResponse_1 = require("../../data/models/LocationResponse");
 const VehicleMediaRequest_1 = require("../../data/models/VehicleMediaRequest");
 const heartbeat_service_1 = require("../heartbeat/heartbeat.service");
 const VehicleTelemetry_1 = require("../../data/models/VehicleTelemetry");
+const FuelTopUp_1 = require("../../data/models/FuelTopUp");
+const FuelBrand_1 = require("../../data/models/FuelBrand");
 const mm = " 🚼 🚼 🚼 VehicleController  🚼";
 let VehicleController = VehicleController_1 = class VehicleController {
-    constructor(carService, dispatchService, mediaService, locationRequestService, routeService, timeSeriesService, heartbeatService) {
+    constructor(carService, dispatchService, mediaService, locationRequestService, routeService, timeSeriesService, telemetryService) {
         this.carService = carService;
         this.dispatchService = dispatchService;
         this.mediaService = mediaService;
         this.locationRequestService = locationRequestService;
         this.routeService = routeService;
         this.timeSeriesService = timeSeriesService;
-        this.heartbeatService = heartbeatService;
+        this.telemetryService = telemetryService;
         this.logger = new common_1.Logger(VehicleController_1.name);
     }
     async addVehicle(vehicle) {
-        common_1.Logger.log(`${mm} addVehicle; check bucketFileName: ${vehicle.bucketFileName}`);
         return await this.carService.addVehicle(vehicle);
     }
     async updateVehicle(vehicle) {
         return await this.carService.updateVehicle(vehicle);
-    }
-    async addLocationRequest(request) {
-        return await this.locationRequestService.addLocationRequest(request);
-    }
-    async addLocationResponse(request) {
-        return await this.locationRequestService.addLocationResponse(request);
     }
     async addVehicleMediaRequest(request) {
         return await this.routeService.addVehicleMediaRequest(request);
@@ -63,15 +56,20 @@ let VehicleController = VehicleController_1 = class VehicleController {
     async addVehiclePhoto(vehiclePhoto) {
         return await this.mediaService.addVehiclePhoto(vehiclePhoto);
     }
+    async addFuelBrand(fuelBrand) {
+        return await this.carService.addFuelBrand(fuelBrand);
+    }
+    async addFuelTopUp(fuelTopUp) {
+        return await this.carService.addFuelTopUp(fuelTopUp);
+    }
     async addVehicleArrival(vehicle) {
         return await this.dispatchService.addVehicleArrival(vehicle);
     }
     async addVehicleTelemetry(telemetry) {
-        return await this.heartbeatService.addVehicleTelemetry(telemetry);
+        return await this.telemetryService.addVehicleTelemetry(telemetry);
     }
     async uploadQRFile(file, associationId) {
         const fileName = await this.carService.uploadQRFile(file, associationId);
-        common_1.Logger.log(`${mm} uploadQRFile result: ${fileName}`);
         if (!fileName) {
             throw new common_1.HttpException(`uploadQRFile failed`, common_1.HttpStatus.BAD_REQUEST);
         }
@@ -82,6 +80,18 @@ let VehicleController = VehicleController_1 = class VehicleController {
     }
     async getPassengerTimeSeries(query) {
         return await this.timeSeriesService.getPassengerTimeSeries(query.associationId, query.routeId, query.startDate);
+    }
+    async getVehicleData(vehicleId, startDate, endDate) {
+        return await this.carService.getVehicleData(vehicleId, startDate, endDate);
+    }
+    async getVehicleFuelTopUps(vehicleId, startDate, endDate) {
+        return await this.carService.getVehicleFuelTopUps(vehicleId, startDate, endDate);
+    }
+    async getAssociationFuelTopUps(associationId, startDate, endDate) {
+        return await this.carService.getAssociationFuelTopUps(associationId, startDate, endDate);
+    }
+    async getFuelBrands() {
+        return await this.carService.getFuelBrands();
     }
     async getAssociationHeartbeatTimeSeries(query, res) {
         try {
@@ -135,20 +145,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], VehicleController.prototype, "updateVehicle", null);
 __decorate([
-    (0, common_1.Post)("addLocationRequest"),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [LocationRequest_1.LocationRequest]),
-    __metadata("design:returntype", Promise)
-], VehicleController.prototype, "addLocationRequest", null);
-__decorate([
-    (0, common_1.Post)("addLocationResponse"),
-    __param(0, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [LocationResponse_1.LocationResponse]),
-    __metadata("design:returntype", Promise)
-], VehicleController.prototype, "addLocationResponse", null);
-__decorate([
     (0, common_1.Post)("addVehicleMediaRequest"),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -162,6 +158,20 @@ __decorate([
     __metadata("design:paramtypes", [VehiclePhoto_1.VehiclePhoto]),
     __metadata("design:returntype", Promise)
 ], VehicleController.prototype, "addVehiclePhoto", null);
+__decorate([
+    (0, common_1.Post)("addFuelBrand"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [FuelBrand_1.FuelBrand]),
+    __metadata("design:returntype", Promise)
+], VehicleController.prototype, "addFuelBrand", null);
+__decorate([
+    (0, common_1.Post)("addFuelTopUp"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [FuelTopUp_1.FuelTopUp]),
+    __metadata("design:returntype", Promise)
+], VehicleController.prototype, "addFuelTopUp", null);
 __decorate([
     (0, common_1.Post)("addVehicleArrival"),
     __param(0, (0, common_1.Body)()),
@@ -199,6 +209,39 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], VehicleController.prototype, "getPassengerTimeSeries", null);
+__decorate([
+    (0, common_1.Get)("getVehicleData"),
+    __param(0, (0, common_1.Query)("vehicleId")),
+    __param(1, (0, common_1.Query)("startDate")),
+    __param(2, (0, common_1.Query)("endDate")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:returntype", Promise)
+], VehicleController.prototype, "getVehicleData", null);
+__decorate([
+    (0, common_1.Get)("getVehicleFuelTopUps"),
+    __param(0, (0, common_1.Query)("vehicleId")),
+    __param(1, (0, common_1.Query)("startDate")),
+    __param(2, (0, common_1.Query)("endDate")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:returntype", Promise)
+], VehicleController.prototype, "getVehicleFuelTopUps", null);
+__decorate([
+    (0, common_1.Get)("getAssociationFuelTopUps"),
+    __param(0, (0, common_1.Query)("associationId")),
+    __param(1, (0, common_1.Query)("startDate")),
+    __param(2, (0, common_1.Query)("endDate")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:returntype", Promise)
+], VehicleController.prototype, "getAssociationFuelTopUps", null);
+__decorate([
+    (0, common_1.Get)("getFuelBrands"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], VehicleController.prototype, "getFuelBrands", null);
 __decorate([
     (0, common_1.Get)("getAssociationHeartbeatTimeSeries"),
     __param(0, (0, common_1.Query)()),
@@ -258,6 +301,6 @@ exports.VehicleController = VehicleController = VehicleController_1 = __decorate
         location_request_service_1.LocationRequestService,
         route_service_1.RouteService,
         time_series_service_1.TimeSeriesService,
-        heartbeat_service_1.HeartbeatService])
+        heartbeat_service_1.TelemetryService])
 ], VehicleController);
 //# sourceMappingURL=vehicle.controller.js.map

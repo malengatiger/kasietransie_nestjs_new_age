@@ -38,8 +38,12 @@ import { LocationResponse } from "src/data/models/LocationResponse";
 import { VehicleMediaRequest } from "src/data/models/VehicleMediaRequest";
 import { VehicleBag } from "src/data/helpers/VehicleBag";
 import { VehicleVideo } from "src/data/models/VehicleVideo";
-import { HeartbeatService } from "../heartbeat/heartbeat.service";
+import { TelemetryService } from "../heartbeat/heartbeat.service";
 import { VehicleTelemetry } from "src/data/models/VehicleTelemetry";
+import { UpdateResult } from "mongoose";
+import { FuelTopUp } from "src/data/models/FuelTopUp";
+import { FuelBrand } from "src/data/models/FuelBrand";
+
 
 const mm = " 🚼 🚼 🚼 VehicleController  🚼";
 
@@ -54,32 +58,18 @@ export class VehicleController {
     private readonly locationRequestService: LocationRequestService,
     private readonly routeService: RouteService,
     private readonly timeSeriesService: TimeSeriesService,
-    private readonly heartbeatService: HeartbeatService
+    private readonly telemetryService: TelemetryService
   ) {}
 
   @Post("addVehicle")
   async addVehicle(@Body() vehicle: Vehicle): Promise<Vehicle> {
-    Logger.log(
-      `${mm} addVehicle; check bucketFileName: ${vehicle.bucketFileName}`
-    );
     return await this.carService.addVehicle(vehicle);
   }
   @Post("updateVehicle")
-  async updateVehicle(@Body() vehicle: Vehicle): Promise<number> {
+  async updateVehicle(@Body() vehicle: Vehicle): Promise<UpdateResult> {
     return await this.carService.updateVehicle(vehicle);
   }
-  @Post("addLocationRequest")
-  async addLocationRequest(
-    @Body() request: LocationRequest
-  ): Promise<LocationRequest> {
-    return await this.locationRequestService.addLocationRequest(request);
-  }
-  @Post("addLocationResponse")
-  async addLocationResponse(
-    @Body() request: LocationResponse
-  ): Promise<LocationResponse> {
-    return await this.locationRequestService.addLocationResponse(request);
-  }
+
   @Post("addVehicleMediaRequest")
   async addVehicleMediaRequest(
     @Body() request: VehicleMediaRequest
@@ -92,6 +82,14 @@ export class VehicleController {
   ): Promise<VehiclePhoto> {
     return await this.mediaService.addVehiclePhoto(vehiclePhoto);
   }
+  @Post("addFuelBrand")
+  async addFuelBrand(@Body() fuelBrand: FuelBrand): Promise<FuelBrand> {
+    return await this.carService.addFuelBrand(fuelBrand);
+  }
+  @Post("addFuelTopUp")
+  async addFuelTopUp(@Body() fuelTopUp: FuelTopUp): Promise<FuelTopUp> {
+    return await this.carService.addFuelTopUp(fuelTopUp);
+  }
   @Post("addVehicleArrival")
   async addVehicleArrival(
     @Body() vehicle: VehicleArrival
@@ -103,7 +101,7 @@ export class VehicleController {
   async addVehicleTelemetry(
     @Body() telemetry: VehicleTelemetry
   ): Promise<VehicleTelemetry> {
-    return await this.heartbeatService.addVehicleTelemetry(telemetry);
+    return await this.telemetryService.addVehicleTelemetry(telemetry);
   }
 
   @Post("uploadQRFile")
@@ -113,7 +111,6 @@ export class VehicleController {
     @Query("associationId") associationId: string
   ): Promise<any> {
     const fileName = await this.carService.uploadQRFile(file, associationId);
-    Logger.log(`${mm} uploadQRFile result: ${fileName}`);
     if (!fileName) {
       throw new HttpException(`uploadQRFile failed`, HttpStatus.BAD_REQUEST);
     }
@@ -142,6 +139,34 @@ export class VehicleController {
       query.routeId,
       query.startDate
     );
+  }
+  @Get("getVehicleData")
+  public async getVehicleData(
+    @Query("vehicleId") vehicleId: string,
+    @Query("startDate") startDate: string,
+    @Query("endDate") endDate: string
+  ): Promise<any> {
+    return await this.carService.getVehicleData(vehicleId, startDate, endDate);
+  }
+  @Get("getVehicleFuelTopUps")
+  public async getVehicleFuelTopUps(
+    @Query("vehicleId") vehicleId: string,
+    @Query("startDate") startDate: string,
+    @Query("endDate") endDate: string
+  ): Promise<any> {
+    return await this.carService.getVehicleFuelTopUps(vehicleId, startDate, endDate);
+  }
+  @Get("getAssociationFuelTopUps")
+  public async getAssociationFuelTopUps(
+    @Query("associationId") associationId: string,
+    @Query("startDate") startDate: string,
+    @Query("endDate") endDate: string
+  ): Promise<any> {
+    return await this.carService.getAssociationFuelTopUps(associationId, startDate, endDate);
+  }
+  @Get("getFuelBrands")
+  public async getFuelBrands(): Promise<FuelBrand[]> {
+    return await this.carService.getFuelBrands();
   }
   @Get("getAssociationHeartbeatTimeSeries")
   public async getAssociationHeartbeatTimeSeries(

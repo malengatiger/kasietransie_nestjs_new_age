@@ -42,7 +42,7 @@ exports.HeartbeatModule = HeartbeatModule = __decorate([
             ]),
         ],
         controllers: [heartbeat_controller_1.HeartbeatController],
-        providers: [heartbeat_service_1.HeartbeatService,
+        providers: [heartbeat_service_1.TelemetryService,
             time_series_service_1.TimeSeriesService, fcm_service_1.MessagingService, zipper_1.FileArchiverService],
     })
 ], HeartbeatModule);

@@ -15,17 +15,23 @@ export declare class StorageController {
     uploadVehiclePhoto(files: {
         imageFile: Express.Multer.File[];
         thumbFile: Express.Multer.File[];
-    }, vehicleId: string, latitude: string, longitude: string): Promise<VehiclePhoto>;
+    }, vehicleId: string, latitude: number, longitude: number): Promise<VehiclePhoto>;
     uploadUserProfilePicture(files: {
         imageFile: Express.Multer.File[];
         thumbFile: Express.Multer.File[];
     }, userId: string): Promise<User>;
     uploadQrCodeFile(files: {
         imageFile: Express.Multer.File[];
-    }, associationId: string): Promise<string>;
+    }, associationId: string): Promise<any>;
+    uploadReceiptFile(files: {
+        imageFile: Express.Multer.File[];
+    }, associationId: string): Promise<any>;
     uploadVehicleVideo(file: Express.Multer.File, data: {
         vehicleId: string;
         latitude: number;
         longitude: number;
     }): Promise<any>;
+    uploadFuelBrandLogo(files: {
+        file: Express.Multer.File[];
+    }, fuelBrandId: string): Promise<any>;
 }

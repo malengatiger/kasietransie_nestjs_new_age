@@ -60,6 +60,13 @@ const UserPhoto_1 = require("../../data/models/UserPhoto");
 const heartbeat_service_1 = require("../heartbeat/heartbeat.service");
 const VehicleTelemetry_1 = require("../../data/models/VehicleTelemetry");
 const Trip_1 = require("../../data/models/Trip");
+const CommuterCashCheckIn_1 = require("../../data/models/CommuterCashCheckIn");
+const CommuterCashPayment_1 = require("../../data/models/CommuterCashPayment");
+const RankFeeCashCheckIn_1 = require("../../data/models/RankFeeCashCheckIn");
+const RankFeeCashPayment_1 = require("../../data/models/RankFeeCashPayment");
+const LocationResponseError_1 = require("../../data/models/LocationResponseError");
+const FuelBrand_1 = require("../../data/models/FuelBrand");
+const FuelTopUp_1 = require("../../data/models/FuelTopUp");
 let VehicleModule = class VehicleModule {
 };
 exports.VehicleModule = VehicleModule;
@@ -103,17 +110,29 @@ exports.VehicleModule = VehicleModule = __decorate([
                 { name: "Route", schema: Route_1.RouteSchema },
                 { name: "RoutePoint", schema: RoutePoint_1.RoutePointSchema },
                 { name: "CalculatedDistance", schema: CalculatedDistance_1.CalculatedDistanceSchema },
-                { name: "VehicleHeartbeatTimeSeries", schema: VehicleHeartbeatTimeSeries_1.VehicleHeartbeatTimeSeriesSchema },
+                {
+                    name: "VehicleHeartbeatTimeSeries",
+                    schema: VehicleHeartbeatTimeSeries_1.VehicleHeartbeatTimeSeriesSchema,
+                },
                 { name: "PassengerTimeSeries", schema: PassengerTimeSeries_1.PassengerTimeSeriesSchema },
                 { name: "City", schema: City_1.CitySchema },
                 { name: "City", schema: City_1.CitySchema },
                 { name: "Trip", schema: Trip_1.TripSchema },
                 { name: "UserPhoto", schema: UserPhoto_1.UserPhotoSchema },
+                { name: "CommuterCashPayment", schema: CommuterCashPayment_1.CommuterCashPaymentSchema },
+                { name: "CommuterCashCheckIn", schema: CommuterCashCheckIn_1.CommuterCashCheckInSchema },
+                { name: "RankFeeCashPayment", schema: RankFeeCashPayment_1.RankFeeCashPaymentSchema },
+                { name: "RankFeeCashCheckIn", schema: RankFeeCashCheckIn_1.RankFeeCashCheckInSchema },
+                { name: "VehicleTelemetry", schema: VehicleTelemetry_1.VehicleTelemetrySchema },
+                { name: "CommuterRequest", schema: CommuterRequest_1.CommuterRequestSchema },
+                { name: "LocationResponseError", schema: LocationResponseError_1.LocationResponseErrorSchema },
+                { name: "FuelBrand", schema: FuelBrand_1.FuelBrandSchema },
+                { name: "FuelTopUp", schema: FuelTopUp_1.FuelTopUpSchema },
             ]),
         ],
         controllers: [vehicle_controller_1.VehicleController],
         providers: [
-            heartbeat_service_1.HeartbeatService,
+            heartbeat_service_1.TelemetryService,
             vehicle_service_1.VehicleService,
             user_service_1.UserService,
             city_service_1.CityService,
@@ -126,7 +145,8 @@ exports.VehicleModule = VehicleModule = __decorate([
             association_service_1.AssociationService,
             fcm_service_1.MessagingService,
             zipper_1.FileArchiverService,
-            storage_service_1.CloudStorageUploaderService, firebase_util_1.FirebaseAdmin,
+            storage_service_1.CloudStorageUploaderService,
+            firebase_util_1.FirebaseAdmin,
         ],
     })
 ], VehicleModule);

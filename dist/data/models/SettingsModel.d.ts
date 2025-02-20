@@ -17,6 +17,7 @@ export declare class SettingsModel {
     distanceFilter: number;
     created: string;
     mDate: Date;
+    geofenceRefreshMinutes: number;
 }
 export declare const SettingsModelSchema: import("mongoose").Schema<SettingsModel, import("mongoose").Model<SettingsModel, any, any, any, import("mongoose").Document<unknown, any, SettingsModel> & SettingsModel & Required<{
     _id: string;

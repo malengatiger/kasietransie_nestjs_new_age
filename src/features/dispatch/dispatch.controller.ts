@@ -96,43 +96,7 @@ export class DispatchController {
       endDate
     );
   }
-  @Get("getAssociationVehicleDepartures")
-  public async getAssociationVehicleDepartures(
-    associationId: string,
-    startDate: string,
-    endDate: string
-  ): Promise<VehicleDeparture[]> {
-    return this.dispatchService.getAssociationVehicleDepartures(
-      associationId,
-      startDate,
-      endDate
-    );
-  }
-  @Get("getAssociationDispatchRecords")
-  public async getAssociationDispatchRecords(
-    associationId: string,
-    startDate: string,
-    endDate: string
-  ): Promise<DispatchRecord[]> {
-    return this.dispatchService.getAssociationDispatchRecords(
-      associationId,
-      startDate,
-      endDate
-    );
-  }
-  @Get("getAssociationVehicleArrivals")
-  public async getAssociationVehicleArrivals(
-    associationId: string,
-    startDate: string,
-    endDate: string
-  ): Promise<VehicleArrival[]> {
-    return this.dispatchService.getAssociationVehicleArrivals(
-      associationId,
-      startDate,
-      endDate
-    );
-  }
-  @Get("getAssociationCounts")
+    @Get("getAssociationCounts")
   public async getAssociationCounts(
     associationId: string,
     startDate: string,

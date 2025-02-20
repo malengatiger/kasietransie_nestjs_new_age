@@ -7,6 +7,8 @@ export declare class LocationRequest {
     created: string;
     userId: string;
     userName: string;
+    fcmToken: string;
+    vehicleFcmToken: string;
     mDate: Date;
 }
 export declare const LocationRequestSchema: import("mongoose").Schema<LocationRequest, import("mongoose").Model<LocationRequest, any, any, any, import("mongoose").Document<unknown, any, LocationRequest> & LocationRequest & Required<{

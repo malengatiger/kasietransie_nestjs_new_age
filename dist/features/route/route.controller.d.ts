@@ -29,6 +29,7 @@ export declare class RouteController {
         assocIdFrom: string;
         assocIdTo: string;
     }): Promise<string>;
+    copySelectedRoute(associationId: string, routeId: string): Promise<any>;
     deleteCopiedRoutes(query: {
         associationId: string;
     }): Promise<string>;
@@ -83,4 +84,11 @@ export declare class RouteController {
     getRouteLandmarks(routeId: string): Promise<RouteLandmark[]>;
     getRoutePoints(routeId: string): Promise<RoutePoint[]>;
     private sendFile;
+    deleteExcept(query: {
+        associationId: string;
+    }): Promise<any>;
+    deleteAssociationRoutePoints(query: {
+        associationId: string;
+    }): Promise<any>;
+    deleteRoutePointsWithNoAssociation(): Promise<any>;
 }

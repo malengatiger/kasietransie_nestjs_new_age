@@ -10,13 +10,14 @@ import { LocationRequestService } from "src/features/location_request/location_r
 import { RouteService } from "src/features/route/route.service";
 import { TimeSeriesService } from "src/features/time_series/time_series.service";
 import { VehicleService } from "src/features/vehicle/vehicle.service";
-import { LocationRequest } from "src/data/models/LocationRequest";
-import { LocationResponse } from "src/data/models/LocationResponse";
 import { VehicleMediaRequest } from "src/data/models/VehicleMediaRequest";
 import { VehicleBag } from "src/data/helpers/VehicleBag";
 import { VehicleVideo } from "src/data/models/VehicleVideo";
-import { HeartbeatService } from "../heartbeat/heartbeat.service";
+import { TelemetryService } from "../heartbeat/heartbeat.service";
 import { VehicleTelemetry } from "src/data/models/VehicleTelemetry";
+import { UpdateResult } from "mongoose";
+import { FuelTopUp } from "src/data/models/FuelTopUp";
+import { FuelBrand } from "src/data/models/FuelBrand";
 export declare class VehicleController {
     private readonly carService;
     private readonly dispatchService;
@@ -24,15 +25,15 @@ export declare class VehicleController {
     private readonly locationRequestService;
     private readonly routeService;
     private readonly timeSeriesService;
-    private readonly heartbeatService;
+    private readonly telemetryService;
     private readonly logger;
-    constructor(carService: VehicleService, dispatchService: DispatchService, mediaService: MediaService, locationRequestService: LocationRequestService, routeService: RouteService, timeSeriesService: TimeSeriesService, heartbeatService: HeartbeatService);
+    constructor(carService: VehicleService, dispatchService: DispatchService, mediaService: MediaService, locationRequestService: LocationRequestService, routeService: RouteService, timeSeriesService: TimeSeriesService, telemetryService: TelemetryService);
     addVehicle(vehicle: Vehicle): Promise<Vehicle>;
-    updateVehicle(vehicle: Vehicle): Promise<number>;
-    addLocationRequest(request: LocationRequest): Promise<LocationRequest>;
-    addLocationResponse(request: LocationResponse): Promise<LocationResponse>;
+    updateVehicle(vehicle: Vehicle): Promise<UpdateResult>;
     addVehicleMediaRequest(request: VehicleMediaRequest): Promise<VehicleMediaRequest>;
     addVehiclePhoto(vehiclePhoto: VehiclePhoto): Promise<VehiclePhoto>;
+    addFuelBrand(fuelBrand: FuelBrand): Promise<FuelBrand>;
+    addFuelTopUp(fuelTopUp: FuelTopUp): Promise<FuelTopUp>;
     addVehicleArrival(vehicle: VehicleArrival): Promise<VehicleArrival>;
     addVehicleTelemetry(telemetry: VehicleTelemetry): Promise<VehicleTelemetry>;
     uploadQRFile(file: Express.Multer.File, associationId: string): Promise<any>;
@@ -43,6 +44,10 @@ export declare class VehicleController {
         vehicleId: string;
         startDate: string;
     }): Promise<any[]>;
+    getVehicleData(vehicleId: string, startDate: string, endDate: string): Promise<any>;
+    getVehicleFuelTopUps(vehicleId: string, startDate: string, endDate: string): Promise<any>;
+    getAssociationFuelTopUps(associationId: string, startDate: string, endDate: string): Promise<any>;
+    getFuelBrands(): Promise<FuelBrand[]>;
     getAssociationHeartbeatTimeSeries(query: {
         associationId: string;
         startDate: string;

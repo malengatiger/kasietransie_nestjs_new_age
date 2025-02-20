@@ -15,6 +15,10 @@ import { CloudStorageUploaderService } from "src/storage/storage.service";
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 import { AssociationRouteData } from "src/data/models/RouteData";
 import { Association } from "src/data/models/Association";
+import { Vehicle } from "src/data/models/Vehicle";
+import { User } from "src/data/models/User";
+import { DispatchRecord } from "src/data/models/DispatchRecord";
+import { CommuterRequest } from "src/data/models/CommuterRequest";
 export declare class RouteService {
     private storage;
     private readonly archiveService;
@@ -30,8 +34,14 @@ export declare class RouteService {
     private calculatedDistanceModel;
     private assModel;
     private routeModel;
-    constructor(storage: CloudStorageUploaderService, archiveService: FileArchiverService, messagingService: MessagingService, cityService: CityService, errorHandler: KasieErrorHandler, routeUpdateRequestModel: mongoose.Model<RouteUpdateRequest>, vehicleMediaRequestModel: mongoose.Model<VehicleMediaRequest>, routeLandmarkModel: mongoose.Model<RouteLandmark>, routeCityModel: mongoose.Model<RouteCity>, cityModel: mongoose.Model<City>, routePointModel: mongoose.Model<RoutePoint>, calculatedDistanceModel: mongoose.Model<CalculatedDistance>, assModel: mongoose.Model<Association>, routeModel: mongoose.Model<Route>);
-    deleteCopiedRoutes(associationId: string): Promise<string>;
+    private vehicleModel;
+    private dispatchRecordModel;
+    private commuterRequestModel;
+    private userModel;
+    constructor(storage: CloudStorageUploaderService, archiveService: FileArchiverService, messagingService: MessagingService, cityService: CityService, errorHandler: KasieErrorHandler, routeUpdateRequestModel: mongoose.Model<RouteUpdateRequest>, vehicleMediaRequestModel: mongoose.Model<VehicleMediaRequest>, routeLandmarkModel: mongoose.Model<RouteLandmark>, routeCityModel: mongoose.Model<RouteCity>, cityModel: mongoose.Model<City>, routePointModel: mongoose.Model<RoutePoint>, calculatedDistanceModel: mongoose.Model<CalculatedDistance>, assModel: mongoose.Model<Association>, routeModel: mongoose.Model<Route>, vehicleModel: mongoose.Model<Vehicle>, dispatchRecordModel: mongoose.Model<DispatchRecord>, commuterRequestModel: mongoose.Model<CommuterRequest>, userModel: mongoose.Model<User>);
+    deleteExcept(associationId: string): Promise<any>;
+    deleteAssociationArtifacts(associationId: string, name: string): Promise<string>;
+    copySelectedRoute(associationId: string, routeId: string): Promise<any>;
     copyRoutes(assocIdFrom: string, assocIdTo: string): Promise<string>;
     findAssociationRouteLandmarksByLocation(associationId: string, latitude: number, longitude: number, radiusInKM: number): Promise<RouteLandmark[]>;
     findAssociationRoutesByLocation(associationId: string, latitude: number, longitude: number, radiusInKM: number): Promise<Route[]>;
@@ -56,6 +66,7 @@ export declare class RouteService {
     getRouteCities(routeId: string): Promise<RouteCity[]>;
     getRouteLandmarks(routeId: string): Promise<RouteLandmark[]>;
     findRoutesByLocation(latitude: number, longitude: number, radiusInKM: number): Promise<Route[]>;
+    private removeDuplicateRoutes;
     findRouteLandmarksByLocation(latitude: number, longitude: number, radiusInKM: number): Promise<RouteLandmark[]>;
     findRoutePointsByLocation(latitude: number, longitude: number, radiusInKM: number): Promise<RoutePoint[]>;
     getAssociationRoutePoints(associationId: string): Promise<string>;
@@ -72,7 +83,13 @@ export declare class RouteService {
     getRoutePointsZipped(routeId: string): Promise<string>;
     getRoute(routeId: string): Promise<Route>;
     deleteRoutePoints(routeId: string): Promise<any>;
+    deleteAssociationRoutePoints(associationId: string): Promise<any>;
+    deleteRoutePointsWithNoAssociation(): Promise<any>;
     deleteRoutePointList(routePointList: RoutePointList): Promise<RoutePoint[]>;
     removeAllDuplicateRoutePoints(): Promise<any>;
     removeDuplicateRoutePoints(routeId: string): Promise<any>;
+}
+export interface RoutesToCopy {
+    assocId: string;
+    routeIds: string[];
 }

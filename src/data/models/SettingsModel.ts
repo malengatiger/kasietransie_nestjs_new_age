@@ -58,6 +58,10 @@ export class SettingsModel {
   @Prop()
   @ApiProperty()
   mDate: Date;
+  
+  @Prop()
+  @ApiProperty()
+  geofenceRefreshMinutes: number;
 }
 
 export const SettingsModelSchema = SchemaFactory.createForClass(SettingsModel);

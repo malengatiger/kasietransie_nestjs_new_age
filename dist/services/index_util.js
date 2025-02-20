@@ -32,6 +32,15 @@ let MongoIndexBuilder = class MongoIndexBuilder {
             const collectionI = db.collection("UserGeofenceEvent");
             const resI = await collectionI.createIndex({ position: "2dsphere" });
             common_1.Logger.debug(`${tag} UserGeofenceEvent spatial index created: ${resI}`);
+            const collectionIa = db.collection("CommuterRequest");
+            const resIa = await collectionIa.createIndex({ position: "2dsphere" });
+            common_1.Logger.debug(`${tag} CommuterRequest spatial index created: ${resIa}`);
+            const collectionIb = db.collection("DispatchRecord");
+            const resIb = await collectionIb.createIndex({ position: "2dsphere" });
+            common_1.Logger.debug(`${tag} DispatchRecord spatial index created: ${resIb}`);
+            const collectionIc = db.collection("VehicleTelemetry");
+            const resIc = await collectionIc.createIndex({ position: "2dsphere" });
+            common_1.Logger.debug(`${tag} VehicleTelemetry spatial index created: ${resIc}`);
             const collectionH = db.collection("VehicleVideo");
             const resH = await collectionH.createIndex({ position: "2dsphere" });
             common_1.Logger.debug(`${tag} VehicleVideo spatial index created: ${resH}`);
@@ -104,7 +113,7 @@ let MongoIndexBuilder = class MongoIndexBuilder {
             const collection9 = db.collection("User");
             const res9 = await collection9.createIndex({ associationId: 1, email: 1 }, { unique: true });
             common_1.Logger.debug(`${tag} User association/email unique index created: ${res9}`);
-            common_1.Logger.log(`${tag} 🌼 🌼 🌼 18 MongoDB Atlas indexes created successfully!  🌼\n\n`);
+            common_1.Logger.log(`${tag} 🌼 🌼 🌼 21 MongoDB Atlas indexes created successfully!  🌼\n\n`);
         }
         catch (error) {
             console.error(`${tag} Error creating indexes:`, error);

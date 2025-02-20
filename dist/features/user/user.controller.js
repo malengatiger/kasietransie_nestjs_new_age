@@ -27,6 +27,9 @@ let UserController = UserController_1 = class UserController {
         common_1.Logger.log(`${mm} addUser; check bucketFileName: ${JSON.stringify(user, null, 2)}`);
         return await this.userService.createUser(user);
     }
+    async createVehicleUser(user) {
+        return await this.userService.createVehicleUser(user);
+    }
     async createOwner(user) {
         return await this.userService.createOwner(user);
     }
@@ -58,6 +61,13 @@ __decorate([
     __metadata("design:paramtypes", [User_1.User]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "addUser", null);
+__decorate([
+    (0, common_1.Post)("createVehicleUser"),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [User_1.User]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "createVehicleUser", null);
 __decorate([
     (0, common_1.Post)("createOwner"),
     __param(0, (0, common_1.Body)()),

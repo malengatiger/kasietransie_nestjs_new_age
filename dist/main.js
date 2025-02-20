@@ -10,10 +10,23 @@ const mm = "🔵 🔵 🔵 🔵 🔵 🔵 Kasie Transie Bootstrap 🔵 🔵";
 const env = process.env.NODE_ENV;
 common_1.Logger.log(`${mm} Kasie NODE_ENV : ${env}`);
 async function bootstrap() {
-    common_1.Logger.log(`${mm} ... Kasie NestJS Backend bootstrapping .....`);
-    const app = await core_1.NestFactory.create(app_module_1.AppModule, {
-        logger: ["fatal", "log", "error", "warn", "debug"],
-    });
+    common_1.Logger.log(`${mm} ... Kasie NestJS Backend bootstrapping ..... env: ${env}`);
+    let app;
+    if (env === "production") {
+        app = await core_1.NestFactory.create(app_module_1.AppModule, {
+            logger: ["fatal", "error"],
+        });
+    }
+    if (env === "development") {
+        app = await core_1.NestFactory.create(app_module_1.AppModule, {
+            logger: ["fatal", "error", 'log', 'debug'],
+        });
+    }
+    if (app === null) {
+        app = await core_1.NestFactory.create(app_module_1.AppModule, {
+            logger: ["fatal", "error", 'log', 'debug'],
+        });
+    }
     const port = my_utils_1.MyUtils.getPort();
     app.setGlobalPrefix("api/v1");
     const config = new swagger_1.DocumentBuilder()

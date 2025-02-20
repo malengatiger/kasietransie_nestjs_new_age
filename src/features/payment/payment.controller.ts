@@ -48,6 +48,7 @@ export class PaymentController {
   ): Promise<CommuterProviderPayment> {
     return this.paymentService.addCommuterProviderPayment(payment);
   }
+  //
   @Post("addRankFeeCashPayment")
   async addRankFeeCashPayment(
     @Body() payment: RankFeeCashPayment

@@ -21,6 +21,15 @@ const RouteLandmark_1 = require("../../data/models/RouteLandmark");
 const Route_1 = require("../../data/models/Route");
 const RoutePoint_1 = require("../../data/models/RoutePoint");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
+const storage_service_1 = require("../../storage/storage.service");
+const errors_interceptor_1 = require("../../middleware/errors.interceptor");
+const ExampleFile_1 = require("../../data/models/ExampleFile");
+const Vehicle_1 = require("../../data/models/Vehicle");
+const User_1 = require("../../data/models/User");
+const UserPhoto_1 = require("../../data/models/UserPhoto");
+const VehiclePhoto_1 = require("../../data/models/VehiclePhoto");
+const VehicleVideo_1 = require("../../data/models/VehicleVideo");
+const Association_1 = require("../../data/models/Association");
 let CommuterModule = class CommuterModule {
 };
 exports.CommuterModule = CommuterModule;
@@ -36,11 +45,20 @@ exports.CommuterModule = CommuterModule = __decorate([
                 { name: "RouteLandmark", schema: RouteLandmark_1.RouteLandmarkSchema },
                 { name: "Route", schema: Route_1.RouteSchema },
                 { name: "RoutePoint", schema: RoutePoint_1.RoutePointSchema },
+                { name: "Vehicle", schema: Vehicle_1.VehicleSchema },
+                { name: "User", schema: User_1.UserSchema },
+                { name: "UserPhoto", schema: UserPhoto_1.UserPhotoSchema },
+                { name: "VehiclePhoto", schema: VehiclePhoto_1.VehiclePhotoSchema },
+                { name: "VehicleVideo", schema: VehicleVideo_1.VehicleVideoSchema },
+                { name: "Association", schema: Association_1.AssociationSchema },
+                { name: "ExampleFile", schema: ExampleFile_1.ExampleFileSchema },
                 { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
             ]),
         ],
         controllers: [commuter_controller_1.CommuterController],
-        providers: [commuter_service_1.CommuterService, fcm_service_1.MessagingService],
+        providers: [commuter_service_1.CommuterService,
+            errors_interceptor_1.KasieErrorHandler,
+            fcm_service_1.MessagingService, storage_service_1.CloudStorageUploaderService],
     })
 ], CommuterModule);
 //# sourceMappingURL=commuter.module.js.map

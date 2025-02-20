@@ -98,9 +98,6 @@ let UserService = class UserService {
                 });
             }
             else {
-                user.bucketFileName = "NAY";
-                user.qrCodeBytes = "NAY";
-                user.qrCodeBytes = "NAY";
                 userRecord = await app.auth().createUser({
                     email: user.email,
                     password: user.password,
@@ -112,16 +109,79 @@ let UserService = class UserService {
             user.dateRegistered = new Date().toISOString();
             user.password = null;
             user.userId = uid;
-            common_1.Logger.debug(`${mm} createUser: ... bucketFileName: ${user.bucketFileName}`);
             common_1.Logger.debug(`${mm} ... adding user to Mongo, user; check bucketFileName: ${user.email}`);
+            user.dateRegistered = new Date().toISOString();
+            const url = await this.storage.createQRCode({
+                data: JSON.stringify(user),
+                prefix: "user",
+                size: 2,
+                associationId: user.associationId,
+            });
+            user.qrCodeUrl = url;
             await this.userModel.create(user);
             user.password = storedPassword;
-            common_1.Logger.log(`\n\n${mm} createUser: 🔵 🔵 🔵 🔵 🔵 user created on Mongo Atlas: 🥬🥬🥬 ${user.email} 🥬\n\n`);
+            common_1.Logger.log(`\n\n${mm} createUser: 🔵 🔵 🔵 🔵 🔵 user ${user.email} created on Mongo Atlas: 🥬🥬🥬 ${user.email} 🥬\n\n`);
         }
         catch (e) {
             common_1.Logger.error(`${mm} User creation failed: ${e}`);
             this.errorHandler.handleError(`User creation failed: ${e}`, user.associationId, user.associationName);
             throw new common_1.HttpException(`${mm} User creation failed: ${e}`, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        common_1.Logger.error(`${mm} User creation OK!: ${JSON.stringify(user)}`);
+        return user;
+    }
+    async createVehicleUser(user) {
+        const storedPassword = user.password;
+        const app = this.firebaseAdmin.getFirebaseApp();
+        common_1.Logger.log(`\n\n${mm} ........ createVehicleUser on Firebase Authentication: ${JSON.stringify(user, null, 2)} \n`);
+        let mUser = await this.userModel.findOne({
+            email: user.email,
+        });
+        if (mUser) {
+            common_1.Logger.log(`${mm} ........ User exists on Atlas: ${JSON.stringify(mUser, null, 2)} \n`);
+            return mUser;
+        }
+        try {
+            common_1.Logger.log(`${mm} createVehicleUser  .... 🎽 email: ${user.email}`);
+            const uid = (0, crypto_1.randomUUID)();
+            let userRecord = null;
+            if (user.cellphone) {
+                userRecord = await app.auth().createUser({
+                    email: user.email,
+                    password: user.password,
+                    displayName: `${user.firstName} ${user.lastName}`,
+                    uid: uid,
+                });
+            }
+            else {
+                userRecord = await app.auth().createUser({
+                    email: user.email,
+                    password: user.password,
+                    displayName: `${user.firstName} ${user.lastName}`,
+                    uid: uid,
+                });
+            }
+            common_1.Logger.log(`${mm} createVehicleUser: Firebase auth user created. userRecord from Firebase : 🎽 ${JSON.stringify(userRecord, null, 2)}`);
+            user.dateRegistered = new Date().toISOString();
+            user.password = null;
+            user.userId = uid;
+            common_1.Logger.debug(`${mm} ... adding user to Mongo, user; check bucketFileName: ${user.email}`);
+            user.dateRegistered = new Date().toISOString();
+            const url = await this.storage.createQRCode({
+                data: JSON.stringify(user),
+                prefix: "user",
+                size: 2,
+                associationId: null,
+            });
+            user.qrCodeUrl = url;
+            await this.userModel.create(user);
+            user.password = storedPassword;
+            common_1.Logger.log(`\n\n${mm} createVehicleUser: 🔵 🔵 🔵 🔵 🔵 user created on Mongo Atlas: 🥬🥬🥬 ${user.email} 🥬\n\n`);
+        }
+        catch (e) {
+            common_1.Logger.error(`${mm} createVehicleUser creation failed: ${e}`);
+            this.errorHandler.handleError(`User creation failed: ${e}`, user.associationId, user.associationName);
+            throw new common_1.HttpException(`${mm} Vehicle User creation failed: ${e}`, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return user;
     }
@@ -204,7 +264,6 @@ let UserService = class UserService {
             user.password = null;
             user.userId = uid;
             let url = null;
-            common_1.Logger.debug(`${mm} createOwner: ... bucketFileName: ${user.bucketFileName}`);
             common_1.Logger.debug(`${mm} ... adding owner to Mongo, userId: ${user.userId} - ${user.firstName}`);
             const mUser = await this.userModel.create(user);
             user.password = storedPassword;

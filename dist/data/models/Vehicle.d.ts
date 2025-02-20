@@ -1,5 +1,3 @@
-import { VehiclePhoto } from "./VehiclePhoto";
-import { VehicleVideo } from "./VehicleVideo";
 export declare class Vehicle {
     _partitionKey: string;
     _id: string;
@@ -10,8 +8,6 @@ export declare class Vehicle {
     countryId: string;
     ownerName: string;
     associationName: string;
-    bucketFileName: string;
-    qrCodeBytes: string;
     vehicleReg: string;
     model: string;
     make: string;
@@ -22,8 +18,7 @@ export declare class Vehicle {
     updated: string;
     dateInstalled: string;
     qrCodeUrl: string;
-    photos: VehiclePhoto[];
-    videos: VehicleVideo[];
+    fcmToken: string;
 }
 export declare const VehicleSchema: import("mongoose").Schema<Vehicle, import("mongoose").Model<Vehicle, any, any, any, import("mongoose").Document<unknown, any, Vehicle> & Vehicle & Required<{
     _id: string;

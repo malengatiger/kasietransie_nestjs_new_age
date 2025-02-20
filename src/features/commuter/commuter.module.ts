@@ -13,6 +13,15 @@ import { RouteSchema } from "src/data/models/Route";
 import { RoutePointSchema } from "src/data/models/RoutePoint";
 import { AssociationTokenSchema } from "src/data/models/AssociationToken";
 import { FirebaseAdmin } from "src/services/firebase_util";
+import { CloudStorageUploaderService } from "src/storage/storage.service";
+import { KasieErrorHandler } from "src/middleware/errors.interceptor";
+import { ExampleFileSchema } from "src/data/models/ExampleFile";
+import { VehicleSchema } from "src/data/models/Vehicle";
+import { UserSchema } from "src/data/models/User";
+import { UserPhotoSchema } from "src/data/models/UserPhoto";
+import { VehiclePhotoSchema } from "src/data/models/VehiclePhoto";
+import { VehicleVideoSchema } from "src/data/models/VehicleVideo";
+import { AssociationSchema } from "src/data/models/Association";
 
 @Module({
   imports: [
@@ -27,11 +36,22 @@ import { FirebaseAdmin } from "src/services/firebase_util";
       { name: "RouteLandmark", schema: RouteLandmarkSchema },
       { name: "Route", schema: RouteSchema },
       { name: "RoutePoint", schema: RoutePointSchema },
+      { name: "Vehicle", schema: VehicleSchema },
+      { name: "User", schema: UserSchema },
+      { name: "UserPhoto", schema: UserPhotoSchema },
+      { name: "VehiclePhoto", schema: VehiclePhotoSchema },
+      { name: "VehicleVideo", schema: VehicleVideoSchema },
+
+      { name: "Association", schema: AssociationSchema },
+      { name: "ExampleFile", schema: ExampleFileSchema },
+
       { name: "AssociationToken", schema: AssociationTokenSchema },
 
     ]),
   ],
   controllers: [CommuterController],
-  providers: [CommuterService, MessagingService],
+  providers: [CommuterService, 
+    KasieErrorHandler,
+    MessagingService, CloudStorageUploaderService],
 })
 export class CommuterModule {}

@@ -28,6 +28,14 @@ export class LocationRequest {
   @ApiProperty()
   userName: string;
 
+  @Prop({required: true})
+  @ApiProperty()
+  fcmToken: string;
+
+  @Prop({required: true})
+  @ApiProperty()
+  vehicleFcmToken: string;
+
   @Prop()
   @ApiProperty()
   mDate: Date;

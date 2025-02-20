@@ -35,6 +35,8 @@ const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 const User_1 = require("../../data/models/User");
 const UserPhoto_1 = require("../../data/models/UserPhoto");
 const Association_1 = require("../../data/models/Association");
+const DispatchRecord_1 = require("../../data/models/DispatchRecord");
+const CommuterRequest_1 = require("../../data/models/CommuterRequest");
 let RouteModule = class RouteModule {
 };
 exports.RouteModule = RouteModule;
@@ -61,6 +63,8 @@ exports.RouteModule = RouteModule = __decorate([
                 { name: "User", schema: User_1.UserSchema },
                 { name: "UserPhoto", schema: UserPhoto_1.UserPhotoSchema },
                 { name: "Association", schema: Association_1.AssociationSchema },
+                { name: "DispatchRecord", schema: DispatchRecord_1.DispatchRecordSchema },
+                { name: "CommuterRequest", schema: CommuterRequest_1.CommuterRequestSchema },
             ]),
         ],
         controllers: [route_controller_1.RouteController],

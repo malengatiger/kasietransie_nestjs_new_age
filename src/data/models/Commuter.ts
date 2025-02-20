@@ -45,6 +45,9 @@ export class Commuter {
   @Prop()
   @ApiProperty()
   fcmToken: string;
+  @Prop()
+  @ApiProperty()
+  created: string;
 }
 
 export const CommuterSchema = SchemaFactory.createForClass(Commuter);

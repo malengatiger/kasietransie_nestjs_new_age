@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { HttpException, HttpStatus, Injectable, Logger } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import mongoose from "mongoose";
+import mongoose, { UpdateResult } from "mongoose";
 import { Vehicle } from "src/data/models/Vehicle";
 import { Association } from "src/data/models/Association";
 import { User } from "src/data/models/User";
@@ -28,6 +28,14 @@ import * as path from "path";
 import { parse } from "csv";
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 import { UserService } from "../user/user.service";
+import { DispatchService } from "../dispatch/dispatch.service";
+import { VehicleTelemetry } from "src/data/models/VehicleTelemetry";
+import { CommuterCashPayment } from "src/data/models/CommuterCashPayment";
+import { Trip } from "src/data/models/Trip";
+import { daysInWeek } from "date-fns";
+import { RankFeeCashPayment } from "src/data/models/RankFeeCashPayment";
+import { FuelBrand } from "src/data/models/FuelBrand";
+import { FuelTopUp } from "src/data/models/FuelTopUp";
 const mm = "💚 💚 💚 VehicleService  💚 ";
 
 @Injectable()
@@ -36,6 +44,7 @@ export class VehicleService {
     private storage: CloudStorageUploaderService,
     private associationService: AssociationService,
     private userService: UserService,
+    private readonly dispatchService: DispatchService,
 
     private readonly errorHandler: KasieErrorHandler,
 
@@ -75,7 +84,29 @@ export class VehicleService {
     private vehiclePhotoModel: mongoose.Model<VehiclePhoto>,
 
     @InjectModel(VehicleVideo.name)
-    private vehicleVideoModel: mongoose.Model<VehicleVideo>
+    private vehicleVideoModel: mongoose.Model<VehicleVideo>,
+
+    @InjectModel(VehicleTelemetry.name)
+    private vehicleTelemetryModel: mongoose.Model<VehicleTelemetry>,
+
+    @InjectModel(AmbassadorPassengerCount.name)
+    private passengerCountModel: mongoose.Model<AmbassadorPassengerCount>,
+
+    @InjectModel(CommuterCashPayment.name)
+    private commuterCashPaymentModel: mongoose.Model<CommuterCashPayment>,
+
+    @InjectModel(Trip.name)
+    private tripModel: mongoose.Model<Trip>,
+
+    @InjectModel(FuelBrand.name)
+    private fuelBrandModel: mongoose.Model<FuelBrand>,
+
+    @InjectModel(FuelTopUp.name)
+    private fuelTopUpModel: mongoose.Model<FuelTopUp>,
+
+
+    @InjectModel(RankFeeCashPayment.name)
+    private rankFeeCashPaymentModel: mongoose.Model<RankFeeCashPayment>
   ) {}
 
   public async getAssociationVehicleMediaRequests(
@@ -88,6 +119,39 @@ export class VehicleService {
     });
   }
 
+  public async addFuelBrand(
+    fuelBrand: FuelBrand
+  ): Promise<FuelBrand> {
+    fuelBrand.fuelBrandId = randomUUID();
+    fuelBrand.created = new Date().toISOString();
+    return await this.fuelBrandModel.create(fuelBrand);
+  }
+  public async getFuelBrands(
+  ): Promise<FuelBrand[]> {
+    return await this.fuelBrandModel.find({});
+  }
+  public async addFuelTopUp(
+    fuelTopUp: FuelTopUp
+  ): Promise<FuelTopUp> {
+    return await this.fuelTopUpModel.create(fuelTopUp);
+  }
+  public async getAssociationFuelTopUps(
+    associationId: string, startDate: string, endDate: string
+  ): Promise<FuelTopUp[]> {
+    return await this.fuelTopUpModel.find({
+      associationId: associationId
+    });
+  }
+  public async getVehicleFuelTopUps(
+    vehicleId: string, startDate: string, endDate: string
+  ): Promise<FuelTopUp[]> {
+    const res = await this.fuelTopUpModel.find({
+      vehicleId: vehicleId,
+      created: {$gte: startDate, $lte: endDate}
+    });
+    Logger.debug(`${mm} getVehicleFuelTopUps: ${JSON.stringify(res, null, 2)}`);
+    return res;
+  }
   public async addVehiclePhoto(
     vehiclePhoto: VehiclePhoto
   ): Promise<VehiclePhoto> {
@@ -185,6 +249,13 @@ export class VehicleService {
           `${mm} ... creating new car ... ${JSON.stringify(vehicle)}`
         );
         vehicle.created = new Date().toISOString();
+        const url = await this.storage.createQRCode({
+          data: JSON.stringify(vehicle, null, 2),
+          prefix: vehicle.vehicleReg.replace(" ", ""),
+          size: 1,
+          associationId: vehicle.associationId,
+        });
+        vehicle.qrCodeUrl = url;
         await this.vehicleModel.create(vehicle);
         return vehicle;
       }
@@ -267,17 +338,15 @@ export class VehicleService {
   ): Promise<VehicleHeartbeat[]> {
     return [];
   }
-  public async updateVehicle(vehicle: Vehicle): Promise<number> {
-    Logger.debug(`${mm} Update vehicle: ${JSON.stringify(vehicle)}`);
-    const del = await this.vehicleModel.deleteOne({
-      vehicleId: vehicle.vehicleId,
-    });
-    Logger.debug(`${mm} delete result: ${del}`);
+  public async updateVehicle(vehicle: Vehicle): Promise<UpdateResult> {
+    Logger.debug(`${mm} Update vehicle, check fcmToken: ${JSON.stringify(vehicle)}`);
+    
+    const updateResult = await this.vehicleModel.updateOne({
+      vehicleId: vehicle.vehicleId, 
+    }, vehicle);
+    Logger.debug(`${mm} updateVehicle: Update result: ${updateResult}`);
 
-    const updateResult = await this.vehicleModel.updateOne(vehicle);
-    Logger.debug(`${mm} Update result: ${updateResult}`);
-
-    return updateResult.matchedCount;
+    return updateResult;
   }
 
   public async getOwnerVehicles(
@@ -344,6 +413,86 @@ export class VehicleService {
         HttpStatus.BAD_REQUEST
       );
     }
+  }
+
+  public async getVehicleData(
+    vehicleId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<any> {
+    Logger.log(
+      `${mm} getVehicleData: vehicleId: ${vehicleId} startDate: ${startDate} endDate:${endDate}`
+    );
+
+    const telemetry = await this.vehicleTelemetryModel.find({
+      vehicleId: vehicleId,
+      created: { $gte: startDate, $lte: endDate },
+    });
+    const dispatches = await this.dispatchRecordModel.find({
+      vehicleId: vehicleId,
+      created: { $gte: startDate, $lte: endDate },
+    });
+    const passengerCounts = await this.passengerCountModel.find({
+      vehicleId: vehicleId,
+      created: { $gte: startDate, $lte: endDate },
+    });
+
+    const commuterCashPayments = await this.commuterCashPaymentModel.find({
+      vehicleId: vehicleId,
+      created: { $gte: startDate, $lte: endDate },
+    });
+    const vehicleArrivals = await this.vehicleArrivalModel.find({
+      vehicleId: vehicleId,
+      created: { $gte: startDate, $lte: endDate },
+    });
+
+    const trips = await this.tripModel.find({
+      vehicleId: vehicleId,
+      created: { $gte: startDate, $lte: endDate },
+    });
+    const rankFeeCashPayments = await this.rankFeeCashPaymentModel.find({
+      vehicleId: vehicleId,
+      created: { $gte: startDate, $lte: endDate },
+    });
+    const fuelTopUps = await this.fuelTopUpModel.find({
+      vehicleId: vehicleId,
+      created: { $gte: startDate, $lte: endDate },
+    });
+
+    var result = {
+      vehicleArrivals: vehicleArrivals,
+      commuterCashPayments: commuterCashPayments,
+      passengerCounts: passengerCounts,
+      dispatchRecords: dispatches,
+      vehicleTelemetry: telemetry,
+      trips: trips,
+      fuelTopUps: fuelTopUps,
+      commuterCashCheckIns: [],
+      rankFeeCashPayments: rankFeeCashPayments,
+      rankFeeCashCheckIns: [],
+    };
+
+    const jsonData = JSON.stringify(result, null, 2); // Convert JSON object to string with indentation
+    // Specify the file path where you want to save the JSON data
+    const outputDir = './vehicledata';
+    const filePath = path.join(outputDir, `${new Date().getTime()}_data.json`);
+    
+    //todo - uncomment when ready - save data in json file and upload it to cloud storage
+    // try {
+    //     if (!fs.existsSync(outputDir)) {
+    //         fs.mkdirSync(outputDir);
+    //     }
+    //     fs.writeFileSync(filePath, jsonData);
+    //     console.log(`JSON data saved to ${filePath}`);
+
+    // } catch (error) {
+    //   console.error("Error writing JSON data to file:", error);
+    //   // Handle the error appropriately, e.g., throw an exception or return an error response.
+    // }
+
+    Logger.debug(`${mm} vehicleData: ${JSON.stringify(result, null, 2)}`);
+
+    return result;
   }
 }
 

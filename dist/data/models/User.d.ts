@@ -16,10 +16,8 @@ export declare class User {
     countryName: string;
     dateRegistered: string;
     qrCodeUrl: string;
-    bucketFileName: string;
     profileUrl: string;
     profileThumbnail: string;
-    qrCodeBytes: string;
 }
 export declare const UserSchema: import("mongoose").Schema<User, import("mongoose").Model<User, any, any, any, import("mongoose").Document<unknown, any, User> & User & Required<{
     _id: string;

@@ -35,14 +35,7 @@ export class Vehicle {
   @Prop({required: true})
   @ApiProperty()
   associationName: string;
-  @Prop({required: true})
-  @ApiProperty()
-  bucketFileName: string;
-
-  @Prop({required: true})
-  @ApiProperty()
-  qrCodeBytes: string;
-
+  
   @Prop({required: true, index: { unique: true}})
   @ApiProperty()
   vehicleReg: string;
@@ -74,8 +67,12 @@ export class Vehicle {
   @ApiProperty()
   qrCodeUrl: string;
 
-  photos: VehiclePhoto[];
-  videos: VehicleVideo[];
+  @Prop({required: true})
+  @ApiProperty()
+  fcmToken: string;
+
+  // photos: VehiclePhoto[];
+  // videos: VehicleVideo[];
 }
 
 export const VehicleSchema = SchemaFactory.createForClass(Vehicle);

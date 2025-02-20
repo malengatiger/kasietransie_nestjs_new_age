@@ -73,6 +73,14 @@ let StorageController = class StorageController {
         const fileName = await this.storageService.uploadQRCodeFile(associationId, imageTempFile);
         return fileName;
     }
+    async uploadReceiptFile(files, associationId) {
+        common_1.Logger.log(`${tag} uploadReceiptFile: imageFile: ${files.imageFile[0].originalname} 🥦 `);
+        const imageTempFile = path.join(os.tmpdir(), files.imageFile[0].originalname);
+        await fs.promises.writeFile(imageTempFile, files.imageFile[0].buffer);
+        common_1.Logger.log(`${tag}  uploadReceiptFile: : receipt ${files.imageFile[0].originalname} 🥦 saved to ${imageTempFile}`);
+        const fileName = await this.storageService.uploadReceiptFile(associationId, imageTempFile);
+        return fileName;
+    }
     async uploadVehicleVideo(file, data) {
         const { vehicleId, latitude, longitude } = data;
         const vehicleImageFile = file;
@@ -82,10 +90,18 @@ let StorageController = class StorageController {
         const resp = await this.storageService.uploadVehicleVideo(vehicleId, vehicleTempFile, latitude, longitude);
         return resp;
     }
+    async uploadFuelBrandLogo(files, fuelBrandId) {
+        common_1.Logger.log(`${tag} uploadFuelBrandLogo: file: ${files.file[0].originalname} 🥦 `);
+        const imageTempFile = path.join(os.tmpdir(), files.file[0].originalname);
+        await fs.promises.writeFile(imageTempFile, files.file[0].buffer);
+        common_1.Logger.log(`${tag}  uploadFuelBrandLogo: : file ${files.file[0].originalname} 🥦 saved to ${imageTempFile}`);
+        const fileName = await this.storageService.uploadFuelBrandLogo(fuelBrandId, imageTempFile);
+        return fileName;
+    }
 };
 exports.StorageController = StorageController;
 __decorate([
-    (0, common_1.Get)('getExampleFiles'),
+    (0, common_1.Get)("getExampleFiles"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
@@ -119,7 +135,7 @@ __decorate([
     __param(2, (0, common_1.Query)("latitude")),
     __param(3, (0, common_1.Query)("longitude")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, String, String, String]),
+    __metadata("design:paramtypes", [Object, String, Number, Number]),
     __metadata("design:returntype", Promise)
 ], StorageController.prototype, "uploadVehiclePhoto", null);
 __decorate([
@@ -144,6 +160,15 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], StorageController.prototype, "uploadQrCodeFile", null);
 __decorate([
+    (0, common_1.Post)("uploadReceiptFile"),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileFieldsInterceptor)([{ name: "imageFile", maxCount: 1 }])),
+    __param(0, (0, common_1.UploadedFiles)()),
+    __param(1, (0, common_1.Query)("associationId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
+], StorageController.prototype, "uploadReceiptFile", null);
+__decorate([
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)("file")),
     (0, common_1.Post)("uploadVehicleVideo"),
     __param(0, (0, common_1.UploadedFile)()),
@@ -152,6 +177,15 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], StorageController.prototype, "uploadVehicleVideo", null);
+__decorate([
+    (0, common_1.Post)("uploadFuelBrandLogo"),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileFieldsInterceptor)([{ name: "file", maxCount: 1 }])),
+    __param(0, (0, common_1.UploadedFiles)()),
+    __param(1, (0, common_1.Query)("fuelBrandId")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
+], StorageController.prototype, "uploadFuelBrandLogo", null);
 exports.StorageController = StorageController = __decorate([
     (0, common_1.Controller)("storage"),
     __metadata("design:paramtypes", [storage_service_1.CloudStorageUploaderService])

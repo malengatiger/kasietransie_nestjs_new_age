@@ -1,5 +1,5 @@
-import { HeartbeatService } from './heartbeat.service';
+import { TelemetryService } from './heartbeat.service';
 export declare class HeartbeatController {
-    private readonly heartbeatService;
-    constructor(heartbeatService: HeartbeatService);
+    private readonly telemetryService;
+    constructor(telemetryService: TelemetryService);
 }

@@ -14,8 +14,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CloudStorageUploaderService = void 0;
 const common_1 = require("@nestjs/common");
-const storage_1 = require("@google-cloud/storage");
-const storage_2 = require("firebase-admin/storage");
+const storage_1 = require("firebase-admin/storage");
 const config_1 = require("@nestjs/config");
 const fs = require("fs");
 const path = require("path");
@@ -28,7 +27,6 @@ const VehicleVideo_1 = require("../data/models/VehicleVideo");
 const VehiclePhoto_1 = require("../data/models/VehiclePhoto");
 const Vehicle_1 = require("../data/models/Vehicle");
 const sharp_1 = require("sharp");
-const position_1 = require("../data/models/position");
 const User_1 = require("../data/models/User");
 const UserPhoto_1 = require("../data/models/UserPhoto");
 const crypto_1 = require("crypto");
@@ -47,10 +45,15 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
         this.vehiclePhotoModel = vehiclePhotoModel;
         this.vehicleVideoModel = vehicleVideoModel;
         this.associationModel = associationModel;
-        this.bucketName = "kasie-transie-3.appspot.com";
-        this.projectId = "kasie-transie-3";
-        this.cloudStorageDirectory = "kasie-transie-3_data";
-        this.storage = new storage_1.Storage({ projectId: "kasie-transie-3" });
+        this.cloudStorageDirectory = process.env.CLOUD_STORAGE_DIRECTORY;
+        this.projectId = process.env.PROJECT_ID;
+        this.bucketName = process.env.BUCKET_NAME;
+        common_1.Logger.debug(`${mm} this.bucketName from env: ${this.bucketName}`);
+        if (!this.cloudStorageDirectory) {
+            this.bucketName = "kasie-transie-4.firebasestorage.app";
+            this.projectId = "kasie-transie-4";
+            this.cloudStorageDirectory = "kasie-transie-4_data";
+        }
     }
     async uploadVehicleVideo(vehicleId, filePath, latitude, longitude) {
         common_1.Logger.log(`${mm} getting vehicle from Atlas, car: ${vehicleId}`);
@@ -70,7 +73,12 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             p.thumbNailUrl = "tbd";
             p.vehicleId = car.vehicleId;
             p.vehicleReg = car.vehicleReg;
-            const pos = new position_1.Position("Point", [longitude, latitude]);
+            const pos = {
+                type: "Point",
+                coordinates: [longitude, latitude],
+                latitude: latitude,
+                longitude: longitude,
+            };
             p.position = pos;
             p.created = new Date().toISOString();
             const mDate = new Date(p.created);
@@ -85,8 +93,6 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
     }
     async uploadVehiclePhoto(vehicleId, filePath, thumbFilePath, latitude, longitude) {
         common_1.Logger.log(`\n\n${mm} uploadVehiclePhoto: getting vehicle from Atlas, 🔵 vehicleId: ${vehicleId} 🔵 latitude: ${latitude} 🔵 longitude: ${longitude}`);
-        const latitudeNum = parseFloat(latitude);
-        const longitudeNum = parseFloat(longitude);
         const cars = await this.vehicleModel
             .find({ vehicleId: vehicleId })
             .limit(1);
@@ -98,20 +104,25 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             const url = await this.uploadFile(`photo_${vehicleId}_${dt}`, filePath, car.associationName);
             const thumbUrl = await this.uploadFile(`thumbnail_${vehicleId}_${dt}`, thumbFilePath, car.associationName);
             try {
-                const photo = new VehiclePhoto_1.VehiclePhoto();
-                photo.associationId = car.associationId;
-                photo.vehiclePhotoId = `${vehicleId}_${dt}`;
-                photo.url = url["url"];
-                photo.thumbNailUrl = thumbUrl["url"];
-                photo.vehicleId = car.vehicleId;
-                photo.vehicleReg = car.vehicleReg;
-                const pos = new position_1.Position("Point", [longitudeNum, latitudeNum]);
-                photo.position = pos;
-                photo.created = new Date().toISOString();
-                common_1.Logger.debug(`${mm} vehicle photo about to be added: 🔵 ${JSON.stringify(photo, null, 2)}🔵`);
-                const mDate = new Date(photo.created);
-                photo.mDate = mDate;
-                const resp = await this.vehiclePhotoModel.create(photo);
+                const photo1 = new VehiclePhoto_1.VehiclePhoto();
+                photo1.associationId = car.associationId;
+                photo1.vehiclePhotoId = `${vehicleId}_${dt}`;
+                photo1.url = url["url"];
+                photo1.thumbNailUrl = thumbUrl["url"];
+                photo1.vehicleId = car.vehicleId;
+                photo1.vehicleReg = car.vehicleReg;
+                const pos = {
+                    type: "Point",
+                    coordinates: [longitude, latitude],
+                    latitude: latitude,
+                    longitude: longitude,
+                };
+                photo1.position = pos;
+                photo1.created = new Date().toISOString();
+                common_1.Logger.debug(`${mm} vehicle photo about to be added: 🔵 ${JSON.stringify(photo1, null, 2)}🔵`);
+                const mDate = new Date(photo1.created);
+                photo1.mDate = mDate;
+                const resp = await this.vehiclePhotoModel.create(photo1);
                 common_1.Logger.log(`\n${mm} 🍎 🍎 vehicle photo uploaded and added to Atlas:🍎 🍎 🍎 🍎 \n\n🍎 🍎 ${JSON.stringify(resp)} 🍎 🍎 \n\n`);
                 return resp;
             }
@@ -120,6 +131,11 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
                 throw new common_1.HttpException(e, common_1.HttpStatus.BAD_REQUEST);
             }
         }
+    }
+    async uploadFuelBrandLogo(fuelBrandId, filePath) {
+        common_1.Logger.log(`\n\n${mm} uploadFuelBrandLogo:  🔵 fuelBrandId: ${fuelBrandId} 🔵 `);
+        const url = await this.uploadFile(`logo_${fuelBrandId}`, filePath, "ADMIN");
+        return url;
     }
     async createUserPhoto(userPhoto) {
         userPhoto.userPhotoId = (0, crypto_1.randomUUID)();
@@ -211,6 +227,36 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             throw new common_1.HttpException(msg, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    async uploadReceiptFile(associationId, filePath) {
+        common_1.Logger.log(`${mm} uploadReceiptFile: 🔵 associationId: ${associationId}`);
+        const objectName = `receipt_${(0, crypto_1.randomUUID)()}.png`;
+        let name = "General";
+        try {
+            if (associationId) {
+                const ass = await this.associationModel
+                    .findOne({ associationId: associationId })
+                    .limit(1);
+                common_1.Logger.debug(`${mm} uploadQRCodeFile: association from Atlas 🔵 name: ${ass.associationName}`);
+                if (ass == null) {
+                    throw new common_1.HttpException("Association not found", common_1.HttpStatus.BAD_REQUEST);
+                }
+                name = ass.associationName;
+            }
+            const uploadResult = await this.uploadFile(`${objectName}`, filePath, name);
+            common_1.Logger.log(`${mm} uploadQRCodeFile: returning fileName: 🔵  ${JSON.stringify(uploadResult)}`);
+            if (!uploadResult) {
+                this.errorHandler.handleError("url is blank", associationId, "nay");
+                throw new common_1.HttpException("url is blank", common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            return uploadResult;
+        }
+        catch (e) {
+            const msg = `Receipt file upload failed: ${e}`;
+            common_1.Logger.error(`${mm} ${msg}: ${e}`);
+            this.errorHandler.handleError(msg, associationId, "nay");
+            throw new common_1.HttpException(msg, common_1.HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     async uploadExampleFiles(userFilePath, vehicleFilePath) {
         common_1.Logger.log(`${mm} ... upload example files ... 🍐 users: ${userFilePath} 🍐 cars: ${vehicleFilePath}`);
         const userUrl = await this.uploadFile("users.csv", userFilePath, "admin");
@@ -232,10 +278,11 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
         return list;
     }
     async uploadFile(objectName, filePath, folder) {
-        common_1.Logger.log(`uploadFile : ${filePath} bucket: ${this.bucketName} `);
+        common_1.Logger.log(`${mm} uploadFile : ${filePath} bucket: ${this.bucketName} `);
         const bucketFileName = `${this.cloudStorageDirectory}/${folder}/${objectName}`;
         common_1.Logger.log(`${mm} uploadFile : ${filePath} bucketFileName: ${bucketFileName} to ${this.bucketName}`);
-        await this.storage.bucket(this.bucketName).setCorsConfiguration([
+        const storage = (0, storage_1.getStorage)();
+        await storage.bucket(this.bucketName).setCorsConfiguration([
             {
                 method: ["*"],
                 origin: ["*"],
@@ -247,19 +294,18 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             const contentType = this.getFileContentType(filePath);
             const options = {
                 destination: bucketFileName,
-                preconditionOpts: {},
                 metadata: {
                     contentType: contentType,
                     predefinedAcl: "publicRead",
                 },
             };
             common_1.Logger.log(`${mm} upload ${filePath} to cloud: await storage.bucket ${this.bucketName}...`);
-            const response = await this.storage
+            const response = await storage
                 .bucket(this.bucketName)
                 .upload(filePath, options);
-            common_1.Logger.log(`${mm} UploadResponse: ${response[0].name}  ${response[0].baseUrl}  ${response[0].cloudStorageURI} ...`);
-            const fileRef = this.storage.bucket(this.bucketName).file(bucketFileName);
-            const downloadURL = await (0, storage_2.getDownloadURL)(fileRef);
+            common_1.Logger.log(`\n\n${mm} storage.bucket.upload: UploadResponse: ${response[0].name}  ${response[0].baseUrl}  ${response[0].cloudStorageURI} ...`);
+            const fileRef = storage.bucket(this.bucketName).file(bucketFileName);
+            const downloadURL = await (0, storage_1.getDownloadURL)(fileRef);
             var mFile = response[0];
             var prop = response[1];
             common_1.Logger.log(`\n\n${mm} UploadResponse mFile: ${mFile.name} ✅ downloadURL: \n ✅  ${downloadURL} ✅ ...\n\n`);
@@ -303,11 +349,17 @@ let CloudStorageUploaderService = class CloudStorageUploaderService {
             await qrcode.toFile(tempFilePath, data.data, {
                 version: version,
             });
-            return await this.uploadFile(fileName, tempFilePath, data.associationId);
+            var assId = "ADMIN";
+            if (data.associationId) {
+                assId = data.associationId;
+            }
+            const res = await this.uploadFile(fileName, tempFilePath, assId);
+            common_1.Logger.debug(`qrcode created and uploaded: 💀 💀 💀 ${JSON.stringify(res, null, 2)}`);
+            return res["url"];
         }
         catch (error) {
             common_1.Logger.error(error);
-            throw new Error("Failed to create QR code and upload to Cloud Storage.");
+            throw new common_1.HttpException("Failed to create QR code and upload to Cloud Storage.", common_1.HttpStatus.BAD_REQUEST);
         }
     }
 };

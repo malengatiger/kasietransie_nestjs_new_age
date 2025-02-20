@@ -18,7 +18,7 @@ import { RouteLandmark } from "src/data/models/RouteLandmark";
 import { RoutePoint } from "src/data/models/RoutePoint";
 import { RouteUpdateRequest } from "src/data/models/RouteUpdateRequest";
 import { RoutePointList } from "src/data/models/RoutePointList";
-import { RouteService } from "src/features/route/route.service";
+import { RouteService, RoutesToCopy } from "src/features/route/route.service";
 import { AssociationRouteData, RouteData } from "src/data/models/RouteData";
 
 const mm = " 🚼 🚼 🚼 RouteController  🚼";
@@ -101,12 +101,21 @@ export class RouteController {
     );
     return result;
   }
+  @Get("copySelectedRoute")
+  async copySelectedRoute(
+    @Query('associationId') associationId: string, @Query('routeId') routeId: string
+  ): Promise<any> {
+    const result = await this.routeService.copySelectedRoute(associationId, routeId);
+    Logger.log(`${result}`)
+    return result;
+  }
   @Get("deleteCopiedRoutes")
   async deleteCopiedRoutes(
     @Query() query: { associationId: string }
   ): Promise<string> {
-    const result = await this.routeService.deleteCopiedRoutes(
-      query.associationId
+    const result = await this.routeService.deleteAssociationArtifacts(
+      query.associationId,
+      ""
     );
     return result;
   }
@@ -329,4 +338,26 @@ export class RouteController {
     //MyUtils.deleteOldFiles();
     res.sendFile(fileName);
   }
+
+  @Get("deleteExcept")
+  async deleteExcept(@Query() query: { associationId: string }): Promise<any> {
+    const data = await this.routeService.deleteExcept(query.associationId);
+    return data;
+  }
+  @Get("deleteAssociationRoutePoints")
+  async deleteAssociationRoutePoints(
+    @Query() query: { associationId: string }
+  ): Promise<any> {
+    const data = await this.routeService.deleteAssociationRoutePoints(
+      query.associationId
+    );
+    return data;
+  }
+
+  @Get("deleteRoutePointsWithNoAssociation")
+  async deleteRoutePointsWithNoAssociation(): Promise<any> {
+    const data = await this.routeService.deleteRoutePointsWithNoAssociation();
+    return data;
+  }
 }
+

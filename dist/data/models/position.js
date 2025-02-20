@@ -15,6 +15,8 @@ class Position {
     constructor(type, coordinates) {
         this.type = type;
         this.coordinates = coordinates;
+        this.latitude = coordinates[1];
+        this.longitude = coordinates[0];
     }
 }
 exports.Position = Position;
@@ -26,4 +28,12 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Array)
 ], Position.prototype, "coordinates", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Number)
+], Position.prototype, "latitude", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", Number)
+], Position.prototype, "longitude", void 0);
 //# sourceMappingURL=position.js.map

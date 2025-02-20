@@ -13,13 +13,13 @@ exports.HeartbeatController = void 0;
 const common_1 = require("@nestjs/common");
 const heartbeat_service_1 = require("./heartbeat.service");
 let HeartbeatController = class HeartbeatController {
-    constructor(heartbeatService) {
-        this.heartbeatService = heartbeatService;
+    constructor(telemetryService) {
+        this.telemetryService = telemetryService;
     }
 };
 exports.HeartbeatController = HeartbeatController;
 exports.HeartbeatController = HeartbeatController = __decorate([
     (0, common_1.Controller)('heartbeat'),
-    __metadata("design:paramtypes", [heartbeat_service_1.HeartbeatService])
+    __metadata("design:paramtypes", [heartbeat_service_1.TelemetryService])
 ], HeartbeatController);
 //# sourceMappingURL=heartbeat.controller.js.map

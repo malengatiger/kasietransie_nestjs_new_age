@@ -11,6 +11,7 @@ import { Route } from "src/data/models/Route";
 import { Position } from "src/data/models/position";
 import { MessagingService } from "../fcm/fcm.service";
 import { randomUUID } from "crypto";
+import { CloudStorageUploaderService } from "src/storage/storage.service";
 
 const mm = "CommuterService";
 
@@ -19,6 +20,7 @@ export class CommuterService {
   constructor(
     private configService: ConfigService,
     private messagingService: MessagingService,
+    private storage: CloudStorageUploaderService,
 
     @InjectModel(Commuter.name)
     private commuterModel: mongoose.Model<Commuter>,
@@ -49,8 +51,16 @@ export class CommuterService {
     associationId: string,
     startDate: string
   ): Promise<CommuterRequest[]> {
-    return [];
+    const requests = await this.commuterRequestModel.find(
+      {
+        associationId: associationId,
+        dateRequested: {$gte: startDate}
+      }  
+    );
+    Logger.debug(`${mm} commuter requests since ${startDate} : ${requests.length} for association: ${associationId}`);
+    return requests;
   }
+  
   public async lambda$0(
     arg0: Route,
     arg1: [],
@@ -63,7 +73,15 @@ export class CommuterService {
     routeId: string,
     startDate: string
   ): Promise<CommuterRequest[]> {
-    return [];
+    
+    const requests = await this.commuterRequestModel.find(
+      {
+        routeId: routeId,
+        dateRequested: {$gte: startDate}
+      }  
+    );
+    Logger.debug(`${mm} commuter requests since ${startDate} : ${requests.length} for route: ${routeId}`);
+    return requests;
   }
   public async createCommuter(commuter: Commuter): Promise<Commuter> {
     return null;
@@ -72,6 +90,14 @@ export class CommuterService {
     return null;
   }
   public async addCommuter(commuter: Commuter): Promise<Commuter> {
+    commuter.created = new Date().toISOString();
+    const url = await this.storage.createQRCode({
+      data: JSON.stringify(commuter),
+      prefix: 'commuter',
+      size: 1,
+      associationId: null,
+    });
+    commuter.qrCodeUrl = url;
     const res = this.commuterModel.create(commuter);
     Logger.debug(
       `CommuterService: added commuter to Atlas: ${JSON.stringify(res, null, 2)}`
@@ -79,6 +105,14 @@ export class CommuterService {
     return res;
   }
   public async updateCommuter(commuter: Commuter): Promise<UpdateResult> {
+    commuter.created = new Date().toISOString();
+    const url = await this.storage.createQRCode({
+      data: JSON.stringify(commuter),
+      prefix: 'commuter',
+      size: 2,
+      associationId: null,
+    });
+    commuter.qrCodeUrl = url;
     const res = this.commuterModel.updateOne(
       { commuterId: commuter.cellphone },
       commuter
@@ -93,7 +127,7 @@ export class CommuterService {
   ): Promise<CommuterRequest> {
     const mDateNeeded = new Date(commuterRequest.dateNeeded);
     commuterRequest.mDateNeeded = mDateNeeded;
-
+    commuterRequest.dateRequested = new Date().toISOString();
     const mDateRequested = new Date(commuterRequest.dateRequested);
     commuterRequest.mDateRequested = mDateRequested;
 
@@ -116,11 +150,16 @@ export class CommuterService {
     return req;
   }
   public async getCommuterRequests(
-    associationId: string,
+    commuterId: string,
     startDate: string
   ): Promise<CommuterRequest[]> {
+    if (!startDate) {
+      return this.commuterRequestModel.find({
+        commuterId: commuterId,
+      });
+    }
     return this.commuterRequestModel.find({
-      associationId: associationId,
+      commuterId: commuterId,
       dateRequested: { $gte: startDate },
     });
   }
@@ -130,7 +169,7 @@ export class CommuterService {
     const mDate = new Date(commuterResponse.created);
     commuterResponse.mDate = mDate;
     const resp = await this.commuterResponseModel.create(commuterResponse);
-    await this.messagingService.sendCommuterResponseMessage(resp);
+    await this.messagingService.sendCommuterResponseMessageToTopic(resp);
     return resp;
   }
   public async generateCommuters(count: number): Promise<Commuter[]> {

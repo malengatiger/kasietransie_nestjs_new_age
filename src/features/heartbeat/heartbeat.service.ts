@@ -14,10 +14,10 @@ import { MyUtils } from 'src/my-utils/my-utils';
 import { MessagingService } from '../fcm/fcm.service';
 import { TimeSeriesService } from '../time_series/time_series.service';
 
-const mm = '🌶🌶🌶 HeartbeatService 🌶 ';
+const mm = '🌶🌶🌶 TelemetryService 🌶 ';
 
 @Injectable()
-export class HeartbeatService {
+export class TelemetryService {
   constructor(
     private configService: ConfigService,
     private readonly timeSeriesService: TimeSeriesService,

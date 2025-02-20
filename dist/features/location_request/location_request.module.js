@@ -18,6 +18,7 @@ const AppError_1 = require("../../data/models/AppError");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
 const kasie_error_1 = require("../../data/models/kasie.error");
 const LocationResponse_1 = require("../../data/models/LocationResponse");
+const LocationResponseError_1 = require("../../data/models/LocationResponseError");
 let LocationRequestModule = class LocationRequestModule {
 };
 exports.LocationRequestModule = LocationRequestModule;
@@ -29,6 +30,8 @@ exports.LocationRequestModule = LocationRequestModule = __decorate([
                 { name: "AppError", schema: AppError_1.AppErrorSchema },
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
                 { name: "LocationRequest", schema: LocationRequest_1.LocationRequestSchema },
+                { name: "LocationResponse", schema: LocationResponse_1.LocationResponseSchema },
+                { name: "LocationResponseError", schema: LocationResponseError_1.LocationResponseErrorSchema },
                 { name: "LocationResponse", schema: LocationResponse_1.LocationResponseSchema },
                 { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCount_1.AmbassadorPassengerCountSchema },
             ]),

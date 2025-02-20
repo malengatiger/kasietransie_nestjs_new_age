@@ -23,6 +23,7 @@ const Route_1 = require("../../data/models/Route");
 const RouteAssignment_1 = require("../../data/models/RouteAssignment");
 const VehicleHeartbeat_1 = require("../../data/models/VehicleHeartbeat");
 const fs = require("fs");
+const crypto_1 = require("crypto");
 const VehicleBag_1 = require("../../data/helpers/VehicleBag");
 const AmbassadorPassengerCount_1 = require("../../data/models/AmbassadorPassengerCount");
 const DispatchRecord_1 = require("../../data/models/DispatchRecord");
@@ -37,12 +38,20 @@ const os = require("os");
 const path = require("path");
 const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 const user_service_1 = require("../user/user.service");
+const dispatch_service_1 = require("../dispatch/dispatch.service");
+const VehicleTelemetry_1 = require("../../data/models/VehicleTelemetry");
+const CommuterCashPayment_1 = require("../../data/models/CommuterCashPayment");
+const Trip_1 = require("../../data/models/Trip");
+const RankFeeCashPayment_1 = require("../../data/models/RankFeeCashPayment");
+const FuelBrand_1 = require("../../data/models/FuelBrand");
+const FuelTopUp_1 = require("../../data/models/FuelTopUp");
 const mm = "💚 💚 💚 VehicleService  💚 ";
 let VehicleService = class VehicleService {
-    constructor(storage, associationService, userService, errorHandler, vehicleModel, dispatchRecordModel, vehicleArrivalModel, vehicleHeartbeatModel, ambassadorPassengerCountModel, vehicleDepartureModel, associationModel, userModel, assignModel, routeModel, vehicleMediaRequestModel, vehiclePhotoModel, vehicleVideoModel) {
+    constructor(storage, associationService, userService, dispatchService, errorHandler, vehicleModel, dispatchRecordModel, vehicleArrivalModel, vehicleHeartbeatModel, ambassadorPassengerCountModel, vehicleDepartureModel, associationModel, userModel, assignModel, routeModel, vehicleMediaRequestModel, vehiclePhotoModel, vehicleVideoModel, vehicleTelemetryModel, passengerCountModel, commuterCashPaymentModel, tripModel, fuelBrandModel, fuelTopUpModel, rankFeeCashPaymentModel) {
         this.storage = storage;
         this.associationService = associationService;
         this.userService = userService;
+        this.dispatchService = dispatchService;
         this.errorHandler = errorHandler;
         this.vehicleModel = vehicleModel;
         this.dispatchRecordModel = dispatchRecordModel;
@@ -57,12 +66,43 @@ let VehicleService = class VehicleService {
         this.vehicleMediaRequestModel = vehicleMediaRequestModel;
         this.vehiclePhotoModel = vehiclePhotoModel;
         this.vehicleVideoModel = vehicleVideoModel;
+        this.vehicleTelemetryModel = vehicleTelemetryModel;
+        this.passengerCountModel = passengerCountModel;
+        this.commuterCashPaymentModel = commuterCashPaymentModel;
+        this.tripModel = tripModel;
+        this.fuelBrandModel = fuelBrandModel;
+        this.fuelTopUpModel = fuelTopUpModel;
+        this.rankFeeCashPaymentModel = rankFeeCashPaymentModel;
     }
     async getAssociationVehicleMediaRequests(associationId, startDate) {
         return this.vehicleMediaRequestModel.find({
             associationId: associationId,
             created: { $gte: startDate },
         });
+    }
+    async addFuelBrand(fuelBrand) {
+        fuelBrand.fuelBrandId = (0, crypto_1.randomUUID)();
+        fuelBrand.created = new Date().toISOString();
+        return await this.fuelBrandModel.create(fuelBrand);
+    }
+    async getFuelBrands() {
+        return await this.fuelBrandModel.find({});
+    }
+    async addFuelTopUp(fuelTopUp) {
+        return await this.fuelTopUpModel.create(fuelTopUp);
+    }
+    async getAssociationFuelTopUps(associationId, startDate, endDate) {
+        return await this.fuelTopUpModel.find({
+            associationId: associationId
+        });
+    }
+    async getVehicleFuelTopUps(vehicleId, startDate, endDate) {
+        const res = await this.fuelTopUpModel.find({
+            vehicleId: vehicleId,
+            created: { $gte: startDate, $lte: endDate }
+        });
+        common_1.Logger.debug(`${mm} getVehicleFuelTopUps: ${JSON.stringify(res, null, 2)}`);
+        return res;
     }
     async addVehiclePhoto(vehiclePhoto) {
         const mDate = new Date(vehiclePhoto.created);
@@ -123,6 +163,13 @@ let VehicleService = class VehicleService {
             else {
                 common_1.Logger.debug(`${mm} ... creating new car ... ${JSON.stringify(vehicle)}`);
                 vehicle.created = new Date().toISOString();
+                const url = await this.storage.createQRCode({
+                    data: JSON.stringify(vehicle, null, 2),
+                    prefix: vehicle.vehicleReg.replace(" ", ""),
+                    size: 1,
+                    associationId: vehicle.associationId,
+                });
+                vehicle.qrCodeUrl = url;
                 await this.vehicleModel.create(vehicle);
                 return vehicle;
             }
@@ -181,14 +228,12 @@ let VehicleService = class VehicleService {
         return [];
     }
     async updateVehicle(vehicle) {
-        common_1.Logger.debug(`${mm} Update vehicle: ${JSON.stringify(vehicle)}`);
-        const del = await this.vehicleModel.deleteOne({
+        common_1.Logger.debug(`${mm} Update vehicle, check fcmToken: ${JSON.stringify(vehicle)}`);
+        const updateResult = await this.vehicleModel.updateOne({
             vehicleId: vehicle.vehicleId,
-        });
-        common_1.Logger.debug(`${mm} delete result: ${del}`);
-        const updateResult = await this.vehicleModel.updateOne(vehicle);
-        common_1.Logger.debug(`${mm} Update result: ${updateResult}`);
-        return updateResult.matchedCount;
+        }, vehicle);
+        common_1.Logger.debug(`${mm} updateVehicle: Update result: ${updateResult}`);
+        return updateResult;
     }
     async getOwnerVehicles(userId, page) {
         return this.vehicleModel.find({ ownerId: userId }).sort({ vehicleReg: 1 });
@@ -229,26 +274,86 @@ let VehicleService = class VehicleService {
             throw new common_1.HttpException(`🔴🔴 Error uploadQRFile failed 🔴🔴`, common_1.HttpStatus.BAD_REQUEST);
         }
     }
+    async getVehicleData(vehicleId, startDate, endDate) {
+        common_1.Logger.log(`${mm} getVehicleData: vehicleId: ${vehicleId} startDate: ${startDate} endDate:${endDate}`);
+        const telemetry = await this.vehicleTelemetryModel.find({
+            vehicleId: vehicleId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        const dispatches = await this.dispatchRecordModel.find({
+            vehicleId: vehicleId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        const passengerCounts = await this.passengerCountModel.find({
+            vehicleId: vehicleId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        const commuterCashPayments = await this.commuterCashPaymentModel.find({
+            vehicleId: vehicleId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        const vehicleArrivals = await this.vehicleArrivalModel.find({
+            vehicleId: vehicleId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        const trips = await this.tripModel.find({
+            vehicleId: vehicleId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        const rankFeeCashPayments = await this.rankFeeCashPaymentModel.find({
+            vehicleId: vehicleId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        const fuelTopUps = await this.fuelTopUpModel.find({
+            vehicleId: vehicleId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        var result = {
+            vehicleArrivals: vehicleArrivals,
+            commuterCashPayments: commuterCashPayments,
+            passengerCounts: passengerCounts,
+            dispatchRecords: dispatches,
+            vehicleTelemetry: telemetry,
+            trips: trips,
+            fuelTopUps: fuelTopUps,
+            commuterCashCheckIns: [],
+            rankFeeCashPayments: rankFeeCashPayments,
+            rankFeeCashCheckIns: [],
+        };
+        const jsonData = JSON.stringify(result, null, 2);
+        const outputDir = './vehicledata';
+        const filePath = path.join(outputDir, `${new Date().getTime()}_data.json`);
+        common_1.Logger.debug(`${mm} vehicleData: ${JSON.stringify(result, null, 2)}`);
+        return result;
+    }
 };
 exports.VehicleService = VehicleService;
 exports.VehicleService = VehicleService = __decorate([
     (0, common_1.Injectable)(),
-    __param(4, (0, mongoose_1.InjectModel)(Vehicle_1.Vehicle.name)),
-    __param(5, (0, mongoose_1.InjectModel)(DispatchRecord_1.DispatchRecord.name)),
-    __param(6, (0, mongoose_1.InjectModel)(VehicleArrival_1.VehicleArrival.name)),
-    __param(7, (0, mongoose_1.InjectModel)(VehicleHeartbeat_1.VehicleHeartbeat.name)),
-    __param(8, (0, mongoose_1.InjectModel)(AmbassadorPassengerCount_1.AmbassadorPassengerCount.name)),
-    __param(9, (0, mongoose_1.InjectModel)(VehicleDeparture_1.VehicleDeparture.name)),
-    __param(10, (0, mongoose_1.InjectModel)(Association_1.Association.name)),
-    __param(11, (0, mongoose_1.InjectModel)(User_1.User.name)),
-    __param(12, (0, mongoose_1.InjectModel)(RouteAssignment_1.RouteAssignment.name)),
-    __param(13, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
-    __param(14, (0, mongoose_1.InjectModel)(VehicleMediaRequest_1.VehicleMediaRequest.name)),
-    __param(15, (0, mongoose_1.InjectModel)(VehiclePhoto_1.VehiclePhoto.name)),
-    __param(16, (0, mongoose_1.InjectModel)(VehicleVideo_1.VehicleVideo.name)),
+    __param(5, (0, mongoose_1.InjectModel)(Vehicle_1.Vehicle.name)),
+    __param(6, (0, mongoose_1.InjectModel)(DispatchRecord_1.DispatchRecord.name)),
+    __param(7, (0, mongoose_1.InjectModel)(VehicleArrival_1.VehicleArrival.name)),
+    __param(8, (0, mongoose_1.InjectModel)(VehicleHeartbeat_1.VehicleHeartbeat.name)),
+    __param(9, (0, mongoose_1.InjectModel)(AmbassadorPassengerCount_1.AmbassadorPassengerCount.name)),
+    __param(10, (0, mongoose_1.InjectModel)(VehicleDeparture_1.VehicleDeparture.name)),
+    __param(11, (0, mongoose_1.InjectModel)(Association_1.Association.name)),
+    __param(12, (0, mongoose_1.InjectModel)(User_1.User.name)),
+    __param(13, (0, mongoose_1.InjectModel)(RouteAssignment_1.RouteAssignment.name)),
+    __param(14, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
+    __param(15, (0, mongoose_1.InjectModel)(VehicleMediaRequest_1.VehicleMediaRequest.name)),
+    __param(16, (0, mongoose_1.InjectModel)(VehiclePhoto_1.VehiclePhoto.name)),
+    __param(17, (0, mongoose_1.InjectModel)(VehicleVideo_1.VehicleVideo.name)),
+    __param(18, (0, mongoose_1.InjectModel)(VehicleTelemetry_1.VehicleTelemetry.name)),
+    __param(19, (0, mongoose_1.InjectModel)(AmbassadorPassengerCount_1.AmbassadorPassengerCount.name)),
+    __param(20, (0, mongoose_1.InjectModel)(CommuterCashPayment_1.CommuterCashPayment.name)),
+    __param(21, (0, mongoose_1.InjectModel)(Trip_1.Trip.name)),
+    __param(22, (0, mongoose_1.InjectModel)(FuelBrand_1.FuelBrand.name)),
+    __param(23, (0, mongoose_1.InjectModel)(FuelTopUp_1.FuelTopUp.name)),
+    __param(24, (0, mongoose_1.InjectModel)(RankFeeCashPayment_1.RankFeeCashPayment.name)),
     __metadata("design:paramtypes", [storage_service_1.CloudStorageUploaderService,
         association_service_1.AssociationService,
         user_service_1.UserService,
-        errors_interceptor_1.KasieErrorHandler, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        dispatch_service_1.DispatchService,
+        errors_interceptor_1.KasieErrorHandler, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], VehicleService);
 //# sourceMappingURL=vehicle.service.js.map

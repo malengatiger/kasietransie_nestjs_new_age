@@ -12,7 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.HeartbeatService = void 0;
+exports.TelemetryService = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const mongoose_1 = require("@nestjs/mongoose");
@@ -24,8 +24,8 @@ const VehicleTelemetry_1 = require("../../data/models/VehicleTelemetry");
 const my_utils_1 = require("../../my-utils/my-utils");
 const fcm_service_1 = require("../fcm/fcm.service");
 const time_series_service_1 = require("../time_series/time_series.service");
-const mm = '🌶🌶🌶 HeartbeatService 🌶 ';
-let HeartbeatService = class HeartbeatService {
+const mm = '🌶🌶🌶 TelemetryService 🌶 ';
+let TelemetryService = class TelemetryService {
     constructor(configService, timeSeriesService, messagingService, vehicleModel, vehicleTelemetryModel, vehicleHeartbeatModel) {
         this.configService = configService;
         this.timeSeriesService = timeSeriesService;
@@ -108,8 +108,8 @@ let HeartbeatService = class HeartbeatService {
         return null;
     }
 };
-exports.HeartbeatService = HeartbeatService;
-exports.HeartbeatService = HeartbeatService = __decorate([
+exports.TelemetryService = TelemetryService;
+exports.TelemetryService = TelemetryService = __decorate([
     (0, common_1.Injectable)(),
     __param(3, (0, mongoose_1.InjectModel)(Vehicle_1.Vehicle.name)),
     __param(4, (0, mongoose_1.InjectModel)(VehicleTelemetry_1.VehicleTelemetry.name)),
@@ -117,5 +117,5 @@ exports.HeartbeatService = HeartbeatService = __decorate([
     __metadata("design:paramtypes", [config_1.ConfigService,
         time_series_service_1.TimeSeriesService,
         fcm_service_1.MessagingService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
-], HeartbeatService);
+], TelemetryService);
 //# sourceMappingURL=heartbeat.service.js.map

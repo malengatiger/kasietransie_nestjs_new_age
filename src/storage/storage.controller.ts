@@ -28,7 +28,7 @@ const tag = "🔵 🔵 🔵 StorageController 🔵 ";
 export class StorageController {
   constructor(private readonly storageService: CloudStorageUploaderService) {}
 
-  @Get('getExampleFiles')
+  @Get("getExampleFiles")
   async getExampleFiles(): Promise<ExampleFile[]> {
     return this.storageService.getExampleFiles();
   }
@@ -85,8 +85,8 @@ export class StorageController {
       thumbFile: Express.Multer.File[];
     },
     @Query("vehicleId") vehicleId: string,
-    @Query("latitude") latitude: string,
-    @Query("longitude") longitude: string
+    @Query("latitude") latitude: number,
+    @Query("longitude") longitude: number
   ): Promise<VehiclePhoto> {
     const imageTempFile = path.join(
       os.tmpdir(),
@@ -172,7 +172,7 @@ export class StorageController {
       imageFile: Express.Multer.File[];
     },
     @Query("associationId") associationId: string
-  ): Promise<string> {
+  ): Promise<any> {
     Logger.log(
       `${tag} uploadQrCodeFile: imageFile: ${files.imageFile[0].originalname} 🥦 `
     );
@@ -188,6 +188,36 @@ export class StorageController {
     );
 
     const fileName = await this.storageService.uploadQRCodeFile(
+      associationId,
+      imageTempFile
+    );
+
+    return fileName;
+  }
+  @Post("uploadReceiptFile")
+  @UseInterceptors(FileFieldsInterceptor([{ name: "imageFile", maxCount: 1 }]))
+  async uploadReceiptFile(
+    @UploadedFiles()
+    files: {
+      imageFile: Express.Multer.File[];
+    },
+    @Query("associationId") associationId: string
+  ): Promise<any> {
+    Logger.log(
+      `${tag} uploadReceiptFile: imageFile: ${files.imageFile[0].originalname} 🥦 `
+    );
+
+    const imageTempFile = path.join(
+      os.tmpdir(),
+      files.imageFile[0].originalname
+    );
+
+    await fs.promises.writeFile(imageTempFile, files.imageFile[0].buffer);
+    Logger.log(
+      `${tag}  uploadReceiptFile: : receipt ${files.imageFile[0].originalname} 🥦 saved to ${imageTempFile}`
+    );
+
+    const fileName = await this.storageService.uploadReceiptFile(
       associationId,
       imageTempFile
     );
@@ -221,5 +251,33 @@ export class StorageController {
     );
 
     return resp;
+  }
+
+  @Post("uploadFuelBrandLogo")
+  @UseInterceptors(FileFieldsInterceptor([{ name: "file", maxCount: 1 }]))
+  async uploadFuelBrandLogo(
+    @UploadedFiles()
+    files: {
+      file: Express.Multer.File[];
+    },
+    @Query("fuelBrandId") fuelBrandId: string
+  ): Promise<any> {
+    Logger.log(
+      `${tag} uploadFuelBrandLogo: file: ${files.file[0].originalname} 🥦 `
+    );
+
+    const imageTempFile = path.join(os.tmpdir(), files.file[0].originalname);
+
+    await fs.promises.writeFile(imageTempFile, files.file[0].buffer);
+    Logger.log(
+      `${tag}  uploadFuelBrandLogo: : file ${files.file[0].originalname} 🥦 saved to ${imageTempFile}`
+    );
+
+    const fileName = await this.storageService.uploadFuelBrandLogo(
+      fuelBrandId,
+      imageTempFile
+    );
+
+    return fileName;
   }
 }

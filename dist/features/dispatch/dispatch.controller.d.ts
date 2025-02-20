@@ -22,9 +22,6 @@ export declare class DispatchController {
     getOwnersBag(userId: string, startDate: string, endDate: string): Promise<BigBag>;
     getAmbassadorPassengerCount(userId: string, startDate: string, endDate: string): Promise<AmbassadorPassengerCount[]>;
     getAssociationBagZippedFile(associationId: string, startDate: string, endDate: string): Promise<any>;
-    getAssociationVehicleDepartures(associationId: string, startDate: string, endDate: string): Promise<VehicleDeparture[]>;
-    getAssociationDispatchRecords(associationId: string, startDate: string, endDate: string): Promise<DispatchRecord[]>;
-    getAssociationVehicleArrivals(associationId: string, startDate: string, endDate: string): Promise<VehicleArrival[]>;
     getAssociationCounts(associationId: string, startDate: string, endDate: string): Promise<AssociationCounts>;
     getRouteDispatchRecords(query: {
         routeId: string;

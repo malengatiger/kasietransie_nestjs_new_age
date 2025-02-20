@@ -19,7 +19,7 @@ export class RankFeeCashCheckIn {
   
   @Prop()
   @ApiProperty()
-  receiptBucketFileName: string;
+  receiptUrl: string;
 
   @Prop()
   @ApiProperty()

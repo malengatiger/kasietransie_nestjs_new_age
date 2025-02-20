@@ -40,6 +40,18 @@ const VehiclePhoto_1 = require("../../data/models/VehiclePhoto");
 const VehicleVideo_1 = require("../../data/models/VehicleVideo");
 const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 const UserPhoto_1 = require("../../data/models/UserPhoto");
+const CommuterCashPayment_1 = require("../../data/models/CommuterCashPayment");
+const CommuterCashCheckIn_1 = require("../../data/models/CommuterCashCheckIn");
+const RankFeeCashPayment_1 = require("../../data/models/RankFeeCashPayment");
+const RankFeeCashCheckIn_1 = require("../../data/models/RankFeeCashCheckIn");
+const Trip_1 = require("../../data/models/Trip");
+const VehicleTelemetry_1 = require("../../data/models/VehicleTelemetry");
+const CommuterRequest_1 = require("../../data/models/CommuterRequest");
+const vehicle_service_1 = require("../vehicle/vehicle.service");
+const dispatch_service_1 = require("../dispatch/dispatch.service");
+const FuelTopUp_1 = require("../../data/models/FuelTopUp");
+const VehicleMediaRequest_1 = require("../../data/models/VehicleMediaRequest");
+const FuelBrand_1 = require("../../data/models/FuelBrand");
 let AssociationModule = class AssociationModule {
 };
 exports.AssociationModule = AssociationModule;
@@ -69,6 +81,16 @@ exports.AssociationModule = AssociationModule = __decorate([
                 { name: "SettingsModel", schema: SettingsModel_1.SettingsModelSchema },
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
                 { name: "UserPhoto", schema: UserPhoto_1.UserPhotoSchema },
+                { name: "CommuterCashPayment", schema: CommuterCashPayment_1.CommuterCashPaymentSchema },
+                { name: "CommuterCashCheckIn", schema: CommuterCashCheckIn_1.CommuterCashCheckInSchema },
+                { name: "RankFeeCashPayment", schema: RankFeeCashPayment_1.RankFeeCashPaymentSchema },
+                { name: "RankFeeCashCheckIn", schema: RankFeeCashCheckIn_1.RankFeeCashCheckInSchema },
+                { name: "Trip", schema: Trip_1.TripSchema },
+                { name: "VehicleTelemetry", schema: VehicleTelemetry_1.VehicleTelemetrySchema },
+                { name: "CommuterRequest", schema: CommuterRequest_1.CommuterRequestSchema },
+                { name: "FuelTopUp", schema: FuelTopUp_1.FuelTopUpSchema },
+                { name: "FuelBrand", schema: FuelBrand_1.FuelBrandSchema },
+                { name: "VehicleMediaRequest", schema: VehicleMediaRequest_1.VehicleMediaRequestSchema },
                 { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCount_1.AmbassadorPassengerCountSchema },
             ]),
         ],
@@ -79,7 +101,8 @@ exports.AssociationModule = AssociationModule = __decorate([
             user_service_1.UserService,
             city_service_1.CityService,
             fcm_service_1.MessagingService,
-            errors_interceptor_1.KasieErrorHandler,
+            errors_interceptor_1.KasieErrorHandler, vehicle_service_1.VehicleService,
+            dispatch_service_1.DispatchService,
             storage_service_1.CloudStorageUploaderService, firebase_util_1.FirebaseAdmin,
         ],
     })

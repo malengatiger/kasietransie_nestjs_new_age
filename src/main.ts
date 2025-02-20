@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
-import { Logger } from "@nestjs/common";
+import { INestApplication, Logger } from "@nestjs/common";
 
 import { MyUtils } from "./my-utils/my-utils";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
@@ -12,12 +12,27 @@ const env = process.env.NODE_ENV;
 Logger.log(`${mm} Kasie NODE_ENV : ${env}`);
 
 async function bootstrap() {
-  Logger.log(`${mm} ... Kasie NestJS Backend bootstrapping .....`);
+  Logger.log(`${mm} ... Kasie NestJS Backend bootstrapping ..... env: ${env}`);
 
-  const app = await NestFactory.create(AppModule, {
-    logger: ["fatal", "log", "error", "warn", "debug"],
-  });
+  let app:INestApplication;
 
+  if (env === "production") {
+    app = await NestFactory.create(AppModule, {
+      logger: ["fatal", "error"],
+    });
+  } 
+  if (env === "development") {
+    app = await NestFactory.create(AppModule, {
+      logger: ["fatal", "error", 'log', 'debug'],
+    });
+  } 
+  if (app === null) {
+    app = await NestFactory.create(AppModule, {
+      logger: ["fatal", "error", 'log', 'debug'],
+    });
+  } 
+  
+ 
   const port = MyUtils.getPort();
   app.setGlobalPrefix("api/v1");
 

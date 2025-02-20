@@ -7,15 +7,17 @@ import { RouteLandmark } from "src/data/models/RouteLandmark";
 import { Route } from "src/data/models/Route";
 import { Position } from "src/data/models/position";
 import { MessagingService } from "../fcm/fcm.service";
+import { CloudStorageUploaderService } from "src/storage/storage.service";
 export declare class CommuterService {
     private configService;
     private messagingService;
+    private storage;
     private commuterModel;
     private commuterResponseModel;
     private commuterRequestModel;
     private routeLandmarkModel;
     private routeModel;
-    constructor(configService: ConfigService, messagingService: MessagingService, commuterModel: mongoose.Model<Commuter>, commuterResponseModel: mongoose.Model<CommuterResponse>, commuterRequestModel: mongoose.Model<CommuterRequest>, routeLandmarkModel: mongoose.Model<RouteLandmark>, routeModel: mongoose.Model<Route>);
+    constructor(configService: ConfigService, messagingService: MessagingService, storage: CloudStorageUploaderService, commuterModel: mongoose.Model<Commuter>, commuterResponseModel: mongoose.Model<CommuterResponse>, commuterRequestModel: mongoose.Model<CommuterRequest>, routeLandmarkModel: mongoose.Model<RouteLandmark>, routeModel: mongoose.Model<Route>);
     toRadians(degree: number): Promise<number>;
     toDegrees(radian: number): Promise<number>;
     generateRouteCommuterRequests(routeId: string): Promise<void>;
@@ -27,7 +29,7 @@ export declare class CommuterService {
     addCommuter(commuter: Commuter): Promise<Commuter>;
     updateCommuter(commuter: Commuter): Promise<UpdateResult>;
     addCommuterRequest(commuterRequest: CommuterRequest): Promise<CommuterRequest>;
-    getCommuterRequests(associationId: string, startDate: string): Promise<CommuterRequest[]>;
+    getCommuterRequests(commuterId: string, startDate: string): Promise<CommuterRequest[]>;
     addCommuterResponse(commuterResponse: CommuterResponse): Promise<CommuterResponse>;
     generateCommuters(count: number): Promise<Commuter[]>;
     makeBusyLandmark(route: Route, commuters: Commuter[], minutesAgo: number, mark: RouteLandmark): Promise<void>;

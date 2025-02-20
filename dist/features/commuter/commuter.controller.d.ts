@@ -8,4 +8,7 @@ export declare class CommuterController {
     updateCommuter(commuter: Commuter): Promise<any>;
     addCommuterRequest(commuterRequest: CommuterRequest): Promise<CommuterRequest>;
     cancelCommuterRequest(commuterRequest: CommuterRequest): Promise<any>;
+    getRouteCommuterRequests(routeId: string, startDate: string): Promise<CommuterRequest[]>;
+    getCommuterRequests(commuterId: string, startDate: string): Promise<CommuterRequest[]>;
+    getAssociationCommuterRequests(associationId: string, startDate: string): Promise<CommuterRequest[]>;
 }

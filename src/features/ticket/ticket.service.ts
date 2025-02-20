@@ -34,6 +34,14 @@ export class TicketService {
       }
       const mDate= new Date(ticket.created);
       ticket.mDate = mDate;
+      ticket.created = new Date().toISOString();
+      const url = await this.storage.createQRCode({
+        data: JSON.stringify(ticket),
+        prefix: 'ticket-template',
+        size: 2,
+        associationId: null,
+      });
+      ticket.qrCodeUrl = url;
       var res = await this.ticketModel.create(ticket);
       Logger.log(
         `${mm} ticket template added to Atlas: 🍎 ${JSON.stringify(res, null, 2)} 🍎`
@@ -59,16 +67,18 @@ export class TicketService {
     commuterTicket.commuterTicketId = randomUUID().toString();
     commuterTicket.created = new Date().toISOString();
     try {
-      // const url = await this.storage.createQRCode({
-
-      //   data: JSON.stringify(commuterTicket),
-      //   prefix: "commuterTicket",
-      //   size: 1,
-      //   associationId: commuterTicket.associationId,
-      // });
-      // commuterTicket.qrCodeUrl = url;
+      
       const mDate= new Date(commuterTicket.created);
       commuterTicket.mDate = mDate;
+      commuterTicket.mDate = mDate;
+      commuterTicket.created = new Date().toISOString();
+      const url = await this.storage.createQRCode({
+        data: JSON.stringify(commuterTicket),
+        prefix: 'commuter',
+        size: 2,
+        associationId: null,
+      });
+      commuterTicket.qrCodeUrl = url;
       var res = await this.commuterTicket.create(commuterTicket);
       Logger.debug(
         `${mm} ticketPunched added to Atlas: ${JSON.stringify(commuterTicket, null, 2)}`

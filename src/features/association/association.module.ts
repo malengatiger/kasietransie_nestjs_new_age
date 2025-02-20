@@ -32,6 +32,18 @@ import { VehiclePhotoSchema } from "src/data/models/VehiclePhoto";
 import { VehicleVideoSchema } from "src/data/models/VehicleVideo";
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 import { UserPhotoSchema } from "src/data/models/UserPhoto";
+import { CommuterCashPaymentSchema } from "src/data/models/CommuterCashPayment";
+import { CommuterCashCheckInSchema } from "src/data/models/CommuterCashCheckIn";
+import { RankFeeCashPaymentSchema } from "src/data/models/RankFeeCashPayment";
+import { RankFeeCashCheckInSchema } from "src/data/models/RankFeeCashCheckIn";
+import { TripSchema } from "src/data/models/Trip";
+import { VehicleTelemetrySchema } from "src/data/models/VehicleTelemetry";
+import { CommuterRequestSchema } from "src/data/models/CommuterRequest";
+import { VehicleService } from "../vehicle/vehicle.service";
+import { DispatchService } from "../dispatch/dispatch.service";
+import { FuelTopUpSchema } from "src/data/models/FuelTopUp";
+import { VehicleMediaRequestSchema } from "src/data/models/VehicleMediaRequest";
+import { FuelBrandSchema } from "src/data/models/FuelBrand";
 
 @Module({
   imports: [
@@ -59,7 +71,19 @@ import { UserPhotoSchema } from "src/data/models/UserPhoto";
       { name: "SettingsModel", schema: SettingsModelSchema },
       { name: "KasieError", schema: KasieErrorSchema },
       { name: "UserPhoto", schema: UserPhotoSchema },
+      { name: "CommuterCashPayment", schema: CommuterCashPaymentSchema },
+      { name: "CommuterCashCheckIn", schema: CommuterCashCheckInSchema },
+      { name: "RankFeeCashPayment", schema: RankFeeCashPaymentSchema },
+      { name: "RankFeeCashCheckIn", schema: RankFeeCashCheckInSchema },
+      
+      { name: "Trip", schema: TripSchema },
+      { name: "VehicleTelemetry", schema: VehicleTelemetrySchema },
+      { name: "CommuterRequest", schema: CommuterRequestSchema },
 
+      { name: "FuelTopUp", schema: FuelTopUpSchema },
+      { name: "FuelBrand", schema: FuelBrandSchema },
+
+      { name: "VehicleMediaRequest", schema: VehicleMediaRequestSchema },
 
       { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCountSchema },
     ]),
@@ -71,8 +95,9 @@ import { UserPhotoSchema } from "src/data/models/UserPhoto";
     UserService,
     CityService,
     MessagingService,
-    KasieErrorHandler,
+    KasieErrorHandler, VehicleService,
     //
+    DispatchService,
     CloudStorageUploaderService, FirebaseAdmin,
   ],
 })

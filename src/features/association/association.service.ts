@@ -27,6 +27,18 @@ import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 import { VehiclePhoto } from "src/data/models/VehiclePhoto";
 import { VehicleVideo } from "src/data/models/VehicleVideo";
 import { randomUUID } from "crypto";
+import { CommuterRequest } from "src/data/models/CommuterRequest";
+import { DispatchRecord } from "src/data/models/DispatchRecord";
+import { VehicleArrival } from "src/data/models/VehicleArrival";
+import { VehicleDeparture } from "src/data/models/VehicleDeparture";
+import { Trip } from "src/data/models/Trip";
+import { CommuterCashPayment } from "src/data/models/CommuterCashPayment";
+import { CommuterCashCheckIn } from "src/data/models/CommuterCashCheckIn";
+import { RankFeeCashCheckIn } from "src/data/models/RankFeeCashCheckIn";
+import { RankFeeCashPayment } from "src/data/models/RankFeeCashPayment";
+import { VehicleTelemetry } from "src/data/models/VehicleTelemetry";
+import { AmbassadorPassengerCount } from "src/data/models/AmbassadorPassengerCount";
+import { Route } from "src/data/models/Route";
 
 const mm = "🍎🍎🍎 AssociationService: 🍎🍎🍎";
 
@@ -68,9 +80,168 @@ export class AssociationService {
     private exampleFileModel: mongoose.Model<ExampleFile>,
 
     @InjectModel(Commuter.name)
-    private commuterModel: mongoose.Model<Commuter>
+    private commuterModel: mongoose.Model<Commuter>,
+
+    @InjectModel(DispatchRecord.name)
+    private dispatchRecordModel: mongoose.Model<DispatchRecord>,
+
+    @InjectModel(Trip.name)
+    private tripModel: mongoose.Model<Trip>,
+
+    @InjectModel(CommuterCashPayment.name)
+    private commuterCashPaymentModel: mongoose.Model<CommuterCashPayment>,
+
+    @InjectModel(CommuterCashCheckIn.name)
+    private commuterCashCheckInModel: mongoose.Model<CommuterCashCheckIn>,
+
+    @InjectModel(RankFeeCashCheckIn.name)
+    private rankFeeCashCheckInModel: mongoose.Model<RankFeeCashCheckIn>,
+
+    @InjectModel(RankFeeCashPayment.name)
+    private rankFeeCashPaymentModel: mongoose.Model<RankFeeCashPayment>,
+
+    @InjectModel(CommuterRequest.name)
+    private commuterRequestModel: mongoose.Model<CommuterRequest>,
+
+    @InjectModel(VehicleTelemetry.name)
+    private vehicleTelemetryModel: mongoose.Model<VehicleTelemetry>,
+
+    @InjectModel(AmbassadorPassengerCount.name)
+    private ambassadorPassengerCountModel: mongoose.Model<AmbassadorPassengerCount>,
+
+    @InjectModel(Route.name)
+    private routeModel: mongoose.Model<Route>,
+    @InjectModel(VehicleArrival.name)
+    private vehicleArrivalModel: mongoose.Model<VehicleArrival>
   ) {}
 
+  public async getAssociationVehicleDepartures(
+    associationId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<VehicleDeparture[]> {
+    return [];
+  }
+  public async getAssociationDispatchRecords(
+    associationId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<DispatchRecord[]> {
+    const res = await this.dispatchRecordModel.find({
+      associationId: associationId,
+      created: { $gte: startDate, $lte: endDate },
+    });
+
+    return res;
+  }
+
+  public async getAssociationVehicleArrivals(
+    associationId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<VehicleArrival[]> {
+    const res = await this.vehicleArrivalModel.find({
+      associationId: associationId,
+      created: { $gte: startDate, $lte: endDate },
+    });
+    return res;
+  }
+
+  public async getAssociationVehicleTelemetry(
+    associationId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<VehicleTelemetry[]> {
+    const res = await this.vehicleTelemetryModel.find({
+      associationId: associationId,
+      created: { $gte: startDate, $lte: endDate },
+    });
+    return res;
+  }
+
+  public async getAssociationCommuterRequests(
+    associationId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<CommuterRequest[]> {
+    const res = await this.commuterRequestModel.find({
+      associationId: associationId,
+      dateRequested: { $gte: startDate, $lte: endDate },
+    });
+    return res;
+  }
+  public async getAssociationCommuterCashPayments(
+    associationId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<CommuterCashPayment[]> {
+    const res = await this.commuterCashPaymentModel.find({
+      associationId: associationId,
+      created: { $gte: startDate, $lte: endDate },
+    });
+    return res;
+  }
+  public async getAssociationCommuterCashCheckIns(
+    associationId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<CommuterCashCheckIn[]> {
+    const res = await this.commuterCashCheckInModel.find({
+      associationId: associationId,
+      created: { $gte: startDate, $lte: endDate },
+    });
+    return res;
+  }
+  public async getAssociationRankFeeCashPayments(
+    associationId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<RankFeeCashPayment[]> {
+    const res = await this.rankFeeCashPaymentModel.find({
+      associationId: associationId,
+      created: { $gte: startDate, $lte: endDate },
+    });
+    return res;
+  }
+  public async getAssociationRankFeeCashCheckIns(
+    associationId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<RankFeeCashCheckIn[]> {
+    const res = await this.rankFeeCashCheckInModel.find({
+      associationId: associationId,
+      created: { $gte: startDate, $lte: endDate },
+    });
+    return res;
+  }
+  public async getAssociationTrips(
+    associationId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<Trip[]> {
+    const res = await this.tripModel.find({
+      associationId: associationId,
+      created: { $gte: startDate, $lte: endDate },
+    });
+    return res;
+  }
+  public async getAssociationPassengerCounts(
+    associationId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<AmbassadorPassengerCount[]> {
+    const res = await this.ambassadorPassengerCountModel.find({
+      associationId: associationId,
+      created: { $gte: startDate, $lte: endDate },
+    });
+    return res;
+  }
+  public async getAssociationRoutes(associationId: string): Promise<Route[]> {
+    const res = await this.routeModel.find({
+      associationId: associationId,
+    });
+    return res;
+  }
   async getAssociationById(associationId: string): Promise<any> {
     Logger.log(
       `${mm} ... getAssociationById starting, id: ${associationId} ...`
@@ -159,6 +330,9 @@ export class AssociationService {
   public async getAssociationSettingsModels(
     associationId: string
   ): Promise<any[]> {
+    Logger.debug(
+      `${mm} getAssociationSettingsModels AssociationId: ${JSON.stringify(associationId)}`
+    );
     const list = await this.settingsModel.find({
       associationId: associationId,
     });
@@ -254,10 +428,18 @@ export class AssociationService {
       associationName: association.associationName,
     });
     if (existingAss) {
-      Logger.debug(`${mm} existingAss Association: ${JSON.stringify(existingAss, null, 2)}`);
-      this.errorHandler.handleError('Association exists', association.associationId, association.associationName);
-      throw new HttpException('This association exists, so fuck you!', HttpStatus.BAD_REQUEST);
-
+      Logger.debug(
+        `${mm} existingAss Association: ${JSON.stringify(existingAss, null, 2)}`
+      );
+      this.errorHandler.handleError(
+        "Association exists",
+        association.associationId,
+        association.associationName
+      );
+      throw new HttpException(
+        "This association exists, so fuck you!",
+        HttpStatus.BAD_REQUEST
+      );
     }
     let mAdminUser: User;
     let mCarUser: User;
@@ -368,7 +550,7 @@ export class AssociationService {
           `${mm} 😈😈😈 car user deleted: ${JSON.stringify(mCarUser, null, 2)}`
         );
       }
-     
+
       if (myAss) {
         await this.associationModel.deleteOne({
           associationId: myAss.associationId,

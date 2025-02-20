@@ -65,8 +65,13 @@ let RouteController = RouteController_1 = class RouteController {
         const result = await this.routeService.copyRoutes(query.assocIdFrom, query.assocIdTo);
         return result;
     }
+    async copySelectedRoute(associationId, routeId) {
+        const result = await this.routeService.copySelectedRoute(associationId, routeId);
+        common_1.Logger.log(`${result}`);
+        return result;
+    }
     async deleteCopiedRoutes(query) {
-        const result = await this.routeService.deleteCopiedRoutes(query.associationId);
+        const result = await this.routeService.deleteAssociationArtifacts(query.associationId, "");
         return result;
     }
     async deleteRoutePoint(routePointId) {
@@ -190,6 +195,18 @@ let RouteController = RouteController_1 = class RouteController {
         res.setHeader("Content-Disposition", `attachment; filename=route.zip`);
         res.sendFile(fileName);
     }
+    async deleteExcept(query) {
+        const data = await this.routeService.deleteExcept(query.associationId);
+        return data;
+    }
+    async deleteAssociationRoutePoints(query) {
+        const data = await this.routeService.deleteAssociationRoutePoints(query.associationId);
+        return data;
+    }
+    async deleteRoutePointsWithNoAssociation() {
+        const data = await this.routeService.deleteRoutePointsWithNoAssociation();
+        return data;
+    }
 };
 exports.RouteController = RouteController;
 __decorate([
@@ -262,6 +279,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "copyRoutes", null);
+__decorate([
+    (0, common_1.Get)("copySelectedRoute"),
+    __param(0, (0, common_1.Query)('associationId')),
+    __param(1, (0, common_1.Query)('routeId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], RouteController.prototype, "copySelectedRoute", null);
 __decorate([
     (0, common_1.Get)("deleteCopiedRoutes"),
     __param(0, (0, common_1.Query)()),
@@ -405,6 +430,26 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], RouteController.prototype, "getRoutePoints", null);
+__decorate([
+    (0, common_1.Get)("deleteExcept"),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], RouteController.prototype, "deleteExcept", null);
+__decorate([
+    (0, common_1.Get)("deleteAssociationRoutePoints"),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], RouteController.prototype, "deleteAssociationRoutePoints", null);
+__decorate([
+    (0, common_1.Get)("deleteRoutePointsWithNoAssociation"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], RouteController.prototype, "deleteRoutePointsWithNoAssociation", null);
 exports.RouteController = RouteController = RouteController_1 = __decorate([
     (0, common_1.Controller)("routes"),
     __metadata("design:paramtypes", [route_service_1.RouteService])

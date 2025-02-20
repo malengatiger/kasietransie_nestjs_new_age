@@ -46,6 +46,16 @@ __decorate([
     __metadata("design:type", String)
 ], LocationRequest.prototype, "userName", void 0);
 __decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], LocationRequest.prototype, "fcmToken", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ required: true }),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
+], LocationRequest.prototype, "vehicleFcmToken", void 0);
+__decorate([
     (0, mongoose_1.Prop)(),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", Date)

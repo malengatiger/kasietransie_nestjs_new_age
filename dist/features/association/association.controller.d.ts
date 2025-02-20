@@ -7,10 +7,13 @@ import { AppError } from 'src/data/models/AppError';
 import { CloudStorageUploaderService } from 'src/storage/storage.service';
 import { KasieQRCode } from 'src/data/helpers/kasie_qr_code';
 import { User } from 'src/data/models/User';
+import { VehicleService } from '../vehicle/vehicle.service';
 export declare class AssociationController {
     private readonly associationService;
     private readonly storage;
-    constructor(associationService: AssociationService, storage: CloudStorageUploaderService);
+    private readonly vehicleService;
+    constructor(associationService: AssociationService, storage: CloudStorageUploaderService, vehicleService: VehicleService);
+    getAssociationData(associationId: string, startDate: string, endDate: string): Promise<any>;
     registerAssociation(association: Association): Promise<RegistrationBag>;
     addSettingsModel(model: SettingsModel): Promise<any>;
     addAssociationToken(associationId: string, userId: string, token: string): Promise<any>;

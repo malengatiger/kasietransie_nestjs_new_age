@@ -19,7 +19,7 @@ export class CommuterCashCheckIn {
 
   @Prop()
   @ApiProperty()
-  receiptBucketFileName: string;
+  receiptUrl: string;
 
   @Prop()
   @ApiProperty()

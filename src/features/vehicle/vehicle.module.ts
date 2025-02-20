@@ -48,14 +48,19 @@ import { CloudStorageUploaderService } from "src/storage/storage.service";
 import { FirebaseAdmin } from "src/services/firebase_util";
 import { KasieErrorHandler } from "src/middleware/errors.interceptor";
 import { UserPhotoSchema } from "src/data/models/UserPhoto";
-import { HeartbeatService } from "../heartbeat/heartbeat.service";
+import { TelemetryService } from "../heartbeat/heartbeat.service";
 import { VehicleTelemetrySchema } from "src/data/models/VehicleTelemetry";
 import { TripSchema } from "src/data/models/Trip";
+import { CommuterCashCheckInSchema } from "src/data/models/CommuterCashCheckIn";
+import { CommuterCashPaymentSchema } from "src/data/models/CommuterCashPayment";
+import { RankFeeCashCheckInSchema } from "src/data/models/RankFeeCashCheckIn";
+import { RankFeeCashPaymentSchema } from "src/data/models/RankFeeCashPayment";
+import { LocationResponseErrorSchema } from "src/data/models/LocationResponseError";
+import { FuelBrandSchema } from "src/data/models/FuelBrand";
+import { FuelTopUpSchema } from "src/data/models/FuelTopUp";
 
 @Module({
   imports: [
-    
-
     MongooseModule.forFeature([
       { name: "Vehicle", schema: VehicleSchema },
       { name: "DispatchRecord", schema: DispatchRecordSchema },
@@ -94,20 +99,33 @@ import { TripSchema } from "src/data/models/Trip";
       { name: "Route", schema: RouteSchema },
       { name: "RoutePoint", schema: RoutePointSchema },
       { name: "CalculatedDistance", schema: CalculatedDistanceSchema },
-      { name: "VehicleHeartbeatTimeSeries", schema: VehicleHeartbeatTimeSeriesSchema },
+      {
+        name: "VehicleHeartbeatTimeSeries",
+        schema: VehicleHeartbeatTimeSeriesSchema,
+      },
       { name: "PassengerTimeSeries", schema: PassengerTimeSeriesSchema },
       { name: "City", schema: CitySchema },
       { name: "City", schema: CitySchema },
-            { name: "Trip", schema: TripSchema },
-      
-      { name: "UserPhoto", schema: UserPhotoSchema },
+      { name: "Trip", schema: TripSchema },
 
+      { name: "UserPhoto", schema: UserPhotoSchema },
+      { name: "CommuterCashPayment", schema: CommuterCashPaymentSchema },
+      { name: "CommuterCashCheckIn", schema: CommuterCashCheckInSchema },
+      { name: "RankFeeCashPayment", schema: RankFeeCashPaymentSchema },
+      { name: "RankFeeCashCheckIn", schema: RankFeeCashCheckInSchema },
+
+      { name: "VehicleTelemetry", schema: VehicleTelemetrySchema },
+      { name: "CommuterRequest", schema: CommuterRequestSchema },
+      { name: "LocationResponseError", schema: LocationResponseErrorSchema },
+      { name: "FuelBrand", schema: FuelBrandSchema },
+
+      { name: "FuelTopUp", schema: FuelTopUpSchema },
 
     ]),
   ],
   controllers: [VehicleController],
   providers: [
-    HeartbeatService,
+    TelemetryService,
     VehicleService,
     UserService,
     CityService,
@@ -120,7 +138,8 @@ import { TripSchema } from "src/data/models/Trip";
     AssociationService,
     MessagingService,
     FileArchiverService,
-    CloudStorageUploaderService, FirebaseAdmin,
+    CloudStorageUploaderService,
+    FirebaseAdmin,
   ],
 })
 export class VehicleModule {}
