@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 ```bash
 npm install
@@ -8,37 +9,25 @@ npm install
 ```bash
 # development
 $ npm run start
+=======
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="40" alt="Nest Logo" /></a>
+</p>
 
-# watch mode
-$ npm run start:dev
+<img width="307" alt="ktlogo_red2" src="https://github.com/user-attachments/assets/7763f3c8-855c-4e49-8263-2f3ab4e314e0" />
 
-# production mode
-$ npm run start:prod
-```
+# KASIE TRANSIE BACKEND APP
+>>>>>>> b3599db760d3a29f2f43a79cd516e59f83191e9c
 
-## Test
+NodeJS with NestJS
 
-```bash
-# unit tests
-$ npm run test
+## Description
+This is the backend app for the Kasie Transie Platform. Largely responsible for managing the data for the Platform.
 
-# e2e tests
-$ npm run test:e2e
+<img width="1143" alt="Screenshot 2025-02-20 at 19 37 49" src="https://github.com/user-attachments/assets/bb6c1148-2624-498d-8a1a-a2ddbd5de84c" />
 
-# test coverage
-$ npm run test:cov
-```
+---
 
-## Support
+### 
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+<img width="1366" alt="Screenshot 2025-02-20 at 19 42 18" src="https://github.com/user-attachments/assets/e64514af-d4ad-4b42-9b95-ae7d13ced44e" />
