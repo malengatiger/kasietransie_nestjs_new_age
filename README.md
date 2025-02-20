@@ -6,7 +6,7 @@
 
 # KASIE TRANSIE BACKEND APP
 
-### NodeJS with NestJSI
+NodeJS with NestJS
 
 ## Description
 This is the backend app for the Kasie Transie Platform. Largely responsible for managing the data for the Platform.
