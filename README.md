@@ -22,7 +22,7 @@ $ npm run start
 NodeJS with NestJS
 
 ## Description
-This is the backend app for the Kasie Transie Platform. Largely responsible for managing the data for the Platform.
+This is the backend app for the Kasie Transie Platform. Largely responsible for managing the data for the Platform. Executes on instances of Google Cloud Run.
 
 <img width="1143" alt="Screenshot 2025-02-20 at 19 37 49" src="https://github.com/user-attachments/assets/bb6c1148-2624-498d-8a1a-a2ddbd5de84c" />
 
