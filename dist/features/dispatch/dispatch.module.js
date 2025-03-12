@@ -26,6 +26,8 @@ const CommuterResponse_1 = require("../../data/models/CommuterResponse");
 const UserGeofenceEvent_1 = require("../../data/models/UserGeofenceEvent");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
 const Trip_1 = require("../../data/models/Trip");
+const CommuterCashPayment_1 = require("../../data/models/CommuterCashPayment");
+const RankFeeCashPayment_1 = require("../../data/models/RankFeeCashPayment");
 let DispatchModule = class DispatchModule {
 };
 exports.DispatchModule = DispatchModule;
@@ -45,6 +47,9 @@ exports.DispatchModule = DispatchModule = __decorate([
                 { name: "KasieError", schema: kasie_error_1.KasieErrorSchema },
                 { name: "Trip", schema: Trip_1.TripSchema },
                 { name: "DispatchRecord", schema: DispatchRecord_1.DispatchRecordSchema },
+                { name: "CommuterCashPayment", schema: CommuterCashPayment_1.CommuterCashPaymentSchema },
+                { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCount_1.AmbassadorPassengerCountSchema },
+                { name: "RankFeeCashPayment", schema: RankFeeCashPayment_1.RankFeeCashPaymentSchema },
                 {
                     name: "AmbassadorPassengerCount",
                     schema: AmbassadorPassengerCount_1.AmbassadorPassengerCountSchema,

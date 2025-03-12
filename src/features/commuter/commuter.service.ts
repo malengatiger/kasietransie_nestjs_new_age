@@ -12,6 +12,7 @@ import { Position } from "src/data/models/position";
 import { MessagingService } from "../fcm/fcm.service";
 import { randomUUID } from "crypto";
 import { CloudStorageUploaderService } from "src/storage/storage.service";
+import { CommuterPickup } from "src/data/models/CommuterPickup";
 
 const mm = "CommuterService";
 
@@ -24,6 +25,9 @@ export class CommuterService {
 
     @InjectModel(Commuter.name)
     private commuterModel: mongoose.Model<Commuter>,
+
+    @InjectModel(CommuterPickup.name)
+    private commuterPickUpModel: mongoose.Model<CommuterPickup>,
 
     @InjectModel(CommuterResponse.name)
     private commuterResponseModel: mongoose.Model<CommuterResponse>,
@@ -149,6 +153,20 @@ export class CommuterService {
     Logger.debug(`${mm} commuter request added and fcm messages sent`);
     return req;
   }
+  public async addCommuterPickUp(
+    commuterPickup: CommuterPickup
+  ): Promise<CommuterPickup> {
+   
+    const created = new Date().toISOString();
+    commuterPickup.created = created;
+
+    const req = await this.commuterPickUpModel.create(commuterPickup);
+    await this.messagingService.sendCommuterPickupMessage(req);
+    
+    Logger.debug(`${mm} commuter pickup added and fcm messages sent`);
+    return req;
+  }
+
   public async getCommuterRequests(
     commuterId: string,
     startDate: string

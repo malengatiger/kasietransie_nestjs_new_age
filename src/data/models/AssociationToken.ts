@@ -15,7 +15,7 @@ export class AssociationToken {
   @Prop()
   @ApiProperty()
   token: string;
-  @Prop()
+  @Prop({required: true})
   @ApiProperty()
   created: string;
   @Prop()

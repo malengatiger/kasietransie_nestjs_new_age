@@ -21,6 +21,7 @@ import { RankFeeCashPayment } from "src/data/models/RankFeeCashPayment";
 import { RankFeeCashCheckIn } from "src/data/models/RankFeeCashCheckIn";
 import { Trip } from "src/data/models/Trip";
 import { LocationResponseError } from "src/data/models/LocationResponseError";
+import { CommuterPickup } from "src/data/models/CommuterPickup";
 export declare class MessagingService {
     private associationTokenModel;
     private kasieModel;
@@ -39,6 +40,7 @@ export declare class MessagingService {
     sendRouteDispatchMessage(dispatch: DispatchRecord): Promise<void>;
     sendCommuterCashMessage(payment: CommuterCashPayment): Promise<void>;
     sendCommuterCashCheckInMessage(checkIn: CommuterCashCheckIn): Promise<void>;
+    sendCommuterPickupMessage(pickup: CommuterPickup): Promise<void>;
     sendRankFeeCashMessage(payment: RankFeeCashPayment): Promise<void>;
     sendRankFeeCashCheckInMessage(checkIn: RankFeeCashCheckIn): Promise<void>;
     sendHeartbeatMessage(heartbeat: VehicleHeartbeat): Promise<void>;
@@ -51,6 +53,7 @@ export declare class MessagingService {
     sendLocationResponseMessageToDevice(response: LocationResponse): Promise<void>;
     sendCommuterResponseMessageToTopic(response: CommuterResponse): Promise<void>;
     sendAssociationRegisteredMessage(assoc: Association): Promise<void>;
-    private sendToTopic;
-    private sendToDevice;
+    sendToTopic(topic: string, title: string, body: string, type: string, data: string, associationId: string): Promise<void>;
+    sendToDevice(fcmToken: string, title: string, body: string, type: string, data: string): Promise<void>;
+    subscribeToEveryThing(): Promise<any>;
 }

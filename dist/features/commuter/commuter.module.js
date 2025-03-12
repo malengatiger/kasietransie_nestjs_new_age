@@ -30,6 +30,7 @@ const UserPhoto_1 = require("../../data/models/UserPhoto");
 const VehiclePhoto_1 = require("../../data/models/VehiclePhoto");
 const VehicleVideo_1 = require("../../data/models/VehicleVideo");
 const Association_1 = require("../../data/models/Association");
+const CommuterPickup_1 = require("../../data/models/CommuterPickup");
 let CommuterModule = class CommuterModule {
 };
 exports.CommuterModule = CommuterModule;
@@ -53,6 +54,7 @@ exports.CommuterModule = CommuterModule = __decorate([
                 { name: "Association", schema: Association_1.AssociationSchema },
                 { name: "ExampleFile", schema: ExampleFile_1.ExampleFileSchema },
                 { name: "AssociationToken", schema: AssociationToken_1.AssociationTokenSchema },
+                { name: "CommuterPickup", schema: CommuterPickup_1.CommuterPickupSchema }
             ]),
         ],
         controllers: [commuter_controller_1.CommuterController],

@@ -22,6 +22,7 @@ import { UserPhotoSchema } from "src/data/models/UserPhoto";
 import { VehiclePhotoSchema } from "src/data/models/VehiclePhoto";
 import { VehicleVideoSchema } from "src/data/models/VehicleVideo";
 import { AssociationSchema } from "src/data/models/Association";
+import { CommuterPickupSchema } from "src/data/models/CommuterPickup";
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { AssociationSchema } from "src/data/models/Association";
 
       { name: "AssociationToken", schema: AssociationTokenSchema },
 
+      {name: "CommuterPickup", schema: CommuterPickupSchema}
     ]),
   ],
   controllers: [CommuterController],

@@ -20,6 +20,8 @@ export class Constants {
   public static readonly commuterCashPayment = 'commuterCashPayment';
   public static readonly commuterCashCheckIn = 'commuterCashCheckIn';
 
+  public static readonly commuterPickUp = 'commuterPickup';
+
   public static readonly rankFeeCashPayment = 'rankFeeCashPayment';
   public static readonly rankFeeCashCheckIn = 'rankFeeCashCheckIn';
 

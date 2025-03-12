@@ -18,6 +18,8 @@ import { UserGeofenceEventSchema } from "src/data/models/UserGeofenceEvent";
 import { AssociationTokenSchema } from "src/data/models/AssociationToken";
 import { FirebaseAdmin } from "src/services/firebase_util";
 import { TripSchema } from "src/data/models/Trip";
+import { CommuterCashPaymentSchema } from "src/data/models/CommuterCashPayment";
+import { RankFeeCashPaymentSchema } from "src/data/models/RankFeeCashPayment";
 
 @Module({
   imports: [
@@ -36,6 +38,9 @@ import { TripSchema } from "src/data/models/Trip";
       { name: "Trip", schema: TripSchema },
 
       { name: "DispatchRecord", schema: DispatchRecordSchema },
+      { name: "CommuterCashPayment", schema: CommuterCashPaymentSchema },
+      { name: "AmbassadorPassengerCount", schema: AmbassadorPassengerCountSchema },
+      { name: "RankFeeCashPayment", schema: RankFeeCashPaymentSchema },
 
       {
         name: "AmbassadorPassengerCount",

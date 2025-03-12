@@ -80,6 +80,9 @@ let AssociationService = class AssociationService {
         this.routeModel = routeModel;
         this.vehicleArrivalModel = vehicleArrivalModel;
     }
+    async sendToDevice(fcmToken, passengerCount) {
+        const m = await this.messagingService.sendToDevice(fcmToken, 'PassengerCount', 'Passengers counted', constants_1.Constants.passengerCount, JSON.stringify(passengerCount));
+    }
     async getAssociationVehicleDepartures(associationId, startDate, endDate) {
         return [];
     }
@@ -405,11 +408,23 @@ let AssociationService = class AssociationService {
         return await this.settingsModel.create(model);
     }
     async addAssociationToken(associationId, userId, token) {
+        const res = await this.associationTokenModel.deleteMany({ associationId: associationId });
+        common_1.Logger.debug(`${mm} addAssociationToken... deleted tokens: ${res}`);
         const at = new AssociationToken_1.AssociationToken();
         at.associationId = associationId;
         at.userId = userId;
         at.token = token;
-        return await this.associationTokenModel.create(at);
+        at.created = new Date().toISOString();
+        var res2 = await this.associationTokenModel.create(at);
+        common_1.Logger.debug(`${mm} addAssociationToken... association token added to Atlas: ${res2}`);
+        return res2;
+    }
+    async getAssociationTokens(associationId) {
+        const toks = await this.associationTokenModel.find({
+            associationId: associationId,
+        });
+        common_1.Logger.debug(`${mm} association tokens: ${toks.length}`);
+        return toks;
     }
     async getAssociationAppErrors(associationId, startDate, endDate) {
         return this.appErrorModel.find({

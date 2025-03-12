@@ -16,6 +16,7 @@ export declare class Constants {
     static readonly routeDispatchRecord = "routeDispatchRecord";
     static readonly commuterCashPayment = "commuterCashPayment";
     static readonly commuterCashCheckIn = "commuterCashCheckIn";
+    static readonly commuterPickUp = "commuterPickup";
     static readonly rankFeeCashPayment = "rankFeeCashPayment";
     static readonly rankFeeCashCheckIn = "rankFeeCashCheckIn";
     static readonly passengerCount = "passengerCount";

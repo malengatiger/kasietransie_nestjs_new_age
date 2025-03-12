@@ -25,13 +25,15 @@ const Route_1 = require("../../data/models/Route");
 const fcm_service_1 = require("../fcm/fcm.service");
 const crypto_1 = require("crypto");
 const storage_service_1 = require("../../storage/storage.service");
+const CommuterPickup_1 = require("../../data/models/CommuterPickup");
 const mm = "CommuterService";
 let CommuterService = class CommuterService {
-    constructor(configService, messagingService, storage, commuterModel, commuterResponseModel, commuterRequestModel, routeLandmarkModel, routeModel) {
+    constructor(configService, messagingService, storage, commuterModel, commuterPickUpModel, commuterResponseModel, commuterRequestModel, routeLandmarkModel, routeModel) {
         this.configService = configService;
         this.messagingService = messagingService;
         this.storage = storage;
         this.commuterModel = commuterModel;
+        this.commuterPickUpModel = commuterPickUpModel;
         this.commuterResponseModel = commuterResponseModel;
         this.commuterRequestModel = commuterRequestModel;
         this.routeLandmarkModel = routeLandmarkModel;
@@ -119,6 +121,14 @@ let CommuterService = class CommuterService {
         common_1.Logger.debug(`${mm} commuter request added and fcm messages sent`);
         return req;
     }
+    async addCommuterPickUp(commuterPickup) {
+        const created = new Date().toISOString();
+        commuterPickup.created = created;
+        const req = await this.commuterPickUpModel.create(commuterPickup);
+        await this.messagingService.sendCommuterPickupMessage(req);
+        common_1.Logger.debug(`${mm} commuter pickup added and fcm messages sent`);
+        return req;
+    }
     async getCommuterRequests(commuterId, startDate) {
         if (!startDate) {
             return this.commuterRequestModel.find({
@@ -157,12 +167,13 @@ exports.CommuterService = CommuterService;
 exports.CommuterService = CommuterService = __decorate([
     (0, common_1.Injectable)(),
     __param(3, (0, mongoose_1.InjectModel)(Commuter_1.Commuter.name)),
-    __param(4, (0, mongoose_1.InjectModel)(CommuterResponse_1.CommuterResponse.name)),
-    __param(5, (0, mongoose_1.InjectModel)(CommuterRequest_1.CommuterRequest.name)),
-    __param(6, (0, mongoose_1.InjectModel)(RouteLandmark_1.RouteLandmark.name)),
-    __param(7, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
+    __param(4, (0, mongoose_1.InjectModel)(CommuterPickup_1.CommuterPickup.name)),
+    __param(5, (0, mongoose_1.InjectModel)(CommuterResponse_1.CommuterResponse.name)),
+    __param(6, (0, mongoose_1.InjectModel)(CommuterRequest_1.CommuterRequest.name)),
+    __param(7, (0, mongoose_1.InjectModel)(RouteLandmark_1.RouteLandmark.name)),
+    __param(8, (0, mongoose_1.InjectModel)(Route_1.Route.name)),
     __metadata("design:paramtypes", [config_1.ConfigService,
         fcm_service_1.MessagingService,
-        storage_service_1.CloudStorageUploaderService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        storage_service_1.CloudStorageUploaderService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], CommuterService);
 //# sourceMappingURL=commuter.service.js.map

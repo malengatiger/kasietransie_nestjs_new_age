@@ -115,6 +115,14 @@ export class AssociationService {
     private vehicleArrivalModel: mongoose.Model<VehicleArrival>
   ) {}
 
+  public async sendToDevice(fcmToken: string, passengerCount: AmbassadorPassengerCount) {
+    const m = await this.messagingService.sendToDevice(
+      fcmToken,
+      'PassengerCount', 
+      'Passengers counted', 
+      Constants.passengerCount, 
+      JSON.stringify(passengerCount));
+  }
   public async getAssociationVehicleDepartures(
     associationId: string,
     startDate: string,
@@ -581,14 +589,28 @@ export class AssociationService {
     userId: string,
     token: string
   ): Promise<any> {
+    const res = await this.associationTokenModel.deleteMany({associationId: associationId});
+    Logger.debug(`${mm} addAssociationToken... deleted tokens: ${res}`);
     const at: AssociationToken = new AssociationToken();
     at.associationId = associationId;
     at.userId = userId;
     at.token = token;
+    at.created = new Date().toISOString();
 
-    return await this.associationTokenModel.create(at);
+    var res2 = await this.associationTokenModel.create(at);
+    Logger.debug(`${mm} addAssociationToken... association token added to Atlas: ${res2}`);
+    return res2;
   }
 
+  public async getAssociationTokens(
+    associationId: string,
+  ): Promise<AssociationToken[]> {
+    const toks: AssociationToken[] = await this.associationTokenModel.find({
+      associationId: associationId,
+    });
+    Logger.debug(`${mm} association tokens: ${toks.length}`);
+    return toks;
+  }
   public async getAssociationAppErrors(
     associationId: string,
     startDate: string,

@@ -9,6 +9,8 @@ import { CounterBag } from "src/data/helpers/CounterBag";
 import { AssociationCounts } from "src/data/helpers/AssociationCounts";
 import { Trip } from "src/data/models/Trip";
 import { UpdateResult } from "mongoose";
+import { CommuterCashPayment } from "src/data/models/CommuterCashPayment";
+import { RankFeeCashPayment } from "src/data/models/RankFeeCashPayment";
 export declare class DispatchController {
     private readonly dispatchService;
     constructor(dispatchService: DispatchService);
@@ -27,4 +29,20 @@ export declare class DispatchController {
         routeId: string;
         startDate: string;
     }): Promise<DispatchRecord[]>;
+    getRouteCommuterCashPayments(query: {
+        routeId: string;
+        startDate: string;
+    }): Promise<CommuterCashPayment[]>;
+    getRoutePassengerCounts(query: {
+        routeId: string;
+        startDate: string;
+    }): Promise<AmbassadorPassengerCount[]>;
+    getRouteRankFeeCashPayments(query: {
+        routeId: string;
+        startDate: string;
+    }): Promise<RankFeeCashPayment[]>;
+    getRouteTrips(query: {
+        routeId: string;
+        startDate: string;
+    }): Promise<Trip[]>;
 }

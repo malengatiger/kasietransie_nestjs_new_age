@@ -28,8 +28,10 @@ import { RankFeeCashPayment } from "src/data/models/RankFeeCashPayment";
 import { RankFeeCashCheckIn } from "src/data/models/RankFeeCashCheckIn";
 import { Trip } from "src/data/models/Trip";
 import { LocationResponseError } from "src/data/models/LocationResponseError";
+import { CommuterPickup } from "src/data/models/CommuterPickup";
+import { getMessaging } from "firebase-messaging";
 
-const mm = "🎽 🎽 🎽 MessagingService";
+const mm = "🎽 🎽 🎽 FCM MessagingService 🎽 🎽 🎽";
 
 @Injectable()
 export class MessagingService {
@@ -93,9 +95,11 @@ export class MessagingService {
       `Vehicle Location Request`,
       `Requested at ${fmtDate}`,
       Constants.locationRequest,
-      JSON.stringify(locationRequest, null, 2),
+      JSON.stringify(locationRequest, null, 2)
     );
-    Logger.debug(`${mm} sendLocationRequestMessageToDevice: message sent to token: ${locationRequest.vehicleFcmToken} `);
+    Logger.debug(
+      `${mm} sendLocationRequestMessageToDevice: message sent to token: ${locationRequest.vehicleFcmToken} `
+    );
   }
 
   //http://192.168.86.242:8080/api/v1/getAssociationCounts?associationId=2f3faebd-6159-4b03-9857-9dad6d9a82ac&startDate=2023-09-14T06:52:32.929Z
@@ -110,7 +114,9 @@ export class MessagingService {
       locationResponse.associationId
     );
   }
-  async sendLocationResponseErrorMessage(locationResponse: LocationResponseError) {
+  async sendLocationResponseErrorMessage(
+    locationResponse: LocationResponseError
+  ) {
     const fmtDate = MyUtils.formatISOStringDate(locationResponse.created, null);
     await this.sendToTopic(
       `${Constants.locationResponseError}${locationResponse.associationId}`,
@@ -121,14 +127,19 @@ export class MessagingService {
       locationResponse.associationId
     );
   }
-  async sendLocationResponseErrorMessageToDevice(locationResponseError: LocationResponseError) {
-    const fmtDate = MyUtils.formatISOStringDate(locationResponseError.created, null);
+  async sendLocationResponseErrorMessageToDevice(
+    locationResponseError: LocationResponseError
+  ) {
+    const fmtDate = MyUtils.formatISOStringDate(
+      locationResponseError.created,
+      null
+    );
     await this.sendToDevice(
       locationResponseError.fcmToken,
       `Vehicle Location Response Error`,
       `Responded at ${fmtDate}`,
       Constants.locationResponseError,
-      JSON.stringify(locationResponseError, null, 2),
+      JSON.stringify(locationResponseError, null, 2)
     );
   }
 
@@ -169,7 +180,6 @@ export class MessagingService {
     Logger.debug(
       `\n\n${mm} DispatchRecord sent to association topic: ${Constants.dispatchRecord}${dispatch.associationId}`
     );
-   
   }
   async sendRouteDispatchMessage(dispatch: DispatchRecord) {
     const fmtDate = MyUtils.formatISOStringDate(dispatch.created, null);
@@ -210,6 +220,18 @@ export class MessagingService {
       Constants.commuterCashCheckIn,
       JSON.stringify(checkIn),
       checkIn.associationId
+    );
+  }
+  async sendCommuterPickupMessage(pickup: CommuterPickup) {
+    const fmtDate = MyUtils.formatISOStringDate(pickup.created, null);
+
+    await this.sendToTopic(
+      `${Constants.commuterPickUp}${pickup.associationId}`,
+      `vehicle: ${pickup.vehicleReg},`,
+      `Picked up at ${fmtDate}`,
+      Constants.commuterCashCheckIn,
+      JSON.stringify(pickup),
+      pickup.associationId
     );
   }
 
@@ -337,8 +359,7 @@ export class MessagingService {
       JSON.stringify(response, null, 2)
     );
   }
-  async sendLocationResponseMessageToDevice(
-    response: LocationResponse) {
+  async sendLocationResponseMessageToDevice(response: LocationResponse) {
     await this.sendToDevice(
       `${response.fcmToken}`,
       `Acknowledgement of your Location Request,`,
@@ -369,7 +390,7 @@ export class MessagingService {
       assoc.associationId
     );
   }
-  private async sendToTopic(
+  public async sendToTopic(
     topic: string,
     title: string,
     body: string,
@@ -391,6 +412,7 @@ export class MessagingService {
 
     try {
       await admin.messaging().send(message);
+      Logger.debug(`${mm} ${type} FCM message sent to topic: ${topic}`);
       const associationToken = await this.associationTokenModel.findOne({
         associationId: associationId,
       });
@@ -416,10 +438,10 @@ export class MessagingService {
         await admin.messaging().send(messageDirect);
       }
 
-      Logger.debug(
-        `${mm} 🅿️🅿️🅿️ Successfully sent FCM message to topic and association (if appropriate) ` +
-          `\n🚺 🚺 🚺 topic: ${topic} message type: ${type} 🚺 title: ${JSON.stringify(title)}`
-      );
+      // Logger.debug(
+      //   `${mm} 🅿️🅿️🅿️ Successfully sent FCM message to topic and association (if appropriate) ` +
+      //     `\n🚺 🚺 🚺 topic: ${topic} message type: ${type} 🚺 title: ${JSON.stringify(title)}`
+      // );
     } catch (error) {
       Logger.error("Error sending message:", error);
       const err = new KasieError(
@@ -429,38 +451,64 @@ export class MessagingService {
       await this.kasieModel.create(err);
     }
   }
-  private async sendToDevice(
+  public async sendToDevice(
     fcmToken: string,
     title: string,
     body: string,
     type: string,
     data: string
   ) {
+    // Validate the fcmToken
+    if (!fcmToken) {
+      Logger.error("FCM token is required but was not provided.");
+      throw new KasieError("FCM token is required.", HttpStatus.BAD_REQUEST);
+    }
+    Logger.debug(`${mm} sendToDevice: fcmToken; ${fcmToken}`);
+    // Construct the message object
     const message: admin.messaging.Message = {
-      token: fcmToken,
       data: {
         type: type,
         data: data,
       },
+      token: fcmToken,
       notification: {
         title: title,
         body: body,
       },
     };
-
+  
     try {
-      await admin.messaging().send(message);
+      // Send the message using Firebase Admin SDK
+      const response = await admin.messaging().send(message);
+      
+      // Log success
       Logger.debug(
-        `${mm} 🅿️ 🅿️ 🅿️ Successfully sent FCM message to single device ` +
-          `🚺 🚺 🚺 message type: ${type} 🚺 title: ${JSON.stringify(title)} \n ${fcmToken}`
+        `${mm} 🅿️  🅿️  🅿️  Successfully sent FCM message to single device; ` +
+        `🚺 🚺 🚺 type: ${type} 🚺 data: ${JSON.stringify(message)}`
       );
+      
+      // Optionally, you can log the response from Firebase
+      Logger.debug(`🥬🥬🥬🥬 sendToDevice: Firebase fcmToken: 🥬 ${fcmToken}`);
+
+      Logger.debug("🥬🥬🥬🥬 sendToDevice: Firebase response: 🥬 ", response);
+  
     } catch (error) {
-      Logger.error("Error sending message:", error);
+      // Log the error
+      Logger.error("👿👿👿👿👿 Error sending message:", error);
+      
+      // Create a KasieError and save it to the database
       const err = new KasieError(
-        `${type} Message Send Failed: ${error}`,
+        `${type} 👿 Message Send Failed: ${error}`,
         HttpStatus.BAD_REQUEST
       );
       await this.kasieModel.create(err);
+      
+      // Optionally, rethrow the error if you want to handle it further up the call stack
+      throw err;
     }
+  }
+  //subscribe to everything
+  async subscribeToEveryThing(): Promise<any> {
+    // getMessaging().
   }
 }

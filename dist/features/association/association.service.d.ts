@@ -57,6 +57,7 @@ export declare class AssociationService {
     private routeModel;
     private vehicleArrivalModel;
     constructor(archiveService: FileArchiverService, userService: UserService, cityService: CityService, messagingService: MessagingService, errorHandler: KasieErrorHandler, associationModel: mongoose.Model<Association>, vehicleModel: mongoose.Model<Vehicle>, settingsModel: mongoose.Model<SettingsModel>, userModel: mongoose.Model<User>, countryModel: mongoose.Model<Country>, associationTokenModel: mongoose.Model<AssociationToken>, appErrorModel: mongoose.Model<AppError>, vehiclePhotoModel: mongoose.Model<VehiclePhoto>, vehicleVideoModel: mongoose.Model<VehicleVideo>, exampleFileModel: mongoose.Model<ExampleFile>, commuterModel: mongoose.Model<Commuter>, dispatchRecordModel: mongoose.Model<DispatchRecord>, tripModel: mongoose.Model<Trip>, commuterCashPaymentModel: mongoose.Model<CommuterCashPayment>, commuterCashCheckInModel: mongoose.Model<CommuterCashCheckIn>, rankFeeCashCheckInModel: mongoose.Model<RankFeeCashCheckIn>, rankFeeCashPaymentModel: mongoose.Model<RankFeeCashPayment>, commuterRequestModel: mongoose.Model<CommuterRequest>, vehicleTelemetryModel: mongoose.Model<VehicleTelemetry>, ambassadorPassengerCountModel: mongoose.Model<AmbassadorPassengerCount>, routeModel: mongoose.Model<Route>, vehicleArrivalModel: mongoose.Model<VehicleArrival>);
+    sendToDevice(fcmToken: string, passengerCount: AmbassadorPassengerCount): Promise<void>;
     getAssociationVehicleDepartures(associationId: string, startDate: string, endDate: string): Promise<VehicleDeparture[]>;
     getAssociationDispatchRecords(associationId: string, startDate: string, endDate: string): Promise<DispatchRecord[]>;
     getAssociationVehicleArrivals(associationId: string, startDate: string, endDate: string): Promise<VehicleArrival[]>;
@@ -88,6 +89,7 @@ export declare class AssociationService {
     registerAssociation(association: Association): Promise<RegistrationBag>;
     addSettingsModel(model: SettingsModel): Promise<any>;
     addAssociationToken(associationId: string, userId: string, token: string): Promise<any>;
+    getAssociationTokens(associationId: string): Promise<AssociationToken[]>;
     getAssociationAppErrors(associationId: string, startDate: string, endDate: string): Promise<AppError[]>;
     getRandomCommuters(limit: number): Promise<any[]>;
     getAppErrors(startDate: string): Promise<any[]>;

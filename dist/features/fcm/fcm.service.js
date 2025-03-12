@@ -21,7 +21,7 @@ const mongoose_1 = require("mongoose");
 const mongoose_2 = require("@nestjs/mongoose");
 const kasie_error_1 = require("../../data/models/kasie.error");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
-const mm = "🎽 🎽 🎽 MessagingService";
+const mm = "🎽 🎽 🎽 FCM MessagingService 🎽 🎽 🎽";
 let MessagingService = class MessagingService {
     constructor(associationTokenModel, kasieModel) {
         this.associationTokenModel = associationTokenModel;
@@ -93,6 +93,10 @@ let MessagingService = class MessagingService {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(checkIn.created, null);
         await this.sendToTopic(`${constants_1.Constants.commuterCashCheckIn}${checkIn.associationId}`, `amount: ${checkIn.amount},`, `Processed at ${fmtDate}`, constants_1.Constants.commuterCashCheckIn, JSON.stringify(checkIn), checkIn.associationId);
     }
+    async sendCommuterPickupMessage(pickup) {
+        const fmtDate = my_utils_1.MyUtils.formatISOStringDate(pickup.created, null);
+        await this.sendToTopic(`${constants_1.Constants.commuterPickUp}${pickup.associationId}`, `vehicle: ${pickup.vehicleReg},`, `Picked up at ${fmtDate}`, constants_1.Constants.commuterCashCheckIn, JSON.stringify(pickup), pickup.associationId);
+    }
     async sendRankFeeCashMessage(payment) {
         const fmtDate = my_utils_1.MyUtils.formatISOStringDate(payment.created, null);
         await this.sendToTopic(`${constants_1.Constants.rankFeeCashPayment}${payment.associationId}`, ` amount: ${payment.amount},`, `Processed at ${fmtDate}`, constants_1.Constants.rankFeeCashPayment, JSON.stringify(payment), payment.associationId);
@@ -156,6 +160,7 @@ let MessagingService = class MessagingService {
         };
         try {
             await admin.messaging().send(message);
+            common_1.Logger.debug(`${mm} ${type} FCM message sent to topic: ${topic}`);
             const associationToken = await this.associationTokenModel.findOne({
                 associationId: associationId,
             });
@@ -178,8 +183,6 @@ let MessagingService = class MessagingService {
                 }
                 await admin.messaging().send(messageDirect);
             }
-            common_1.Logger.debug(`${mm} 🅿️🅿️🅿️ Successfully sent FCM message to topic and association (if appropriate) ` +
-                `\n🚺 🚺 🚺 topic: ${topic} message type: ${type} 🚺 title: ${JSON.stringify(title)}`);
         }
         catch (error) {
             common_1.Logger.error("Error sending message:", error);
@@ -188,27 +191,37 @@ let MessagingService = class MessagingService {
         }
     }
     async sendToDevice(fcmToken, title, body, type, data) {
+        if (!fcmToken) {
+            common_1.Logger.error("FCM token is required but was not provided.");
+            throw new kasie_error_1.KasieError("FCM token is required.", common_1.HttpStatus.BAD_REQUEST);
+        }
+        common_1.Logger.debug(`${mm} sendToDevice: fcmToken; ${fcmToken}`);
         const message = {
-            token: fcmToken,
             data: {
                 type: type,
                 data: data,
             },
+            token: fcmToken,
             notification: {
                 title: title,
                 body: body,
             },
         };
         try {
-            await admin.messaging().send(message);
-            common_1.Logger.debug(`${mm} 🅿️ 🅿️ 🅿️ Successfully sent FCM message to single device ` +
-                `🚺 🚺 🚺 message type: ${type} 🚺 title: ${JSON.stringify(title)} \n ${fcmToken}`);
+            const response = await admin.messaging().send(message);
+            common_1.Logger.debug(`${mm} 🅿️  🅿️  🅿️  Successfully sent FCM message to single device; ` +
+                `🚺 🚺 🚺 type: ${type} 🚺 data: ${JSON.stringify(message)}`);
+            common_1.Logger.debug(`🥬🥬🥬🥬 sendToDevice: Firebase fcmToken: 🥬 ${fcmToken}`);
+            common_1.Logger.debug("🥬🥬🥬🥬 sendToDevice: Firebase response: 🥬 ", response);
         }
         catch (error) {
-            common_1.Logger.error("Error sending message:", error);
-            const err = new kasie_error_1.KasieError(`${type} Message Send Failed: ${error}`, common_1.HttpStatus.BAD_REQUEST);
+            common_1.Logger.error("👿👿👿👿👿 Error sending message:", error);
+            const err = new kasie_error_1.KasieError(`${type} 👿 Message Send Failed: ${error}`, common_1.HttpStatus.BAD_REQUEST);
             await this.kasieModel.create(err);
+            throw err;
         }
+    }
+    async subscribeToEveryThing() {
     }
 };
 exports.MessagingService = MessagingService;

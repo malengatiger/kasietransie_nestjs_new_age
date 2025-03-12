@@ -8,6 +8,7 @@ import { CloudStorageUploaderService } from 'src/storage/storage.service';
 import { KasieQRCode } from 'src/data/helpers/kasie_qr_code';
 import { User } from 'src/data/models/User';
 import { VehicleService } from '../vehicle/vehicle.service';
+import { AmbassadorPassengerCount } from 'src/data/models/AmbassadorPassengerCount';
 export declare class AssociationController {
     private readonly associationService;
     private readonly storage;
@@ -17,6 +18,7 @@ export declare class AssociationController {
     registerAssociation(association: Association): Promise<RegistrationBag>;
     addSettingsModel(model: SettingsModel): Promise<any>;
     addAssociationToken(associationId: string, userId: string, token: string): Promise<any>;
+    getAssociationTokens(associationId: string): Promise<any>;
     resetAssociationData(associationId: string): Promise<any>;
     downloadExampleUserCSVFile(): Promise<string>;
     getAssociations(): Promise<any[]>;
@@ -28,4 +30,5 @@ export declare class AssociationController {
     getAssociationAppErrors(associationId: string, startDate: string, endDate: string): Promise<AppError[]>;
     getExampleFiles(): Promise<any[]>;
     createQRCode(data: KasieQRCode): Promise<string>;
+    sendToDevice(fcmToken: string, count: AmbassadorPassengerCount): Promise<any>;
 }

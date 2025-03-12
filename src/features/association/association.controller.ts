@@ -9,6 +9,7 @@ import { CloudStorageUploaderService } from 'src/storage/storage.service';
 import { KasieQRCode } from 'src/data/helpers/kasie_qr_code';
 import { User } from 'src/data/models/User';
 import { VehicleService } from '../vehicle/vehicle.service';
+import { AmbassadorPassengerCount } from 'src/data/models/AmbassadorPassengerCount';
 
 @Controller('association')
 export class AssociationController {
@@ -94,14 +95,23 @@ export class AssociationController {
 
   @Get('addAssociationToken')
   async addAssociationToken(
-    @Query() associationId: string,
-    @Query() userId: string,
-    @Query() token: string,
+    @Query('associationId') associationId: string,
+    @Query('userId') userId: string,
+    @Query('token') token: string,
   ): Promise<any> {
     return this.associationService.addAssociationToken(
       associationId,
       userId,
       token,
+    );
+  }
+  @Get('getAssociationTokens')
+  async getAssociationTokens(
+    @Query('associationId') associationId: string,
+   
+  ): Promise<any> {
+    return this.associationService.getAssociationTokens(
+      associationId,
     );
   }
 
@@ -180,5 +190,12 @@ export class AssociationController {
     @Body() data: KasieQRCode
   ): Promise<string> {
     return this.storage.createQRCode(data);
+  }
+  @Post('sendToDevice')
+  async sendToDevice(
+    @Query('fcmToken') fcmToken: string,
+    @Body() count: AmbassadorPassengerCount
+  ): Promise<any> {
+    return this.associationService.sendToDevice(fcmToken, count);
   }
 }

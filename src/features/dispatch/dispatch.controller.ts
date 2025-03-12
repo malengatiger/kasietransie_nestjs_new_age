@@ -10,6 +10,8 @@ import { CounterBag } from "src/data/helpers/CounterBag";
 import { AssociationCounts } from "src/data/helpers/AssociationCounts";
 import { Trip } from "src/data/models/Trip";
 import { UpdateResult } from "mongoose";
+import { CommuterCashPayment } from "src/data/models/CommuterCashPayment";
+import { RankFeeCashPayment } from "src/data/models/RankFeeCashPayment";
 
 @Controller("dispatch")
 export class DispatchController {
@@ -115,6 +117,52 @@ export class DispatchController {
    
   ): Promise<DispatchRecord[]> {
     return this.dispatchService.getRouteDispatchRecords(
+      query.routeId,
+      query.startDate,
+      
+    );
+  }
+  @Get("getRouteCommuterCashPayments")
+  public async getRouteCommuterCashPayments(
+    @Query() query: { routeId: string, startDate: string }
+   
+  ): Promise<CommuterCashPayment[]> {
+    return this.dispatchService.getRouteCommuterCashPayments(
+      query.routeId,
+      query.startDate,
+      
+    );
+  }
+
+  @Get("getRoutePassengerCounts")
+
+  public async getRoutePassengerCounts(
+    @Query() query: { routeId: string, startDate: string }
+   
+  ): Promise<AmbassadorPassengerCount[]> {
+    return this.dispatchService.getRoutePassengerCounts(
+      query.routeId,
+      query.startDate,
+      
+    );
+  }
+  @Get("getRouteRankFeeCashPayments")
+  public async getRouteRankFeeCashPayments(
+    @Query() query: { routeId: string, startDate: string }
+   
+  ): Promise<RankFeeCashPayment[]> {
+    return this.dispatchService.getRouteRankFeeCashPayments(
+      query.routeId,
+      query.startDate,
+      
+    );
+  }
+  @Get("getRouteTrips")
+  public async getRouteTrips(
+    @Query() query: { routeId: string, startDate: string }
+   
+  ): Promise<Trip[]> {
+    return this.dispatchService.getRouteTrips(
       query.routeId,
       query.startDate,
       

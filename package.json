@@ -41,6 +41,7 @@
     "dotenv": "^16.3.1",
     "express-rate-limit": "^7.0.0",
     "firebase-admin": "^12.7.0",
+    "firebase-messaging": "^1.0.6",
     "google-auth-library": "^9.0.0",
     "helmet": "^7.0.0",
     "i": "^0.3.7",

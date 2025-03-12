@@ -19,8 +19,10 @@ import { Trip } from "src/data/models/Trip";
 import { de } from 'date-fns/locale';
 import { randomUUID } from "crypto";
 import { start } from "repl";
+import { CommuterCashPayment } from "src/data/models/CommuterCashPayment";
+import { RankFeeCashPayment } from "src/data/models/RankFeeCashPayment";
 
-const mm = "DispatchService";
+const mm = "🍐🍐🍐🍐 DispatchService 🍐🍐";
 
 @Injectable()
 export class DispatchService {
@@ -39,6 +41,10 @@ export class DispatchService {
     private ambassadorPassengerCountModel: mongoose.Model<AmbassadorPassengerCount>,
     @InjectModel(CommuterRequest.name)
     private commuterRequestModel: mongoose.Model<CommuterRequest>,
+    @InjectModel(CommuterCashPayment.name)
+    private commuterCashPaymentModel: mongoose.Model<CommuterCashPayment>,
+    @InjectModel(RankFeeCashPayment.name)
+    private rankFeeCashPaymentModel: mongoose.Model<RankFeeCashPayment>,
 
     @InjectModel(Trip.name)
     private tripModel: mongoose.Model<Trip>
@@ -59,14 +65,69 @@ export class DispatchService {
 
     return res;
   }
-  
+  public async getRouteCommuterCashPayments(
+    routeId: string,
+    startDate: string,
+  ): Promise<CommuterCashPayment[]> {
+    Logger.debug(`${mm} getRouteCommuterCashPayments: ... startDate: ${startDate} routeId: ${routeId}`)
+    const aDate = new Date(startDate);
+    const res = await this.commuterCashPaymentModel.find(
+      {routeId: routeId, created: {$gte: startDate}});
+      Logger.debug(`${mm} found ${res.length} dispatch records`)
+      Logger.debug(`getRouteCommuterCashPayments, result: ${JSON.stringify(res, null, 2)}`);
+      Logger.log(`\n${mm} found 🎽 ${res.length} commuter cash payments  🎽`)
+
+    return res;
+  }
+  public async getRouteRankFeeCashPayments(
+    routeId: string,
+    startDate: string,
+  ): Promise<RankFeeCashPayment[]> {
+    Logger.debug(`${mm} getRouteRankFeeCashPayments: ... startDate: ${startDate} routeId: ${routeId}`)
+    const aDate = new Date(startDate);
+    const res = await this.rankFeeCashPaymentModel.find(
+      {routeId: routeId, created: {$gte: startDate}});
+      Logger.debug(`${mm} found ${res.length} dispatch records`)
+      Logger.debug(`getRouteRankFeeCashPayments, result: ${JSON.stringify(res, null, 2)}`);
+      Logger.log(`\n${mm} found 🎽 ${res.length} rank fee cash payments  🎽`)
+
+    return res;
+  }
+  public async getRouteTrips(
+    routeId: string,
+    startDate: string,
+  ): Promise<Trip[]> {
+    Logger.debug(`${mm} getRouteTrips: ... startDate: ${startDate} routeId: ${routeId}`)
+    const aDate = new Date(startDate);
+    const res = await this.tripModel.find(
+      {routeId: routeId, created: {$gte: startDate}});
+      Logger.debug(`${mm} found ${res.length} dispatch records`)
+      Logger.debug(`getRouteTrips, result: ${JSON.stringify(res, null, 2)}`);
+      Logger.log(`\n${mm} found 🎽 ${res.length} route trips  🎽`)
+
+    return res;
+  }
+  public async getRoutePassengerCounts(
+    routeId: string,
+    startDate: string,
+  ): Promise<AmbassadorPassengerCount[]> {
+    Logger.debug(`${mm} getRoutePassengerCounts: ... startDate: ${startDate} routeId: ${routeId}`)
+    const aDate = new Date(startDate);
+    const res = await this.ambassadorPassengerCountModel.find(
+      {routeId: routeId, created: {$gte: startDate}});
+      Logger.debug(`${mm} found ${res.length} passenger counts`)
+      Logger.debug(`getRoutePassengerCounts, result: ${JSON.stringify(res, null, 2)}`);
+      Logger.log(`\n${mm} found 🎽 ${res.length} route passengerCounts  🎽`)
+
+    return res;
+  }
   public async addTrip(trip: Trip) : Promise<Trip>{
     const mDate= new Date(trip.created);
     trip.mDate = mDate;
 
     const res = await this.tripModel.create(trip);
     const re2 = await this.messagingService.sendTripMessage(trip);
-    Logger.debug(`${mm} added Trip to Atlas ${JSON.stringify(res, null, 2)}`);
+    Logger.debug(`${mm} added Trip to Atlas ${trip.routeName}`);
     return res;
   }
   public async updateTrip(trip: Trip) : Promise<UpdateResult>{
@@ -179,7 +240,7 @@ export class DispatchService {
   public async addDispatchRecord(
     dispatchRecord: DispatchRecord
   ): Promise<DispatchRecord> {
-    Logger.debug(`${mm} addDispatchRecord : ${JSON.stringify(dispatchRecord, null, 2)}`);
+    Logger.debug(`${mm} adding DispatchRecord : ${dispatchRecord.vehicleReg}`);
     const mDate= new Date();
     dispatchRecord.created = mDate.toISOString();
     dispatchRecord.mDate = mDate;

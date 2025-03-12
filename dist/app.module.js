@@ -93,6 +93,7 @@ const RankFeeCashPayment_1 = require("./data/models/RankFeeCashPayment");
 const VehicleTelemetry_1 = require("./data/models/VehicleTelemetry");
 const points_module_1 = require("./points/points.module");
 const LocationResponseError_1 = require("./data/models/LocationResponseError");
+const CommuterPickup_1 = require("./data/models/CommuterPickup");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
@@ -167,6 +168,7 @@ exports.AppModule = AppModule = __decorate([
                 { name: "VehicleTelemetry", schema: VehicleTelemetry_1.VehicleTelemetrySchema },
                 { name: "CommuterRequest", schema: CommuterRequest_1.CommuterRequestSchema },
                 { name: "LocationResponseError", schema: LocationResponseError_1.LocationResponseErrorSchema },
+                { name: "CommuterPickup", schema: CommuterPickup_1.CommuterPickupSchema },
                 {
                     name: "AmbassadorPassengerCount",
                     schema: AmbassadorPassengerCount_1.AmbassadorPassengerCountSchema,

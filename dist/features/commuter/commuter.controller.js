@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const commuter_service_1 = require("./commuter.service");
 const Commuter_1 = require("../../data/models/Commuter");
 const CommuterRequest_1 = require("../../data/models/CommuterRequest");
+const CommuterPickup_1 = require("../../data/models/CommuterPickup");
 let CommuterController = class CommuterController {
     constructor(commuterService) {
         this.commuterService = commuterService;
@@ -29,6 +30,9 @@ let CommuterController = class CommuterController {
     }
     async addCommuterRequest(commuterRequest) {
         return await this.commuterService.addCommuterRequest(commuterRequest);
+    }
+    async addCommuterPickUp(commuterPickUp) {
+        return await this.commuterService.addCommuterPickUp(commuterPickUp);
     }
     async cancelCommuterRequest(commuterRequest) {
         return null;
@@ -65,6 +69,13 @@ __decorate([
     __metadata("design:paramtypes", [CommuterRequest_1.CommuterRequest]),
     __metadata("design:returntype", Promise)
 ], CommuterController.prototype, "addCommuterRequest", null);
+__decorate([
+    (0, common_1.Post)('addCommuterPickUp'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [CommuterPickup_1.CommuterPickup]),
+    __metadata("design:returntype", Promise)
+], CommuterController.prototype, "addCommuterPickUp", null);
 __decorate([
     (0, common_1.Post)('cancelCommuterRequest'),
     __param(0, (0, common_1.Body)()),

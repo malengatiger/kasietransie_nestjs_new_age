@@ -76,4 +76,34 @@ export class InternalController {
     .startOfficialAppCarDemo(vehicleId, routeId, userId, latitude, longitude);
   }
 
+  @Get('startSingleRouteDemo')
+  async startSingleRouteDemo(
+    @Query('routeId')  routeId: string, 
+  ): Promise<any> {
+
+    return await this.internalService
+    .startSingleRouteDemo(routeId);
+  }
+ 
+  @Get('startCarDemo')
+  async startCarDemo(
+    @Query('routeId')  routeId: string, 
+    @Query('vehicleId') vehicleId: string,
+    @Query('ambassadorId') ambassadorId: string,
+    @Query('marshalId') marshalId: string,
+    @Query('emoji') emoji: string,
+    @Query('sleep') sleep: boolean,
+    @Query('associationId') associationId: string,
+  ): Promise<any> {
+
+    return await this.internalService
+    .startSingleCarDemo(routeId, vehicleId, ambassadorId, marshalId, emoji, sleep, associationId);
+  }
+/*
+ final cmd = '${url}internal/startSingleCarDemo?'
+        'routeId=${route.routeId}'
+        '&vehicleId=${car.vehicleId}'
+        '&ambassadorId=${ambassador.userId}'
+        '&marshalId=${marshal.userId}';
+*/
 }

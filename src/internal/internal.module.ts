@@ -58,6 +58,8 @@ import { VehicleMediaRequestSchema } from "src/data/models/VehicleMediaRequest";
 import { TelemetryService } from "src/features/heartbeat/heartbeat.service";
 import { FuelBrandSchema } from "src/data/models/FuelBrand";
 import { FuelTopUpSchema } from "src/data/models/FuelTopUp";
+import { CommuterPickupSchema } from "src/data/models/CommuterPickup";
+import { RoutePointSchema } from "src/data/models/RoutePoint";
 
 @Module({
   imports: [
@@ -95,6 +97,8 @@ import { FuelTopUpSchema } from "src/data/models/FuelTopUp";
       { name: "CommuterResponse", schema: CommuterResponseSchema },
       { name: "RouteLandmark", schema: RouteLandmarkSchema },
       { name: "Trip", schema: TripSchema },
+      { name: "RoutePoint", schema: RoutePointSchema },
+
       {
         name: "CommuterProviderPayment",
         schema: CommuterProviderPaymentSchema,
@@ -117,6 +121,8 @@ import { FuelTopUpSchema } from "src/data/models/FuelTopUp";
       { name: "FuelBrand", schema: FuelBrandSchema },
 
       { name: "FuelTopUp", schema: FuelTopUpSchema },
+      {name: "CommuterPickup", schema: CommuterPickupSchema}
+
     ]),
   ],
 

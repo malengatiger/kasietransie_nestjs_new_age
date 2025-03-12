@@ -13,6 +13,8 @@ import { CommuterRequest } from "src/data/models/CommuterRequest";
 import { VehicleHeartbeat } from "src/data/models/VehicleHeartbeat";
 import mongoose, { UpdateResult } from "mongoose";
 import { Trip } from "src/data/models/Trip";
+import { CommuterCashPayment } from "src/data/models/CommuterCashPayment";
+import { RankFeeCashPayment } from "src/data/models/RankFeeCashPayment";
 export declare class DispatchService {
     private messagingService;
     private zipService;
@@ -22,9 +24,15 @@ export declare class DispatchService {
     private dispatchRecordModel;
     private ambassadorPassengerCountModel;
     private commuterRequestModel;
+    private commuterCashPaymentModel;
+    private rankFeeCashPaymentModel;
     private tripModel;
-    constructor(messagingService: MessagingService, zipService: FileArchiverService, vehicleHeartbeatModel: mongoose.Model<VehicleHeartbeat>, vehicleArrivalModel: mongoose.Model<VehicleArrival>, vehicleDepartureModel: mongoose.Model<VehicleDeparture>, dispatchRecordModel: mongoose.Model<DispatchRecord>, ambassadorPassengerCountModel: mongoose.Model<AmbassadorPassengerCount>, commuterRequestModel: mongoose.Model<CommuterRequest>, tripModel: mongoose.Model<Trip>);
+    constructor(messagingService: MessagingService, zipService: FileArchiverService, vehicleHeartbeatModel: mongoose.Model<VehicleHeartbeat>, vehicleArrivalModel: mongoose.Model<VehicleArrival>, vehicleDepartureModel: mongoose.Model<VehicleDeparture>, dispatchRecordModel: mongoose.Model<DispatchRecord>, ambassadorPassengerCountModel: mongoose.Model<AmbassadorPassengerCount>, commuterRequestModel: mongoose.Model<CommuterRequest>, commuterCashPaymentModel: mongoose.Model<CommuterCashPayment>, rankFeeCashPaymentModel: mongoose.Model<RankFeeCashPayment>, tripModel: mongoose.Model<Trip>);
     getRouteDispatchRecords(routeId: string, startDate: string): Promise<DispatchRecord[]>;
+    getRouteCommuterCashPayments(routeId: string, startDate: string): Promise<CommuterCashPayment[]>;
+    getRouteRankFeeCashPayments(routeId: string, startDate: string): Promise<RankFeeCashPayment[]>;
+    getRouteTrips(routeId: string, startDate: string): Promise<Trip[]>;
+    getRoutePassengerCounts(routeId: string, startDate: string): Promise<AmbassadorPassengerCount[]>;
     addTrip(trip: Trip): Promise<Trip>;
     updateTrip(trip: Trip): Promise<UpdateResult>;
     getAmbassadorPassengerCounts(userId: string, startDate: string, endDate: string): Promise<AmbassadorPassengerCount[]>;

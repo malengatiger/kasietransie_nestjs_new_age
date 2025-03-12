@@ -86,6 +86,7 @@ import { RankFeeCashPaymentSchema } from "./data/models/RankFeeCashPayment";
 import { VehicleTelemetrySchema } from "./data/models/VehicleTelemetry";
 import { PointsModule } from './points/points.module';
 import { LocationResponseErrorSchema } from "./data/models/LocationResponseError";
+import { CommuterPickupSchema } from "./data/models/CommuterPickup";
 
 @Module({
   imports: [
@@ -151,7 +152,8 @@ import { LocationResponseErrorSchema } from "./data/models/LocationResponseError
       { name: "VehicleTelemetry", schema: VehicleTelemetrySchema },
       { name: "CommuterRequest", schema: CommuterRequestSchema },
       { name: "LocationResponseError", schema: LocationResponseErrorSchema },
-      
+      {name: "CommuterPickup", schema: CommuterPickupSchema},
+
 
       {
         name: "AmbassadorPassengerCount",

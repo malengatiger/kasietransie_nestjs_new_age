@@ -3,6 +3,7 @@ import { CommuterService } from './commuter.service';
 import { Commuter } from 'src/data/models/Commuter';
 import { CommuterRequest } from 'src/data/models/CommuterRequest';
 import { start } from 'repl';
+import { CommuterPickup } from 'src/data/models/CommuterPickup';
 
 @Controller('commuter')
 export class CommuterController {
@@ -30,6 +31,13 @@ export class CommuterController {
   ) : Promise<CommuterRequest> {
 
     return await this.commuterService.addCommuterRequest(commuterRequest);
+  }
+  @Post('addCommuterPickUp')
+  public async addCommuterPickUp(
+    @Body() commuterPickUp: CommuterPickup
+  ) : Promise<CommuterPickup> {
+
+    return await this.commuterService.addCommuterPickUp(commuterPickUp);
   }
   @Post('cancelCommuterRequest')
   public async cancelCommuterRequest(

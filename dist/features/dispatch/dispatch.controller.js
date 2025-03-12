@@ -60,6 +60,18 @@ let DispatchController = class DispatchController {
     async getRouteDispatchRecords(query) {
         return this.dispatchService.getRouteDispatchRecords(query.routeId, query.startDate);
     }
+    async getRouteCommuterCashPayments(query) {
+        return this.dispatchService.getRouteCommuterCashPayments(query.routeId, query.startDate);
+    }
+    async getRoutePassengerCounts(query) {
+        return this.dispatchService.getRoutePassengerCounts(query.routeId, query.startDate);
+    }
+    async getRouteRankFeeCashPayments(query) {
+        return this.dispatchService.getRouteRankFeeCashPayments(query.routeId, query.startDate);
+    }
+    async getRouteTrips(query) {
+        return this.dispatchService.getRouteTrips(query.routeId, query.startDate);
+    }
 };
 exports.DispatchController = DispatchController;
 __decorate([
@@ -150,6 +162,34 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], DispatchController.prototype, "getRouteDispatchRecords", null);
+__decorate([
+    (0, common_1.Get)("getRouteCommuterCashPayments"),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], DispatchController.prototype, "getRouteCommuterCashPayments", null);
+__decorate([
+    (0, common_1.Get)("getRoutePassengerCounts"),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], DispatchController.prototype, "getRoutePassengerCounts", null);
+__decorate([
+    (0, common_1.Get)("getRouteRankFeeCashPayments"),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], DispatchController.prototype, "getRouteRankFeeCashPayments", null);
+__decorate([
+    (0, common_1.Get)("getRouteTrips"),
+    __param(0, (0, common_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], DispatchController.prototype, "getRouteTrips", null);
 exports.DispatchController = DispatchController = __decorate([
     (0, common_1.Controller)("dispatch"),
     __metadata("design:paramtypes", [dispatch_service_1.DispatchService])

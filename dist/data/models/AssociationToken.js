@@ -26,7 +26,7 @@ __decorate([
     __metadata("design:type", String)
 ], AssociationToken.prototype, "token", void 0);
 __decorate([
-    (0, mongoose_1.Prop)(),
+    (0, mongoose_1.Prop)({ required: true }),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
 ], AssociationToken.prototype, "created", void 0);

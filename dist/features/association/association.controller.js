@@ -19,6 +19,7 @@ const Association_1 = require("../../data/models/Association");
 const SettingsModel_1 = require("../../data/models/SettingsModel");
 const storage_service_1 = require("../../storage/storage.service");
 const vehicle_service_1 = require("../vehicle/vehicle.service");
+const AmbassadorPassengerCount_1 = require("../../data/models/AmbassadorPassengerCount");
 let AssociationController = class AssociationController {
     constructor(associationService, storage, vehicleService) {
         this.associationService = associationService;
@@ -82,6 +83,9 @@ let AssociationController = class AssociationController {
     async addAssociationToken(associationId, userId, token) {
         return this.associationService.addAssociationToken(associationId, userId, token);
     }
+    async getAssociationTokens(associationId) {
+        return this.associationService.getAssociationTokens(associationId);
+    }
     async resetAssociationData(associationId) {
         return this.associationService.resetAssociationData(associationId);
     }
@@ -116,6 +120,9 @@ let AssociationController = class AssociationController {
     async createQRCode(data) {
         return this.storage.createQRCode(data);
     }
+    async sendToDevice(fcmToken, count) {
+        return this.associationService.sendToDevice(fcmToken, count);
+    }
 };
 exports.AssociationController = AssociationController;
 __decorate([
@@ -143,13 +150,20 @@ __decorate([
 ], AssociationController.prototype, "addSettingsModel", null);
 __decorate([
     (0, common_1.Get)('addAssociationToken'),
-    __param(0, (0, common_1.Query)()),
-    __param(1, (0, common_1.Query)()),
-    __param(2, (0, common_1.Query)()),
+    __param(0, (0, common_1.Query)('associationId')),
+    __param(1, (0, common_1.Query)('userId')),
+    __param(2, (0, common_1.Query)('token')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, String, String]),
     __metadata("design:returntype", Promise)
 ], AssociationController.prototype, "addAssociationToken", null);
+__decorate([
+    (0, common_1.Get)('getAssociationTokens'),
+    __param(0, (0, common_1.Query)('associationId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], AssociationController.prototype, "getAssociationTokens", null);
 __decorate([
     (0, common_1.Get)('resetAssociationData'),
     __param(0, (0, common_1.Query)()),
@@ -216,6 +230,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AssociationController.prototype, "createQRCode", null);
+__decorate([
+    (0, common_1.Post)('sendToDevice'),
+    __param(0, (0, common_1.Query)('fcmToken')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, AmbassadorPassengerCount_1.AmbassadorPassengerCount]),
+    __metadata("design:returntype", Promise)
+], AssociationController.prototype, "sendToDevice", null);
 exports.AssociationController = AssociationController = __decorate([
     (0, common_1.Controller)('association'),
     __metadata("design:paramtypes", [association_service_1.AssociationService,

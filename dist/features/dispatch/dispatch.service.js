@@ -30,9 +30,11 @@ const mongoose_1 = require("@nestjs/mongoose");
 const mongoose_2 = require("mongoose");
 const Trip_1 = require("../../data/models/Trip");
 const crypto_1 = require("crypto");
-const mm = "DispatchService";
+const CommuterCashPayment_1 = require("../../data/models/CommuterCashPayment");
+const RankFeeCashPayment_1 = require("../../data/models/RankFeeCashPayment");
+const mm = "🍐🍐🍐🍐 DispatchService 🍐🍐";
 let DispatchService = class DispatchService {
-    constructor(messagingService, zipService, vehicleHeartbeatModel, vehicleArrivalModel, vehicleDepartureModel, dispatchRecordModel, ambassadorPassengerCountModel, commuterRequestModel, tripModel) {
+    constructor(messagingService, zipService, vehicleHeartbeatModel, vehicleArrivalModel, vehicleDepartureModel, dispatchRecordModel, ambassadorPassengerCountModel, commuterRequestModel, commuterCashPaymentModel, rankFeeCashPaymentModel, tripModel) {
         this.messagingService = messagingService;
         this.zipService = zipService;
         this.vehicleHeartbeatModel = vehicleHeartbeatModel;
@@ -41,6 +43,8 @@ let DispatchService = class DispatchService {
         this.dispatchRecordModel = dispatchRecordModel;
         this.ambassadorPassengerCountModel = ambassadorPassengerCountModel;
         this.commuterRequestModel = commuterRequestModel;
+        this.commuterCashPaymentModel = commuterCashPaymentModel;
+        this.rankFeeCashPaymentModel = rankFeeCashPaymentModel;
         this.tripModel = tripModel;
     }
     async getRouteDispatchRecords(routeId, startDate) {
@@ -52,12 +56,48 @@ let DispatchService = class DispatchService {
         common_1.Logger.log(`\n${mm} found 🎽 ${res.length} dispatch records 🎽`);
         return res;
     }
+    async getRouteCommuterCashPayments(routeId, startDate) {
+        common_1.Logger.debug(`${mm} getRouteCommuterCashPayments: ... startDate: ${startDate} routeId: ${routeId}`);
+        const aDate = new Date(startDate);
+        const res = await this.commuterCashPaymentModel.find({ routeId: routeId, created: { $gte: startDate } });
+        common_1.Logger.debug(`${mm} found ${res.length} dispatch records`);
+        common_1.Logger.debug(`getRouteCommuterCashPayments, result: ${JSON.stringify(res, null, 2)}`);
+        common_1.Logger.log(`\n${mm} found 🎽 ${res.length} commuter cash payments  🎽`);
+        return res;
+    }
+    async getRouteRankFeeCashPayments(routeId, startDate) {
+        common_1.Logger.debug(`${mm} getRouteRankFeeCashPayments: ... startDate: ${startDate} routeId: ${routeId}`);
+        const aDate = new Date(startDate);
+        const res = await this.rankFeeCashPaymentModel.find({ routeId: routeId, created: { $gte: startDate } });
+        common_1.Logger.debug(`${mm} found ${res.length} dispatch records`);
+        common_1.Logger.debug(`getRouteRankFeeCashPayments, result: ${JSON.stringify(res, null, 2)}`);
+        common_1.Logger.log(`\n${mm} found 🎽 ${res.length} rank fee cash payments  🎽`);
+        return res;
+    }
+    async getRouteTrips(routeId, startDate) {
+        common_1.Logger.debug(`${mm} getRouteTrips: ... startDate: ${startDate} routeId: ${routeId}`);
+        const aDate = new Date(startDate);
+        const res = await this.tripModel.find({ routeId: routeId, created: { $gte: startDate } });
+        common_1.Logger.debug(`${mm} found ${res.length} dispatch records`);
+        common_1.Logger.debug(`getRouteTrips, result: ${JSON.stringify(res, null, 2)}`);
+        common_1.Logger.log(`\n${mm} found 🎽 ${res.length} route trips  🎽`);
+        return res;
+    }
+    async getRoutePassengerCounts(routeId, startDate) {
+        common_1.Logger.debug(`${mm} getRoutePassengerCounts: ... startDate: ${startDate} routeId: ${routeId}`);
+        const aDate = new Date(startDate);
+        const res = await this.ambassadorPassengerCountModel.find({ routeId: routeId, created: { $gte: startDate } });
+        common_1.Logger.debug(`${mm} found ${res.length} passenger counts`);
+        common_1.Logger.debug(`getRoutePassengerCounts, result: ${JSON.stringify(res, null, 2)}`);
+        common_1.Logger.log(`\n${mm} found 🎽 ${res.length} route passengerCounts  🎽`);
+        return res;
+    }
     async addTrip(trip) {
         const mDate = new Date(trip.created);
         trip.mDate = mDate;
         const res = await this.tripModel.create(trip);
         const re2 = await this.messagingService.sendTripMessage(trip);
-        common_1.Logger.debug(`${mm} added Trip to Atlas ${JSON.stringify(res, null, 2)}`);
+        common_1.Logger.debug(`${mm} added Trip to Atlas ${trip.routeName}`);
         return res;
     }
     async updateTrip(trip) {
@@ -146,7 +186,7 @@ let DispatchService = class DispatchService {
         return null;
     }
     async addDispatchRecord(dispatchRecord) {
-        common_1.Logger.debug(`${mm} addDispatchRecord : ${JSON.stringify(dispatchRecord, null, 2)}`);
+        common_1.Logger.debug(`${mm} adding DispatchRecord : ${dispatchRecord.vehicleReg}`);
         const mDate = new Date();
         dispatchRecord.created = mDate.toISOString();
         dispatchRecord.mDate = mDate;
@@ -434,8 +474,10 @@ exports.DispatchService = DispatchService = __decorate([
     __param(5, (0, mongoose_1.InjectModel)(DispatchRecord_1.DispatchRecord.name)),
     __param(6, (0, mongoose_1.InjectModel)(AmbassadorPassengerCount_1.AmbassadorPassengerCount.name)),
     __param(7, (0, mongoose_1.InjectModel)(CommuterRequest_1.CommuterRequest.name)),
-    __param(8, (0, mongoose_1.InjectModel)(Trip_1.Trip.name)),
+    __param(8, (0, mongoose_1.InjectModel)(CommuterCashPayment_1.CommuterCashPayment.name)),
+    __param(9, (0, mongoose_1.InjectModel)(RankFeeCashPayment_1.RankFeeCashPayment.name)),
+    __param(10, (0, mongoose_1.InjectModel)(Trip_1.Trip.name)),
     __metadata("design:paramtypes", [fcm_service_1.MessagingService,
-        zipper_1.FileArchiverService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
+        zipper_1.FileArchiverService, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model, mongoose_2.default.Model])
 ], DispatchService);
 //# sourceMappingURL=dispatch.service.js.map

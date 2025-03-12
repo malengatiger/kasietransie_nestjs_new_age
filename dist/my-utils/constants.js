@@ -21,6 +21,7 @@ Constants.dispatchRecord = 'dispatchRecord';
 Constants.routeDispatchRecord = 'routeDispatchRecord';
 Constants.commuterCashPayment = 'commuterCashPayment';
 Constants.commuterCashCheckIn = 'commuterCashCheckIn';
+Constants.commuterPickUp = 'commuterPickup';
 Constants.rankFeeCashPayment = 'rankFeeCashPayment';
 Constants.rankFeeCashCheckIn = 'rankFeeCashCheckIn';
 Constants.passengerCount = 'passengerCount';
