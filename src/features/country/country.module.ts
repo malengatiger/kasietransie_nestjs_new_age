@@ -10,6 +10,7 @@ import { AppErrorSchema } from 'src/data/models/AppError';
 import { KasieErrorSchema } from 'src/data/models/kasie.error';
 import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
 import { FileArchiverService } from 'src/my-utils/zipper';
+import { FirebaseAdmin } from 'src/services/firebase_util';
 
 @Module({
   imports: [
@@ -26,6 +27,6 @@ import { FileArchiverService } from 'src/my-utils/zipper';
   ],  
   
   controllers: [CountryController],
-  providers: [CountryService, MessagingService, FileArchiverService],
+  providers: [CountryService, MessagingService, FileArchiverService, FirebaseAdmin],
 })
 export class CountryModule {}

@@ -23,6 +23,7 @@ const VehicleHeartbeatTimeSeries_1 = require("../../data/models/VehicleHeartbeat
 const PassengerTimeSeries_1 = require("../../data/models/PassengerTimeSeries");
 const RouteUpdateRequest_1 = require("../../data/models/RouteUpdateRequest");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
+const firebase_util_1 = require("../../services/firebase_util");
 let HeartbeatModule = class HeartbeatModule {
 };
 exports.HeartbeatModule = HeartbeatModule;
@@ -43,7 +44,7 @@ exports.HeartbeatModule = HeartbeatModule = __decorate([
         ],
         controllers: [heartbeat_controller_1.HeartbeatController],
         providers: [heartbeat_service_1.TelemetryService,
-            time_series_service_1.TimeSeriesService, fcm_service_1.MessagingService, zipper_1.FileArchiverService],
+            time_series_service_1.TimeSeriesService, fcm_service_1.MessagingService, zipper_1.FileArchiverService, firebase_util_1.FirebaseAdmin],
     })
 ], HeartbeatModule);
 //# sourceMappingURL=heartbeat.module.js.map

@@ -6,6 +6,7 @@ import { KasieErrorSchema } from 'src/data/models/kasie.error';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppErrorSchema } from 'src/data/models/AppError';
 import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
+import { FirebaseAdmin } from 'src/services/firebase_util';
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
   ],  
   
   controllers: [ErrorController],
-  providers: [ErrorService, MessagingService],
+  providers: [ErrorService, MessagingService, FirebaseAdmin],
 })
 export class ErrorModule {}

@@ -45,7 +45,7 @@ const Trip_1 = require("../../data/models/Trip");
 const RankFeeCashPayment_1 = require("../../data/models/RankFeeCashPayment");
 const FuelBrand_1 = require("../../data/models/FuelBrand");
 const FuelTopUp_1 = require("../../data/models/FuelTopUp");
-const mm = "💚 💚 💚 VehicleService  💚 ";
+const mm = "💚💚💚 VehicleService  💚 ";
 let VehicleService = class VehicleService {
     constructor(storage, associationService, userService, dispatchService, errorHandler, vehicleModel, dispatchRecordModel, vehicleArrivalModel, vehicleHeartbeatModel, ambassadorPassengerCountModel, vehicleDepartureModel, associationModel, userModel, assignModel, routeModel, vehicleMediaRequestModel, vehiclePhotoModel, vehicleVideoModel, vehicleTelemetryModel, passengerCountModel, commuterCashPaymentModel, tripModel, fuelBrandModel, fuelTopUpModel, rankFeeCashPaymentModel) {
         this.storage = storage;
@@ -88,7 +88,23 @@ let VehicleService = class VehicleService {
     async getFuelBrands() {
         return await this.fuelBrandModel.find({});
     }
+    async getCarFuelTopUps(vehicleId, startDate, endDate) {
+        common_1.Logger.debug(`${mm} VehicleService: getCarFuelTopUps, vehicleId : ${vehicleId} startDate: ${startDate} endDate: ${endDate}`);
+        const res = await this.fuelTopUpModel.find({
+            vehicleId: vehicleId,
+            created: { $gte: startDate, $lte: endDate },
+        });
+        common_1.Logger.log(`${mm} VehicleService: car fuelTopUs: ${res.length}`);
+        for (const f of res) {
+            common_1.Logger.debug(`\n\n${mm} VehicleService: top up: ${JSON.stringify(f, null, 2)}`);
+        }
+        return res;
+    }
     async addFuelTopUp(fuelTopUp) {
+        fuelTopUp.created = new Date().toISOString();
+        if (!fuelTopUp.amount || fuelTopUp.amount == 0) {
+            throw new common_1.HttpException('Amount not found', common_1.HttpStatus.BAD_REQUEST);
+        }
         return await this.fuelTopUpModel.create(fuelTopUp);
     }
     async getAssociationFuelTopUps(associationId, startDate, endDate) {

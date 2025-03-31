@@ -36,7 +36,7 @@ import { daysInWeek } from "date-fns";
 import { RankFeeCashPayment } from "src/data/models/RankFeeCashPayment";
 import { FuelBrand } from "src/data/models/FuelBrand";
 import { FuelTopUp } from "src/data/models/FuelTopUp";
-const mm = "💚 💚 💚 VehicleService  💚 ";
+const mm = "💚💚💚 VehicleService  💚 ";
 
 @Injectable()
 export class VehicleService {
@@ -130,9 +130,33 @@ export class VehicleService {
   ): Promise<FuelBrand[]> {
     return await this.fuelBrandModel.find({});
   }
+
+  async getCarFuelTopUps(
+      vehicleId: string,
+      startDate: string,
+      endDate: string
+    ): Promise<FuelTopUp[]> {
+
+      Logger.debug(`${mm} VehicleService: getCarFuelTopUps, vehicleId : ${vehicleId} startDate: ${startDate} endDate: ${endDate}`);
+    
+      const res = await this.fuelTopUpModel.find({
+        vehicleId: vehicleId,
+        created: { $gte: startDate, $lte: endDate },
+      });
+
+      Logger.log(`${mm} VehicleService: car fuelTopUs: ${res.length}`);
+      for (const f of res) {
+        Logger.debug(`\n\n${mm} VehicleService: top up: ${JSON.stringify(f, null, 2)}`);
+      }
+      return res;
+    }
   public async addFuelTopUp(
     fuelTopUp: FuelTopUp
   ): Promise<FuelTopUp> {
+    fuelTopUp.created = new Date().toISOString();
+    if (!fuelTopUp.amount || fuelTopUp.amount == 0) {
+      throw new HttpException('Amount not found', HttpStatus.BAD_REQUEST);
+    }
     return await this.fuelTopUpModel.create(fuelTopUp);
   }
   public async getAssociationFuelTopUps(

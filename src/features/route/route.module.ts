@@ -28,6 +28,7 @@ import { UserPhotoSchema } from 'src/data/models/UserPhoto';
 import { AssociationSchema } from 'src/data/models/Association';
 import { DispatchRecordSchema } from 'src/data/models/DispatchRecord';
 import { CommuterRequestSchema } from 'src/data/models/CommuterRequest';
+import { FirebaseAdmin } from 'src/services/firebase_util';
 
 @Module({
   imports: [
@@ -62,6 +63,6 @@ import { CommuterRequestSchema } from 'src/data/models/CommuterRequest';
     ]),
   ],
   controllers: [RouteController],
-  providers: [RouteService, KasieErrorHandler, FileArchiverService, MessagingService, CityService, CloudStorageUploaderService],
+  providers: [RouteService, FirebaseAdmin, KasieErrorHandler, FileArchiverService, MessagingService, CityService, CloudStorageUploaderService],
 })
 export class RouteModule {}

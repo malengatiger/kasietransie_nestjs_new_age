@@ -168,6 +168,15 @@ export class VehicleController {
   public async getFuelBrands(): Promise<FuelBrand[]> {
     return await this.carService.getFuelBrands();
   }
+  @Get("getCarFuelTopUps")
+  public async getCarFuelTopUps(
+    @Query('vehicleId') vehicleId: string,
+    @Query('startDate') startDate: string,
+    @Query('endDate') endDate: string,
+  ): Promise<FuelTopUp[]> {
+    return await this.carService.getCarFuelTopUps(vehicleId, startDate, endDate);
+    ;
+  }
   @Get("getAssociationHeartbeatTimeSeries")
   public async getAssociationHeartbeatTimeSeries(
     @Query() query: { associationId: string; startDate: string },

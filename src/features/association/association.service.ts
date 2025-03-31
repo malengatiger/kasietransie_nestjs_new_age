@@ -584,12 +584,16 @@ export class AssociationService {
     return await this.settingsModel.create(model);
   }
 
+  //salmon platter R218, salmon sashimi R70, tuna sashimi, R70, lunch box R110
+   
   public async addAssociationToken(
     associationId: string,
     userId: string,
     token: string
   ): Promise<any> {
-    const res = await this.associationTokenModel.deleteMany({associationId: associationId});
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const res = await this.associationTokenModel.deleteMany({associationId: associationId, created: {$lte: yesterday}});
     Logger.debug(`${mm} addAssociationToken... deleted tokens: ${res}`);
     const at: AssociationToken = new AssociationToken();
     at.associationId = associationId;

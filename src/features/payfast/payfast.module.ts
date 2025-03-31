@@ -13,6 +13,7 @@ import { VehiclePhotoSchema } from 'src/data/models/VehiclePhoto';
 import { VehicleVideoSchema } from 'src/data/models/VehicleVideo';
 import { KasieErrorHandler } from 'src/middleware/errors.interceptor';
 import { MessagingService } from '../fcm/fcm.service';
+import { FirebaseAdmin } from 'src/services/firebase_util';
 
 @Module({
   imports: [
@@ -31,6 +32,6 @@ import { MessagingService } from '../fcm/fcm.service';
     ]),
   ],
   controllers: [PayfastController],
-  providers: [PayfastService, KasieErrorHandler, MessagingService],
+  providers: [PayfastService, KasieErrorHandler, MessagingService, FirebaseAdmin],
 })
 export class PayfastModule {}

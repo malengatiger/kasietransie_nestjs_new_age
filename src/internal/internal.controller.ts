@@ -1,6 +1,7 @@
 import { Controller, Get, Logger, Query } from '@nestjs/common';
 import { InternalService } from './internal.service';
 import { Position } from 'src/data/models/position';
+import { FuelTopUp } from 'src/data/models/FuelTopUp';
 
 const mm = "🦠🦠🦠🦠 InternalController  🦠";
 
@@ -91,14 +92,14 @@ export class InternalController {
     @Query('vehicleId') vehicleId: string,
     @Query('ambassadorId') ambassadorId: string,
     @Query('marshalId') marshalId: string,
-    @Query('emoji') emoji: string,
-    @Query('sleep') sleep: boolean,
     @Query('associationId') associationId: string,
   ): Promise<any> {
 
     return await this.internalService
-    .startSingleCarDemo(routeId, vehicleId, ambassadorId, marshalId, emoji, sleep, associationId);
+    .startSingleCarDemo(routeId, vehicleId, ambassadorId, marshalId, associationId);
   }
+  
+ 
 /*
  final cmd = '${url}internal/startSingleCarDemo?'
         'routeId=${route.routeId}'

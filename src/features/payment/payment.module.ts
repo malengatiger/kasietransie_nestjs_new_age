@@ -22,6 +22,7 @@ import { MessagingService } from "../fcm/fcm.service";
 import { AssociationTokenSchema } from "src/data/models/AssociationToken";
 import { KasieErrorSchema } from "src/data/models/kasie.error";
 import { PaymentProviderSchema } from "src/data/models/PaymentProvider";
+import { FirebaseAdmin } from "src/services/firebase_util";
 
 @Module({
   imports: [
@@ -45,6 +46,6 @@ import { PaymentProviderSchema } from "src/data/models/PaymentProvider";
     ]),
   ],
   controllers: [PaymentController],
-  providers: [PaymentService, KasieErrorHandler, MessagingService],
+  providers: [PaymentService, KasieErrorHandler, MessagingService, FirebaseAdmin],
 })
 export class PaymentModule {}

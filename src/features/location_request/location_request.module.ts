@@ -29,6 +29,6 @@ import { LocationResponseErrorSchema } from 'src/data/models/LocationResponseErr
     ]),
   ],
   controllers: [LocationRequestController],
-  providers: [LocationRequestService, MessagingService],
+  providers: [LocationRequestService, MessagingService, FirebaseAdmin],
 })
 export class LocationRequestModule {}

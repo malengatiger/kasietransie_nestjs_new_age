@@ -23,7 +23,7 @@ export class FirebaseAdmin implements OnApplicationBootstrap {
     }
   }
 
-  getFirebaseApp() {
+  getFirebaseApp(): admin.app.App {
     return app;
   }
   async sendInitializationMessage(app: admin.app.App) {

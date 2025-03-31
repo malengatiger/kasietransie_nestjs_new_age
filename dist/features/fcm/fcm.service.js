@@ -21,9 +21,11 @@ const mongoose_1 = require("mongoose");
 const mongoose_2 = require("@nestjs/mongoose");
 const kasie_error_1 = require("../../data/models/kasie.error");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
+const firebase_util_1 = require("../../services/firebase_util");
 const mm = "🎽 🎽 🎽 FCM MessagingService 🎽 🎽 🎽";
 let MessagingService = class MessagingService {
-    constructor(associationTokenModel, kasieModel) {
+    constructor(firebaseAdmin, associationTokenModel, kasieModel) {
+        this.firebaseAdmin = firebaseAdmin;
         this.associationTokenModel = associationTokenModel;
         this.kasieModel = kasieModel;
     }
@@ -161,28 +163,6 @@ let MessagingService = class MessagingService {
         try {
             await admin.messaging().send(message);
             common_1.Logger.debug(`${mm} ${type} FCM message sent to topic: ${topic}`);
-            const associationToken = await this.associationTokenModel.findOne({
-                associationId: associationId,
-            });
-            if (associationToken) {
-                const messageDirect = {
-                    token: associationToken.token,
-                    data: {
-                        type: type,
-                        data: data,
-                    },
-                    notification: {
-                        title: title,
-                        body: body,
-                    },
-                };
-                if (type === constants_1.Constants.admin ||
-                    type === constants_1.Constants.appError ||
-                    type === constants_1.Constants.kasieError) {
-                    return;
-                }
-                await admin.messaging().send(messageDirect);
-            }
         }
         catch (error) {
             common_1.Logger.error("Error sending message:", error);
@@ -195,7 +175,6 @@ let MessagingService = class MessagingService {
             common_1.Logger.error("FCM token is required but was not provided.");
             throw new kasie_error_1.KasieError("FCM token is required.", common_1.HttpStatus.BAD_REQUEST);
         }
-        common_1.Logger.debug(`${mm} sendToDevice: fcmToken; ${fcmToken}`);
         const message = {
             data: {
                 type: type,
@@ -209,10 +188,7 @@ let MessagingService = class MessagingService {
         };
         try {
             const response = await admin.messaging().send(message);
-            common_1.Logger.debug(`${mm} 🅿️  🅿️  🅿️  Successfully sent FCM message to single device; ` +
-                `🚺 🚺 🚺 type: ${type} 🚺 data: ${JSON.stringify(message)}`);
-            common_1.Logger.debug(`🥬🥬🥬🥬 sendToDevice: Firebase fcmToken: 🥬 ${fcmToken}`);
-            common_1.Logger.debug("🥬🥬🥬🥬 sendToDevice: Firebase response: 🥬 ", response);
+            common_1.Logger.debug(`${mm} 🥬🥬🥬🥬 sendToDevice: Firebase fcmToken: 🥬 ${fcmToken} - response: ${response}`);
         }
         catch (error) {
             common_1.Logger.error("👿👿👿👿👿 Error sending message:", error);
@@ -221,14 +197,44 @@ let MessagingService = class MessagingService {
             throw err;
         }
     }
+    async sendToPossibleAssociationDevices(associationId, title, body, type, data) {
+        const associationTokens = await this.associationTokenModel
+            .find({ associationId: associationId })
+            .sort({ created: -1 });
+        for (const tok of associationTokens) {
+            if (await this.checkIfValid(tok.token)) {
+                common_1.Logger.debug(`${mm} Firebase token is valid!`);
+                this.sendToDevice(tok.token, title, body, type, data);
+            }
+        }
+    }
+    async checkIfValid(token) {
+        try {
+            const auth = this.firebaseAdmin.getFirebaseApp().auth();
+            const m = await auth.verifyIdToken(token);
+            common_1.Logger.debug(`Is auth verified?? ${m}`);
+            const currentTime = Math.floor(Date.now() / 1000);
+            if (m.exp < currentTime) {
+                common_1.Logger.debug("Token has expired");
+                return false;
+            }
+            else {
+                common_1.Logger.debug("Token is still valid");
+                return true;
+            }
+        }
+        catch (error) {
+            common_1.Logger.error("Error verifying token:", error);
+        }
+    }
     async subscribeToEveryThing() {
     }
 };
 exports.MessagingService = MessagingService;
 exports.MessagingService = MessagingService = __decorate([
     (0, common_1.Injectable)(),
-    __param(0, (0, mongoose_2.InjectModel)(AssociationToken_1.AssociationToken.name)),
-    __param(1, (0, mongoose_2.InjectModel)(kasie_error_1.KasieError.name)),
-    __metadata("design:paramtypes", [mongoose_1.default.Model, mongoose_1.default.Model])
+    __param(1, (0, mongoose_2.InjectModel)(AssociationToken_1.AssociationToken.name)),
+    __param(2, (0, mongoose_2.InjectModel)(kasie_error_1.KasieError.name)),
+    __metadata("design:paramtypes", [firebase_util_1.FirebaseAdmin, mongoose_1.default.Model, mongoose_1.default.Model])
 ], MessagingService);
 //# sourceMappingURL=fcm.service.js.map

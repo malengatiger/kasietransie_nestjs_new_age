@@ -14,6 +14,7 @@ const AssociationToken_1 = require("../../data/models/AssociationToken");
 const mongoose_1 = require("@nestjs/mongoose");
 const AppError_1 = require("../../data/models/AppError");
 const kasie_error_1 = require("../../data/models/kasie.error");
+const firebase_util_1 = require("../../services/firebase_util");
 let FcmModule = class FcmModule {
 };
 exports.FcmModule = FcmModule;
@@ -27,7 +28,7 @@ exports.FcmModule = FcmModule = __decorate([
             ]),
         ],
         controllers: [fcm_controller_1.FcmController],
-        providers: [fcm_service_1.MessagingService],
+        providers: [fcm_service_1.MessagingService, firebase_util_1.FirebaseAdmin],
     })
 ], FcmModule);
 //# sourceMappingURL=fcm.module.js.map

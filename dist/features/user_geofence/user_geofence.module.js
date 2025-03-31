@@ -17,6 +17,7 @@ const TranslationBag_1 = require("../../data/models/TranslationBag");
 const AppError_1 = require("../../data/models/AppError");
 const kasie_error_1 = require("../../data/models/kasie.error");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
+const firebase_util_1 = require("../../services/firebase_util");
 let UserGeofenceModule = class UserGeofenceModule {
 };
 exports.UserGeofenceModule = UserGeofenceModule;
@@ -32,7 +33,7 @@ exports.UserGeofenceModule = UserGeofenceModule = __decorate([
             ]),
         ],
         controllers: [user_geofence_controller_1.UserGeofenceController],
-        providers: [user_geofence_service_1.UserGeofenceService, fcm_service_1.MessagingService],
+        providers: [user_geofence_service_1.UserGeofenceService, fcm_service_1.MessagingService, firebase_util_1.FirebaseAdmin],
     })
 ], UserGeofenceModule);
 //# sourceMappingURL=user_geofence.module.js.map

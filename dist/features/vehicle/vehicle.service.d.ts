@@ -56,6 +56,7 @@ export declare class VehicleService {
     getAssociationVehicleMediaRequests(associationId: string, startDate: string): Promise<VehicleMediaRequest[]>;
     addFuelBrand(fuelBrand: FuelBrand): Promise<FuelBrand>;
     getFuelBrands(): Promise<FuelBrand[]>;
+    getCarFuelTopUps(vehicleId: string, startDate: string, endDate: string): Promise<FuelTopUp[]>;
     addFuelTopUp(fuelTopUp: FuelTopUp): Promise<FuelTopUp>;
     getAssociationFuelTopUps(associationId: string, startDate: string, endDate: string): Promise<FuelTopUp[]>;
     getVehicleFuelTopUps(vehicleId: string, startDate: string, endDate: string): Promise<FuelTopUp[]>;

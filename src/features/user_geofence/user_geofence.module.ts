@@ -25,6 +25,6 @@ import { FirebaseAdmin } from "src/services/firebase_util";
     ]),
   ],
   controllers: [UserGeofenceController],
-  providers: [UserGeofenceService, MessagingService],
+  providers: [UserGeofenceService, MessagingService, FirebaseAdmin],
 })
 export class UserGeofenceModule {}

@@ -94,6 +94,7 @@ const VehicleTelemetry_1 = require("./data/models/VehicleTelemetry");
 const points_module_1 = require("./points/points.module");
 const LocationResponseError_1 = require("./data/models/LocationResponseError");
 const CommuterPickup_1 = require("./data/models/CommuterPickup");
+const pub_sub_module_1 = require("./pub-sub/pub-sub.module");
 let AppModule = class AppModule {
     configure(consumer) {
         consumer
@@ -199,6 +200,7 @@ exports.AppModule = AppModule = __decorate([
             commuter_module_1.CommuterModule,
             payment_module_1.PaymentModule,
             points_module_1.PointsModule,
+            pub_sub_module_1.PubSubModule,
         ],
         controllers: [
             app_controller_1.AppController,

@@ -24,6 +24,8 @@ export class AssociationToken {
   @Prop()
   @ApiProperty()
   associationName: string;
+
+  
 }
 
 export const AssociationTokenSchema =

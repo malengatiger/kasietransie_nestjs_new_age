@@ -22,6 +22,7 @@ const fcm_service_1 = require("../features/fcm/fcm.service");
 const AssociationToken_1 = require("../data/models/AssociationToken");
 const kasie_error_1 = require("../data/models/kasie.error");
 const Association_1 = require("../data/models/Association");
+const firebase_util_1 = require("../services/firebase_util");
 let StorageModule = class StorageModule {
 };
 exports.StorageModule = StorageModule;
@@ -41,7 +42,7 @@ exports.StorageModule = StorageModule = __decorate([
             ])
         ],
         controllers: [storage_controller_1.StorageController],
-        providers: [storage_service_1.CloudStorageUploaderService, errors_interceptor_1.KasieErrorHandler, fcm_service_1.MessagingService],
+        providers: [storage_service_1.CloudStorageUploaderService, errors_interceptor_1.KasieErrorHandler, fcm_service_1.MessagingService, firebase_util_1.FirebaseAdmin],
     })
 ], StorageModule);
 //# sourceMappingURL=storage.module.js.map

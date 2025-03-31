@@ -87,6 +87,7 @@ import { VehicleTelemetrySchema } from "./data/models/VehicleTelemetry";
 import { PointsModule } from './points/points.module';
 import { LocationResponseErrorSchema } from "./data/models/LocationResponseError";
 import { CommuterPickupSchema } from "./data/models/CommuterPickup";
+import { PubSubModule } from './pub-sub/pub-sub.module';
 
 @Module({
   imports: [
@@ -186,6 +187,7 @@ import { CommuterPickupSchema } from "./data/models/CommuterPickup";
     CommuterModule,
     PaymentModule,
     PointsModule,
+    PubSubModule,
   ],
   controllers: [
     AppController,

@@ -21,6 +21,7 @@ const RouteLandmark_1 = require("../../data/models/RouteLandmark");
 const Route_1 = require("../../data/models/Route");
 const RoutePoint_1 = require("../../data/models/RoutePoint");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
+const firebase_util_1 = require("../../services/firebase_util");
 const storage_service_1 = require("../../storage/storage.service");
 const errors_interceptor_1 = require("../../middleware/errors.interceptor");
 const ExampleFile_1 = require("../../data/models/ExampleFile");
@@ -60,7 +61,7 @@ exports.CommuterModule = CommuterModule = __decorate([
         controllers: [commuter_controller_1.CommuterController],
         providers: [commuter_service_1.CommuterService,
             errors_interceptor_1.KasieErrorHandler,
-            fcm_service_1.MessagingService, storage_service_1.CloudStorageUploaderService],
+            fcm_service_1.MessagingService, storage_service_1.CloudStorageUploaderService, firebase_util_1.FirebaseAdmin],
     })
 ], CommuterModule);
 //# sourceMappingURL=commuter.module.js.map

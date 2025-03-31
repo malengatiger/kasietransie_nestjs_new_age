@@ -30,12 +30,14 @@ import { Trip } from "src/data/models/Trip";
 import { LocationResponseError } from "src/data/models/LocationResponseError";
 import { CommuterPickup } from "src/data/models/CommuterPickup";
 import { getMessaging } from "firebase-messaging";
+import { FirebaseAdmin } from "src/services/firebase_util";
 
 const mm = "🎽 🎽 🎽 FCM MessagingService 🎽 🎽 🎽";
 
 @Injectable()
 export class MessagingService {
   constructor(
+    private readonly firebaseAdmin: FirebaseAdmin,
     @InjectModel(AssociationToken.name)
     private associationTokenModel: mongoose.Model<AssociationToken>,
     @InjectModel(KasieError.name)
@@ -413,30 +415,30 @@ export class MessagingService {
     try {
       await admin.messaging().send(message);
       Logger.debug(`${mm} ${type} FCM message sent to topic: ${topic}`);
-      const associationToken = await this.associationTokenModel.findOne({
-        associationId: associationId,
-      });
-      if (associationToken) {
-        const messageDirect: admin.messaging.Message = {
-          token: associationToken.token,
-          data: {
-            type: type,
-            data: data,
-          },
-          notification: {
-            title: title,
-            body: body,
-          },
-        };
-        if (
-          type === Constants.admin ||
-          type === Constants.appError ||
-          type === Constants.kasieError
-        ) {
-          return;
-        }
-        await admin.messaging().send(messageDirect);
-      }
+      // const associationToken = await this.associationTokenModel.findOne({
+      //   associationId: associationId,
+      // });
+      // if (associationToken) {
+      //   const messageDirect: admin.messaging.Message = {
+      //     token: associationToken.token,
+      //     data: {
+      //       type: type,
+      //       data: data,
+      //     },
+      //     notification: {
+      //       title: title,
+      //       body: body,
+      //     },
+      //   };
+      //   if (
+      //     type === Constants.admin ||
+      //     type === Constants.appError ||
+      //     type === Constants.kasieError
+      //   ) {
+      //     return;
+      //   }
+      //   await admin.messaging().send(messageDirect);
+      //}
 
       // Logger.debug(
       //   `${mm} 🅿️🅿️🅿️ Successfully sent FCM message to topic and association (if appropriate) ` +
@@ -463,7 +465,6 @@ export class MessagingService {
       Logger.error("FCM token is required but was not provided.");
       throw new KasieError("FCM token is required.", HttpStatus.BAD_REQUEST);
     }
-    Logger.debug(`${mm} sendToDevice: fcmToken; ${fcmToken}`);
     // Construct the message object
     const message: admin.messaging.Message = {
       data: {
@@ -476,35 +477,62 @@ export class MessagingService {
         body: body,
       },
     };
-  
+
     try {
       // Send the message using Firebase Admin SDK
       const response = await admin.messaging().send(message);
-      
-      // Log success
-      Logger.debug(
-        `${mm} 🅿️  🅿️  🅿️  Successfully sent FCM message to single device; ` +
-        `🚺 🚺 🚺 type: ${type} 🚺 data: ${JSON.stringify(message)}`
-      );
-      
-      // Optionally, you can log the response from Firebase
-      Logger.debug(`🥬🥬🥬🥬 sendToDevice: Firebase fcmToken: 🥬 ${fcmToken}`);
-
-      Logger.debug("🥬🥬🥬🥬 sendToDevice: Firebase response: 🥬 ", response);
-  
+      Logger.debug(`${mm} 🥬🥬🥬🥬 sendToDevice: Firebase fcmToken: 🥬 ${fcmToken} - response: ${response}`);
     } catch (error) {
       // Log the error
       Logger.error("👿👿👿👿👿 Error sending message:", error);
-      
+
       // Create a KasieError and save it to the database
       const err = new KasieError(
         `${type} 👿 Message Send Failed: ${error}`,
         HttpStatus.BAD_REQUEST
       );
       await this.kasieModel.create(err);
-      
+
       // Optionally, rethrow the error if you want to handle it further up the call stack
       throw err;
+    }
+  }
+  public async sendToPossibleAssociationDevices(
+    associationId: string,
+    title: string,
+    body: string,
+    type: string,
+    data: string
+  ) {
+    const associationTokens: AssociationToken[] =
+      await this.associationTokenModel
+        .find({ associationId: associationId })
+        .sort({ created: -1 });
+    for (const tok of associationTokens) {
+      if (await this.checkIfValid(tok.token)) {
+        Logger.debug(`${mm} Firebase token is valid!`);
+        this.sendToDevice(tok.token, title, body, type, data);
+      }
+    }
+  }
+  async checkIfValid(token: string) {
+    try {
+      const auth = this.firebaseAdmin.getFirebaseApp().auth();
+      const m = await auth.verifyIdToken(token);
+      Logger.debug(`Is auth verified?? ${m}`);
+
+      const currentTime = Math.floor(Date.now() / 1000);
+
+      if (m.exp < currentTime) {
+        Logger.debug("Token has expired");
+        return false;
+      } else {
+        Logger.debug("Token is still valid");
+        return true;
+      }
+    } catch (error) {
+      Logger.error("Error verifying token:", error);
+      // Handle the error (e.g., invalid token, network issues)
     }
   }
   //subscribe to everything

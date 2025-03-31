@@ -408,7 +408,9 @@ let AssociationService = class AssociationService {
         return await this.settingsModel.create(model);
     }
     async addAssociationToken(associationId, userId, token) {
-        const res = await this.associationTokenModel.deleteMany({ associationId: associationId });
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const res = await this.associationTokenModel.deleteMany({ associationId: associationId, created: { $lte: yesterday } });
         common_1.Logger.debug(`${mm} addAssociationToken... deleted tokens: ${res}`);
         const at = new AssociationToken_1.AssociationToken();
         at.associationId = associationId;

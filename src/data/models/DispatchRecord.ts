@@ -35,6 +35,9 @@ export class DispatchRecord {
   landmarkName: string;
   @Prop()
   @ApiProperty()
+  landmarkId: string;
+  @Prop()
+  @ApiProperty()
   marshalName: string;
   @Prop()
   @ApiProperty()

@@ -37,6 +37,7 @@ const UserPhoto_1 = require("../../data/models/UserPhoto");
 const Association_1 = require("../../data/models/Association");
 const DispatchRecord_1 = require("../../data/models/DispatchRecord");
 const CommuterRequest_1 = require("../../data/models/CommuterRequest");
+const firebase_util_1 = require("../../services/firebase_util");
 let RouteModule = class RouteModule {
 };
 exports.RouteModule = RouteModule;
@@ -68,7 +69,7 @@ exports.RouteModule = RouteModule = __decorate([
             ]),
         ],
         controllers: [route_controller_1.RouteController],
-        providers: [route_service_1.RouteService, errors_interceptor_1.KasieErrorHandler, zipper_1.FileArchiverService, fcm_service_1.MessagingService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService],
+        providers: [route_service_1.RouteService, firebase_util_1.FirebaseAdmin, errors_interceptor_1.KasieErrorHandler, zipper_1.FileArchiverService, fcm_service_1.MessagingService, city_service_1.CityService, storage_service_1.CloudStorageUploaderService],
     })
 ], RouteModule);
 //# sourceMappingURL=route.module.js.map

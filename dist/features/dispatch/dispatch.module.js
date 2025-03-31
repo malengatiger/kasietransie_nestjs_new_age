@@ -25,6 +25,7 @@ const CommuterRequest_1 = require("../../data/models/CommuterRequest");
 const CommuterResponse_1 = require("../../data/models/CommuterResponse");
 const UserGeofenceEvent_1 = require("../../data/models/UserGeofenceEvent");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
+const firebase_util_1 = require("../../services/firebase_util");
 const Trip_1 = require("../../data/models/Trip");
 const CommuterCashPayment_1 = require("../../data/models/CommuterCashPayment");
 const RankFeeCashPayment_1 = require("../../data/models/RankFeeCashPayment");
@@ -57,7 +58,7 @@ exports.DispatchModule = DispatchModule = __decorate([
             ]),
         ],
         controllers: [dispatch_controller_1.DispatchController],
-        providers: [dispatch_service_1.DispatchService, fcm_service_1.MessagingService, zipper_1.FileArchiverService],
+        providers: [dispatch_service_1.DispatchService, fcm_service_1.MessagingService, zipper_1.FileArchiverService, firebase_util_1.FirebaseAdmin],
     })
 ], DispatchModule);
 //# sourceMappingURL=dispatch.module.js.map

@@ -15,6 +15,7 @@ const kasie_error_1 = require("../../data/models/kasie.error");
 const mongoose_1 = require("@nestjs/mongoose");
 const AppError_1 = require("../../data/models/AppError");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
+const firebase_util_1 = require("../../services/firebase_util");
 let ErrorModule = class ErrorModule {
 };
 exports.ErrorModule = ErrorModule;
@@ -28,7 +29,7 @@ exports.ErrorModule = ErrorModule = __decorate([
             ]),
         ],
         controllers: [error_controller_1.ErrorController],
-        providers: [error_service_1.ErrorService, fcm_service_1.MessagingService],
+        providers: [error_service_1.ErrorService, fcm_service_1.MessagingService, firebase_util_1.FirebaseAdmin],
     })
 ], ErrorModule);
 //# sourceMappingURL=error.module.js.map

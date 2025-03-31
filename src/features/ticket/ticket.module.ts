@@ -17,6 +17,7 @@ import { KasieErrorSchema } from 'src/data/models/kasie.error';
 import { UserSchema } from 'src/data/models/User';
 import { UserPhotoSchema } from 'src/data/models/UserPhoto';
 import { AssociationSchema } from 'src/data/models/Association';
+import { FirebaseAdmin } from 'src/services/firebase_util';
 
 @Module({
   imports: [
@@ -40,6 +41,6 @@ import { AssociationSchema } from 'src/data/models/Association';
     ]),
   ],
   controllers: [TicketController],
-  providers: [TicketService, CloudStorageUploaderService, KasieErrorHandler, MessagingService],
+  providers: [TicketService, CloudStorageUploaderService, KasieErrorHandler, MessagingService, FirebaseAdmin],
 })
 export class TicketModule {}

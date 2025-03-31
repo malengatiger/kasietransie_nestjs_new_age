@@ -54,6 +54,6 @@ import { CommuterPickupSchema } from "src/data/models/CommuterPickup";
   controllers: [CommuterController],
   providers: [CommuterService, 
     KasieErrorHandler,
-    MessagingService, CloudStorageUploaderService],
+    MessagingService, CloudStorageUploaderService, FirebaseAdmin],
 })
 export class CommuterModule {}

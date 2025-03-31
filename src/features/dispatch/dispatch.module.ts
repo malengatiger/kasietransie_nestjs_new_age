@@ -49,6 +49,6 @@ import { RankFeeCashPaymentSchema } from "src/data/models/RankFeeCashPayment";
     ]),
   ],
   controllers: [DispatchController],
-  providers: [DispatchService, MessagingService, FileArchiverService],
+  providers: [DispatchService, MessagingService, FileArchiverService, FirebaseAdmin],
 })
 export class DispatchModule {}

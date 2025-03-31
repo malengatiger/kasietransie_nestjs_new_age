@@ -56,6 +56,14 @@ export class FuelTopUp {
   @ApiProperty()
   position: Position;
 
+  @Prop()
+  @ApiProperty()
+  createdAt: string;
+
+  @Prop()
+  @ApiProperty()
+  updatedA: string;
+
 }
 
 export const FuelTopUpSchema = SchemaFactory.createForClass(FuelTopUp);

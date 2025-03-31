@@ -20,6 +20,7 @@ const zipper_1 = require("../../my-utils/zipper");
 const VehicleHeartbeatTimeSeries_1 = require("../../data/models/VehicleHeartbeatTimeSeries");
 const PassengerTimeSeries_1 = require("../../data/models/PassengerTimeSeries");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
+const firebase_util_1 = require("../../services/firebase_util");
 const AmbassadorCheckIn_1 = require("../../data/models/AmbassadorCheckIn");
 const Vehicle_1 = require("../../data/models/Vehicle");
 const errors_interceptor_1 = require("../../middleware/errors.interceptor");
@@ -52,7 +53,7 @@ exports.AmbassadorModule = AmbassadorModule = __decorate([
             fcm_service_1.MessagingService,
             time_series_service_1.TimeSeriesService,
             errors_interceptor_1.KasieErrorHandler,
-            zipper_1.FileArchiverService,
+            zipper_1.FileArchiverService, firebase_util_1.FirebaseAdmin
         ],
     })
 ], AmbassadorModule);

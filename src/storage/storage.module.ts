@@ -13,6 +13,7 @@ import { MessagingService } from 'src/features/fcm/fcm.service';
 import { AssociationTokenSchema } from 'src/data/models/AssociationToken';
 import { KasieErrorSchema } from 'src/data/models/kasie.error';
 import { AssociationSchema } from 'src/data/models/Association';
+import { FirebaseAdmin } from 'src/services/firebase_util';
 
 @Module({
   imports: [
@@ -32,6 +33,6 @@ import { AssociationSchema } from 'src/data/models/Association';
     ])
   ],
   controllers: [StorageController],
-  providers: [CloudStorageUploaderService, KasieErrorHandler, MessagingService],
+  providers: [CloudStorageUploaderService, KasieErrorHandler, MessagingService, FirebaseAdmin],
 })
 export class StorageModule {}

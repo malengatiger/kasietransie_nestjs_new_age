@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@google-cloud/logging": "^11.2.0",
+    "@google-cloud/pubsub": "^4.10.0",
     "@google-cloud/storage": "^7.1.0",
     "@google-cloud/storage-control": "^0.2.0",
     "@google-cloud/translate": "^8.0.2",

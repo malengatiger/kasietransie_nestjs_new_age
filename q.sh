@@ -1,2 +1,2 @@
 clear
-npm run start:debug
+npm run start

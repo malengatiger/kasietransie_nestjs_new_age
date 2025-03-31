@@ -93,6 +93,10 @@ let VehicleController = VehicleController_1 = class VehicleController {
     async getFuelBrands() {
         return await this.carService.getFuelBrands();
     }
+    async getCarFuelTopUps(vehicleId, startDate, endDate) {
+        return await this.carService.getCarFuelTopUps(vehicleId, startDate, endDate);
+        ;
+    }
     async getAssociationHeartbeatTimeSeries(query, res) {
         try {
             const fileName = await this.timeSeriesService.aggregateAssociationHeartbeatData(query.associationId, query.startDate);
@@ -242,6 +246,15 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], VehicleController.prototype, "getFuelBrands", null);
+__decorate([
+    (0, common_1.Get)("getCarFuelTopUps"),
+    __param(0, (0, common_1.Query)('vehicleId')),
+    __param(1, (0, common_1.Query)('startDate')),
+    __param(2, (0, common_1.Query)('endDate')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:returntype", Promise)
+], VehicleController.prototype, "getCarFuelTopUps", null);
 __decorate([
     (0, common_1.Get)("getAssociationHeartbeatTimeSeries"),
     __param(0, (0, common_1.Query)()),

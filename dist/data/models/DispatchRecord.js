@@ -59,6 +59,11 @@ __decorate([
     (0, mongoose_1.Prop)(),
     (0, swagger_1.ApiProperty)(),
     __metadata("design:type", String)
+], DispatchRecord.prototype, "landmarkId", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    __metadata("design:type", String)
 ], DispatchRecord.prototype, "marshalName", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),

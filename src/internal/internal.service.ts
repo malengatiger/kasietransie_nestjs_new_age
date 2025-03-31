@@ -40,6 +40,8 @@ import { differenceInSeconds, min } from "date-fns";
 import { RoutePoint } from "src/data/models/RoutePoint";
 import { AssociationToken } from "src/data/models/AssociationToken";
 import { KasieError } from "src/data/models/kasie.error";
+import { FuelTopUp } from "src/data/models/FuelTopUp";
+import { FuelBrand } from "src/data/models/FuelBrand";
 
 const mm = " 🔵 🔵 🔵 🔵 InternalService  🔵 ";
 
@@ -55,8 +57,15 @@ export class InternalService {
     private readonly telemetryService: TelemetryService,
     private readonly messagingService: MessagingService,
 
+    @InjectModel(FuelBrand.name)
+    private fuelBrandModel: mongoose.Model<FuelBrand>,
+
+    @InjectModel(FuelTopUp.name)
+    private fuelTopUpdModel: mongoose.Model<FuelTopUp>,
+
     @InjectModel(User.name)
     private userModel: mongoose.Model<User>,
+
     @InjectModel(Vehicle.name)
     private vehicleModel: mongoose.Model<Vehicle>,
 
@@ -92,6 +101,9 @@ export class InternalService {
 
     @InjectModel(RoutePoint.name)
     private routePointModel: mongoose.Model<RoutePoint>,
+
+    @InjectModel(FuelTopUp.name)
+    private fuelTopUpModel: mongoose.Model<FuelTopUp>,
 
     @InjectModel(CommuterRequest.name)
     private commuterRequestModel: mongoose.Model<CommuterRequest>
@@ -245,9 +257,6 @@ export class InternalService {
     );
     return result;
   }
-  private async routeSleep(): Promise<void> {
-    const mm = "routeSleep"; // Assuming mm is defined somewhere
-  }
   public async startSingleRouteDemo(routeId: string): Promise<any> {
     try {
       // Run all async functions concurrently
@@ -256,153 +265,119 @@ export class InternalService {
           routeId,
           "991c6bc4-2535-4f70-b42d-24f1a8c77329",
           "b27d00ac-a215-4f01-8938-8d92c99a9b71",
-          "1ae8c141-013a-4b11-96af-7cd78b4517ec",
-          "🐸🐸🐸🐸🐸🐸🐸🐸🐸",
-          false
+          "1ae8c141-013a-4b11-96af-7cd78b4517ec"
         ),
 
         this.startSingleCarDemo(
           routeId,
           "17831c17-f367-4895-bc64-5c1bfb93e218",
           "c0f185a8-8cc1-4072-8891-8b2263b4b16c",
-          "a5467938-08c3-4166-8e2d-fa9462ae4a67",
-          "🐳🐳🐳🐳🐳🐳🐳🐳🐳",
-          true
+          "a5467938-08c3-4166-8e2d-fa9462ae4a67"
         ),
 
         this.startSingleCarDemo(
           routeId,
           "a3c28460-4ec5-4f67-a7bc-ce2e8b5bb32d",
           "5dbbf76d-340e-4496-a86d-c2803828cf36",
-          "d1dc9a25-e783-49ea-815c-2f494ae8f0fe",
-          "🌺🌺🌺🌺🌺🌺🌺🌺🌺",
-          true
+          "d1dc9a25-e783-49ea-815c-2f494ae8f0fe"
         ),
 
         this.startSingleCarDemo(
           routeId,
           "ca4a9314-180c-45cd-8d80-5c322290e0a2",
           "cc2be701-70ce-45c8-be96-b91645abbd91",
-          "7033d07f-7bca-480f-8c3a-5e57c9201ea3",
-          "🌸🌸🌸🌸🌸🌸🌸🌸🌸",
-          true
+          "7033d07f-7bca-480f-8c3a-5e57c9201ea3"
         ),
 
         this.startSingleCarDemo(
           routeId,
           "70be2f32-4213-4bac-9e84-8d61bfeaa146",
           "2e4ec3a3-4239-47d5-91cb-4ae449678135",
-          "fc321c5a-8aae-477d-b412-d84c40a19f9d",
-          "💦💦💦💦💦💦💦💦💦",
-          true
+          "fc321c5a-8aae-477d-b412-d84c40a19f9d"
         ),
 
         this.startSingleCarDemo(
           routeId,
           "fad1610e-f88d-4b1d-ae1a-688a1ba20c48",
           "b27d00ac-a215-4f01-8938-8d92c99a9b71",
-          "1ae8c141-013a-4b11-96af-7cd78b4517ec",
-          "💜💜💜💜💜💜💜💜💜",
-          true
+          "1ae8c141-013a-4b11-96af-7cd78b4517ec"
         ),
 
         this.startSingleCarDemo(
           routeId,
           "dd0cb6d4-aaaa-47ac-9f79-14b9925850c2",
           "b27d00ac-a215-4f01-8938-8d92c99a9b71",
-          "1ae8c141-013a-4b11-96af-7cd78b4517ec",
-          "🍎🍎🍎🍎🍎🍎🍎🍎🍎",
-          true
+          "1ae8c141-013a-4b11-96af-7cd78b4517ec"
         ),
 
         this.startSingleCarDemo(
           routeId,
           "6d0fb4cd-2696-4adb-b09d-2e6ff0d423d6",
           "b27d00ac-a215-4f01-8938-8d92c99a9b71",
-          "1ae8c141-013a-4b11-96af-7cd78b4517ec",
-          "🍐🍐🍐🍐🍐🍐🍐🍐🍐",
-          true
+          "1ae8c141-013a-4b11-96af-7cd78b4517ec"
         ),
 
         this.startSingleCarDemo(
           routeId,
           "26f10141-f965-487d-9633-1467311f1001",
           "b27d00ac-a215-4f01-8938-8d92c99a9b71",
-          "1ae8c141-013a-4b11-96af-7cd78b4517ec",
-          "🔆🔆🔆🔆🔆🔆🔆🔆🔆",
-          true
+          "1ae8c141-013a-4b11-96af-7cd78b4517ec"
         ),
 
         this.startSingleCarDemo(
           routeId,
           "6c0bd4dd-52bb-44db-a936-5546713db5a4",
           "b27d00ac-a215-4f01-8938-8d92c99a9b71",
-          "1ae8c141-013a-4b11-96af-7cd78b4517ec",
-          "🍀🍀🍀🍀🍀🍀🍀🍀🍀",
-          true
+          "1ae8c141-013a-4b11-96af-7cd78b4517ec"
         ),
 
         this.startSingleCarDemo(
           routeId,
           "95aad828-f7a5-4b77-94e5-c8d3fe0d9945",
           "b27d00ac-a215-4f01-8938-8d92c99a9b71",
-          "3be9914c-1e4e-47eb-be21-4c2fad895392",
-          "🐼🐼🐼🐼🐼🐼🐼🐼🐼",
-          true
+          "3be9914c-1e4e-47eb-be21-4c2fad895392"
         ),
 
         this.startSingleCarDemo(
           routeId,
           "3833d9af-ed09-4131-b61c-fc458ab05695",
           "b27d00ac-a215-4f01-8938-8d92c99a9b71",
-          "2e4ec3a3-4239-47d5-91cb-4ae449678135",
-          "🐱🐱🐱🐱🐱🐱🐱🐱🐱",
-          true
+          "2e4ec3a3-4239-47d5-91cb-4ae449678135"
         ),
 
         this.startSingleCarDemo(
           routeId,
           "2628ffe0-6aa0-4cc1-ac00-95d152fed951",
           "cc2be701-70ce-45c8-be96-b91645abbd91",
-          "2e4ec3a3-4239-47d5-91cb-4ae449678135",
-          "😡😡😡😡😡😡😡😡😡",
-          true
+          "2e4ec3a3-4239-47d5-91cb-4ae449678135"
         ),
         //
         this.startSingleCarDemo(
           routeId,
           "071adcd4-3ff2-4656-93c9-95ce98da4039",
           "41a6e66f-7883-49b7-8f7c-2eb342954cf8",
-          "2e4ec3a3-4239-47d5-91cb-4ae449678135",
-          "🦋🦋🦋🦋🦋🦋🦋🦋🦋",
-          true
+          "2e4ec3a3-4239-47d5-91cb-4ae449678135"
         ),
 
         this.startSingleCarDemo(
           routeId,
           "33878375-3b66-4927-a1c0-4d565d7132ef",
           "cc2be701-70ce-45c8-be96-b91645abbd91",
-          "2e4ec3a3-4239-47d5-91cb-4ae449678135",
-          "🍏🍏🍏🍏🍏🍏🍏🍏🍏",
-          true
+          "2e4ec3a3-4239-47d5-91cb-4ae449678135"
         ),
 
         this.startSingleCarDemo(
           routeId,
           "4a600896-ee15-4e9a-8a64-ba87c24fd052",
           "5dbbf76d-340e-4496-a86d-c2803828cf36",
-          "2e4ec3a3-4239-47d5-91cb-4ae449678135",
-          "🐹🐹🐹🐹🐹🐹🐹🐹🐹",
-          true
+          "2e4ec3a3-4239-47d5-91cb-4ae449678135"
         ),
 
         this.startSingleCarDemo(
           routeId,
           "e7ab6ff1-558b-4ee2-8494-4ee566afde43",
           "c0f185a8-8cc1-4072-8891-8b2263b4b16c",
-          "2e4ec3a3-4239-47d5-91cb-4ae449678135",
-          "💙💙💙💙💙💙💙💙💙",
-          true
+          "2e4ec3a3-4239-47d5-91cb-4ae449678135"
         ),
       ]);
 
@@ -421,24 +396,54 @@ export class InternalService {
       );
     }
   }
+  sortRouteLandmarksByIndex(landmarks: RouteLandmark[]): RouteLandmark[] {
+    /**
+     * Sorts an array of RouteLandmark objects by their index property in ascending order.
+     *
+     * @param {RouteLandmark[]} landmarks - The array of RouteLandmark objects to sort.
+     * @returns {RouteLandmark[]} A new array containing the sorted RouteLandmark objects.
+     * @throws {Error} If the input is not an array or if any element is not a RouteLandmark object
+     * with a valid numeric index property.
+     */
+
+    if (!Array.isArray(landmarks)) {
+      throw new Error("Input must be an array.");
+    }
+
+    // Create a copy to avoid modifying the original array
+    const sortedLandmarks = [...landmarks];
+
+    sortedLandmarks.sort((a, b) => {
+      // Sort by the 'index' property in ascending order
+      return a.index - b.index;
+    });
+
+    Logger.debug(
+      `\n\n${mm} SORTED LANDMARKS, total: ${sortedLandmarks.length}`
+    );
+    for (const m of sortedLandmarks) {
+      Logger.debug(`${mm} index: ${m.index} - ${m.landmarkName}`);
+    }
+    return sortedLandmarks;
+  }
+
   public async startSingleCarDemo(
     routeId: string,
     vehicleId: string,
     ambassadorId: string,
     marshalId: string,
-    emoji: string,
-    sleep: boolean,
     associationId?: string
   ): Promise<any> {
-    const mm = "startSingleCarDemo"; // Assuming mm is defined somewhere
+    const mm = "🍎 🍎 🍎 startSingleCarDemo 🍎 "; // Assuming mm is defined somewhere
     Logger.debug(
-      `\n\n\n\n${emoji} starting startSingleCarDemo ............... car: ${vehicleId} \n`
+      `\n\n\n\n${mm} starting ............... car: ${vehicleId} \n\n`
     );
 
     let diff1 = 0;
     let car: Vehicle;
     let dispatches = 0;
-    let passengerCounts = 0;
+    let passengerCountsIn = 0;
+    let passengerCountsOut = 0;
     let landmarks = 0;
     let arrivals = 0;
     let cashPayments = 0;
@@ -450,26 +455,23 @@ export class InternalService {
     let routeLandmarks: RouteLandmark[];
     let routePoints: RoutePoint[];
     let token: string;
+    let cash = 0.0;
 
     const startTime = Date.now(); // Get the current time in milliseconds
 
     try {
-      Logger.debug(`${mm} startSingleCarDemo associationId: ${associationId}`);
+      Logger.debug(`${mm} associationId: ${associationId}`);
 
       if (associationId) {
         const tokens: AssociationToken[] = await this.assTokenModel
           .find({ associationId: associationId })
           .sort({ created: 1 });
-        Logger.debug(
-          `${mm} startSingleCarDemo: found ${tokens.length} association tokens`
-        );
+        Logger.debug(`${mm}  found ${tokens.length} association tokens`);
         if (tokens.length > 0) {
           for (const assToken of tokens) {
             // Access properties of each AssociationToken object
-            Logger.debug(`${mm} startSingleCarDemo: token: ${assToken.token}`);
-            Logger.debug(
-              `${mm} startSingleCarDemo: associationId: ${assToken.associationId}`
-            );
+            Logger.debug(`${mm} token: ${assToken.token}`);
+            Logger.debug(`${mm} associationId: ${assToken.associationId}`);
             Logger.debug(
               `${mm} startSingleCarDemo: created: ${assToken.created}`
             );
@@ -482,9 +484,7 @@ export class InternalService {
             // If you only need the first token and want to exit after it is found:
             // break;
           }
-          Logger.debug(
-            `${mm} startSingleCarDemo: 💦💦💦💦💦💦 the token to use: ${token}`
-          );
+          Logger.debug(`${mm} 💦💦💦💦💦💦 the token to use: ${token}`);
         } else {
           Logger.warn(
             `${mm} startSingleCarDemo: 👿👿 No association tokens found for associationId: ${associationId}`
@@ -497,20 +497,20 @@ export class InternalService {
       }
 
       if (!token) {
-        Logger.error(`👿👿👿👿👿👿👿 ... Token has not been found`);
+        Logger.error(`${mm} 👿👿👿👿👿👿👿 ... Token has not been found`);
         throw new KasieError("👿👿👿 Token not found", HttpStatus.BAD_REQUEST);
       }
 
       // Fetch route and related data
       route = await this.routeModel.findOne({ routeId: routeId });
       const ass: Association = await this.assModel.findOne({
-        associationId: route.associationId,
+        associationId: associationId,
       });
 
       routePoints = await this.routePointModel
         .find({ routeId: routeId })
         .sort({ index: 1 });
-      Logger.debug(`${emoji} routePoints: ${routePoints.length} ...`);
+      Logger.debug(`${mm} routePoints: ${routePoints.length} ...`);
 
       if (!ass.associationName) {
         Logger.error(
@@ -521,19 +521,21 @@ export class InternalService {
       Logger.debug(
         `${mm} association name from route: ${route.associationName}`
       );
-      Logger.debug(`${emoji} association for demo: ${ass.associationName} ...`);
-      Logger.debug(`${emoji} route for demo: ${route.name} ....\n\n`);
+      Logger.debug(`${mm} association for demo: ${ass.associationName} ...`);
+      Logger.debug(
+        `${mm} route for demo: ${route.name} .... routeId: ${route.routeId} \n\n`
+      );
 
       ambassador = await this.userModel.findOne({
         associationId: ass.associationId,
         userId: ambassadorId,
       });
       Logger.debug(
-        `${emoji} ambassador: ${ambassador.firstName} ${ambassador.lastName} ...`
+        `${mm} ambassador for demo: ${ambassador.firstName} ${ambassador.lastName} ... ambassadorId: ${ambassador.userId}`
       );
 
       car = await this.vehicleModel.findOne({ vehicleId: vehicleId }).limit(1);
-      Logger.debug(`${emoji} vehicle for demo: ${car.vehicleReg} ...`);
+      Logger.debug(`${mm} vehicle for demo: ${car.vehicleReg} ...`);
 
       marshal = await this.userModel
         .findOne({
@@ -541,38 +543,40 @@ export class InternalService {
         })
         .limit(1);
       Logger.debug(
-        `${emoji} marshal for demo: ${marshal.firstName} ${marshal.lastName} ...`
+        `${mm} marshal for demo: ${marshal.firstName} ${marshal.lastName} ... marshalId: ${marshal.userId}`
       );
 
       routeLandmarks = await this.routeLandmarkModel.find({
         routeId: route.routeId,
       });
-      Logger.debug(
-        `\n${emoji} landmarks for demo: ${routeLandmarks.length} ...`
-      );
+      Logger.debug(`\n${mm} landmarks for demo: ${routeLandmarks.length} ...`);
 
-      if (routeLandmarks.length == 0) {
-        Logger.error(`${emoji} No landmarks for route: ${route.name}`);
+      const sortedLandmarks: RouteLandmark[] =
+        this.sortRouteLandmarksByIndex(routeLandmarks);
+
+      if (sortedLandmarks.length == 0) {
+        Logger.error(`${mm} No landmarks for route: ${route.name}`);
         return `No landmarks found for car: ${car.vehicleId} - route: ${route.name}`;
       }
 
-      for (const landmark of routeLandmarks) {
+      for (const landmark of sortedLandmarks) {
         Logger.debug(
-          `${emoji} route: ${route.name} - landmark: ${landmark.landmarkName}`
+          `${mm} route: ${route.name} - index: ${landmark.index} - landmark: ${landmark.landmarkName}`
         );
       }
 
       // Dispatch and trip logic
       Logger.debug(
-        `\n\n\n\n${emoji} starting car: add dispatch records: ${car.vehicleReg} landmark: ${routeLandmarks[0].landmarkName}...`
+        `\n\n\n\n${mm} starting car: adding dispatch record: ${car.vehicleReg} landmark: ${sortedLandmarks[0].landmarkName}...`
       );
       const dr = await this.addDispatch(
         car,
         route,
-        routeLandmarks[0],
+        sortedLandmarks[0],
         marshal,
         this.getRandomNumber(16)
       );
+
       await this.messagingService.sendToDevice(
         token,
         "Taxi Dispatch",
@@ -582,6 +586,9 @@ export class InternalService {
       );
 
       dispatches++;
+      Logger.log(
+        `\n${mm} starting car: added dispatch record: ${dr.vehicleReg}`
+      );
 
       const trip: Trip = await this.addTrip(
         dr,
@@ -598,160 +605,299 @@ export class InternalService {
 
       trips++;
       landmarks++;
+      Logger.debug(`${mm} adding original dispatch passenger count ...`);
+      const pCount = await this.addPassengerCount(
+        route,
+        car,
+        dr.passengers,
+        0,
+        dr.passengers,
+        ambassador,
+        trip.tripId,
+        sortedLandmarks[0].position
+      );
+      await this.messagingService.sendToDevice(
+        token,
+        "Passenger Count",
+        `Passengers ${dr.passengers}`,
+        `${Constants.passengerCount}`,
+        `${JSON.stringify(pCount)}`
+      );
+      Logger.debug(`${mm} adding original dispatch commuter cash ...`);
 
-      const currentPassengers = dr.passengers;
+      const pCash = await this.addCommuterCashPayment(
+        pCount,
+        car,
+        trip,
+        ambassador
+      );
+      await this.messagingService.sendToDevice(
+        token,
+        "Commuter Payment",
+        `Payment ${pCash.amount}`,
+        `${Constants.commuterCashPayment}`,
+        `${JSON.stringify(pCash)}`
+      );
+      cash += pCash.amount;
 
       // Sleep before processing landmarks
-      Logger.log(`\n\n${emoji} Time before sleep: 🔴 ${new Date()}`);
+      Logger.log(`\n\n${mm} Time before sleep: 🔴 ${new Date()}\n`);
 
       // Generate a random sleep duration between 3 and 5 seconds
-      await this.hibernate(3, 6);
+      await this.hibernate(2, 4);
       // Process landmarks
       let index = 0;
       const numbers: number[] = [];
-      let numPassengers = 0;
-      for (const m of routeLandmarks) {
+      let totalNumberOfPassengers = 0;
+      for (const m of sortedLandmarks) {
         let n = this.getRandomNumber(8);
         if (n == 0) {
           n = 4;
         }
         numbers.push(n);
-        numPassengers += n;
       }
+      Logger.debug(`${mm} passengers for landmarks`);
 
+      let cnt = 0;
       for (const m of numbers) {
-        Logger.debug(`${mm} number: ${m}`);
+        Logger.debug(`${mm} number of passengers: ${m}`);
+        cnt += m;
       }
 
       Logger.log(
-        `$mm generated passenger numbers: ${numbers} - landmarks: ${routeLandmarks.length} - passengers for route: ${numPassengers}`
+        `$mm generated passenger numbers: ${numbers} - landmarks: ${sortedLandmarks.length} - passengers for route: ${cnt}`
       );
 
       const pList: AmbassadorPassengerCount[] = [];
       const cList: CommuterCashPayment[] = [];
 
-      for (const mark of routeLandmarks) {
+      const fuelTopUp = await this.addFuelTopUp(car);
+      Logger.debug(
+        `${mm} fuelTopUp added: ${fuelTopUp.numberOfLitres} - ${fuelTopUp.amount} `
+      );
+
+      for (const mark of sortedLandmarks) {
         Logger.debug(
-          `\n\n\n\n${emoji} .... starting car: add passenger records: ${car.vehicleReg} landmark: ${mark.landmarkName}...`
+          `\n\n\n\n${mm} .... starting car: add passenger records: ${car.vehicleReg} landmark: ${mark.landmarkName}...`
         );
-        const arrival = await this.addArrival(car, mark);
-        await this.messagingService.sendToDevice(
-          token,
-          "Car Arrival",
-          `Car has arrived at ${mark.landmarkName}`,
-          `${Constants.vehicleArrival}`,
-          `${JSON.stringify(arrival)}`
-        );
-        arrivals++;
+        arrivals = await this.handleArrival(car, mark, mm, token, arrivals);
         const currentPassengers = dr.passengers;
         //
-        const count = await this.addPassengerCount(
-          route,
-          car,
-          numbers[index],
-          0,
-          currentPassengers,
-          ambassador,
-          trip.tripId,
-          dr.position
+        Logger.debug(
+          `\n${mm} number of passengersIn for addPassengerCount: ${numbers[index]}`
         );
-        pList.push(count);
-        await this.messagingService.sendToDevice(
-          token,
-          "Passenger Count",
-          `Passengers ${dr.passengers}`,
-          `${Constants.passengerCount}`,
-          `${JSON.stringify(count)}`
-        );
-        passengerCounts++;
-        //
-        const payment = await this.addCommuterCashPayment(
-          count,
-          car,
-          trip,
-          ambassador
-        );
-        await this.messagingService.sendToDevice(
-          token,
-          "Commuter Cash",
-          `Cash Payment of ${JSON.stringify(payment)} at ${mark.landmarkName}`,
-          `${Constants.commuterCashPayment}`,
-          `${JSON.stringify(payment)}`
-        );
-        cList.push(payment);
-        cashPayments++;
-        // Sleep after processing cash
-        Logger.log(
-          `\n\n${emoji} ${mark.landmarkName} - Time before sleep: 🔴 ${new Date()}`
-        );
-        let m0 = Math.floor(Math.random() * 5) + 1;
-        if (m0 < 3) {
-          m0 = 3;
-        }
-        await this.sleep(m0 * 1000); // Ensure sleep is in milliseconds
-        Logger.log(
-          `${emoji} ${mark.landmarkName} - Time after ${m0} second sleep: 🔴 ${new Date()}\n\n`
-        );
-        //
-        const tel = await this.addTelemetry(
-          car,
-          mark.position!.coordinates[1],
-          mark.position!.coordinates[0]
-        );
-        await this.messagingService.sendToDevice(
-          token,
-          "Car Telemetry",
-          `Car has reported its location `,
-          `${Constants.vehicleArrival}`,
-          `${JSON.stringify(tel)}`
-        );
-        telemetry++;
-
-        //let passengers off
-        if (index > 0) {
-          const pCount = pList[index - 1];
-          const count2 = await this.addPassengerCount(
+        ({ passengerCountsIn, totalNumberOfPassengers, cashPayments } =
+          await this.countPassengers(
             route,
             car,
-            0,
-            pCount.passengersIn,
+            numbers,
+            index,
             currentPassengers,
             ambassador,
-            trip.tripId,
-            dr.position
-          );
-
-          await this.messagingService.sendToDevice(
+            trip,
+            dr,
+            pList,
             token,
-            "Passenger Count",
-            `Passengers ${dr.passengers}`,
-            `${Constants.passengerCount}`,
-            `${JSON.stringify(count2)}`
-          );
-          passengerCounts++;
-        }
+            passengerCountsIn,
+            totalNumberOfPassengers,
+            mark,
+            cList,
+            cashPayments
+          ));
 
+        //
+        telemetry = await this.handleTelemetry(car, mark, token, telemetry);
+        //let passengers off
+        passengerCountsOut = await this.dropPassengersOff(
+          index,
+          pList,
+          route,
+          car,
+          ambassador,
+          trip,
+          dr,
+          token,
+          passengerCountsOut
+        );
         index++;
-
         // Sleep after processing each landmark
-        this.hibernate(3, 7);
+        this.hibernate(2, 7);
       }
+
+      trip.dateEnded = new Date().toISOString();
+      const res = await this.dispatchService.updateTrip(trip);
+      Logger.debug(
+        `\n${mm} ..... end the Trip ... update result: ${JSON.stringify(res)}`
+      );
+      for (const p of cList) {
+        cash += p.amount;
+      }
+
       const result = {
-        message: `🥬🥬🥬🥬🥬🥬 ... Demo is complete for car: 🥬 ${car.vehicleReg} on route: 🥬 ${route.name}`,
+        message: `🥬🥬🥬🥬🥬🥬 Demo is complete for car: 🥬 ${car.vehicleReg} on route: 🥬 ${route.name}`,
+        date: new Date().toISOString(),
         cashPayments: cashPayments,
         telemetry: telemetry,
         dispatches: dispatches,
         trips: trips,
         arrivals: arrivals,
+        topUps: 1,
+        totalCash: cash,
+        passengersCountIn: passengerCountsIn,
+        passengerCountsOut: passengerCountsOut,
+        passengers: totalNumberOfPassengers + dr.passengers,
+        originalDispatchPassengers: dr.passengers,
+        generatedNumbers: numbers,
+
+        vehicleReg: car.vehicleReg,
+        vehicleId: vehicleId,
+        routeId: route.routeId,
       };
-      Logger.log(`${mm} ... Demo completion result: ${JSON.stringify(result)}`);
+      Logger.log(
+        `\n\n${mm} Demo completion; result: ${JSON.stringify(result, null, 2)}\n\n`
+      );
       return result;
     } catch (e) {
-      Logger.error(`${emoji} Error : ${e}`);
+      Logger.error(`${mm} Error : ${e}`);
       throw new KasieError(`Demo failed: ${e}`, 400);
     }
   }
-  private async hibernate( min: number, max: number) {
+  private async handleArrival(
+    car: Vehicle,
+    mark: RouteLandmark,
+    mm: string,
+    token: string,
+    arrivals: number
+  ) {
+    const arrival = await this.addArrival(car, mark);
+    Logger.log(`${mm} arrival, check arrivalId: ${JSON.stringify(arrival)}`);
+    await this.messagingService.sendToDevice(
+      token,
+      "Car Arrival",
+      `Car has arrived at ${mark.landmarkName}`,
+      `${Constants.vehicleArrival}`,
+      `${JSON.stringify(arrival)}`
+    );
+    arrivals++;
+    return arrivals;
+  }
+
+  private async dropPassengersOff(
+    index: number,
+    pList: AmbassadorPassengerCount[],
+    route: Route,
+    car: Vehicle,
+    ambassador: User,
+    trip: Trip,
+    dr: DispatchRecord,
+    token: string,
+    passengerCountsOut: number
+  ) {
+    if (index > 0) {
+      const pCount = pList[index - 1];
+      const count2 = await this.addPassengerCount(
+        route,
+        car,
+        0,
+        pCount.passengersIn,
+        0,
+        ambassador,
+        trip.tripId,
+        dr.position
+      );
+
+      await this.messagingService.sendToDevice(
+        token,
+        "Passenger Count",
+        `Passengers ${dr.passengers}`,
+        `${Constants.passengerCount}`,
+        `${JSON.stringify(count2)}`
+      );
+      passengerCountsOut++;
+    }
+    return passengerCountsOut;
+  }
+
+  private async handleTelemetry(
+    car: Vehicle,
+    mark: RouteLandmark,
+    token: string,
+    telemetry: number
+  ) {
+    const tel = await this.addTelemetry(
+      car,
+      mark.position!.coordinates[1],
+      mark.position!.coordinates[0]
+    );
+    await this.messagingService.sendToDevice(
+      token,
+      "Car Telemetry",
+      `Car has reported its location `,
+      `${Constants.telemetry}`,
+      `${JSON.stringify(tel)}`
+    );
+    telemetry++;
+    return telemetry;
+  }
+
+  private async countPassengers(
+    route: Route,
+    car: Vehicle,
+    numbers: number[],
+    index: number,
+    currentPassengers: number,
+    ambassador: User,
+    trip: Trip,
+    dr: DispatchRecord,
+    pList: AmbassadorPassengerCount[],
+    token: string,
+    passengerCountsIn: number,
+    totalNumberOfPassengers: number,
+    mark: RouteLandmark,
+    cList: CommuterCashPayment[],
+    cashPayments: number
+  ) {
+    const count = await this.addPassengerCount(
+      route,
+      car,
+      numbers[index],
+      0,
+      currentPassengers,
+      ambassador,
+      trip.tripId,
+      dr.position
+    );
+    pList.push(count);
+    await this.messagingService.sendToDevice(
+      token,
+      "Passenger Count",
+      `Passengers ${dr.passengers}`,
+      `${Constants.passengerCount}`,
+      `${JSON.stringify(count)}`
+    );
+    passengerCountsIn++;
+    totalNumberOfPassengers += count.passengersIn;
+
+    //
+    const payment = await this.addCommuterCashPayment(
+      count,
+      car,
+      trip,
+      ambassador
+    );
+    await this.messagingService.sendToDevice(
+      token,
+      "Commuter Cash",
+      `Cash Payment of ${JSON.stringify(payment)} at ${mark.landmarkName}`,
+      `${Constants.commuterCashPayment}`,
+      `${JSON.stringify(payment)}`
+    );
+    cList.push(payment);
+    cashPayments++;
+    return { passengerCountsIn, totalNumberOfPassengers, cashPayments };
+  }
+
+  private async hibernate(min: number, max: number) {
     const minSleep = min; // Minimum sleep duration in seconds
     const maxSleep = max; // Maximum sleep duration in seconds
     const sleepDuration =
@@ -876,6 +1022,38 @@ export class InternalService {
     return res;
   }
 
+  
+  private async addFuelTopUp(car: Vehicle): Promise<FuelTopUp> {
+    Logger.debug(`${mm} adding fuel topUp ${car.vehicleReg} ...`);
+
+    const randomLitres = Math.floor(Math.random() * (60 - 20 + 1)) + 20;
+    const price = 12.5;
+    const amount = randomLitres * price;
+
+    const fuelBrands = await this.fuelBrandModel.find({});
+    if (!fuelBrands || fuelBrands.length === 0) {
+      return null; // Return null if the array is empty or undefined
+    }
+
+    const randomIndex = Math.floor(Math.random() * fuelBrands.length);
+    const brand = fuelBrands[randomIndex];
+
+    const f = new FuelTopUp();
+    f.fuelTopUpId = randomUUID();
+    f.fuelBrandId = brand.fuelBrandId;
+    f.brandName = brand.brandName;
+    f.associationId = car.associationId;
+    f.associationName = car.associationName;
+    f.created = new Date().toISOString();
+    f.numberOfLitres = randomLitres;
+    f.amount = amount;
+    f.vehicleId = car.vehicleId;
+    f.vehicleReg = car.vehicleReg;
+
+    var res = await this.vehicleService.addFuelTopUp(f);
+    Logger.debug(`${mm} My FUCKING topUp added, check vehicleId: ${JSON.stringify(res,null,2)}`);
+    return f;
+  }
   private async addArrival(
     car: Vehicle,
     landmark: RouteLandmark
@@ -914,12 +1092,10 @@ export class InternalService {
     marshal: User,
     passengers: number
   ) {
-    Logger.debug(
-      `${mm} add addDispatch ... marshal userName: ${marshal} at ${landmark.landmarkName}`
+    Logger.log(
+      `\n\n${mm} add addDispatch ... marshal: ${marshal.firstName}  ${marshal.lastName} at ${landmark.landmarkName}\n`
     );
-    Logger.debug(
-      `${mm} addTrip route: ${route.routeId} ${route.name}; in car: ${car.vehicleReg} ...`
-    );
+
     const dr = new DispatchRecord();
     dr.vehicleId = car.vehicleId;
     dr.vehicleReg = car.vehicleReg;
@@ -934,15 +1110,16 @@ export class InternalService {
     dr.position = landmark.position;
     dr.marshalId = marshal.userId;
     dr.landmarkName = landmark.landmarkName;
+    dr.landmarkId = landmark.landmarkId;
     dr.routeLandmarkId = landmark.landmarkId;
     dr.marshalName = `${marshal.firstName} ${marshal.lastName}`;
 
     await this.dispatchService.addDispatchRecord(dr);
+
     return dr;
   }
 
   private async addTrip(dr: DispatchRecord, userId: string, userName: string) {
-    Logger.debug(`${mm} add Trip ... ambassador userName: ${userName}`);
     Logger.debug(
       `${mm} addTrip route: ${dr.routeId} ${dr.routeName}; in car: ${dr.vehicleReg} ...`
     );
@@ -1048,9 +1225,11 @@ export class InternalService {
     Logger.debug(
       `${mm} addCommuterCashPayment route: ${c.routeName}  ${c.routeId} in car: ${car.vehicleReg} ...`
     );
+    const price = 20.0;
+
     const p = new CommuterCashPayment();
     p.commuterCashPaymentId = randomUUID();
-    p.amount = c.passengersIn * 20;
+    p.amount = c.passengersIn * price;
     p.associationId = car.associationId;
     p.associationName = car.associationName;
     p.created = new Date().toISOString();
@@ -1089,6 +1268,9 @@ export class InternalService {
     vh.created = new Date().toISOString();
     vh.make = car.make;
     vh.model = car.model;
+    vh.accuracy = 0;
+    vh.speed = 0;
+    vh.speedAccuracy = 0;
 
     await this.telemetryService.addVehicleTelemetry(vh);
     return vh;

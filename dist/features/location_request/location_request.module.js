@@ -18,6 +18,7 @@ const AppError_1 = require("../../data/models/AppError");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
 const kasie_error_1 = require("../../data/models/kasie.error");
 const LocationResponse_1 = require("../../data/models/LocationResponse");
+const firebase_util_1 = require("../../services/firebase_util");
 const LocationResponseError_1 = require("../../data/models/LocationResponseError");
 let LocationRequestModule = class LocationRequestModule {
 };
@@ -37,7 +38,7 @@ exports.LocationRequestModule = LocationRequestModule = __decorate([
             ]),
         ],
         controllers: [location_request_controller_1.LocationRequestController],
-        providers: [location_request_service_1.LocationRequestService, fcm_service_1.MessagingService],
+        providers: [location_request_service_1.LocationRequestService, fcm_service_1.MessagingService, firebase_util_1.FirebaseAdmin],
     })
 ], LocationRequestModule);
 //# sourceMappingURL=location_request.module.js.map

@@ -45,7 +45,7 @@ import { KasieErrorHandler } from "src/middleware/errors.interceptor";
     MessagingService,
     TimeSeriesService,
     KasieErrorHandler,
-    FileArchiverService,
+    FileArchiverService, FirebaseAdmin
   ],
 })
 export class AmbassadorModule {}

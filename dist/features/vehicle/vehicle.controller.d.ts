@@ -48,6 +48,7 @@ export declare class VehicleController {
     getVehicleFuelTopUps(vehicleId: string, startDate: string, endDate: string): Promise<any>;
     getAssociationFuelTopUps(associationId: string, startDate: string, endDate: string): Promise<any>;
     getFuelBrands(): Promise<FuelBrand[]>;
+    getCarFuelTopUps(vehicleId: string, startDate: string, endDate: string): Promise<FuelTopUp[]>;
     getAssociationHeartbeatTimeSeries(query: {
         associationId: string;
         startDate: string;

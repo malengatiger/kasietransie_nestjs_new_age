@@ -10,6 +10,7 @@ export declare class DispatchRecord {
     created: string;
     position: Position;
     landmarkName: string;
+    landmarkId: string;
     marshalName: string;
     routeName: string;
     routeId: string;

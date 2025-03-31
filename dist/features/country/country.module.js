@@ -18,6 +18,7 @@ const AppError_1 = require("../../data/models/AppError");
 const kasie_error_1 = require("../../data/models/kasie.error");
 const AssociationToken_1 = require("../../data/models/AssociationToken");
 const zipper_1 = require("../../my-utils/zipper");
+const firebase_util_1 = require("../../services/firebase_util");
 let CountryModule = class CountryModule {
 };
 exports.CountryModule = CountryModule;
@@ -33,7 +34,7 @@ exports.CountryModule = CountryModule = __decorate([
             ]),
         ],
         controllers: [country_controller_1.CountryController],
-        providers: [country_service_1.CountryService, fcm_service_1.MessagingService, zipper_1.FileArchiverService],
+        providers: [country_service_1.CountryService, fcm_service_1.MessagingService, zipper_1.FileArchiverService, firebase_util_1.FirebaseAdmin],
     })
 ], CountryModule);
 //# sourceMappingURL=country.module.js.map

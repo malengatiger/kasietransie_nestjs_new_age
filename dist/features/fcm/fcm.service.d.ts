@@ -22,10 +22,12 @@ import { RankFeeCashCheckIn } from "src/data/models/RankFeeCashCheckIn";
 import { Trip } from "src/data/models/Trip";
 import { LocationResponseError } from "src/data/models/LocationResponseError";
 import { CommuterPickup } from "src/data/models/CommuterPickup";
+import { FirebaseAdmin } from "src/services/firebase_util";
 export declare class MessagingService {
+    private readonly firebaseAdmin;
     private associationTokenModel;
     private kasieModel;
-    constructor(associationTokenModel: mongoose.Model<AssociationToken>, kasieModel: mongoose.Model<KasieError>);
+    constructor(firebaseAdmin: FirebaseAdmin, associationTokenModel: mongoose.Model<AssociationToken>, kasieModel: mongoose.Model<KasieError>);
     sendAppErrorMessages(appErrors: AppErrors): Promise<void>;
     sendAppErrorMessage(appError: AppError): Promise<void>;
     sendKasieErrorMessage(kasieError: KasieError): Promise<void>;
@@ -55,5 +57,7 @@ export declare class MessagingService {
     sendAssociationRegisteredMessage(assoc: Association): Promise<void>;
     sendToTopic(topic: string, title: string, body: string, type: string, data: string, associationId: string): Promise<void>;
     sendToDevice(fcmToken: string, title: string, body: string, type: string, data: string): Promise<void>;
+    sendToPossibleAssociationDevices(associationId: string, title: string, body: string, type: string, data: string): Promise<void>;
+    checkIfValid(token: string): Promise<boolean>;
     subscribeToEveryThing(): Promise<any>;
 }

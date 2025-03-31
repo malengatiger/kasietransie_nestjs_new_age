@@ -37,6 +37,6 @@ import { FirebaseAdmin } from 'src/services/firebase_util';
   ],
   controllers: [HeartbeatController],
   providers: [TelemetryService, 
-    TimeSeriesService, MessagingService, FileArchiverService],
+    TimeSeriesService, MessagingService, FileArchiverService, FirebaseAdmin],
 })
 export class HeartbeatModule {}
